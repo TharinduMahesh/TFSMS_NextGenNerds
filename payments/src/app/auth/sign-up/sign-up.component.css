@@ -1,4 +1,4 @@
-.auth-container {
+/* .auth-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -180,5 +180,390 @@
     
     .auth-form h2 {
       font-size: 1.5rem;
+    }
+  } */
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  .page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .logo img {
+    height: 70px;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 3.5rem; /* Increased spacing between navbar elements */
+    align-items: center;
+  }
+  
+  /* Base styles for all nav links except register and sign-in */
+  .nav-links a:not(.register) {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    position: relative; /* For the underline positioning */
+    padding: 0.5rem 0; /* Add padding for hover effect */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+  }
+  
+  /* Hover effect for navbar links except register and sign-in */
+  .nav-links a:not(.register):hover {
+    transform: scale(1.1); /* Make elements bigger on hover */
+    color: #90BE6D; /* Change text color on hover */
+  }
+  
+  /* Green underline with shadow on hover for regular links */
+  .nav-links a:not(.register):after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #90BE6D;
+    box-shadow: 0 2px 4px rgba(144, 190, 109, 0.4);
+    transition: width 0.3s ease;
+  }
+  
+  .nav-links a:not(.register):hover:after {
+    width: 100%;
+  }
+  
+  /* Sign-in link styles */
+  .sign-in {
+    text-decoration: none;
+    color: #333;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .sign-in:hover {
+    color: #90BE6D;
+  }
+  
+  /* Register button styles */
+  .register {
+    text-decoration: none;
+    padding: 0.5rem 2rem;
+    background-color: #90BE6D;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: 0 4px 8px rgba(144, 190, 109, 0.3); /* Added shadow to register button */
+    transition: all 0.3s ease;
+  }
+  
+  /* Enhance register button on hover */
+  .register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(144, 190, 109, 0.5);
+  }
+  
+  .auth-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #fff;
+  }
+  
+  .auth-content {
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .left-content {
+    flex: 1;
+    position: relative;
+    padding-right: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .tea-leaf {
+    max-width: 100%;
+    height: auto;
+    width: 500px;
+    border-radius: 8px;
+    display: block;
+  }
+  
+  .right-content {
+    flex: 1;
+    padding: 2rem;
+  }
+  
+  .auth-form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+    flex: 1;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="password"],
+  .form-group input[type="email"],
+  .form-group input[type="tel"],
+  .form-group select {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #F8F8F8;
+  }
+  
+  .sign-up-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #90BE6D;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 1.5rem;
+  }
+  
+  .divider {
+    text-align: center;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: #ddd;
+  }
+  
+  .divider::before {
+    left: 0;
+  }
+  
+  .divider::after {
+    right: 0;
+  }
+  
+  .divider span {
+    background: white;
+    padding: 0 1rem;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .social-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .social-buttons button {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+  }
+  
+  .social-buttons img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .footer {
+    background-color: #43A047;
+    color: white;
+    padding: 3rem 2rem 1rem;
+  }
+  
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-section h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  .footer-section a {
+    color: white;
+    text-decoration: none;
+    opacity: 0.8;
+  }
+  
+  .footer-section a:hover {
+    opacity: 1;
+  }
+  
+  .newsletter-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .newsletter-form input {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    flex: 1;
+  }
+  
+  .newsletter-form button {
+    padding: 0.5rem 1rem;
+    background-color: #2E7D32;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  /* Hide hamburger button on large screens */
+  .hamburger {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 968px) {
+    .hamburger {
+      display: block;
+    }
+  
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      width: 100%;
+      background: white;
+      padding: 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+  
+    .nav-links.show {
+      display: flex;
+    }
+    
+    .nav-links a:last-child {
+      border-bottom: none;
+    }
+    
+    .nav-links .register {
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    
+    .hamburger {
+      color: #90BE6D;
+    }
+    
+    .auth-content {
+      flex-direction: column;
+      padding: 1rem;
+    }
+    
+    .left-content {
+      padding-right: 0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .tea-leaf {
+      max-width: 300px;
+      margin: 2rem auto;
+    }
+    
+    .form-row {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .auth-container {
+      padding: 1rem;
+    }
+    
+    .footer-content {
+      grid-template-columns: 1fr;
     }
   }

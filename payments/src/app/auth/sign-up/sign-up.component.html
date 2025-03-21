@@ -1,4 +1,4 @@
-`
+<!-- 
     <div class="auth-container">
       <div class="auth-content">
         <div class="left-content">
@@ -59,4 +59,138 @@
         </div>
       </div>
     </div>
-  `
+   -->
+
+   <div class="page-container">
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="logo">
+        <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
+      </div>
+  
+      <div class="hamburger" (click)="toggleMenu()">
+        &#9776; 
+      </div>
+      <div class="nav-links" [ngClass]="{'show': menuOpen}">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Features</a>
+        <a href="#">Help</a>
+        <a href="#">Contact</a>
+        <a href="/sign-in" class="sign-in">Sign in</a>
+        <a href="/sign-up" class="register">Register</a>
+      </div>
+    </nav>
+  
+    <!-- Main Content -->
+    <div class="auth-container">
+      <div class="auth-content">
+        <div class="left-content">
+          <img src="https://i.pinimg.com/736x/6a/61/b0/6a61b06b7f2db42caa1dfcc248633a92.jpg" alt="Tea Leaf" class="tea-leaf" />
+        </div>
+        <div class="right-content">
+          <div class="auth-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name :</label>
+                <input type="text" [(ngModel)]="firstName" name="firstName" placeholder="Enter your name..." />
+              </div>
+              <div class="form-group">
+                <label>Last Name :</label>
+                <input type="text" [(ngModel)]="lastName" name="lastName" placeholder="Enter your name..." />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email Id :</label>
+                <input type="email" [(ngModel)]="email" name="email" placeholder="info@xyz.com" />
+              </div>
+              <div class="form-group">
+                <label>Mobile No. :</label>
+                <input type="tel" [(ngModel)]="mobile" name="mobile" placeholder="+94 - 88598 58600" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Password :</label>
+                <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" />
+              </div>
+              <div class="form-group">
+                <label>Confirm Password :</label>
+                <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="••••••••" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Role :</label>
+              <select [(ngModel)]="role" name="role">
+                <option value="" disabled selected>Enter company role...</option>
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="employee">Employee</option>
+              </select>
+            </div>
+            <button type="submit" class="sign-up-btn" (click)="onSubmit()">SIGN UP</button>
+            <div class="divider">
+              <span>Or connect with</span>
+            </div>
+            <div class="social-buttons">
+              <button class="google-btn">
+                <img src="https://techdocs.akamai.com/identity-cloud/img/social-login/identity-providers/iconfinder-new-google-favicon-682665.png" alt="Google" />
+              </button>
+              <button class="facebook-btn">
+                <img src="https://z-m-static.xx.fbcdn.net/rsrc.php/v4/yD/r/5D8s-GsHJlJ.png" alt="Facebook" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Reach us</h3>
+          <p>+94 342294110</p>
+          <p>arunateaarunatea.lk</p>
+          <p>
+            Aruna Tea Factory (Pvt) Ltd<br>
+            Kumbaduwaa Estate,<br>
+            Kumbaduwaa,<br>
+            Meegahathanna,<br>
+            Sri Lanka
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Company</h3>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+          <a href="#">Blogs</a>
+        </div>
+        <div class="footer-section">
+          <h3>Legal</h3>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms & Services</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Refund Policy</a>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <a href="#">Techlabz Keybox</a>
+          <a href="#">Downloads</a>
+          <a href="#">Forum</a>
+        </div>
+        <div class="footer-section">
+          <h3>Join Our Newsletter</h3>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Enter your email address" />
+            <button>Subscribe</button>
+          </div>
+          <p>* Will send you weekly updates for your better tool management.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>©2024 Copyright:www.Arunatea.com</p>
+      </div>
+    </footer>
+  </div>

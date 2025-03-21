@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\text3.props" />
+</Project>

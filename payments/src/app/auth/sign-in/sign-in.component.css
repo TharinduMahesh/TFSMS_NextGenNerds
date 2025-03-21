@@ -34,7 +34,7 @@ body {
 }
 
 /* Base styles for all nav links except register and sign-in */
-.nav-links a:not(.register):not(.sign-in) {
+.nav-links a:not(.register) {
   text-decoration: none;
   color: #333;
   font-weight: 500;
@@ -44,13 +44,13 @@ body {
 }
 
 /* Hover effect for navbar links except register and sign-in */
-.nav-links a:not(.register):not(.sign-in):hover {
+.nav-links a:not(.register):hover {
   transform: scale(1.1); /* Make elements bigger on hover */
   color: #90BE6D; /* Change text color on hover */
 }
 
 /* Green underline with shadow on hover for regular links */
-.nav-links a:not(.register):not(.sign-in):after {
+.nav-links a:not(.register):after {
   content: '';
   position: absolute;
   width: 0;
@@ -62,7 +62,7 @@ body {
   transition: width 0.3s ease;
 }
 
-.nav-links a:not(.register):not(.sign-in):hover:after {
+.nav-links a:not(.register):hover:after {
   width: 100%;
 }
 
@@ -80,6 +80,7 @@ body {
 
 .sign-in:hover {
   color: #90BE6D;
+  
 }
 
 /* Register button styles */

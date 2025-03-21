@@ -4,7 +4,11 @@
       <div class="logo">
         <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
       </div>
-      <div class="nav-links">
+
+      <div class="hamburger" (click)="toggleMenu()">
+        &#9776; 
+      </div>
+      <div class="nav-links" [ngClass]="{'show': menuOpen}">
         <a href="#">Home</a>
         <a href="#">About</a>
         <a href="#">Features</a>

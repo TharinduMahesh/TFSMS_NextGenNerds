@@ -82,4 +82,14 @@ export class SignInComponent {
   onSubmit() {
     console.log('Sign in attempt', { username: this.username, password: this.password });
   }
+
+ 
+  menuOpen = false;
+
+  toggleMenu(): void {
+    console.log("Hamburger menu clicked!");
+    this.menuOpen = !this.menuOpen;
+  }
+  
+  
 }

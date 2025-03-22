@@ -328,21 +328,6 @@ body {
   margin-top: 4rem;
 }
 
-/* Wave effect at the top of the footer */
-.footer-wave {
-  position: absolute;
-  top: -100px;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.footer-wave svg {
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 100px;
-}
 
 .footer-content {
   display: grid;

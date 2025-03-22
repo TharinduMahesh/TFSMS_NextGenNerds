@@ -1,73 +1,62 @@
 <div class="page-container">
-    <!-- Navigation -->
+    <!-- Header/Navigation -->
     <nav class="navbar">
       <div class="logo">
         <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
       </div>
-
+  
       <div class="hamburger" (click)="toggleMenu()">
-        &#9776; 
+        &#9776;
       </div>
       <div class="nav-links" [ngClass]="{'show': menuOpen}">
-        <a href="/home">Home</a>
-        <a href="#">About</a>
-        <a href="#">Features</a>
-        <a href="#">Help</a>
-        <a href="#">Contact</a>
-        <a href="/sign-in" class="sign-in">Sign in</a>
-        <a href="/sign-up" class="register">Register</a>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a routerLink="/about" routerLinkActive="active">About</a>
+        <a routerLink="/features" routerLinkActive="active">Features</a>
+        <a routerLink="/help" routerLinkActive="active">Help</a>
+        <a routerLink="/contact" routerLinkActive="active">Contact</a>
+        <a routerLink="/sign-in" class="sign-in">Sign in</a>
+        <a routerLink="/sign-up" class="register">Register</a>
       </div>
     </nav>
   
-    <!-- Main Content -->
-    <div class="auth-container">
-      <div class="auth-content">
-        <div class="left-content">
-          <h1>Welcome to our community</h1>
-          <img src="https://i.pinimg.com/736x/6a/61/b0/6a61b06b7f2db42caa1dfcc248633a92.jpg" alt="Tea Leaf" class="tea-leaf" />
-          <p>Start your new journey with us </p>
-          <p>and join our community</p>
-          <button class="explore-btn">Explore our community</button>
-          
-        
-          
-        </div>
-        <div class="right-content">
-          <div class="auth-form">
-            <div class="form-group">
-              <input type="text" [(ngModel)]="username" name="username" placeholder="Enter your user name" />
-            </div>
-            <div class="form-group">
-              <input type="password" [(ngModel)]="password" name="password" placeholder="Password" />
-              <div class="password-options">
-                <label>
-                  <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
-                  Remember me
-                </label>
-                <a href="#">Forgot Password?</a>
-              </div>
-            </div>
-            <button type="submit" class="sign-in-btn" (click)="onSubmit()">SIGN IN</button>
-            <div class="divider">
-              <span>Or connect with</span>
-            </div>
-            <div class="social-buttons">
-              <button class="google-btn">
-                <img src="https://techdocs.akamai.com/identity-cloud/img/social-login/identity-providers/iconfinder-new-google-favicon-682665.png" alt="Google" />
-              </button>
-              <button class="facebook-btn">
-                <img src="https://z-m-static.xx.fbcdn.net/rsrc.php/v4/yD/r/5D8s-GsHJlJ.png" alt="Facebook" />
-              </button>
-            </div>
+    <!-- Main Content - Hero Section -->
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>ARUNA TEA FACTORY<br />SINCE 1984</h1>
+          <p>
+            Aruna Group of Companies (AGC) has established themselves as a leading manufacturer and supplier 
+            of black tea for direct exporters in the domestic market under the name of Aruna Tea Factory (Pvt) 
+            Ltd in Kaluthara District, Sri Lanka and was incorporated in the year 2004 under the Companies 
+            Act of 1982.
+          </p>
+          <div class="hero-buttons">
+            <a routerLink="/sign-in" class="btn btn-primary">Sign in</a>
+            <a routerLink="/sign-up" class="btn btn-outline">Sign up</a>
           </div>
         </div>
+        <div class="hero-image">
+          <img src="https://img.freepik.com/free-photo/tea-plantation-nature-background_1150-10328.jpg" alt="Tea Leaves" />
+        </div>
+      </div>
+      
+      <div class="hero-description">
+        <p>
+          Aruna Group of Companies (AGC) has established themselves as a leading manufacturer and supplier of 
+          black tea for direct exporters in the domestic market under the name of Aruna Tea Factory (Pvt) Ltd in 
+          Kaluthara District, Sri Lanka and was incorporated in the year 2004 under the Companies Act of 1982. The 
+          total factory area is sq.ft. 70,000 which is located on an extent of 5acres in the Meegahatanna, Kumbaduwaa 
+          Estate.
+        </p>
+      </div>
+      
+      <div class="scroll-indicator" (click)="scrollToContent()">
+        <i class="fas fa-chevron-down scroll-icon"></i>
       </div>
     </div>
   
     <!-- Footer -->
     <footer class="footer">
-     
-      
       <div class="footer-content">
         <div class="footer-section">
           <h3><i class="fas fa-map-marker-alt"></i> Reach us</h3>
@@ -107,8 +96,8 @@
         <div class="footer-section newsletter">
           <h3><i class="fas fa-paper-plane"></i> Join Our Newsletter</h3>
           <div class="newsletter-form">
-            <input type="email" placeholder="Enter your email address" />
-            <button><i class="fas fa-arrow-right"></i> Subscribe</button>
+            <input type="email" placeholder="Enter your email address" #newsletterEmail />
+            <button (click)="subscribeToNewsletter(newsletterEmail.value)"><i class="fas fa-arrow-right"></i> Subscribe</button>
           </div>
           <p class="newsletter-note"><i class="fas fa-info-circle"></i> Will send you weekly updates for your better tool management.</p>
           
@@ -133,3 +122,4 @@
         </div>
       </div>
     </footer>
+  </div>

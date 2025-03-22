@@ -128,7 +128,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('https://img.freepik.com/free-vector/hand-painted-watercolor-nature-background_23-2148941599.jpg?w=1380&t=st=1711156636~exp=1711157236~hmac=9a9c5c7c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c');
+  background-image: url('https://images.immediate.co.uk/production/volatile/sites/30/2023/08/tea-plantation-2e4af22.jpg?quality=90&resize=556,505');
   background-size: cover;
   background-position: center;
   opacity: 0.1;
@@ -209,10 +209,10 @@
 }
 
 .hero-image img {
-  max-width: 100%;
+  max-width: 120%;
   height: auto;
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  /* border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); */
 }
 
 .hero-description {

@@ -46,7 +46,7 @@ body {
 /* Hover effect for navbar links except register and sign-in */
 .nav-links a:not(.register):hover {
   transform: scale(1.1); /* Make elements bigger on hover */
-  color: #90BE6D; /* Change text color on hover */
+  color: #56ae12; /* Change text color on hover */
 }
 
 /* Green underline with shadow on hover for regular links */
@@ -57,7 +57,7 @@ body {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: #90BE6D;
+  background-color: #56ae12;
   box-shadow: 0 2px 4px rgba(144, 190, 109, 0.4);
   transition: width 0.3s ease;
 }
@@ -79,28 +79,28 @@ body {
 }
 
 .sign-in:hover {
-  color: #90BE6D;
-  
+  color: #56ae12;
 }
 
 /* Register button styles */
 .register {
   text-decoration: none;
   padding: 0.5rem 2rem;
-  background-color: #90BE6D;
+  background-color: #4a9e0f; /* Darkened from #56ae12 */
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px; /* Increased border radius */
   cursor: pointer;
   font-weight: 500;
-  box-shadow: 0 4px 8px rgba(144, 190, 109, 0.3); /* Added shadow to register button */
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.4); /* Enhanced shadow */
   transition: all 0.3s ease;
 }
 
 /* Enhance register button on hover */
 .register:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(144, 190, 109, 0.5);
+  background-color: #3f8a0c; /* Even darker on hover */
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.6);
 }
 
 .auth-container {
@@ -129,7 +129,7 @@ body {
 
 .left-content h1 {
   font-size: 3rem;
-  color: #90BE6D;
+  color: #56ae12;
   /* margin-bottom: 1rem; */
   font-weight: 500;
 }
@@ -140,20 +140,25 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* .left-content p:nth-child(3) {
-  margin-bottom: 2rem;
-} */
-
+/* Enhanced explore button */
 .explore-btn {
-  background: #90BE6D;
+  background: #4a9e0f; /* Darkened from #56ae12 */
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
-  border-radius: 6px;
+  border-radius: 10px; /* Increased border radius */
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   width: fit-content;
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); /* Added shadow */
+}
+
+/* Enhanced hover effect for explore button */
+.explore-btn:hover {
+  background: #3f8a0c; /* Darker on hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5); /* Enhanced shadow on hover */
 }
 
 /* New tea leaf styling */
@@ -180,14 +185,24 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* Enhanced input fields with better borders and radius */
 .form-group input[type="text"],
 .form-group input[type="password"] {
   width: 100%;
   padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 2px solid #ddd; /* Thicker border */
+  border-radius: 10px; /* Increased border radius */
   font-size: 1rem;
   background-color: #F8F8F8;
+  transition: all 0.3s ease;
+}
+
+/* Add focus effect to input fields */
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+  border-color: #56ae12;
+  box-shadow: 0 0 0 3px rgba(86, 174, 18, 0.2);
+  outline: none;
 }
 
 .password-options {
@@ -208,19 +223,34 @@ body {
 .password-options a {
   color: #666;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
+.password-options a:hover {
+  color: #56ae12;
+  text-decoration: underline;
+}
+
+/* Enhanced sign-in button */
 .sign-in-btn {
   width: 100%;
   padding: 1rem;
-  background: #90BE6D;
+  background: #4a9e0f; /* Darkened from #56ae12 */
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px; /* Increased border radius */
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
   margin-bottom: 1.5rem;
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); /* Added shadow */
+}
+
+/* Enhanced hover effect for sign-in button */
+.sign-in-btn:hover {
+  background: #3f8a0c; /* Darker on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5); /* Enhanced shadow on hover */
 }
 
 .divider {
@@ -256,21 +286,30 @@ body {
 
 .social-buttons {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem; /* Increased gap */
   justify-content: center;
 }
 
+/* Enhanced social buttons with shadows */
 .social-buttons button {
-  width: 48px;
-  height: 48px;
+  width: 52px; /* Slightly larger */
+  height: 52px; /* Slightly larger */
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 10px; /* Increased border radius */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added shadow */
+}
+
+/* Enhanced hover effect for social buttons */
+.social-buttons button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  border-color: #56ae12;
 }
 
 .social-buttons img {
@@ -307,6 +346,7 @@ body {
   color: white;
   text-decoration: none;
   opacity: 0.8;
+  transition: opacity 0.3s ease;
 }
 
 .footer-section a:hover {
@@ -333,6 +373,11 @@ body {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+  background-color: #1b5e20;
 }
 
 .footer-bottom {
@@ -346,19 +391,19 @@ body {
   .nav-links {
     display: none;
   }
-  
+
   .auth-content {
     flex-direction: column;
     padding: 1rem;
   }
-  
+
   .left-content {
     padding-right: 0;
     text-align: center;
     margin-bottom: 2rem;
     align-items: center;
   }
-  
+
   .tea-leaf {
     max-width: 300px;
     margin: 2rem auto;
@@ -369,11 +414,11 @@ body {
   .auth-container {
     padding: 1rem;
   }
-  
+
   .left-content h1 {
     font-size: 2rem;
   }
-  
+
   .footer-content {
     grid-template-columns: 1fr;
   }
@@ -408,27 +453,20 @@ body {
     display: flex;
   }
 
-  /* .nav-links a {
-    padding: 3rem 3;
-    border-bottom: 1px solid #eee;
-    width: 100%;
-  } */
-  
   .nav-links a:last-child {
     border-bottom: none;
   }
-  
+
   .nav-links .register {
     margin-top: 0.5rem;
     text-align: center;
   }
-  
+
   .nav-links {
     z-index: 100;
   }
-  
+
   .hamburger {
-    color: #90BE6D;
+    color: #56ae12;
   }
 }
-

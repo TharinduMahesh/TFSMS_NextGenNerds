@@ -1,0 +1,128 @@
+/* ===== NAVBAR STYLES ===== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .logo img {
+    height: 70px;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 3.5rem;
+    align-items: center;
+  }
+  
+  .nav-links a:not(.register):not(.sign-in) {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-links a:not(.register):not(.sign-in):hover,
+  .nav-links a:not(.register):not(.sign-in).active {
+    transform: scale(1.1);
+    color: #4a9e0f;
+  }
+  
+  .nav-links a:not(.register):not(.sign-in):after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #4a9e0f;
+    box-shadow: 0 2px 4px rgba(74, 158, 15, 0.4);
+    transition: width 0.3s ease;
+  }
+  
+  .nav-links a:not(.register):not(.sign-in):hover:after,
+  .nav-links a:not(.register):not(.sign-in).active:after {
+    width: 100%;
+  }
+  
+  .sign-in {
+    text-decoration: none;
+    color: #333;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .sign-in:hover {
+    color: #4a9e0f;
+  }
+  
+  .register {
+    text-decoration: none;
+    padding: 0.5rem 2rem;
+    background-color: #4a9e0f;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .register:hover {
+    transform: translateY(-2px);
+    background-color: #3f8a0c;
+    box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5);
+  }
+  
+  .hamburger {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #4a9e0f;
+  }
+  
+  /* ===== RESPONSIVE STYLES ===== */
+  @media (max-width: 968px) {
+    .hamburger {
+      display: block;
+    }
+  
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      width: 100%;
+      background: white;
+      padding: 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+  
+    .nav-links.show {
+      display: flex;
+    }
+    
+    .nav-links a:last-child {
+      border-bottom: none;
+    }
+    
+    .nav-links .register {
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+  }

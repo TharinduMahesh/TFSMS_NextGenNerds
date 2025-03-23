@@ -1,0 +1,18 @@
+<nav class="navbar">
+    <div class="logo">
+      <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
+    </div>
+  
+    <div class="hamburger" (click)="toggleMenu()">
+      &#9776;
+    </div>
+    <div class="nav-links" [ngClass]="{'show': menuOpen}">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <a routerLink="/about" routerLinkActive="active">About</a>
+      <a routerLink="/features" routerLinkActive="active">Features</a>
+      <a routerLink="/help" routerLinkActive="active">Help</a>
+      <a routerLink="/contact" routerLinkActive="active">Contact</a>
+      <a routerLink="/sign-in" class="sign-in">Sign in</a>
+      <a routerLink="/sign-up" class="register">Register</a>
+    </div>
+  </nav>

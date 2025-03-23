@@ -1,1 +1,143 @@
-<p>contact works!</p>
+<div class="page-container">
+    <!-- Navigation -->
+    <app-header></app-header>
+    
+    <!-- Contact Content -->
+    <div class="contact-container">
+      <div class="contact-header">
+        <h1>Contact Us</h1>
+        <p>Any question or remarks? Just write us a message!</p>
+      </div>
+      
+      <div class="contact-content">
+        <div class="contact-info">
+          <h2>Contact Information</h2>
+          
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="person-icon"></i>
+            </div>
+            <div class="info-text">
+              <p class="name">Mr. Nevil Rathnayka</p>
+              <p class="title">Chief Executive Officer</p>
+              <p class="company">Aruna Group of Companies</p>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="phone-icon"></i>
+            </div>
+            <p>Tel: +94 768225694</p>
+          </div>
+          
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="email-icon"></i>
+            </div>
+            <p>nevil&#64;arunate</p>
+          </div>
+          
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="location-icon"></i>
+            </div>
+            <div class="address">
+              <p>9 Aruna Tea Factory (Pvt) Ltd</p>
+              <p>Kumbaduwaa Estate,</p>
+              <p>Kumbaduwaa,</p>
+              <p>Meegahathanna,</p>
+              <p>Sri Lanka</p>
+            </div>
+          </div>
+          
+          <div class="social-links">
+            <a href="#" class="social-icon twitter">
+              <i class="twitter-icon"></i>
+            </a>
+            <a href="#" class="social-icon instagram">
+              <i class="instagram-icon"></i>
+            </a>
+            <a href="#" class="social-icon facebook">
+              <i class="facebook-icon"></i>
+            </a>
+          </div>
+          
+          <div class="background-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+          </div>
+        </div>
+        
+        <div class="contact-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input 
+                type="text" 
+                id="firstName" 
+                name="firstName" 
+                [(ngModel)]="contactForm.firstName" 
+                placeholder="John"
+              >
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input 
+                type="text" 
+                id="lastName" 
+                name="lastName" 
+                [(ngModel)]="contactForm.lastName" 
+                placeholder="Doe"
+              >
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                [(ngModel)]="contactForm.email" 
+                placeholder="example@email.com"
+              >
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                [(ngModel)]="contactForm.phone" 
+                placeholder="+1 012 3456 789"
+              >
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              [(ngModel)]="contactForm.message" 
+              placeholder="Write your message..."
+              rows="5"
+            ></textarea>
+          </div>
+          
+          <button type="submit" class="send-message-btn" (click)="onSubmit()">
+            Send Message
+          </button>
+          
+          <div class="form-decoration">
+            <img src="https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png" alt="Tea Leaf" class="tea-leaf-decoration">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <app-footer></app-footer>
+  </div>

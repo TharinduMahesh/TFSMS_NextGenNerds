@@ -9,6 +9,8 @@ import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { PaymentComponent } from './payment/payment.component';
 import { SuccessComponent } from './auth/success/success.component';
 import { HomeComponent } from './auth/home/home.component';
+import { HeaderComponent } from './auth/header/header.component';
+import { FooterComponent } from './auth/footer/footer.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -16,5 +18,7 @@ export const routes: Routes = [
   { path: 'sign-up', component: SignUpComponent },
   { path: 'payments', component: PaymentComponent },
   {path: 'success', component: SuccessComponent},
-  {path: 'home', component: HomeComponent}
+  {path: 'home', component: HomeComponent},
+  {path: 'header', component: HeaderComponent},
+  {path: 'footer', component: FooterComponent}
 ];

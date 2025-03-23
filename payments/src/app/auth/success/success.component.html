@@ -1,80 +1,21 @@
 <div class="page-container">
-    <!-- Navigation -->
-    <nav class="navbar">
-      <div class="logo">
-        <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
-      </div>
+  <!-- Navigation -->
+  <app-header></app-header>
   
-      <div class="hamburger" (click)="toggleMenu()">
-        &#9776; 
-      </div>
-      <div class="nav-links" [ngClass]="{'show': menuOpen}">
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Features</a>
-        <a href="#">Help</a>
-        <a href="#">Contact</a>
-        <span class="user-name">Rayan</span>
-      </div>
-    </nav>
-  
-    <!-- Success Content -->
-    <div class="success-container">
-      <div class="success-content">
+  <!-- Success Content -->
+  <div class="success-container">
+    <div class="success-content">
+      <div class="success-icon-container">
         <img src="https://png.pngtree.com/png-vector/20250124/ourmid/pngtree-3d-green-checkmark-icon-png-image_15324355.png" alt="Success" class="success-icon" />
-        <div class="success-text">
-          <h1>Welcome Back!</h1>
-          <p>You have been signed in successfully.</p>
-          <a routerLink="/dashboard" class="dashboard-btn">Dashboard</a>
-        </div>
+      </div>
+      <div class="success-text">
+        <h1>Welcome Back!</h1>
+        <p>You have been signed in successfully.</p>
+        <a routerLink="/dashboard" class="dashboard-btn">Dashboard</a>
       </div>
     </div>
-  
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>Reach us</h3>
-          <p>+94 342294110</p>
-          <p>arunateaarunatea.lk</p>
-          <p>
-            Aruna Tea Factory (Pvt) Ltd<br>
-            Kumbaduwaa Estate,<br>
-            Kumbaduwaa,<br>
-            Meegahathanna,<br>
-            Sri Lanka
-          </p>
-        </div>
-        <div class="footer-section">
-          <h3>Company</h3>
-          <a href="#">About</a>
-          <a href="#">Contact</a>
-          <a href="#">Blogs</a>
-        </div>
-        <div class="footer-section">
-          <h3>Legal</h3>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms & Services</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Refund Policy</a>
-        </div>
-        <div class="footer-section">
-          <h3>Quick Links</h3>
-          <a href="#">Techlabz Keybox</a>
-          <a href="#">Downloads</a>
-          <a href="#">Forum</a>
-        </div>
-        <div class="footer-section">
-          <h3>Join Our Newsletter</h3>
-          <div class="newsletter-form">
-            <input type="email" placeholder="Enter your email address" />
-            <button>Subscribe</button>
-          </div>
-          <p>* Will send you weekly updates for your better tool management.</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>©2024 Copyright:www.Arunatea.com</p>
-      </div>
-    </footer>
   </div>
+  
+  <!-- Footer -->
+  <app-footer></app-footer>
+</div>

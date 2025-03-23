@@ -1,24 +1,5 @@
-<div class="page-container">
-    <!-- Header/Navigation -->
-    <nav class="navbar">
-      <div class="logo">
-        <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
-      </div>
-  
-      <div class="hamburger" (click)="toggleMenu()">
-        &#9776;
-      </div>
-      <div class="nav-links" [ngClass]="{'show': menuOpen}">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-        <a routerLink="/about" routerLinkActive="active">About</a>
-        <a routerLink="/features" routerLinkActive="active">Features</a>
-        <a routerLink="/help" routerLinkActive="active">Help</a>
-        <a routerLink="/contact" routerLinkActive="active">Contact</a>
-        <a routerLink="/sign-in" class="sign-in">Sign in</a>
-        <a routerLink="/sign-up" class="register">Register</a>
-      </div>
-    </nav>
-  
+      
+    <app-header></app-header>
     <!-- Main Content - Hero Section -->
     <div class="hero-container">
       <div class="hero-content">
@@ -55,71 +36,4 @@
       </div>
     </div>
   
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3><i class="fas fa-map-marker-alt"></i> Reach us</h3>
-          <p><i class="fas fa-phone"></i> +94 342294110</p>
-          <p><i class="fas fa-envelope"></i> arunatea&#64;arunatea.lk</p>
-          <p class="address">
-            <i class="fas fa-building"></i> Aruna Tea Factory (Pvt) Ltd<br>
-            <span class="address-indent">Kumbaduwaa Estate,</span><br>
-            <span class="address-indent">Kumbaduwaa,</span><br>
-            <span class="address-indent">Meegahathanna,</span><br>
-            <span class="address-indent">Sri Lanka</span>
-          </p>
-        </div>
-        
-        <div class="footer-section">
-          <h3><i class="fas fa-info-circle"></i> Company</h3>
-          <a href="#"><i class="fas fa-users"></i> About</a>
-          <a href="#"><i class="fas fa-paper-plane"></i> Contact</a>
-          <a href="#"><i class="fas fa-blog"></i> Blogs</a>
-        </div>
-        
-        <div class="footer-section">
-          <h3><i class="fas fa-gavel"></i> Legal</h3>
-          <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
-          <a href="#"><i class="fas fa-file-contract"></i> Terms & Services</a>
-          <a href="#"><i class="fas fa-file-alt"></i> Terms of Use</a>
-          <a href="#"><i class="fas fa-undo"></i> Refund Policy</a>
-        </div>
-        
-        <div class="footer-section">
-          <h3><i class="fas fa-link"></i> Quick Links</h3>
-          <a href="#"><i class="fas fa-box"></i> Techlabz Keybox</a>
-          <a href="#"><i class="fas fa-download"></i> Downloads</a>
-          <a href="#"><i class="fas fa-comments"></i> Forum</a>
-        </div>
-        
-        <div class="footer-section newsletter">
-          <h3><i class="fas fa-paper-plane"></i> Join Our Newsletter</h3>
-          <div class="newsletter-form">
-            <input type="email" placeholder="Enter your email address" #newsletterEmail />
-            <button (click)="subscribeToNewsletter(newsletterEmail.value)"><i class="fas fa-arrow-right"></i> Subscribe</button>
-          </div>
-          <p class="newsletter-note"><i class="fas fa-info-circle"></i> Will send you weekly updates for your better tool management.</p>
-          
-          <div class="social-icons">
-            <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="footer-bottom">
-        <div class="footer-logo">
-          <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
-        </div>
-        <p>&copy; 2024 Copyright: <a href="https://www.arunatea.com">www.Arunatea.com</a></p>
-        <div class="footer-bottom-links">
-          <a href="#">Sitemap</a>
-          <a href="#">FAQ</a>
-          <a href="#">Support</a>
-        </div>
-      </div>
-    </footer>
-  </div>
+   <app-footer></app-footer>

@@ -1,393 +1,354 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-  
-  .page-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .logo img {
-    height: 70px;
-  }
-  
-  .nav-links {
-    display: flex;
-    gap: 3.5rem;
-    align-items: center;
-  }
-  
-  .nav-links a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    position: relative;
-    padding: 0.5rem 0;
-    transition: all 0.3s ease;
-  }
-  
-  .nav-links a:hover {
-    transform: scale(1.1);
-    color: #4a9e0f; /* Darkened green to match sign-in page */
-  }
-  
-  .nav-links a:after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: #4a9e0f;
-    box-shadow: 0 2px 4px rgba(74, 158, 15, 0.4);
-    transition: width 0.3s ease;
-  }
-  
-  .nav-links a:hover:after {
-    width: 100%;
-  }
-  
-  /* Enhanced user name styling */
-  .user-name {
-    padding: 0.5rem 1.5rem;
-    background-color: #f0f8eb; /* Light green background */
-    border-radius: 25px;
-    color: #4a9e0f; /* Green text */
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 2px 8px rgba(74, 158, 15, 0.15); /* Subtle shadow */
-    transition: all 0.3s ease;
-  }
-  
-  .user-name:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(74, 158, 15, 0.2);
-  }
-  
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fdf6; /* Light green background for entire page */
+  position: relative;
+}
+
+/* Add blurred tea leaf background */
+.page-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  opacity: 0.2;
+  filter: blur(8px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Add a second, larger tea leaf in the corner */
+.page-container::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.05;
+  transform: rotate(45deg);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* User name styling */
+.user-name {
+  padding: 0.5rem 1.5rem;
+  background-color: #f0f8eb;
+  border-radius: 25px;
+  color: #4a9e0f;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(74, 158, 15, 0.15);
+  transition: all 0.3s ease;
+}
+
+.user-name:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 158, 15, 0.2);
+}
+
+.success-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 1; /* Ensure content is above the background */
+}
+
+/* Completely transparent success content */
+.success-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1000px;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+  /* Removed background color, backdrop filter, and border radius */
+}
+
+/* Left side with success icon */
+.success-icon-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Animated success icon with glow effect */
+.success-icon {
+  width: 220px;
+  height: 220px;
+  filter: drop-shadow(0 10px 25px rgba(74, 158, 15, 0.25));
+  transition: all 0.5s ease;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.success-icon:hover {
+  transform: scale(1.08) rotate(5deg);
+  filter: drop-shadow(0 15px 30px rgba(74, 158, 15, 0.35));
+}
+
+/* Add decorative circle behind icon */
+.success-icon-container::before {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(74, 158, 15, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* Right side with text content */
+.success-text {
+  flex: 1;
+  padding-left: 3rem;
+  position: relative;
+}
+
+.success-content h1 {
+  font-size: 3.8rem;
+  color: #4a9e0f;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  line-height: 1.1;
+  position: relative;
+  display: inline-block;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8); /* Add text shadow for better readability */
+}
+
+/* Add underline effect to heading */
+.success-content h1::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(to right, #4a9e0f, transparent);
+  border-radius: 2px;
+}
+
+.success-content p {
+  font-size: 1.5rem;
+  color: #555;
+  margin-bottom: 2.5rem;
+  line-height: 1.5;
+  text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8); /* Add text shadow for better readability */
+}
+
+/* Enhanced dashboard button */
+.dashboard-btn {
+  position: relative;
+  display: inline-block;
+  padding: 1.2rem 2.5rem;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.7px;
+  overflow: hidden;
+  z-index: 1;
+  background: linear-gradient(90deg, #4a9e0f 0%, #56ae12 50%, #3f8a0c 100%);
+  background-size: 200% auto;
+  transition: all 0.5s ease;
+  box-shadow: 0 10px 20px rgba(74, 158, 15, 0.25);
+}
+
+.dashboard-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  transition: all 0.6s ease;
+  z-index: -1;
+}
+
+.dashboard-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(74, 158, 15, 0.35);
+  background-position: right center;
+}
+
+.dashboard-btn:hover::before {
+  left: 100%;
+}
+
+.dashboard-btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(74, 158, 15, 0.3);
+}
+
+/* Add tea leaf decoration to the button */
+.dashboard-btn::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 40px;
+  height: 40px;
+  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  transform: rotate(30deg);
+  pointer-events: none;
+}
+
+/* Add small floating tea leaves for decoration */
+.success-container::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  width: 80px;
+  height: 80px;
+  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.1;
+  transform: rotate(-15deg);
+  animation: floatLeaf1 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.success-container::after {
+  content: '';
+  position: absolute;
+  bottom: 20%;
+  right: 15%;
+  width: 100px;
+  height: 100px;
+  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.1;
+  transform: rotate(25deg);
+  animation: floatLeaf2 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes floatLeaf1 {
+  0% { transform: translateY(0) rotate(-15deg); }
+  50% { transform: translateY(-20px) rotate(-10deg); }
+  100% { transform: translateY(0) rotate(-15deg); }
+}
+
+@keyframes floatLeaf2 {
+  0% { transform: translateY(0) rotate(25deg); }
+  50% { transform: translateY(-25px) rotate(30deg); }
+  100% { transform: translateY(0) rotate(25deg); }
+}
+
+/* Responsive styles */
+@media (max-width: 968px) {
   .success-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 2rem;
-    background-color: #fff;
   }
   
-  /* Modified to display content side by side */
   .success-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 900px; /* Increased max-width */
-    width: 100%;
-    padding: 3rem;
-    /* border-radius: 16px; */
-    /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); Added subtle shadow */
-    background-color: #fafffe; /* Very light green tint */
+    flex-direction: column;
+    padding: 2rem 1rem;
   }
   
-  /* Increased size of success icon and positioned on left */
   .success-icon {
-    width: 220px; /* Increased from 150px */
-    height: 220px; /* Increased from 150px */
-    margin-right: 9rem; /* Added margin to separate from text */
-    filter: drop-shadow(0 8px 15px rgba(74, 158, 15, 0.2)); /* Added shadow to icon */
-    transition: transform 0.5s ease;
+    width: 180px;
+    height: 180px;
+    margin-bottom: 2rem;
   }
   
-  .success-icon:hover {
-    transform: scale(1.05) rotate(5deg); /* Add subtle animation on hover */
-  }
-  
-  /* Text content container */
   .success-text {
-    text-align: left; /* Align text to left */
-    flex: 1;
+    padding-left: 0;
+    text-align: center;
   }
   
   .success-content h1 {
-    font-size: 3.5rem; /* Increased from 3rem */
-    color: #4a9e0f; /* Matched to sign-in page green */
-    margin-bottom: 1rem;
-    font-weight: 600;
-    line-height: 1.1;
+    font-size: 3rem;
+  }
+  
+  .success-content h1::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  /* Adjust background image size for mobile */
+  .page-container::before {
+    background-size: 200%;
+  }
+  
+  .page-container::after {
+    width: 300px;
+    height: 300px;
+    bottom: -50px;
+    right: -50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .success-container {
+    padding: 1rem;
+  }
+  
+  .success-content {
+    padding: 1rem 0.5rem;
+  }
+  
+  .success-icon {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .success-content h1 {
+    font-size: 2.5rem;
   }
   
   .success-content p {
-    font-size: 1.4rem; /* Increased from 1.2rem */
-    color: #555;
-    margin-bottom: 2.5rem;
-    line-height: 1.5;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
   }
   
   .dashboard-btn {
-    position: relative;
-    display: inline-block;
-    padding: 1rem 2.3rem;
-    color: white;
-    text-decoration: none;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 1.2rem;
-    letter-spacing: 0.7px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(64, 131, 15, 0.3);
-    overflow: hidden;
-    z-index: 1;
-    background: linear-gradient(90deg, #4a9e0f 0%, #56ae12 50%, #3f8a0c 100%);
-    background-size: 200% auto;
-    transition: all 0.5s ease;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
   }
-  
-  .dashboard-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, #3f8a0c 0%, #56ae12 50%, #4a9e0f 100%);
-    transition: all 0.6s ease;
-    z-index: -1;
-  }
-  
-  .dashboard-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(74, 158, 15, 0.4);
-    background-position: right center;
-  }
-  
-  .dashboard-btn:hover::before {
-    left: 0;
-  }
-  
-  .dashboard-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3);
-  }
-  
-  /* Alternative version with shimmer effect */
-  .dashboard-btn-shimmer {
-    position: relative;
-    display: inline-block;
-    padding: 1rem 2.3rem;
-    background: #4a9e0f;
-    color: white;
-    text-decoration: none;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 1.2rem;
-    letter-spacing: 0.7px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(74, 158, 15, 0.3);
-    overflow: hidden;
-  }
-  
-  .dashboard-btn-shimmer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent
-    );
-    transition: all 0.6s ease;
-  }
-  
-  .dashboard-btn-shimmer:hover {
-    background: #3f8a0c;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(74, 158, 15, 0.4);
-  }
-  
-  .dashboard-btn-shimmer:hover::before {
-    left: 100%;
-  }
-  
-  .dashboard-btn-shimmer:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3);
-  }
-  
-  .footer {
-    background-color: #43A047;
-    color: white;
-    padding: 3rem 2rem 1rem;
-  }
-  
-  .footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .footer-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .footer-section h3 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-  }
-  
-  .footer-section a {
-    color: white;
-    text-decoration: none;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-  }
-  
-  .footer-section a:hover {
-    opacity: 1;
-  }
-  
-  .newsletter-form {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .newsletter-form input {
-    padding: 0.5rem;
-    border: none;
-    border-radius: 4px;
-    flex: 1;
-  }
-  
-  .newsletter-form button {
-    padding: 0.5rem 1rem;
-    background-color: #2E7D32;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .newsletter-form button:hover {
-    background-color: #1b5e20;
-  }
-  
-  .footer-bottom {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
-  }
-  
-  /* Hamburger menu for mobile */
-  .hamburger {
-    display: none;
-    font-size: 2rem;
-    cursor: pointer;
-    color: #4a9e0f;
-  }
-  
-  @media (max-width: 968px) {
-    .hamburger {
-      display: block;
-    }
-  
-    .nav-links {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 80px;
-      left: 0;
-      width: 100%;
-      background: white;
-      padding: 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      z-index: 100;
-    }
-  
-    .nav-links.show {
-      display: flex;
-    }
-  
-    /* Switch to vertical layout on mobile */
-    .success-content {
-      flex-direction: column;
-      text-align: center;
-      padding: 2rem 1rem;
-    }
-  
-    .success-icon {
-      width: 180px;
-      height: 180px;
-      margin-right: 0;
-      margin-bottom: 2rem;
-    }
-  
-    .success-text {
-      text-align: center;
-    }
-  
-    .success-content h1 {
-      font-size: 2.5rem;
-    }
-  
-    .success-content p {
-      font-size: 1.2rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .success-container {
-      padding: 1rem;
-    }
-  
-    .success-content {
-      padding: 1.5rem 1rem;
-    }
-  
-    .success-icon {
-      width: 150px;
-      height: 150px;
-    }
-  
-    .success-content h1 {
-      font-size: 2rem;
-    }
-  
-    .success-content p {
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-    }
-  
-    .dashboard-btn {
-      padding: 0.8rem 2rem;
-      font-size: 1rem;
-    }
-  
-    .footer-content {
-      grid-template-columns: 1fr;
-    }
-  }
+}

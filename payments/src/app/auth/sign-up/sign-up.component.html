@@ -1,24 +1,7 @@
 
    <div class="page-container">
     <!-- Navigation -->
-    <nav class="navbar">
-      <div class="logo">
-        <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
-      </div>
-  
-      <div class="hamburger" (click)="toggleMenu()">
-        &#9776; 
-      </div>
-      <div class="nav-links" [ngClass]="{'show': menuOpen}">
-        <a href="/home">Home</a>
-        <a href="#">About</a>
-        <a href="#">Features</a>
-        <a href="#">Help</a>
-        <a href="#">Contact</a>
-        <a href="/sign-in" class="sign-in">Sign in</a>
-        <a href="/sign-up" class="register">Register</a>
-      </div>
-    </nav>
+    <app-header></app-header>
   
     <!-- Main Content -->
     <div class="auth-container">
@@ -85,50 +68,4 @@
     </div>
   
     <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>Reach us</h3>
-          <p>+94 342294110</p>
-          <p>arunateaarunatea.lk</p>
-          <p>
-            Aruna Tea Factory (Pvt) Ltd<br>
-            Kumbaduwaa Estate,<br>
-            Kumbaduwaa,<br>
-            Meegahathanna,<br>
-            Sri Lanka
-          </p>
-        </div>
-        <div class="footer-section">
-          <h3>Company</h3>
-          <a href="#">About</a>
-          <a href="#">Contact</a>
-          <a href="#">Blogs</a>
-        </div>
-        <div class="footer-section">
-          <h3>Legal</h3>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms & Services</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Refund Policy</a>
-        </div>
-        <div class="footer-section">
-          <h3>Quick Links</h3>
-          <a href="#">Techlabz Keybox</a>
-          <a href="#">Downloads</a>
-          <a href="#">Forum</a>
-        </div>
-        <div class="footer-section">
-          <h3>Join Our Newsletter</h3>
-          <div class="newsletter-form">
-            <input type="email" placeholder="Enter your email address" />
-            <button>Subscribe</button>
-          </div>
-          <p>* Will send you weekly updates for your better tool management.</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>©2024 Copyright:www.Arunatea.com</p>
-      </div>
-    </footer>
-  </div>
+    <app-footer></app-footer>

@@ -121,30 +121,46 @@ export class PaymentComponent implements OnInit {
   selectedDate: string = '';
   filteredPayments: Payment[] = [];
   
+  // Summary metrics
   totalPayments: number = 0;
   totalBankTransfer: number = 0;
   totalCash: number = 0;
   totalCheques: number = 0;
 
-  newPayment: Payment = { paymentId: 0, supplierId: 0, amount: 0, paymentMethod: '', paymentDate: '' };
+  // New Payment Fields
+  newPayment: Payment = { 
+    paymentId: 0, 
+    supplierId: 0, 
+    amount: 0, 
+    paymentMethod: '', 
+    paymentDate: new Date().toISOString().split('T')[0] 
+  };
 
-  constructor(private paymentService: PaymentService) {
-    this.calculateSummaryMetrics();
-  }
+  // Error handling
+  error: string | null = null;
+  loading: boolean = false;
+
+  constructor(private paymentService: PaymentService) {}
 
   ngOnInit() {
     this.loadPayments();
   }
 
   loadPayments() {
+    this.loading = true;
+    this.error = null;
+    
     this.paymentService.getPayments().subscribe({
       next: (data) => {
         this.payments = data;
         this.filteredPayments = data;
         this.calculateSummaryMetrics();
+        this.loading = false;
       },
       error: (error) => {
         console.error('Error loading payments:', error);
+        this.error = 'Failed to load payments. Please try again later.';
+        this.loading = false;
       }
     });
   }
@@ -172,33 +188,44 @@ export class PaymentComponent implements OnInit {
 
   addPayment() {
     if (this.validatePayment()) {
-      // Convert the date string to the format expected by the backend
-      const paymentToAdd = {
-        ...this.newPayment,
-        paymentDate: new Date(this.newPayment.paymentDate).toISOString()
-      };
-      
-      this.paymentService.addPayment(paymentToAdd).subscribe({
+      this.loading = true;
+      this.error = null;
+
+      this.paymentService.addPayment(this.newPayment).subscribe({
         next: (response) => {
-          // Reload the payments list
-          this.loadPayments();
-          // Reset the form
+          this.payments.push(response);
+          this.filterPayments();
+          this.calculateSummaryMetrics();
           this.resetForm();
+          this.loading = false;
         },
         error: (error) => {
           console.error('Error adding payment:', error);
+          this.error = 'Failed to add payment. Please try again.';
+          this.loading = false;
         }
       });
     }
   }
 
   private validatePayment(): boolean {
-    return !!(
-      this.newPayment.supplierId &&
-      this.newPayment.amount &&
-      this.newPayment.paymentMethod &&
-      this.newPayment.paymentDate
-    );
+    if (!this.newPayment.supplierId || this.newPayment.supplierId <= 0) {
+      this.error = 'Please enter a valid Supplier ID';
+      return false;
+    }
+    if (!this.newPayment.amount || this.newPayment.amount <= 0) {
+      this.error = 'Please enter a valid amount';
+      return false;
+    }
+    if (!this.newPayment.paymentMethod) {
+      this.error = 'Please select a payment method';
+      return false;
+    }
+    if (!this.newPayment.paymentDate) {
+      this.error = 'Please select a payment date';
+      return false;
+    }
+    return true;
   }
 
   private resetForm() {
@@ -207,7 +234,8 @@ export class PaymentComponent implements OnInit {
       supplierId: 0,
       amount: 0,
       paymentMethod: '',
-      paymentDate: ''
+      paymentDate: new Date().toISOString().split('T')[0]
     };
+    this.error = null;
   }
 }

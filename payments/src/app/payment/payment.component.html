@@ -1,38 +1,4 @@
-<!-- add new -->
-  <!-- 
-  <div class="payment-details">
-    <h3>Payment Details</h3>
-    <div class="filters">
-      <select [(ngModel)]="selectedMethod" (change)="filterPayments()">
-        <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
-      </select>
-      <input type="text" placeholder="Search the Date..." />
-    </div>
-  
-    <table>
-      <thead>
-        <tr>
-          <th>Payment ID</th>
-          <th>Supplier ID</th>
-          <th>Amount</th>
-          <th>Payment Method</th>
-          <th>Receipt</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let payment of filteredPayments">
-          <td>{{ payment.paymentId }}</td>
-          <td>{{ payment.supplierId }}</td>
-          <td>{{ payment.amount }}</td>
-          <td>{{ payment.paymentMethod }}</td>
-          <td>
-            <button class="download-btn">Download</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-   -->
+<!-- 
    <div class="payment-page">
     <h2 class="page-title">Payment Management</h2>
   
@@ -133,4 +99,114 @@
         </table>
       </div>
     </div>
-  </div>
+  </div> -->
+
+  <div class="payment-page">
+    <h2 class="page-title">Payment Management</h2>
+
+    <!-- Error message -->
+    <div *ngIf="error" class="error-message">
+        {{ error }}
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="loading-spinner">
+        Loading...
+    </div>
+  
+    <div class="summary-cards">
+      <div class="card light-blue">
+        <h2>{{ totalPayments }}</h2>
+        <p>Total Payments</p>
+      </div>
+      <div class="card light-yellow">
+        <h2>LKR {{ totalBankTransfer | number }}</h2>
+        <p>Total Bank Transfer</p>
+      </div>
+      <div class="card light-green">
+        <h2>LKR {{ totalCash | number }}</h2>
+        <p>Total Cash</p>
+      </div>
+      <div class="card light-orange">
+        <h2>LKR {{ totalCheques | number }}</h2>
+        <p>Total Cheque</p>
+      </div>
+    </div>
+  
+    <div class="payment-container">
+      <h3>Payment Details</h3>
+      
+      <div class="filters">
+        <div class="filter-group">
+          <label>Payment Method:</label>
+          <select [(ngModel)]="selectedMethod" (change)="filterPayments()">
+            <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Filter by Date:</label>
+          <input type="date" [(ngModel)]="selectedDate" (change)="filterPayments()" />
+        </div>
+      </div>
+  
+      <div class="manual-entry">
+        <h4>Add New Payment</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Supplier ID:</label>
+            <input type="number" [(ngModel)]="newPayment.supplierId" placeholder="Enter Supplier ID" />
+          </div>
+          <div class="form-group">
+            <label>Amount:</label>
+            <input type="number" [(ngModel)]="newPayment.amount" placeholder="Enter Amount" />
+          </div>
+          <div class="form-group">
+            <label>Payment Method:</label>
+            <select [(ngModel)]="newPayment.paymentMethod">
+              <option value="">Select Method</option>
+              <option *ngFor="let method of paymentMethods.slice(1)" [value]="method">{{ method }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Payment Date:</label>
+            <input type="date" [(ngModel)]="newPayment.paymentDate" />
+          </div>
+          <div class="form-group">
+            <button (click)="addPayment()" [disabled]="loading" class="add-btn">
+              {{ loading ? 'Adding...' : 'Add Payment' }}
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Payment ID</th>
+              <th>Supplier ID</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Payment Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let payment of filteredPayments">
+              <td>{{ payment.paymentId }}</td>
+              <td>{{ payment.supplierId }}</td>
+              <td>LKR {{ payment.amount | number }}</td>
+              <td>{{ payment.paymentMethod }}</td>
+              <td>{{ payment.paymentDate }}</td>
+              <td>
+                <button class="download-btn">Download</button>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && filteredPayments.length === 0">
+              <td colspan="6" class="no-data">No payments found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>

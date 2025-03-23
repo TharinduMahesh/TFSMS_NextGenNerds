@@ -10,24 +10,9 @@
   margin-top: 4rem;
 }
 
-.footer-wave {
-  position: absolute;
-  top: -100px;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.footer-wave svg {
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 100px;
-}
-
 .footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 2.5rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -58,7 +43,7 @@
   color: #c8e6c9;
 }
 
-.footer-section p, 
+.footer-section p,
 .footer-section a {
   display: flex;
   align-items: center;
@@ -93,7 +78,7 @@
 .address {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.1rem; /* Reduced gap for compactness */
 }
 
 .address i {
@@ -104,15 +89,35 @@
   padding-left: 1.5rem;
 }
 
-/* Newsletter section */
-.newsletter {
-  grid-column: span 2;
+/* Ensure the address and newsletter are side by side */
+.address-newsletter-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  width: 100%;
 }
 
+/* Adjust the newsletter section to align properly */
+.footer-section.newsletter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Ensure the address container takes only the space it needs */
+.address-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Newsletter section */
 .newsletter-form {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.8rem;
+  width: 100%;
+  max-width: 300px; /* Adjust the width as needed */
 }
 
 .newsletter-form input {
@@ -161,7 +166,8 @@
 .social-icons {
   display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
+  justify-content: flex-start;
 }
 
 .social-icon {
@@ -242,17 +248,13 @@
 
 /* Responsive adjustments */
 @media (max-width: 968px) {
-  .footer-wave {
-    top: -60px;
-    height: 60px;
+  .address-newsletter-container {
+    flex-direction: column;
+    align-items: center;
   }
 
-  .footer-wave svg {
-    height: 60px;
-  }
-
-  .newsletter {
-    grid-column: span 1;
+  .footer-section.newsletter {
+    align-items: center;
   }
 
   .footer-bottom {
@@ -273,17 +275,7 @@
   }
 
   .footer-content {
-    grid-template-columns: 1fr;
     gap: 2rem;
-  }
-
-  .footer-wave {
-    top: -40px;
-    height: 40px;
-  }
-
-  .footer-wave svg {
-    height: 40px;
   }
 
   .social-icons {

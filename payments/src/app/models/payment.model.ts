@@ -1,8 +1,8 @@
 export interface Payment {
-    paymentId: number;
-    supplierId: number;
-    amount: number;
-    paymentMethod: string;
-    paymentDate: string;
+    PaymentId: number;
+    SupplierId: number;
+    Amount: number;
+    PaymentMethod: string;
+    PaymentDate: string;
   }
   

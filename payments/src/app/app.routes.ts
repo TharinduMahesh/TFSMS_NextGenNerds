@@ -13,6 +13,7 @@ import { HeaderComponent } from './auth/header/header.component';
 import { FooterComponent } from './auth/footer/footer.component';
 import { AboutusComponent } from './auth/aboutus/aboutus.component';
 import { ContactComponent } from './auth/contact/contact.component';
+import { TransactionComponent } from './viewtransaction/viewtransaction.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -24,5 +25,6 @@ export const routes: Routes = [
   {path: 'header', component: HeaderComponent},
   {path: 'footer', component: FooterComponent},
   {path:'about-us', component: AboutusComponent},
-  {path:'contact-us', component:ContactComponent}
+  {path:'contact-us', component:ContactComponent},
+  {path :'viewtransaction', component: TransactionComponent}
 ];

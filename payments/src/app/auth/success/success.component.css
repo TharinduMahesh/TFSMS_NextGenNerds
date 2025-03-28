@@ -6,6 +6,7 @@
 
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .page-container {
@@ -14,12 +15,14 @@ body {
   flex-direction: column;
   background-color: #f8fdf6; /* Light green background for entire page */
   position: relative;
+  width: 100%;
+  overflow: hidden; /* Prevent content from causing overflow */
 }
 
 /* Add blurred tea leaf background */
 .page-container::before {
   content: '';
-  position: absolute;
+  position: fixed; /* Changed from absolute to fixed */
   top: 0;
   left: 0;
   right: 0;
@@ -27,7 +30,7 @@ body {
   background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100%;
+  background-size: 80%; /* Reduced from 100% to prevent overflow */
   opacity: 0.2;
   filter: blur(8px);
   z-index: 0;
@@ -37,11 +40,11 @@ body {
 /* Add a second, larger tea leaf in the corner */
 .page-container::after {
   content: '';
-  position: absolute;
+  position: fixed; /* Changed from absolute to fixed */
   bottom: -100px;
   right: -100px;
-  width: 600px;
-  height: 600px;
+  width: 500px; /* Reduced from 600px */
+  height: 500px; /* Reduced from 600px */
   background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
   background-repeat: no-repeat;
   background-position: center;
@@ -78,7 +81,6 @@ body {
   justify-content: center;
   padding: 3rem;
   position: relative;
-  overflow: hidden;
   z-index: 1; /* Ensure content is above the background */
 }
 
@@ -92,7 +94,6 @@ body {
   padding: 2rem;
   position: relative;
   z-index: 1;
-  /* Removed background color, backdrop filter, and border radius */
 }
 
 /* Left side with success icon */
@@ -150,7 +151,7 @@ body {
   line-height: 1.1;
   position: relative;
   display: inline-block;
-  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8); /* Add text shadow for better readability */
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
 }
 
 /* Add underline effect to heading */
@@ -170,7 +171,7 @@ body {
   color: #555;
   margin-bottom: 2.5rem;
   line-height: 1.5;
-  text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8); /* Add text shadow for better readability */
+  text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8);
 }
 
 /* Enhanced dashboard button */
@@ -313,12 +314,12 @@ body {
   
   /* Adjust background image size for mobile */
   .page-container::before {
-    background-size: 200%;
+    background-size: 150%;
   }
   
   .page-container::after {
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 250px;
     bottom: -50px;
     right: -50px;
   }

@@ -16,8 +16,6 @@ body {
   flex-direction: column;
 }
 
-
-
 /* Sign-in link styles */
 .sign-in {
   text-decoration: none;
@@ -269,11 +267,8 @@ body {
   height: 24px;
 }
 
-/* Enhanced Footer Styles */
-
-
-/* Show hamburger button on small screens */
-/* @media (max-width: 968px) {
+/* Responsive styles */
+@media (max-width: 968px) {
   .hamburger {
     display: block;
   }
@@ -288,6 +283,7 @@ body {
     background: white;
     padding: 1rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
   }
 
   .nav-links.show {
@@ -303,11 +299,43 @@ body {
     text-align: center;
   }
 
-  .nav-links {
-    z-index: 100;
-  }
-
   .hamburger {
     color: #56ae12;
   }
-} */
+  
+  /* Add these missing styles for responsive layout */
+  .auth-content {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .left-content {
+    padding-right: 0;
+    text-align: center;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
+  
+  .tea-leaf {
+    max-width: 350px;
+    margin: 1rem auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1rem;
+  }
+  
+  .left-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .left-content p {
+    font-size: 1rem;
+  }
+  
+  .tea-leaf {
+    max-width: 280px;
+  }
+}

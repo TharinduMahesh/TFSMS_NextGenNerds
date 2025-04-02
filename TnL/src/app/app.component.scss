@@ -1,0 +1,26 @@
+.app-container {
+  display: flex;
+  min-height: 95vh; /* Ensure full viewport height */
+  width: 98vw;      /* Full viewport width */
+}
+
+/* Sidebar Container (Fixed Position) */
+app-slidebar {
+  position: fixed;    /* Fix sidebar to viewport */
+  top: 0;
+  left: 0;
+  height: 100vh;      /* Full viewport height */
+  width: 25%;         /* Match your desired width */
+  z-index: 1000;      /* Ensure sidebar stays above content */
+  overflow-y: auto;   /* Allow sidebar to scroll internally if needed */
+}
+
+/* Content Area (Scrollable) */
+.content {
+  flex: 1;
+  margin-left: 25%;   /* Offset by sidebar width */
+  padding: 0%;
+  background-color: #ecf0f1;
+  overflow-y: auto;   /* Enable vertical scrolling */
+  min-height: 100vh;  /* Ensure full height */
+}

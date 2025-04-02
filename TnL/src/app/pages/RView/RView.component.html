@@ -1,0 +1,57 @@
+<div class="route-container">
+  <div class="top-bar">
+    <input type="text" placeholder="Search by Route ID" [value]="searchTerm()"
+      (input)="searchTerm.set($any($event.target).value)" />
+
+    <select [value]="selectedFilter()" (change)="selectedFilter.set($any($event.target).value)">
+      <option value="all">All</option>
+      <option value="short">Short Distance (20km)</option>
+      <option value="medium">Medium Distance (20-50km)</option>
+      <option value="long">Long Distance (> 50km)</option>
+    </select>
+
+    <div class="addr">
+      <button class="add-route" (click)="AddNewRoute()">Add New Route</button>
+    </div>
+    
+  </div>
+
+  <h3>Route List</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Route ID</th>
+        <th>Start Location</th>
+        <th>End Location</th>
+        <th>Distance (Km)</th>
+        <th>Collector ID</th>
+        <th>Vehicle ID</th>
+        <th>View</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (route of filteredRoutes(); track route.id) {
+      <tr>
+        <td>{{ route.id }}</td>
+        <td>{{ route.startLocation }}</td>
+        <td>{{ route.endLocation }}</td>
+        <td>{{ route.distance }}</td>
+        <td>{{ route.collectorId }}</td>
+        <td>{{ route.vehicleId }}</td>
+        <td>
+          <button (click)="onView(route.id)">📄</button>
+        </td>
+        <td>
+          <button (click)="onEdit(route.id)">✏️</button>
+        </td>
+        <td>
+          <button (click)="onDelete(route.id)">🗑</button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

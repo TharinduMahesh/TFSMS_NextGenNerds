@@ -1,0 +1,39 @@
+<div class="route-container">
+    <div class="top-bar">
+      <input type="text" placeholder="Search..by Route ID." />
+      <select>
+        <option>All</option>
+      </select>
+    <div class = "addr">
+      <button class="route-yield" (click)="AddNewRoute()">Add New</button>
+    </div>
+    </div>
+  
+    <h3>Yeild List</h3>
+  
+    <table>
+      <thead>
+        <tr>
+          <th>Route ID</th>
+          <th>Route Name</th>
+          <th>Collector ID</th>
+          <th>Vehicle ID</th>
+          <th >Collected Yield (Kg)</th>
+          <th>Golden Tips Present</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (route of routes; track route.id) {
+          <tr>
+            <td>{{ route.id }}</td>
+            <td>{{ route.routeName}}</td>
+            <td>{{ route.collectorId }}</td>
+            <td>{{ route.vehicleId }}</td>
+            <td>{{ route.collectedyield}}</td>
+            <td>{{ route.gtpresent }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  

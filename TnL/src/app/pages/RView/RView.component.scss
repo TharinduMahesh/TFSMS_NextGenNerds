@@ -1,0 +1,87 @@
+.route-container {
+  padding: 50px;
+  background: #F7F4F0;
+
+  .top-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
+
+    input {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    select {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .add-route {
+      background-color: #2ECC71;
+      color: white;
+      padding: 10px 30px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .route-yield {
+      background-color: #42A5F5;
+      color: white;
+      padding: 10px 30px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      margin: 0px 20px;
+    }
+  }
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: smaller;
+
+    th,
+    td {
+      padding: 18px;
+      text-align: left;
+      background-color: transparent;
+      /* Added to remove cell backgrounds */
+    }
+
+    th {
+      font-weight: bold;
+      color: #5555555b;
+    }
+
+
+    button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    tbody tr {
+      color: #333;
+      border-bottom: 2px solid #ddd;
+      background-color: white;
+    }
+  }
+
+  .addr {
+    margin-left: auto;
+
+  }
+}

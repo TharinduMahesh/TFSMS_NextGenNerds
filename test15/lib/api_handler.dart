@@ -9,8 +9,7 @@ class ApiHandler {
     try {
       final response = await http.post(
         Uri.parse(url),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-
+        headers: {'Content-Type': 'application/json'},
         body: json.encode(user.toJson()),
       );
 

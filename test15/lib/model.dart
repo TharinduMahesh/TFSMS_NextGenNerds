@@ -26,7 +26,6 @@ class User {
   );
 
   Map<String, dynamic> toJson() => {
-    "userId": userId,
     "quantity": quantity,
     "transportmethod": transportmethod,
     "paymentmethod": paymentmethod,

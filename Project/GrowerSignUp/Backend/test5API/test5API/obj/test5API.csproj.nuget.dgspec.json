@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\source\\repos\\test5API\\test5API\\test5API.csproj": {}
+    "C:\\Users\\User\\Desktop\\Tea\\TFSMS_NextGenNerds\\Project\\GrowerSignUp\\Backend\\test5API\\test5API\\test5API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\source\\repos\\test5API\\test5API\\test5API.csproj": {
+    "C:\\Users\\User\\Desktop\\Tea\\TFSMS_NextGenNerds\\Project\\GrowerSignUp\\Backend\\test5API\\test5API\\test5API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\test5API\\test5API\\test5API.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\Tea\\TFSMS_NextGenNerds\\Project\\GrowerSignUp\\Backend\\test5API\\test5API\\test5API.csproj",
         "projectName": "test5API",
-        "projectPath": "C:\\Users\\User\\source\\repos\\test5API\\test5API\\test5API.csproj",
+        "projectPath": "C:\\Users\\User\\Desktop\\Tea\\TFSMS_NextGenNerds\\Project\\GrowerSignUp\\Backend\\test5API\\test5API\\test5API.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\test5API\\test5API\\obj\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\Tea\\TFSMS_NextGenNerds\\Project\\GrowerSignUp\\Backend\\test5API\\test5API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

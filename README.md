@@ -78,7 +78,7 @@ The system is designed to support the end-to-end operations of a tea factory, of
 
 ---
 
-## 📸 Screenshots
+## 📸 Screens
 Figma UI link (https://www.figma.com/design/DWnJEQv2zgP056r6UKCRSX/NextGenNerds?node-id=36-4&p=f&t=SazpzsVaC8tQbpjz-0)
 
 

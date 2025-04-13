@@ -44,5 +44,5 @@ CREATE TABLE GrowerCreateAccount (
     GrowerDOB DATE,
     GrowerPhoneNum NVARCHAR(20),
     MoneyMethod NVARCHAR(50),
-    GrowerId INT NOT NULL \
+    GrowerId INT NOT NULL 
 );

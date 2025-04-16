@@ -18,6 +18,8 @@ export class RytrackComponent implements OnInit {
   isLoading = signal(false);
   error = signal<string | null>(null);
   isModalOpen = signal(false);
+  routeToView = signal<YieldList | null>(null);
+
 
   filteredYieldLists = computed(() => {
     return this.yieldLists().filter(yieldList => {
@@ -77,14 +79,16 @@ export class RytrackComponent implements OnInit {
   onView(): void {
     const route = this.selectedRoute();
     if (route?.routeId) {
+        this.routeToView.set(route);
         this.isModalOpen.set(true);
         console.log('Viewing route:', route.routeId);
     }
+
   }
 
   closeModal(): void {
     this.isModalOpen.set(false);
-    this.selectedRoute.set(null);
+    this.routeToView.set(null);
   }
   //view logic end
 

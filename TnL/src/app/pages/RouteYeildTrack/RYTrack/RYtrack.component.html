@@ -95,9 +95,9 @@
   </div>
   @if (isModalOpen()) {
     <app-ryview
-      [route]="selectedRoute()!" 
-      (close)="closeModal()">
-    </app-ryview>
+      [route]="routeToView()!"
+      (close)="closeModal()"
+    ></app-ryview>
   }
   
 </div>

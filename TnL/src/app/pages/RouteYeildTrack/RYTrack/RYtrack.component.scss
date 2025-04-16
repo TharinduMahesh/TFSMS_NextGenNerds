@@ -20,13 +20,14 @@
       }
   
       .add-route {
+        margin-left: auto;
         background-color: #2ECC71;
         color: white;
         padding: 10px 30px;
         border-radius: 5px;
         border: none;
         cursor: pointer;
-        margin-left: 20px;
+        
       }
   
       .route-yield {
@@ -81,4 +82,39 @@
       width: 100%;
       margin-left: 259px;
     }
+
+    .route-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    
+      h2 {
+        margin: 0;
+      }
+    
+      .caption-actions {
+        display: flex;
+        gap: 0.5rem;
+    
+        button {
+          padding: 0.4rem 0.8rem;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+    
+          &:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+    
+    .route-list table tr.selected {
+      background-color: rgba(0, 123, 255, 0.15); // Soft Power Blue
+    }
+    
   }

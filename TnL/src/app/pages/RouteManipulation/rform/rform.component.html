@@ -1,0 +1,58 @@
+<div class="form-container">
+    <h2>{{ formData().id ? 'Edit Route' : 'Add New Route' }}</h2>
+    
+    <form (submit)="onSubmit($event)">
+      <div class="form-group">
+        <label for="routeId">Route ID</label>
+        <input type="text" id="routeId" 
+               [value]="formData().id"
+               (input)="handleInput('id', $event)"
+               required>
+      </div>
+  
+      <div class="form-group">
+        <label for="startLocation">Start Location</label>
+        <input type="text" id="startLocation"
+               [value]="formData().startLocation"
+               (input)="handleInput('startLocation', $event)"
+               required>
+      </div>
+  
+      <div class="form-group">
+        <label for="endLocation">End Location</label>
+        <input type="text" id="endLocation"
+               [value]="formData().endLocation"
+               (input)="handleInput('endLocation', $event)"
+               required>
+      </div>
+  
+      <div class="form-group">
+        <label for="distance">Distance (km)</label>
+        <input type="number" id="distance"
+               [value]="formData().distance"
+               (input)="handleInput('distance', $event)"
+               required>
+      </div>
+  
+      <div class="form-group">
+        <label for="collectorId">Collector ID</label>
+        <input type="text" id="collectorId"
+               [value]="formData().collectorId"
+               (input)="handleInput('collectorId', $event)"
+               required>
+      </div>
+  
+      <div class="form-group">
+        <label for="vehicleId">Vehicle ID</label>
+        <input type="text" id="vehicleId"
+               [value]="formData().vehicleId"
+               (input)="handleInput('vehicleId', $event)"
+               required>
+      </div>
+  
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+  </div>

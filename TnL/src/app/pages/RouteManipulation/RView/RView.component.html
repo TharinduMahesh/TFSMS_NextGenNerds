@@ -1,0 +1,70 @@
+<div class="route-container">
+  <div class="top-bar">
+    <input
+      type="text"
+      placeholder="Search routes..."
+      [value]="searchTerm()"
+      (input)="searchTerm.set($any($event.target).value)"
+/>
+
+    <select
+      [value]="selectedFilter()"
+      (change)="selectedFilter.set($any($event.target).value)"
+    >
+      <option value="all">All Routes</option>
+      <option value="short">Short Distance (<20km)</option>
+      <option value="medium">Medium Distance (20-50km)</option>
+      <option value="long">Long Distance (>50km)</option>
+    </select>
+
+    <button class="add-route" (click)="addNewRoute()">
+      + Add New Route
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">Loading routes...</div>
+  }
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="route-list">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Start Location</th>
+          <th>End Location</th>
+          <th>Distance (km)</th>
+          <th>Collector</th>
+          <th>Vehicle</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (route of filteredRoutes(); track trackById($index, route)) {
+          <tr>
+            <td>{{ route.id }}</td>
+            <td>{{ route.rName }}</td>
+            <td>{{ route.startLocation }}</td>
+            <td>{{ route.endLocation }}</td>
+            <td>{{ route.distance }}</td>
+            <td>{{ route.collectorId }}</td>
+            <td>{{ route.vehicleId }}</td>
+            <td class="actions">
+              <button (click)="onView(route.id)">View</button>
+              <button (click)="onEdit(route.id)">Edit</button>
+              <button (click)="onDelete(route.id)">Delete</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="8">No routes found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

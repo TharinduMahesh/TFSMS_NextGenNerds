@@ -1,0 +1,103 @@
+<!-- src/app/components/rytrack/rytrack.component.html -->
+<div class="route-container">
+  <div class="top-bar">
+    <input
+      type="text"
+      placeholder="Search routes..."
+      [value]="searchTerm()"
+      (input)="searchTerm.set($any($event.target).value)"
+    />
+
+    <select
+      [value]="selectedFilter()"
+      (change)="selectedFilter.set($any($event.target).value)"
+    >
+      <option value="all">All Routes</option>
+      <option value="short">(0 - 50 kg)</option>
+      <option value="medium">(50 - 100 Kg )</option>
+      <option value="long">(100 - 200 Kg ) </option>
+      <option value="long">(200 - 400 Kg)</option>
+    </select>
+
+    <button class="add-route" (click)="addNewRoute()">
+      + Add New Route
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">Loading routes...</div>
+  }
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="route-list">
+    <div class="route-caption">
+      <h2>Route Yield</h2>
+
+      <div class="caption-actions">
+        <!-- View Button with Tooltip Wrapper -->
+        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to View Route'">
+          <button (click)="onView()" [disabled]="!selectedRoute()">View</button>
+        </div>
+      
+        <!-- Edit Button -->
+        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to Edit Route'">
+        <button (click)="onEdit()" [disabled]="!selectedRoute()">Edit</button>
+        </div>
+
+        <!-- Delete Button -->
+        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to Delete Route'">
+          <button
+            (click)="selectedRoute() ? deleteYield(selectedRoute()!.routeId) : null"
+            [disabled]="!selectedRoute()"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+      
+
+
+    </div>    
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>collected Yield(kg)</th>
+          <th>golden Tips Present</th>
+          <th>Collector Id</th>
+          <th>Vehicle Id</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (route of filteredYieldLists(); track trackById($index, route)) {
+          <tr 
+            (click)="onSelectRoute(route)" 
+            [class.selected]="selectedRoute()?.routeId === route.routeId"
+          >
+            <td>{{ route.routeId }}</td>
+            <td>{{ route.routeName }}</td>
+            <td>{{ route.collected_Yield }}</td>
+            <td>{{ route.golden_Tips_Present}}</td>
+            <td>{{ route.collectorID }}</td>
+            <td>{{ route.vehicalID }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6">No routes found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (isModalOpen()) {
+    <app-ryview
+      [route]="selectedRoute()!" 
+      (close)="closeModal()">
+    </app-ryview>
+  }
+  
+</div>

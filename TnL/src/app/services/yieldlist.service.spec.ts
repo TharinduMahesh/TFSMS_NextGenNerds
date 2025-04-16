@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FmsubService } from './fmsub.service';
+import { YieldlistService } from './yieldlist.service';
 
-describe('FmsubService', () => {
-  let service: FmsubService;
+describe('YieldlistService', () => {
+  let service: YieldlistService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FmsubService);
+    service = TestBed.inject(YieldlistService);
   });
 
   it('should be created', () => {

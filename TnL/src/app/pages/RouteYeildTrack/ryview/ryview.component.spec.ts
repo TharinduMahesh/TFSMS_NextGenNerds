@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RouetyieldComponent } from './rouetyield.component';
+import { RyviewComponent } from './ryview.component';
 
-describe('RouetyieldComponent', () => {
-  let component: RouetyieldComponent;
-  let fixture: ComponentFixture<RouetyieldComponent>;
+describe('RyviewComponent', () => {
+  let component: RyviewComponent;
+  let fixture: ComponentFixture<RyviewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouetyieldComponent]
+      imports: [RyviewComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RouetyieldComponent);
+    fixture = TestBed.createComponent(RyviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

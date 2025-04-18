@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goo/pages/constant.dart';
 import 'package:goo/pages/notifications_page.dart';
-import 'package:goo/pages/orderpage.dart';
 import 'package:goo/pages/payments_page.dart';
 
 class SupplierHomePage extends StatefulWidget {
@@ -54,16 +53,16 @@ class _SupplierHomePageState extends State<SupplierHomePage> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white,
-        onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HarvestPage()),);
-                  },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add,color: Colors.black,size: 35,),
-      ),
+      //   floatingActionButton: FloatingActionButton(
+      //     backgroundColor: Colors.white,
+      //   onPressed: () {
+      //               Navigator.push(context, MaterialPageRoute(builder: (context) => HarvestPage()),);
+      //             },
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add,color: Colors.black,size: 35,),
+      // ),
       
-      bottomNavigationBar: navigationBar(),
+      // bottomNavigationBar: navigationBar(),
     );
   }
 }

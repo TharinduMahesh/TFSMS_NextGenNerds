@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:goo/pages/sign_in_page.dart';
+import 'package:goo/pages/supplier_home_page.dart';
 
 void main(){
   runApp(MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Harvest App',
       theme: ThemeData(primarySwatch: Colors.green),
-      home: SignInPage(), // Ensure HarvestPage is defined
+      home: SupplierHomePage(), // Ensure HarvestPage is defined
     );
   }
 }

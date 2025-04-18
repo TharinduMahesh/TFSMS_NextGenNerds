@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "cFRIbVI4pXUid3yDetqktWnLV/KnM1HiEc5aaGOG984=",
+  "Source": "harvestbackend",
+  "BasePath": "_content/harvestbackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

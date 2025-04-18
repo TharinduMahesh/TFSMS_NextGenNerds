@@ -1,0 +1,18 @@
+[
+  {
+    "ContainingType": "HarvestController",
+    "Method": "PostHarvest",
+    "RelativePath": "api/Harvest",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "entry",
+        "Type": "harvestbackend.Modles.HarvestEntity",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

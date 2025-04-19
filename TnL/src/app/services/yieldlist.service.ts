@@ -28,5 +28,9 @@ export class RytrackService {
   deleteYieldList(id: number): Observable<void> {
     return this.http.delete<void>(`https://localhost:7263/api/rytrack/${id}`);
   }
+
+  updateYieldList(id: number, updated: YieldList): Observable<YieldList> {
+    return this.http.put<YieldList>(`${this.apiUrl}/${id}`, updated);
+  }
   
 }

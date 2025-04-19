@@ -1,0 +1,35 @@
+<div class="edit-modal">
+    <h2>Edit Route Yield</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <label>
+        Route Name:
+        <input formControlName="routeName" type="text" />
+      </label>
+      <label>
+        Collected Yield (kg):
+        <input formControlName="collected_Yield" type="number" />
+      </label>
+      <label>
+        Golden Tips Present:
+        <select formControlName="golden_Tips_Present">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </label>
+      
+      <label>
+        Collector ID:
+        <input formControlName="collectorID" type="number" />
+      </label>
+      <label>
+        Vehicle ID:
+        <input formControlName="vehicalID" type="number" />
+      </label>
+  
+      <div class="form-buttons">
+        <button type="submit">Save Changes</button>
+        <button type="button" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+  

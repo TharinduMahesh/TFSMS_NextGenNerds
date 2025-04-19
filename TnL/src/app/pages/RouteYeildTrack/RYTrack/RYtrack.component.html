@@ -99,5 +99,11 @@
       (close)="closeModal()"
     ></app-ryview>
   }
+  @if (isEditModalOpen()) {
+    <app-ryedit
+      [route]="formModel()!"
+      (close)="isEditModalOpen.set(false); fetchYieldLists();"
+    ></app-ryedit>
+  }
   
 </div>

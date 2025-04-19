@@ -3,6 +3,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { RytrackService } from '../../../services/yieldlist.service';
 import { YieldList } from '../../../models/rview.model';
 import { RYViewComponent } from '../ryview/ryview.component';
+import { RyeditComponent } from '../ryedit/ryedit.component';
 
 @Component({
   selector: 'app-rytrack',
@@ -17,8 +18,15 @@ export class RytrackComponent implements OnInit {
   yieldLists = signal<YieldList[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  isModalOpen = signal(false);
+
+  isModalOpen = signal(false);   //signals for view
   routeToView = signal<YieldList | null>(null);
+
+  routeToEdit = signal<YieldList | null>(null);  //signals for edit 
+  isEditModalOpen = signal(false);
+  formModel = signal<YieldList | null>(null);
+
+
 
 
   filteredYieldLists = computed(() => {
@@ -92,13 +100,18 @@ export class RytrackComponent implements OnInit {
   }
   //view logic end
 
+  //edit logic begin
   onEdit(): void {
     const route = this.selectedRoute();
-    if (route?.routeId) {
-      //edit logic here
-      console.log('Editing route:', route.routeId);
+    if (route) {
+      this.formModel.set(route); // <- make sure to set this
+      this.isEditModalOpen.set(true);
     }
   }
+  
+  
+  //edit end
+  
 
   deleteYield(id: number): void {
     if (confirm('Are you sure you want to delete this entry?')) {

@@ -9,11 +9,13 @@ import { AboutusComponent } from './components/aboutus/aboutus.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { MainLayoutComponent } from './components/layouts/main-layout/main-layout.component';
 import { authGuard } from './shared/auth.guard';
+import { HomeComponent } from './components/home/home.component';
 // Uncomment if you plan to use TransactionComponent
 // import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
   { path: 'sign-in', component: SignInComponent },
   { path: 'sign-up', component: SignUpComponent },
   { path: 'header', component: HeaderComponent },

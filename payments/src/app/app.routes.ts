@@ -4,16 +4,16 @@
 
 
 import { Routes } from '@angular/router';
-import { SignInComponent } from './auth/sign-in/sign-in.component';
-import { SignUpComponent } from './auth/sign-up/sign-up.component';
-import { PaymentComponent } from './payment/payment.component';
-import { SuccessComponent } from './auth/success/success.component';
+import { SignInComponent } from './components/user/sign-in/sign-in.component';
+import { SignUpComponent } from './components/user/sign-up/sign-up.component';
+import { PaymentComponent } from './components/payment/payment.component';
+import { SuccessComponent } from './components/success/success.component';
 import { HomeComponent } from './auth/home/home.component';
-import { HeaderComponent } from './auth/header/header.component';
-import { FooterComponent } from './auth/footer/footer.component';
-import { AboutusComponent } from './auth/aboutus/aboutus.component';
-import { ContactComponent } from './auth/contact/contact.component';
-import { TransactionComponent } from './viewtransaction/viewtransaction.component';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { AboutusComponent } from './components/aboutus/aboutus.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -27,4 +27,4 @@ export const routes: Routes = [
   {path:'about-us', component: AboutusComponent},
   {path:'contact-us', component:ContactComponent},
   {path :'viewtransaction', component: TransactionComponent}
-];
+]; 

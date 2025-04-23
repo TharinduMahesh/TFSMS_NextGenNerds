@@ -1,8 +1,8 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import { Payment } from '../models/payment.model';
-import { PaymentService } from '../services/payment.service';
+import { Payment } from '../../models/payment.model';
+import { PaymentService } from '../../shared/services/payment.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';

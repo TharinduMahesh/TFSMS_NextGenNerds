@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
-import { Transaction } from '../models/transaction.model';
-import { TransactionService } from '../services/transaction.service';
+import { Transaction } from '../../models/transaction.model';
+import { TransactionService } from '../../shared/services/transaction.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';

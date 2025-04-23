@@ -1,0 +1,76 @@
+<div class="report-container">
+  <h1 class="dashboard-title">Report</h1>
+
+  <!-- Filter Reports Section -->
+  <div class="filter-section">
+    <h2 class="filter-section-title">Filter Reports</h2>
+    <div class="filters-container">
+      <div class="filter-item">
+        <label class="filter-label">Dispatch ID:</label>
+        <select [(ngModel)]="selectedDispatchID" (change)="filterReports()">
+          <option value="All Dispatch IDs">All Dispatch IDs</option>
+          <option *ngFor="let id of dispatchIDs" [value]="id">{{ id }}</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label class="filter-label">Yield:</label>
+        <select [(ngModel)]="selectedYield" (change)="filterReports()">
+          <option value="All Yield">All Yield</option>
+          <option *ngFor="let yield of yields" [value]="yield">{{ yield }}</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label class="filter-label">Status:</label>
+        <select [(ngModel)]="selectedStatus" (change)="filterReports()">
+          <option value="All Statuses">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label class="filter-label">Date:</label>
+        <input type="date" [(ngModel)]="selectedDate" (change)="filterReports()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Details Section -->
+  <div class="report-details-section">
+    <div class="report-details-header">
+      <h2 class="report-details-title">Report Details</h2>
+      <button class="options-button">...</button>
+    </div>
+
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Dispatch ID</th>
+          <th>Seal Number</th>
+          <th>Bag Count</th>
+          <th>Vehicle Number</th>
+          <th>Driver NIC</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of filteredReports">
+          <td>{{ report.dispatchID }}</td>
+          <td>{{ report.yield }}</td>
+          <td>{{ report.bagCount }}</td>
+          <td>{{ report.vehicleNumber }}</td>
+          <td>{{ report.driverNIC }}</td>
+          <td>{{ report.date }}</td>
+          <td [ngClass]="getStatusClass(report.status)">{{ report.status }}</td>
+          <td>
+            <button (click)="editReport(report)">Edit</button>
+            <button (click)="deleteReport(report.dispatchID)">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredReports.length === 0">
+          <td colspan="8" class="no-data">No data available for the selected filters</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

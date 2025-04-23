@@ -1,0 +1,89 @@
+<div class="claims-container">
+  <h1 class="claims-title">Claims and Returns</h1>
+
+  <!-- Summary Section -->
+  <div class="summary">
+    <div class="summary-box total-returns">
+      <h2>{{ totalReturns }} KILOS</h2>
+      <p>Total Returns</p>
+    </div>
+    <div class="summary-box total-claims-approved">
+      <h2>{{ totalClaimsApproved }} CLAIMS</h2>
+      <p>Total Claims Approved</p>
+    </div>
+    <div class="summary-box pending-claims">
+      <h2>{{ totalClaimsPending }} CLAIMS</h2>
+      <p>Pending Claims</p>
+    </div>
+    <div class="summary-box total-claims-rejected">
+      <h2>{{ totalClaimsRejected }} CLAIMS</h2>
+      <p>Total Claims Rejected</p>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <h2 class="filter-section-title">Filter Claims</h2>
+
+    <div class="filters-container">
+      <div class="filter-item">
+        <label class="filter-label">Season:</label>
+        <select [(ngModel)]="selectedSeason" (change)="filterClaims()">
+          <option value="All Seasons">All Seasons</option>
+          <option value="Season01">Season 01</option>
+          <option value="Season02">Season 02</option>
+          <option value="Season03">Season 03</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Status:</label>
+        <select [(ngModel)]="selectedStatus" (change)="filterClaims()">
+          <option value="All Statuses">All Statuses</option>
+          <option value="Approved">Approved</option>
+          <option value="Pending">Pending</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Start Date:</label>
+        <input type="date" [(ngModel)]="selectedStartDate" (change)="filterClaims()">
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">End Date:</label>
+        <input type="date" [(ngModel)]="selectedEndDate" (change)="filterClaims()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Claims Details Section -->
+  <div class="claims-details-section">
+    <table class="claims-table">
+      <thead>
+        <tr>
+          <th>Season</th>
+          <th>Garden Mark</th>
+          <th>Invoice</th>
+          <th>Return Date</th>
+          <th>Kilos Returned</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let claim of filteredClaims">
+          <td>{{ claim.season }}</td>
+          <td>{{ claim.gardenMark }}</td>
+          <td>{{ claim.invoice }}</td>
+          <td>{{ claim.returnDate }}</td>
+          <td>{{ claim.kilosReturned }}</td>
+          <td [ngClass]="getStatusClass(claim.status)">{{ claim.status }}</td>
+        </tr>
+        <tr *ngIf="filteredClaims.length === 0">
+          <td colspan="6" class="no-data">No data available for the selected filters</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

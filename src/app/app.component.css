@@ -1,0 +1,137 @@
+/* Updated app.component.css */
+
+.app-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  /* Make sidebar fixed width */
+  app-sidebar {
+    width: 250px;
+    min-width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    background-color: #b8e4c9; /* Light green color from your screenshot */
+    z-index: 1001; /* Higher than navbar */
+  }
+  
+  /* Fix navigation bar to not overlap sidebar */
+  .top-nav {
+    background-color: #ffffff;
+    overflow: hidden;
+    position: fixed;
+    width: calc(100% - 250px); /* Subtract sidebar width */
+    top: 0;
+    left: 250px; /* Move it after the sidebar */
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    height: 60px;
+  }
+  
+  .nav-content {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+  
+  /* Center navigation links and improve typography */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* Take full width to allow center alignment */
+    margin: 0;
+  }
+  
+  nav a {
+    color: #333333;
+    font-weight: 600; /* Make text bolder */
+    font-size: 16px; /* Increase font size */
+    text-decoration: none;
+    margin: 0 30px; /* Even spacing between items */
+    position: relative;
+    padding: 8px 0;
+    transition: color 0.3s;
+    letter-spacing: 0.5px; /* Slightly improve readability */
+  }
+  
+  nav a:hover {
+    color: #4CAF50;
+    font-size: larger;
+  }
+  
+  nav a.active {
+    color: #4CAF50;
+  }
+  
+  nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #4CAF50;
+  }
+  
+  /* Adjust search bar positioning */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Push to the right */
+  }
+  
+  .search-bar input {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    width: 200px;
+    background-color: #f5f5f5;
+    font-size: 14px;
+  }
+  
+  .search-bar input:focus {
+    outline: none;
+  }
+  
+  .search-bar button {
+    background: transparent;
+    border: none;
+    color: #9E9E9E;
+    cursor: pointer;
+    margin-left: 10px;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .search-bar button:last-child {
+    color: #333333;
+  }
+  
+  /* Adjust main content area to not overlap with navbar and sidebar */
+  .content {
+    margin-left: 250px; /* Equal to sidebar width */
+    margin-top: 60px; /* Equal to navbar height */
+    padding: 20px;
+    background-color: #f5f5f5;
+    width: calc(100% - 250px);
+    overflow-y: auto;
+    min-height: calc(100vh - 60px);
+  }
+
+  .search-bar button:hover{
+    color: #4CAF50;
+  }

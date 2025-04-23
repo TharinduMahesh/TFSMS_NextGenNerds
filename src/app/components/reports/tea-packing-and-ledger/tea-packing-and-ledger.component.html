@@ -1,0 +1,100 @@
+<div class="ledger-container">
+  <h1 class="ledger-title">Tea Packing Ledger</h1>
+
+  <!-- Summary Section -->
+  <div class="summary">
+    <div class="summary-box total-kilos">
+      <h2>{{ totalKilos }} KILOS</h2>
+      <p>Total Kilos Packed</p>
+    </div>
+    <div class="summary-box total-sales">
+      <h2>{{ totalSales }} SALES</h2>
+      <p>Total Sales</p>
+    </div>
+    <div class="summary-box total-cash">
+      <h2>{{ totalCashSales }} SALES</h2>
+      <p>Cash Sales</p>
+    </div>
+    <div class="summary-box total-card">
+      <h2>{{ totalCardSales }} SALES</h2>
+      <p>Card Sales</p>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <h2 class="filter-section-title">Filter Records</h2>
+
+    <div class="filters-container">
+      <div class="filter-item">
+        <label class="filter-label">Sale ID:</label>
+        <select [(ngModel)]="selectedSaleID" (change)="filterRecords()">
+          <option value="All Sale IDs">All Sale IDs</option>
+          <option value="S-001">S-001</option>
+          <option value="S-002">S-002</option>
+          <option value="S-003">S-003</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Transaction Type:</label>
+        <select [(ngModel)]="selectedTransactionType" (change)="filterRecords()">
+          <option value="All Types">All Types</option>
+          <option value="Cash">Cash</option>
+          <option value="Card">Card</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Status:</label>
+        <select [(ngModel)]="selectedStatus" (change)="filterRecords()">
+          <option value="All Statuses">All Statuses</option>
+          <option value="Completed">Completed</option>
+          <option value="Pending">Pending</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Start Date:</label>
+        <input type="date" [(ngModel)]="selectedStartDate" (change)="filterRecords()">
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">End Date:</label>
+        <input type="date" [(ngModel)]="selectedEndDate" (change)="filterRecords()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Ledger Details Section -->
+  <div class="ledger-details-section">
+    <table class="ledger-table">
+      <thead>
+        <tr>
+          <th>Sale ID</th>
+          <th>Buyer Name</th>
+          <th>Kilos Sold</th>
+          <th>Sold Price (Kg)</th>
+          <th>Transaction Type</th>
+          <th>Sale Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of filteredRecords">
+          <td>{{ record.saleId }}</td>
+          <td>{{ record.buyerName }}</td>
+          <td>{{ record.kilosSold }}</td>
+          <td>{{ record.soldPriceKg }}</td>
+          <td>{{ record.transactionType }}</td>
+          <td>{{ record.saleDate }}</td>
+          <td [ngClass]="getStatusClass(record.status)">{{ record.status }}</td>
+        </tr>
+        <tr *ngIf="filteredRecords.length === 0">
+          <td colspan="7" class="no-data">No data available for the selected filters</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

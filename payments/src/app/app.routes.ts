@@ -13,17 +13,35 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AboutusComponent } from './components/aboutus/aboutus.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { MainLayoutComponent } from './components/layouts/main-layout/main-layout.component';
+import { authGuard } from './shared/auth.guard';
 // import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
   { path: 'sign-in', component: SignInComponent },
   { path: 'sign-up', component: SignUpComponent },
-  { path: 'payments', component: PaymentComponent },
-  {path: 'success', component: SuccessComponent},
   {path: 'header', component: HeaderComponent},
   {path: 'footer', component: FooterComponent},
   {path:'about-us', component: AboutusComponent},
   {path:'contact-us', component:ContactComponent},
   // {path :'viewtransaction', component: TransactionComponent}
+
+  {
+    path: '',
+      component:MainLayoutComponent,
+      canActivate: [authGuard],
+    canActivateChild: [authGuard],
+      children: [
+
+
+        { path:'dashboard',component: SuccessComponent },
+        { path: 'payments', component: PaymentComponent },
+
+      
+        
+      
+        
+      ]
+  }
 ]; 

@@ -8,13 +8,12 @@ import  {AbstractControl, ReactiveFormsModule, Validators} from '@angular/forms'
 import { AuthService } from '../../../shared/services/auth.service';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent,FooterComponent,ReactiveFormsModule,RouterLink],
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent,FooterComponent,ReactiveFormsModule,],
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css']
 })

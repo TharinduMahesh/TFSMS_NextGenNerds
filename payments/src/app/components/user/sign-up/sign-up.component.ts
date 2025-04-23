@@ -10,13 +10,12 @@ import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from '../../../shared/services/auth.service';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
 import { FirstKeyPipe } from '../../../shared/pipes/first-key-pipe.pipe';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, FooterComponent,RouterLink,ReactiveFormsModule,FirstKeyPipe],
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, FooterComponent,ReactiveFormsModule,FirstKeyPipe],
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']
 })

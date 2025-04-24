@@ -9,7 +9,7 @@ import  {TOKEN_KEY} from '../constans';
 export class AuthService {
 
   constructor(private http: HttpClient) {}
-  baseUrl = 'http://localhost:5183/api';
+  baseUrl = 'http://localhost:5274/api';
 
   createUser(formData: any) {
      return this.http.post<any>(this.baseUrl + '/signup', formData)

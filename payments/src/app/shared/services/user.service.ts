@@ -12,7 +12,7 @@ export class UserService {
     private authService: AuthService
  ) { }
 
- baseUrl = 'http://localhost:5183/api';
+ baseUrl = 'http://localhost:5274/api';
 
  getUserProfile() {
    return this.http.get(this.baseUrl + '/userprofile')

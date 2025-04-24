@@ -12,11 +12,11 @@ export class AuthService {
   baseUrl = 'http://localhost:5274/api';
 
   createUser(formData: any) {
-     return this.http.post<any>(this.baseUrl + '/signup', formData)
+     return this.http.post<any>(this.baseUrl + '/sign-up', formData)
   } 
 
   signin(formData: any) {
-    return this.http.post<any>(this.baseUrl + '/signin', formData)
+    return this.http.post<any>(this.baseUrl + '/sign-in', formData)
  } 
   
  isLoggedIn(){

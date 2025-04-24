@@ -23,7 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                 alert('Session expired. Please login again.');
               }, 1000);
             
-              router.navigate(['/login']);
+              router.navigate(['/sign-in']);
             }
             else if(err.status == 403) {//user does not have access to the resource
               alert('Ooops! ,You do not have access to this resource.');

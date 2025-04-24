@@ -34,7 +34,7 @@ export class SuccessComponent {
 
    onLogout() {
     this.authService.deletetoken();
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/sign-in');
    }
 
   menuOpen = false;

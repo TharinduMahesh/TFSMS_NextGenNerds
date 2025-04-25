@@ -19,6 +19,9 @@
     </ng-container>
     
     <ng-template #loggedIn>
+      <a class="user-name" routerLink="/dashboard" *ngIf="firstName">
+        <i class="fas fa-user-circle"></i> {{firstName}}
+      </a>
       <a (click)="logout()" class="sign-in">Logout</a>
     </ng-template>
   </div>

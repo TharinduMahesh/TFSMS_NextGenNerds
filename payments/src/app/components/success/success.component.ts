@@ -1,47 +1,65 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
-import { Router } from '@angular/router';
-// import { HideIfClaimsNotMetDirective } from '../../shared/directives/hide-if-claims-not-met.directive';
-// import { claimReq } from '../../shared/claimReq';
-import { AuthService } from '../../shared/services/auth.service';
-import { UserService } from '../../shared/services/user.service';
+import { Component, type OnInit } from "@angular/core"
+import { CommonModule } from "@angular/common"
+import { FormsModule } from "@angular/forms"
+import { RouterModule } from "@angular/router"
+import { HeaderComponent } from "../header/header.component"
+import { FooterComponent } from "../footer/footer.component"
+import  { Router } from "@angular/router"
+import  { AuthService } from "../../shared/services/auth.service"
+import { UserService } from "../../shared/services/user.service"
 
 @Component({
-  selector: 'app-success',
+  selector: "app-success",
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, FooterComponent],
-  templateUrl: './success.component.html',
-  styleUrl: './success.component.css'
+  templateUrl: "./success.component.html",
+  styleUrls: ["./success.component.css"],
 })
-export class SuccessComponent {
+export class SuccessComponent implements OnInit {
+  firstName = ""
+  lastName = ""
+  isLoading = true
+  error: string | null = null
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private authService: AuthService,
-    private userService: UserService
-  ) { }
-  FirstName: string = '';
-  // claimReq = claimReq
+    private userService: UserService,
+  ) {}
 
   ngOnInit(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigateByUrl("/sign-in")
+      return
+    }
+
     this.userService.getUserProfile().subscribe({
-      next: (res: any) => this.FirstName = res.name,
-      error: (err:any) => console.log('error while retriving user profile:\n' + err)
-    });
+      next: (res: any) => {
+        this.firstName = res.firstName || ""
+        this.lastName = res.lastName || ""
+        this.isLoading = false
+      },
+      error: (err: any) => {
+        console.log("Error while retrieving user profile:\n", err)
+        this.error = "Unable to load your profile. Please try again later."
+        this.isLoading = false
+      },
+    })
   }
 
-   onLogout() {
-    this.authService.deletetoken();
-    this.router.navigateByUrl('/sign-in');
-   }
+  onLogout() {
+    this.authService.deletetoken()
+    this.router.navigateByUrl("/sign-in")
+  }
 
-  menuOpen = false;
+  navigateToDashboard() {
+    this.router.navigateByUrl("/dashboard")
+  }
+
+  menuOpen = false
 
   toggleMenu(): void {
-    console.log("Hamburger menu clicked!");
-    this.menuOpen = !this.menuOpen;
+    console.log("Hamburger menu clicked!")
+    this.menuOpen = !this.menuOpen
   }
-
-       }
+}

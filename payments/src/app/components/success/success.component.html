@@ -10,10 +10,16 @@
       </div>
       <div class="success-text">
         <h1>Welcome Back!</h1>
-        <h1>{{FirstName}} </h1>
-
+        <h1 *ngIf="firstName">{{firstName}} {{lastName}}</h1>
+        <div *ngIf="isLoading" class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading your profile...</p>
+        </div>
+        <div *ngIf="error" class="error-message">
+          {{error}}
+        </div>
         <p>You have been signed in successfully.</p>
-        <a routerLink="/dashboard" class="dashboard-btn">Dashboard</a>
+        <a (click)="navigateToDashboard()" class="dashboard-btn">Go to Dashboard</a>
       </div>
     </div>
   </div>

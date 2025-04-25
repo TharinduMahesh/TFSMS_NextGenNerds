@@ -5,7 +5,8 @@
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
   overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
@@ -21,13 +22,13 @@ body {
 
 /* Add blurred tea leaf background */
 .page-container::before {
-  content: '';
+  content: "";
   position: fixed; /* Changed from absolute to fixed */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-image: url("https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 80%; /* Reduced from 100% to prevent overflow */
@@ -39,13 +40,13 @@ body {
 
 /* Add a second, larger tea leaf in the corner */
 .page-container::after {
-  content: '';
+  content: "";
   position: fixed; /* Changed from absolute to fixed */
   bottom: -100px;
   right: -100px;
   width: 500px; /* Reduced from 600px */
   height: 500px; /* Reduced from 600px */
-  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-image: url("https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -115,9 +116,15 @@ body {
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .success-icon:hover {
@@ -127,7 +134,7 @@ body {
 
 /* Add decorative circle behind icon */
 .success-icon-container::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 280px;
   height: 280px;
@@ -156,7 +163,7 @@ body {
 
 /* Add underline effect to heading */
 .success-content h1::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: 0;
@@ -191,10 +198,11 @@ body {
   background-size: 200% auto;
   transition: all 0.5s ease;
   box-shadow: 0 10px 20px rgba(74, 158, 15, 0.25);
+  cursor: pointer;
 }
 
 .dashboard-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -222,13 +230,13 @@ body {
 
 /* Add tea leaf decoration to the button */
 .dashboard-btn::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -20px;
   right: -20px;
   width: 40px;
   height: 40px;
-  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-image: url("https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0.2;
@@ -238,13 +246,13 @@ body {
 
 /* Add small floating tea leaves for decoration */
 .success-container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 15%;
   left: 10%;
   width: 80px;
   height: 80px;
-  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-image: url("https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0.1;
@@ -254,13 +262,13 @@ body {
 }
 
 .success-container::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 20%;
   right: 15%;
   width: 100px;
   height: 100px;
-  background-image: url('https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png');
+  background-image: url("https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0.1;
@@ -270,15 +278,66 @@ body {
 }
 
 @keyframes floatLeaf1 {
-  0% { transform: translateY(0) rotate(-15deg); }
-  50% { transform: translateY(-20px) rotate(-10deg); }
-  100% { transform: translateY(0) rotate(-15deg); }
+  0% {
+    transform: translateY(0) rotate(-15deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(-10deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-15deg);
+  }
 }
 
 @keyframes floatLeaf2 {
-  0% { transform: translateY(0) rotate(25deg); }
-  50% { transform: translateY(-25px) rotate(30deg); }
-  100% { transform: translateY(0) rotate(25deg); }
+  0% {
+    transform: translateY(0) rotate(25deg);
+  }
+  50% {
+    transform: translateY(-25px) rotate(30deg);
+  }
+  100% {
+    transform: translateY(0) rotate(25deg);
+  }
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(74, 158, 15, 0.1);
+  border-radius: 50%;
+  border-top-color: #4a9e0f;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner p {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+/* Error message */
+.error-message {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
 }
 
 /* Responsive styles */
@@ -286,37 +345,37 @@ body {
   .success-container {
     padding: 2rem;
   }
-  
+
   .success-content {
     flex-direction: column;
     padding: 2rem 1rem;
   }
-  
+
   .success-icon {
     width: 180px;
     height: 180px;
     margin-bottom: 2rem;
   }
-  
+
   .success-text {
     padding-left: 0;
     text-align: center;
   }
-  
+
   .success-content h1 {
     font-size: 3rem;
   }
-  
+
   .success-content h1::after {
     left: 50%;
     transform: translateX(-50%);
   }
-  
+
   /* Adjust background image size for mobile */
   .page-container::before {
     background-size: 150%;
   }
-  
+
   .page-container::after {
     width: 250px;
     height: 250px;
@@ -329,25 +388,25 @@ body {
   .success-container {
     padding: 1rem;
   }
-  
+
   .success-content {
     padding: 1rem 0.5rem;
   }
-  
+
   .success-icon {
     width: 150px;
     height: 150px;
   }
-  
+
   .success-content h1 {
     font-size: 2.5rem;
   }
-  
+
   .success-content p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
   }
-  
+
   .dashboard-btn {
     padding: 1rem 2rem;
     font-size: 1.1rem;

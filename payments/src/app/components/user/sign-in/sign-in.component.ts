@@ -7,7 +7,6 @@ import { FooterComponent } from "../../footer/footer.component"
 import {  FormBuilder, Validators } from "@angular/forms"
 import  { AuthService } from "../../../shared/services/auth.service"
 import  { Router } from "@angular/router"
-import { HttpClientModule } from "@angular/common/http"
 
 @Component({
   selector: "app-sign-in",
@@ -18,8 +17,8 @@ import { HttpClientModule } from "@angular/common/http"
     RouterModule,
     HeaderComponent,
     FooterComponent,
-    ReactiveFormsModule,
-    HttpClientModule,
+    ReactiveFormsModule
+  
   ],
   templateUrl: "./sign-in.component.html",
   styleUrls: ["./sign-in.component.css"],
@@ -28,6 +27,8 @@ export class SignInComponent implements OnInit {
   form: any
   isSubmitted = false
   menuOpen = false
+  isLoading = false
+  successMessage: string | null = null
 
   constructor(
     public formBuilder: FormBuilder,
@@ -45,7 +46,13 @@ export class SignInComponent implements OnInit {
     // Only check login status in browser environment
     if (typeof window !== "undefined" && this.service.isLoggedIn()) {
       this.router.navigateByUrl("/dashboard")
+      const signupSuccess = localStorage.getItem("signupSuccess")
+      if (signupSuccess) {
+        this.successMessage = signupSuccess
+        localStorage.removeItem("signupSuccess")
+      }
     }
+
   }
 
   hasDisplayError(controlName: string): boolean {
@@ -55,18 +62,24 @@ export class SignInComponent implements OnInit {
 
   onSubmit() {
     this.isSubmitted = true
+    this.successMessage = null
 
     if (this.form.valid) {
       this.service.signin(this.form.value).subscribe({
         next: (res: any) => {
           this.service.savetoken(res.token)
-          this.router.navigateByUrl("/dashboard")
+          this.successMessage = "Sign in successful! Redirecting to your dashboard..."
+
+          // Delay redirect to show success message
+          setTimeout(() => {
+            this.router.navigateByUrl("/dashboard")
+          }, 1500)
         },
         error: (err) => {
           if (err.status == 400) {
             alert("Invalid username or password")
           } else {
-            alert("Something went wrong")
+            alert("Something went wrong. Please try again.")
           }
         },
       })
@@ -76,5 +89,9 @@ export class SignInComponent implements OnInit {
   toggleMenu(): void {
     console.log("Hamburger menu clicked!")
     this.menuOpen = !this.menuOpen
+  }
+
+  exploreClick() {
+    this.router.navigateByUrl("/about-us")
   }
 }

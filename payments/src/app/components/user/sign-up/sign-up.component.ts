@@ -30,6 +30,8 @@ export class SignUpComponent implements OnInit {
   form: any
   isSubmitted = false
   menuOpen = false
+  isLoading = false
+
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): null => {
     const password = control.get("password")
@@ -81,6 +83,13 @@ export class SignUpComponent implements OnInit {
             console.log("User registered successfully", response)
             this.form.reset()
             this.isSubmitted = false
+
+            if (typeof window !== "undefined") {
+              localStorage.setItem("signupSuccess", "Your account has been created successfully. Please sign in.")
+            }
+
+            // Redirect to sign-in page
+            this.router.navigateByUrl("/sign-in")
           }
           console.log(response)
         },

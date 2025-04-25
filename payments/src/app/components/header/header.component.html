@@ -1,18 +1,25 @@
 <nav class="navbar">
-    <div class="logo">
-      <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
-    </div>
-  
-    <div class="hamburger" (click)="toggleMenu()">
-      &#9776;
-    </div>
-    <div class="nav-links" [ngClass]="{'show': menuOpen}">
-      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-      <a routerLink="/about-us" routerLinkActive="active">About</a>
-      <a routerLink="/success" routerLinkActive="active">Dashboard</a>
-      <a routerLink="/help" routerLinkActive="active">Help</a>
-      <a routerLink="/contact-us" routerLinkActive="active">Contact</a>
+  <div class="logo">
+    <img src="https://arunatea.lk/images/logo/Aruna%20Logo.png" alt="Arunatea Logo" />
+  </div>
+
+  <div class="hamburger" (click)="toggleMenu()">
+    &#9776;
+  </div>
+  <div class="nav-links" [ngClass]="{'show': menuOpen}">
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+    <a routerLink="/about-us" routerLinkActive="active">About</a>
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/help" routerLinkActive="active">Help</a>
+    <a routerLink="/contact-us" routerLinkActive="active">Contact</a>
+    
+    <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
       <a routerLink="/sign-in" class="sign-in">Sign in</a>
       <a routerLink="/sign-up" class="register">Register</a>
-    </div>
-  </nav>
+    </ng-container>
+    
+    <ng-template #loggedIn>
+      <a (click)="logout()" class="sign-in">Logout</a>
+    </ng-template>
+  </div>
+</nav>

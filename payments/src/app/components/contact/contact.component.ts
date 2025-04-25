@@ -13,14 +13,13 @@ import { FooterComponent } from '../footer/footer.component';
 })
 export class ContactComponent {
   contactForm = {
-    firstName: '',
-    lastName: '',
+    Name: '',
     email: '',
     phone: '',
     message: ''
   };
 
-  onSubmit() {
+  onSubmit1() {
     console.log('Contact form submitted', this.contactForm);
     // Add your form submission logic here
   }

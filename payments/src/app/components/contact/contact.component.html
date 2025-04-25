@@ -72,25 +72,15 @@
         <div class="contact-form">
           <div class="form-row">
             <div class="form-group">
-              <label for="firstName">First Name</label>
+              <label for="Name">First Name</label>
               <input 
                 type="text" 
-                id="firstName" 
-                name="firstName" 
-                [(ngModel)]="contactForm.firstName" 
+                id="Name" 
+                name="Name" 
+                [(ngModel)]="contactForm.Name" 
                 placeholder="John"
               >
-            </div>
-            <div class="form-group">
-              <label for="lastName">Last Name</label>
-              <input 
-                type="text" 
-                id="lastName" 
-                name="lastName" 
-                [(ngModel)]="contactForm.lastName" 
-                placeholder="Doe"
-              >
-            </div>
+            
           </div>
           
           <div class="form-row">
@@ -127,7 +117,7 @@
             ></textarea>
           </div>
           
-          <button type="submit" class="send-message-btn" (click)="onSubmit()">
+          <button type="submit" class="send-message-btn" (click)="onSubmit1()">
             Send Message
           </button>
           

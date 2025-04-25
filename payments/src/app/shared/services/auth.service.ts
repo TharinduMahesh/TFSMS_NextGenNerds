@@ -1,40 +1,58 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError ,map,Observable, of } from 'rxjs';
-import  {TOKEN_KEY} from '../constans';
+import { isPlatformBrowser } from '@angular/common';
+import { TOKEN_KEY } from '../constans';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+  
   baseUrl = 'http://localhost:5274/api';
 
   createUser(formData: any) {
-     return this.http.post<any>(this.baseUrl + '/sign-up', formData)
+     return this.http.post<any>(this.baseUrl + '/sign-up', formData);
   } 
 
   signin(formData: any) {
-    return this.http.post<any>(this.baseUrl + '/sign-in', formData)
- } 
+    return this.http.post<any>(this.baseUrl + '/sign-in', formData);
+  } 
   
- isLoggedIn(){
-  return this.gettoken() !== null? true : false;
- }
+  isLoggedIn() {
+    return this.gettoken() !== null ? true : false;
+  }
 
- savetoken(token: string) {
-  localStorage.setItem(TOKEN_KEY, token);
- }
- gettoken() {
-  return localStorage.getItem(TOKEN_KEY);
- }
- 
- deletetoken() {
-  localStorage.removeItem(TOKEN_KEY);
- }
+  savetoken(token: string) {
+    if (this.isBrowser) {
+      localStorage.setItem(TOKEN_KEY, token);
+    }
+  }
+  
+  gettoken() {
+    if (this.isBrowser) {
+      return localStorage.getItem(TOKEN_KEY);
+    }
+    return null;
+  }
+  
+  deletetoken() {
+    if (this.isBrowser) {
+      localStorage.removeItem(TOKEN_KEY);
+    }
+  }
 
- getClaims() {
-  return JSON.parse(window.atob(this.gettoken()!.split('.')[1]))
- }
+  getClaims() {
+    if (this.isBrowser && this.gettoken()) {
+      return JSON.parse(window.atob(this.gettoken()!.split('.')[1]));
+    }
+    return null;
+  }
 }

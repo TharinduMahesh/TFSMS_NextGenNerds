@@ -1,6 +1,6 @@
 // src/app/components/rytrack/rytrack.component.ts
 import { Component, OnInit, signal, computed } from '@angular/core';
-import { RytrackService } from '../../../services/YieldDetails/YieldDetails.service';
+import { RytrackService } from '../../../services/RouteYieldMaintainService/YieldDetails.service';
 import { YieldList } from '../../../models/rview.model';
 import { RYViewComponent } from '../ryView/ryView.component';
 import { RyeditComponent } from '../ryEdit/ryedit.component';

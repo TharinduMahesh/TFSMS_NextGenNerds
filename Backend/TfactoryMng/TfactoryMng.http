@@ -1,0 +1,6 @@
+@TfactoryMng_HostAddress = http://localhost:5006
+
+GET {{TfactoryMng_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

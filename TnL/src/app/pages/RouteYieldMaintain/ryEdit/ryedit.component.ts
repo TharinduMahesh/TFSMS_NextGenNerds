@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { YieldList } from '../../../models/rview.model';
-import { RytrackService } from '../../../services/yieldlist.service';
+import { RytrackService } from '../../../services/YieldDetails/YieldDetails.service';
 import { NonNullableFormBuilder } from '@angular/forms';
 
 @Component({

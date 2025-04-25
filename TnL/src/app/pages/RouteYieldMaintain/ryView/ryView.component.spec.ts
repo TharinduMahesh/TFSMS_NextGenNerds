@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RyviewComponent } from './ryview.component';
+import { RyviewComponent } from './ryView.component';
 
 describe('RyviewComponent', () => {
   let component: RyviewComponent;

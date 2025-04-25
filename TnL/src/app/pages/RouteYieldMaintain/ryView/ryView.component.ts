@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { RytrackComponent } from '../RYTrack/RYtrack.component';
+import { RytrackComponent } from '../ryReview/ryReview.component';
 
 @Component({
   selector: 'app-ryview',
-  templateUrl: './ryview.component.html',
-  styleUrls: ['./ryview.component.scss']
+  templateUrl: './ryView.component.html',
+  styleUrls: ['./ryView.component.scss']
 })
 export class RYViewComponent {
   @Input() route: any;

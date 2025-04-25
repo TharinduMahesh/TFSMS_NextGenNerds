@@ -1,12 +1,13 @@
-// src/app/services/rytrack.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { YieldList } from '../models/rview.model';
+import { YieldList } from '../../models/rview.model';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class RytrackService {
   private apiUrl = 'https://localhost:7263/api/rytrack';
   constructor(private http: HttpClient) {}
@@ -26,7 +27,7 @@ export class RytrackService {
     return this.http.get<YieldList>(`${this.apiUrl}/${id}`);
   }
   deleteYieldList(id: number): Observable<void> {
-    return this.http.delete<void>(`https://localhost:7263/api/rytrack/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   updateYieldList(id: number, updated: YieldList): Observable<YieldList> {

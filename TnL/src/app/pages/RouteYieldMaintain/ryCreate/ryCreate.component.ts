@@ -5,8 +5,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   selector: 'app-ryform',
   standalone : true,
   imports: [ReactiveFormsModule],
-  templateUrl: './RYform.component.html',
-  styleUrls: ['./RYform.component.scss']
+  templateUrl: './ryCreate.component.html',
+  styleUrls: ['./ryCreate.component.scss']
 })
 export class RYformComponent {
   routeForm: FormGroup;

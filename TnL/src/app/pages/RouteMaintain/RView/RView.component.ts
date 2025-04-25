@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { RviewService } from '../../../services/Rview.service';
+import { RviewService } from '../../../services/RoutePlanning';
 import { Rview } from '../../../models/rview.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

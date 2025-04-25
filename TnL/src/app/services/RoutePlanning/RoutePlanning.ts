@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { Rview } from '../models/rview.model';
+import { Rview } from '../../models/rview.model';
 
 @Injectable({
   providedIn: 'root'

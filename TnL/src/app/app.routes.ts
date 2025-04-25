@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { RytrackComponent } from './pages/RouteYeildTrack/RYTrack/RYtrack.component';
+import { RytrackComponent } from './pages/RouteYeildTrack/ryReview/ryReview.component';
 import { CManagementComponent } from './pages/CostManagement/CManagement/cmanagement.component';
 import { CMformComponent } from './pages/CostManagement/cmform/cmform.component';
 import { PmformComponent } from './pages/PerformanceMonitoring/pmform/pmform.component';
 import { PfmComponent } from './pages/PerformanceMonitoring/PMonitering/pmonitering.component';
 import { RFormComponent } from './pages/RouteManipulation/rform/rform.component';
-import { RYformComponent } from './pages/RouteYeildTrack/RYform/RYform.component';
+import { RYformComponent } from './pages/RouteYeildTrack/ryCreate/ryCreate.component';
 import { RViewComponent } from './pages/RouteManipulation/RView/RView.component';
-import { RYViewComponent } from './pages/RouteYeildTrack/ryview/ryview.component';
+import { RYViewComponent } from './pages/RouteYeildTrack/ryView/ryView.component';
 
 export const routes: Routes = [
     {

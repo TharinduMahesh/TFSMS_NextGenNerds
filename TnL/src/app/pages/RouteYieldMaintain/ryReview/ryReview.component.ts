@@ -1,15 +1,15 @@
 // src/app/components/rytrack/rytrack.component.ts
 import { Component, OnInit, signal, computed } from '@angular/core';
-import { RytrackService } from '../../../services/yieldlist.service';
+import { RytrackService } from '../../../services/YieldDetails/YieldDetails.service';
 import { YieldList } from '../../../models/rview.model';
-import { RYViewComponent } from '../ryview/ryview.component';
-import { RyeditComponent } from '../ryedit/ryedit.component';
+import { RYViewComponent } from '../ryView/ryView.component';
+import { RyeditComponent } from '../ryEdit/ryedit.component';
 
 @Component({
   selector: 'app-rytrack',
   standalone: true,
-  templateUrl: './rytrack.component.html',
-  styleUrls: ['./rytrack.component.scss'],
+  templateUrl: './ryReview.component.html',
+  styleUrls: ['./ryReview.component.scss'],
   imports:[RYViewComponent]
 })
 export class RytrackComponent implements OnInit {

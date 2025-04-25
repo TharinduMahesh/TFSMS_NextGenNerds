@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Rview } from '../../../models/rview.model';
-import { RviewService } from '../../../services/Rview.service';
+import { RviewService } from '../../../services/RoutePlanning';
 
 @Component({
   selector: 'app-rform',

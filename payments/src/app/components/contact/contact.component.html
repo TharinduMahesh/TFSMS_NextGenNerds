@@ -1,86 +1,99 @@
 <div class="page-container">
-    <!-- Navigation -->
-    <app-header></app-header>
+  <!-- Navigation -->
+  <app-header></app-header>
+
+  <!-- Contact Content -->
+  <div class="contact-container">
+    <div class="contact-header">
+      <h1>Contact Us</h1>
+      <p>Any question or remarks? Just write us a message!</p>
+    </div>
     
-    <!-- Contact Content -->
-    <div class="contact-container">
-      <div class="contact-header">
-        <h1>Contact Us</h1>
-        <p>Any question or remarks? Just write us a message!</p>
-      </div>
-      
-      <div class="contact-content">
-        <div class="contact-info">
-          <h2>Contact Information</h2>
-          
-          <div class="info-item">
-            <div class="icon-wrapper">
-              <i class="person-icon"></i>
-            </div>
-            <div class="info-text">
-              <p class="name">Mr. Nevil Rathnayka</p>
-              <p class="title">Chief Executive Officer</p>
-              <p class="company">Aruna Group of Companies</p>
-            </div>
+    <div class="contact-content">
+      <div class="contact-info">
+        <h2>Contact Information</h2>
+        
+        <div class="info-item">
+          <div class="icon-wrapper">
+            <i class="person-icon"></i>
           </div>
-          
-          <div class="info-item">
-            <div class="icon-wrapper">
-              <i class="phone-icon"></i>
-            </div>
-            <p>Tel: +94 768225694</p>
-          </div>
-          
-          <div class="info-item">
-            <div class="icon-wrapper">
-              <i class="email-icon"></i>
-            </div>
-            <p>nevil&#64;arunate</p>
-          </div>
-          
-          <div class="info-item">
-            <div class="icon-wrapper">
-              <i class="location-icon"></i>
-            </div>
-            <div class="address">
-              <p>9 Aruna Tea Factory (Pvt) Ltd</p>
-              <p>Kumbaduwaa Estate,</p>
-              <p>Kumbaduwaa,</p>
-              <p>Meegahathanna,</p>
-              <p>Sri Lanka</p>
-            </div>
-          </div>
-          
-          <div class="social-links">
-            <a href="#" class="social-icon twitter">
-              <i class="twitter-icon"></i>
-            </a>
-            <a href="#" class="social-icon instagram">
-              <i class="instagram-icon"></i>
-            </a>
-            <a href="#" class="social-icon facebook">
-              <i class="facebook-icon"></i>
-            </a>
-          </div>
-          
-          <div class="background-circles">
-            <div class="circle circle-1"></div>
-            <div class="circle circle-2"></div>
+          <div class="info-text">
+            <p class="name">Mr. Nevil Rathnayka</p>
+            <p class="title">Chief Executive Officer</p>
+            <p class="company">Aruna Group of Companies</p>
           </div>
         </div>
         
-        <div class="contact-form">
+        <div class="info-item">
+          <div class="icon-wrapper">
+            <i class="phone-icon"></i>
+          </div>
+          <p>Tel: +94 768225694</p>
+        </div>
+        
+        <div class="info-item">
+          <div class="icon-wrapper">
+            <i class="email-icon"></i>
+          </div>
+          <p>nevil&#64;arunatea.lk</p>
+        </div>
+        
+        <div class="info-item">
+          <div class="icon-wrapper">
+            <i class="location-icon"></i>
+          </div>
+          <div class="address">
+            <p>9 Aruna Tea Factory (Pvt) Ltd</p>
+            <p>Kumbaduwaa Estate,</p>
+            <p>Kumbaduwaa,</p>
+            <p>Meegahathanna,</p>
+            <p>Sri Lanka</p>
+          </div>
+        </div>
+        
+        <div class="social-links">
+          <a href="#" class="social-icon twitter">
+            <i class="twitter-icon"></i>
+          </a>
+          <a href="#" class="social-icon instagram">
+            <i class="instagram-icon"></i>
+          </a>
+          <a href="#" class="social-icon facebook">
+            <i class="facebook-icon"></i>
+          </a>
+        </div>
+        
+        <div class="background-circles">
+          <div class="circle circle-1"></div>
+          <div class="circle circle-2"></div>
+        </div>
+      </div>
+      
+      <div class="contact-form">
+        <form (ngSubmit)="onSubmit()">
           <div class="form-row">
             <div class="form-group">
-              <label for="Name">First Name</label>
+              <label for="firstName">First Name</label>
               <input 
                 type="text" 
-                id="Name" 
-                name="Name" 
-                [(ngModel)]="contactForm.Name" 
+                id="firstName" 
+                name="firstName" 
+                [(ngModel)]="contactForm.firstName" 
                 placeholder="John"
+                required
               >
-            
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input 
+                type="text" 
+                id="lastName" 
+                name="lastName" 
+                [(ngModel)]="contactForm.lastName" 
+                placeholder="Doe"
+                required
+              >
+            </div>
           </div>
           
           <div class="form-row">
@@ -92,6 +105,7 @@
                 name="email" 
                 [(ngModel)]="contactForm.email" 
                 placeholder="example@email.com"
+                required
               >
             </div>
             <div class="form-group">
@@ -101,7 +115,7 @@
                 id="phone" 
                 name="phone" 
                 [(ngModel)]="contactForm.phone" 
-                placeholder="+1 012 3456 789"
+                placeholder="+94 768 225 694"
               >
             </div>
           </div>
@@ -114,20 +128,36 @@
               [(ngModel)]="contactForm.message" 
               placeholder="Write your message..."
               rows="5"
+              required
             ></textarea>
           </div>
           
-          <button type="submit" class="send-message-btn" (click)="onSubmit1()">
-            Send Message
-          </button>
-          
-          <div class="form-decoration">
-            <img src="https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png" alt="Tea Leaf" class="tea-leaf-decoration">
+          <div class="form-status" *ngIf="submitSuccess || submitError">
+            <div class="success-message" *ngIf="submitSuccess">
+              Your message has been sent successfully! We'll get back to you soon.
+            </div>
+            <div class="error-message" *ngIf="submitError">
+              There was an error sending your message. Please try again.
+            </div>
           </div>
+          
+          <button 
+            type="submit" 
+            class="send-message-btn" 
+            [disabled]="isSubmitting"
+          >
+            <span *ngIf="!isSubmitting">Send Message</span>
+            <span *ngIf="isSubmitting">Sending...</span>
+          </button>
+        </form>
+        
+        <div class="form-decoration">
+          <img src="https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png" alt="Tea Leaf" class="tea-leaf-decoration">
         </div>
       </div>
     </div>
-    
-    <!-- Footer -->
-    <app-footer></app-footer>
   </div>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+</div>

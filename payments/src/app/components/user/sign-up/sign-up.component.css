@@ -1,3 +1,5 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -5,52 +7,14 @@
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
 }
 
 .page-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-
-
-/* Sign-in link styles */
-.sign-in {
-  text-decoration: none;
-  color: #333;
-  padding: 0.5rem 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.sign-in:hover {
-  color: #4a9e0f;
-}
-
-/* Register button styles */
-.register {
-  text-decoration: none;
-  padding: 0.5rem 2rem;
-  background-color: #4a9e0f; /* Darkened green */
-  color: white;
-  border: none;
-  border-radius: 25px; /* Increased border radius */
-  cursor: pointer;
-  font-weight: 500;
-  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); /* Enhanced shadow */
-  transition: all 0.3s ease;
-}
-
-/* Enhance register button on hover */
-.register:hover {
-  transform: translateY(-2px);
-  background-color: #3f8a0c; /* Even darker on hover */
-  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5);
 }
 
 .auth-container {
@@ -67,103 +31,103 @@ body {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .left-content {
   flex: 1;
   position: relative;
-  padding-right: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Changed from center to move image up */
-  align-items: center;
-  padding-top: 2rem; /* Added padding to move image up */
+  overflow: hidden;
 }
 
-.tea-leaf {
-  max-width: 100%;
-  height: auto;
-  width: 600px; /* Increased from 500px to make image larger */
-  border-radius: 8px;
+.left-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  margin-top: -30px; /* Added negative margin to move image up */
-  /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); Added shadow to image */
 }
 
 .right-content {
-  flex: 1;
-  padding: 2rem;
+  flex: 1.2;
+  padding: 2.5rem;
+  background-color: white;
 }
 
 .auth-form {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 .form-row {
   display: flex;
-  gap: 2rem; /* Increased from 1rem to add more horizontal space between form fields */
-  margin-bottom: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
   flex: 1;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: #555;
   font-weight: 500;
 }
 
-/* Enhanced input fields with better borders and radius */
-.form-group input[type="text"],
-.form-group input[type="password"],
-.form-group input[type="email"],
-.form-group input[type="tel"],
+.form-group input,
 .form-group select {
   width: 100%;
   padding: 1rem;
-  border: 2px solid #ddd; /* Thicker border */
-  border-radius: 10px; /* Increased border radius */
+  border: 2px solid #ddd;
+  border-radius: 10px;
   font-size: 1rem;
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
   transition: all 0.3s ease;
 }
 
-/* Add focus effect to input fields */
-.form-group input[type="text"]:focus,
-.form-group input[type="password"]:focus,
-.form-group input[type="email"]:focus,
-.form-group input[type="tel"]:focus,
+.form-group input:focus,
 .form-group select:focus {
-  border-color: #4a9e0f;
-  box-shadow: 0 0 0 3px rgba(74, 158, 15, 0.2);
+  border-color: #56ae12;
+  box-shadow: 0 0 0 3px rgba(86, 174, 18, 0.2);
   outline: none;
 }
 
-/* Enhanced sign-up button */
+.error {
+  color: #e53935;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+}
+
 .sign-up-btn {
   width: 100%;
   padding: 1rem;
-  background: #4a9e0f; /* Darkened green */
+  background: #4a9e0f;
   color: white;
   border: none;
-  border-radius: 10px; /* Increased border radius */
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); /* Added shadow */
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3);
 }
 
-/* Enhanced hover effect for sign-up button */
-.sign-up-btn:hover {
-  background: #3f8a0c; /* Darker on hover */
+.sign-up-btn:hover:not(:disabled) {
+  background: #3f8a0c;
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5); /* Enhanced shadow on hover */
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5);
+}
+
+.sign-up-btn:disabled {
+  background-color: #90a4ae;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .divider {
@@ -174,7 +138,7 @@ body {
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   width: 45%;
@@ -199,30 +163,28 @@ body {
 
 .social-buttons {
   display: flex;
-  gap: 2rem; /* Increased from 1rem to add more space between social buttons */
+  gap: 1.5rem;
   justify-content: center;
 }
 
-/* Enhanced social buttons with shadows */
 .social-buttons button {
-  width: 52px; /* Slightly larger */
-  height: 52px; /* Slightly larger */
+  width: 52px;
+  height: 52px;
   border: 1px solid #ddd;
-  border-radius: 10px; /* Increased border radius */
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added shadow */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Enhanced hover effect for social buttons */
 .social-buttons button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-  border-color: #4a9e0f;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  border-color: #56ae12;
 }
 
 .social-buttons img {
@@ -230,27 +192,20 @@ body {
   height: 24px;
 }
 
-
-
+/* Responsive styles */
 @media (max-width: 968px) {
- 
-  
   .auth-content {
     flex-direction: column;
-    padding: 1rem;
   }
-  
+
   .left-content {
-    padding-right: 0;
-    text-align: center;
-    margin-bottom: 2rem;
+    display: none;
   }
-  
-  .tea-leaf {
-    max-width: 350px; /* Increased from 300px for mobile view */
-    margin: 1rem auto; /* Reduced margin to move image up */
+
+  .right-content {
+    width: 100%;
   }
-  
+
   .form-row {
     flex-direction: column;
     gap: 0;
@@ -261,6 +216,8 @@ body {
   .auth-container {
     padding: 1rem;
   }
-  
-  
+
+  .right-content {
+    padding: 1.5rem;
+  }
 }

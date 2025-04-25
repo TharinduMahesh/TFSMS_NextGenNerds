@@ -35,7 +35,7 @@ export class SignInComponent implements OnInit {
     private router: Router,
   ) {
     this.form = this.formBuilder.group({
-      email: ["", Validators.required],
+      Email: ["", Validators.required],
       password: ["", Validators.required],
       rememberMe: [false],
     })

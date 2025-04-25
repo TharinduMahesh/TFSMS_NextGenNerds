@@ -41,7 +41,7 @@ export class ContactComponent implements OnInit {
             this.contactForm.firstName = userData.firstName || ""
             this.contactForm.lastName = userData.lastName || ""
             this.contactForm.email = userData.email || ""
-            this.contactForm.phone = userData.mobile || ""
+            this.contactForm.phone = userData.MobileNo || ""
           }
         },
         error: (error) => {

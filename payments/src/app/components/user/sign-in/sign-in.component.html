@@ -17,8 +17,8 @@
         <div class="auth-form">
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="form-group">
-              <input type="email" formControlName="email" placeholder="Enter your email" />
-              <div class="error" *ngIf="hasDisplayError('email') && form.get('email')?.hasError('required')">
+              <input type="email" formControlName="Email" placeholder="Enter your email" />
+              <div class="error" *ngIf="hasDisplayError('meail') && form.get('Email')?.hasError('required')">
                 Email is required
               </div>
             </div>

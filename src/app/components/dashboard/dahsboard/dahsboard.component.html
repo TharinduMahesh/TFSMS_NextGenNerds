@@ -1,7 +1,6 @@
 <div class="report-container">
   <h1 class="dashboard-title">Report</h1>
 
-  <!-- Filter Reports Section -->
   <div class="filter-section">
     <h2 class="filter-section-title">Filter Reports</h2>
     <div class="filters-container">
@@ -33,11 +32,9 @@
     </div>
   </div>
 
-  <!-- Report Details Section -->
   <div class="report-details-section">
     <div class="report-details-header">
       <h2 class="report-details-title">Report Details</h2>
-      <button class="options-button">...</button>
     </div>
 
     <table class="report-table">
@@ -60,17 +57,58 @@
           <td>{{ report.bagCount }}</td>
           <td>{{ report.vehicleNumber }}</td>
           <td>{{ report.driverNIC }}</td>
-          <td>{{ report.date }}</td>
-          <td [ngClass]="getStatusClass(report.status)">{{ report.status }}</td>
+          <td>{{ formatDate(report.date) }}</td>
           <td>
-            <button (click)="editReport(report)">Edit</button>
-            <button (click)="deleteReport(report.dispatchID)">Delete</button>
+            <span class="status-cell" [ngClass]="getStatusClass(report.status)">
+              {{ report.status }}
+            </span>
           </td>
-        </tr>
-        <tr *ngIf="filteredReports.length === 0">
-          <td colspan="8" class="no-data">No data available for the selected filters</td>
+          <td class="actions-cell">
+            <button class="action-btn edit-btn" (click)="editReport(report)">Edit</button>
+            <button class="action-btn delete-btn" (click)="confirmDelete(report.dispatchID)">Delete</button>
+          </td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal" *ngIf="showEditModal">
+    <div class="modal-content">
+      <h2>Edit Report</h2>
+      <form *ngIf="editingReport" (ngSubmit)="saveEdit()">
+        <div class="form-group">
+          <label>Dispatch ID</label>
+          <input type="text" [(ngModel)]="editingReport.dispatchID" name="dispatchID" readonly>
+        </div>
+        <div class="form-group">
+          <label>Seal Number</label>
+          <input type="text" [(ngModel)]="editingReport.yield" name="yield">
+        </div>
+        <div class="form-group">
+          <label>Bag Count</label>
+          <input type="number" [(ngModel)]="editingReport.bagCount" name="bagCount">
+        </div>
+        <div class="form-group">
+          <label>Vehicle Number</label>
+          <input type="text" [(ngModel)]="editingReport.vehicleNumber" name="vehicleNumber">
+        </div>
+        <div class="form-group">
+          <label>Driver NIC</label>
+          <input type="text" [(ngModel)]="editingReport.driverNIC" name="driverNIC">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="editingReport.status" name="status">
+            <option value="Delivered">Delivered</option>
+            <option value="In Transit">In Transit</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

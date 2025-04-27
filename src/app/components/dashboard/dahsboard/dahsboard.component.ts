@@ -12,7 +12,7 @@ import { Report } from '../../../models/report.interface';
   imports: [FormsModule, CommonModule]
 })
 export class DashboardComponent implements OnInit {
-  dispatchIDs = ['D-001', 'D-002', 'D-003'];
+  dispatchIDs: string[] = [];
   yields = ['More than 500', 'Less than 500'];
   statuses = ['Delivered', 'In Transit'];
   selectedDispatchID = 'All Dispatch IDs';
@@ -45,21 +45,22 @@ export class DashboardComponent implements OnInit {
   }
 
   updateDispatchIDs(): void {
-    // Get unique dispatch IDs from reports
     const uniqueIDs = [...new Set(this.reports.map(report => report.dispatchID))];
     this.dispatchIDs = uniqueIDs.sort();
   }
 
   filterReports(): void {
     this.filteredReports = this.reports.filter(report => {
-      const matchesDispatchID = this.selectedDispatchID === 'All Dispatch IDs' || report.dispatchID === this.selectedDispatchID;
-      
+      const matchesDispatchID = this.selectedDispatchID === 'All Dispatch IDs' || 
+                               report.dispatchID === this.selectedDispatchID;
+
       const matchesYield = this.selectedYield === 'All Yield' ||
-        (this.selectedYield === 'More than 500' && report.bagCount > 500) ||
-        (this.selectedYield === 'Less than 500' && report.bagCount <= 500);
-      
-      const matchesStatus = this.selectedStatus === 'All Statuses' || report.status === this.selectedStatus;
-      
+                          (this.selectedYield === 'More than 500' && report.bagCount > 500) ||
+                          (this.selectedYield === 'Less than 500' && report.bagCount <= 500);
+
+      const matchesStatus = this.selectedStatus === 'All Statuses' || 
+                           report.status === this.selectedStatus;
+
       let matchesDate = true;
       if (this.selectedDate) {
         const reportDate = new Date(report.date).toISOString().split('T')[0];
@@ -97,7 +98,7 @@ export class DashboardComponent implements OnInit {
   }
 
   confirmDelete(dispatchID: string): void {
-    if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
+    if (confirm('Are you sure you want to delete this report?')) {
       this.deleteReport(dispatchID);
     }
   }
@@ -115,14 +116,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    switch (status) {
-      case 'Delivered':
-        return 'delivered';
-      case 'In Transit':
-        return 'in-transit';
-      default:
-        return '';
-    }
+    return status.toLowerCase().replace(' ', '-');
   }
 
   formatDate(date: string): string {

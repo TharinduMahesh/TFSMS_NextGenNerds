@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:growersignup/sreens/grower_signup.dart';
 import 'package:growersignup/welcome_screens/welcome1.dart';
 
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: WelcomePage1(),
+      home: GrowerSignupPage(),
     );
   }
 }

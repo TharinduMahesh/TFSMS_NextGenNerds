@@ -10,7 +10,7 @@ class GrowerAccount {
   final DateTime GrowerDOB;
   final String GrowerPhoneNum;
   final String MoneyMethod;
-  final int GrowerId;
+  final String GrowerEmail;
 
   const GrowerAccount({
     required this.GrowerAccountId,
@@ -24,7 +24,7 @@ class GrowerAccount {
     required this.GrowerDOB,
     required this.GrowerPhoneNum,
     required this.MoneyMethod,
-    required this.GrowerId,
+    required this.GrowerEmail,
   });
 
   factory GrowerAccount.fromJson(Map<String, dynamic> json) {
@@ -40,7 +40,7 @@ class GrowerAccount {
       GrowerDOB: DateTime.parse(json['GrowerDOB']),
       GrowerPhoneNum: json['GrowerPhoneNum'] as String,
       MoneyMethod: json['MoneyMethod'] as String,
-      GrowerId: json['GrowerId'] as int,
+      GrowerEmail: json['GrowerEmail'] as String,
     );
   }
 
@@ -56,7 +56,7 @@ class GrowerAccount {
       'GrowerDOB': GrowerDOB.toIso8601String(),
       'GrowerPhoneNum': GrowerPhoneNum,
       'MoneyMethod': MoneyMethod,
-      'GrowerId': GrowerId,
+      'GrowerEmail': GrowerEmail,
     };
   }
 }

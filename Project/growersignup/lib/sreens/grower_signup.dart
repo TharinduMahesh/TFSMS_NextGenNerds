@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:growersignup/models/g_signup_model.dart';
-import 'package:growersignup/sreens/GrowerCreateAccountPage1.dart';
+import 'package:growersignup/sreens/GrowerCreateAccount.dart';
 import 'package:http/http.dart' as http;
 
 class GrowerSignupPage extends StatefulWidget {
@@ -86,7 +86,7 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => GrowerCreateAccountPage1(GrowerEmail: _emailController.text.trim()),
+              builder: (context) => GrowerCreateAccountPage(email: email),
             ),
           );
 

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:growersignup/models/grower_Account.dart';
 import 'package:http/http.dart' as http;
 
-class SignupApi {
+class GrowerCreateApi {
   Future <GrowerAccount> groweraccount(GrowerAccount gSignupModel) async {
     const url = 'https://localhost:7061/api/growercreateaccount'; // Replace with your API endpoint
 

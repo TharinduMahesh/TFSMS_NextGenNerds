@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/sreens/growe_signup.dart';
+import 'package:growersignup/sreens/grower_signup.dart';
 
 class WelcomeSupplierPage extends StatelessWidget {
   // Callback for the 'Let's Start' button press

@@ -34,7 +34,7 @@
                   <label>Email Id :</label>
                   <input type="email" formControlName="Email" placeholder="info@xyz.com" />
                   <div class="error" *ngIf="hasDisplayError('Email')">
-                    <div *ngIf="form.get('email')?.hasError('required')">
+                    <div *ngIf="form.get('Email')?.hasError('required')">
                       Please enter your email address
                     </div>
                     <div *ngIf="form.get('Email')?.hasError('Email')">                                 mobile

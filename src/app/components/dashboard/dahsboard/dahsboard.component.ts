@@ -12,9 +12,9 @@ import { Report } from '../../../models/report.interface';
   imports: [FormsModule, CommonModule]
 })
 export class DashboardComponent implements OnInit {
-  dispatchIDs = ['All Dispatch IDs', 'D-001', 'D-002', 'D-003'];
-  yields = ['All Yield', 'More than 500', 'Less than 500'];
-  statuses = ['All Statuses', 'Delivered', 'In Transit'];
+  dispatchIDs = ['D-001', 'D-002', 'D-003'];
+  yields = ['More than 500', 'Less than 500'];
+  statuses = ['Delivered', 'In Transit'];
   selectedDispatchID = 'All Dispatch IDs';
   selectedYield = 'All Yield';
   selectedStatus = 'All Statuses';
@@ -22,6 +22,8 @@ export class DashboardComponent implements OnInit {
 
   reports: Report[] = [];
   filteredReports: Report[] = [];
+  showEditModal = false;
+  editingReport: Report | null = null;
 
   constructor(private reportService: ReportService) {}
 
@@ -33,6 +35,7 @@ export class DashboardComponent implements OnInit {
     this.reportService.getReports().subscribe({
       next: (data) => {
         this.reports = data;
+        this.updateDispatchIDs();
         this.filterReports();
       },
       error: (error) => {
@@ -41,28 +44,62 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  updateDispatchIDs(): void {
+    // Get unique dispatch IDs from reports
+    const uniqueIDs = [...new Set(this.reports.map(report => report.dispatchID))];
+    this.dispatchIDs = uniqueIDs.sort();
+  }
+
   filterReports(): void {
     this.filteredReports = this.reports.filter(report => {
       const matchesDispatchID = this.selectedDispatchID === 'All Dispatch IDs' || report.dispatchID === this.selectedDispatchID;
+      
       const matchesYield = this.selectedYield === 'All Yield' ||
-                         (this.selectedYield === 'More than 500' && report.bagCount > 500) ||
-                         (this.selectedYield === 'Less than 500' && report.bagCount <= 500);
+        (this.selectedYield === 'More than 500' && report.bagCount > 500) ||
+        (this.selectedYield === 'Less than 500' && report.bagCount <= 500);
+      
       const matchesStatus = this.selectedStatus === 'All Statuses' || report.status === this.selectedStatus;
-      const matchesDate = !this.selectedDate || new Date(report.date).toISOString().split('T')[0] === this.selectedDate;
+      
+      let matchesDate = true;
+      if (this.selectedDate) {
+        const reportDate = new Date(report.date).toISOString().split('T')[0];
+        matchesDate = reportDate === this.selectedDate;
+      }
 
       return matchesDispatchID && matchesYield && matchesStatus && matchesDate;
     });
   }
 
   editReport(report: Report): void {
-    this.reportService.updateReport(report).subscribe({
-      next: () => {
-        this.loadReports();
-      },
-      error: (error) => {
-        console.error('Error updating report:', error);
-      }
-    });
+    this.editingReport = { ...report };
+    this.showEditModal = true;
+  }
+
+  saveEdit(): void {
+    if (this.editingReport) {
+      this.reportService.updateReport(this.editingReport).subscribe({
+        next: () => {
+          this.loadReports();
+          this.showEditModal = false;
+          this.editingReport = null;
+        },
+        error: (error) => {
+          console.error('Error updating report:', error);
+          alert('Failed to update report. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEdit(): void {
+    this.showEditModal = false;
+    this.editingReport = null;
+  }
+
+  confirmDelete(dispatchID: string): void {
+    if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
+      this.deleteReport(dispatchID);
+    }
   }
 
   deleteReport(dispatchID: string): void {
@@ -72,6 +109,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error deleting report:', error);
+        alert('Failed to delete report. Please try again.');
       }
     });
   }
@@ -85,5 +123,9 @@ export class DashboardComponent implements OnInit {
       default:
         return '';
     }
+  }
+
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString();
   }
 }

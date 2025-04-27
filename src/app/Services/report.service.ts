@@ -1,25 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-interface Report {
-  dispatchID: string;
-  yield: string;
-  bagCount: number;
-  vehicleNumber: string;
-  driverNIC: string;
-  date: string;
-  status: 'Delivered' | 'In Transit';
-}
+import { Report } from '../models/report.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = 'https://localhost:7210'; // Update with your backend URL
-  // updateReport: any;
+  private apiUrl = 'http://localhost:5105/api/reports';  // Changed to HTTP and correct port
 
   constructor(private http: HttpClient) {}
+
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  }
 
   getReports(): Observable<Report[]> {
     return this.http.get<Report[]>(this.apiUrl);
@@ -27,7 +23,9 @@ export class ReportService {
   
   updateReport(report: Report): Observable<Report> {
     const url = `${this.apiUrl}/${report.dispatchID}`;
-    return this.http.put<Report>(url, report);
+    return this.http.put<Report>(url, report, { 
+      headers: this.getHeaders()
+    });
   }
 
   deleteReport(dispatchID: string): Observable<void> {
@@ -35,5 +33,9 @@ export class ReportService {
     return this.http.delete<void>(url);
   }
 
-  // Add methods for updating and creating reports as needed
+  createReport(report: Report): Observable<Report> {
+    return this.http.post<Report>(this.apiUrl, report, { 
+      headers: this.getHeaders()
+    });
+  }
 }

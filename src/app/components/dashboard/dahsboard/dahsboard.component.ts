@@ -2,24 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ReportService } from '../../../Services/report.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-
-interface Report {
-  dispatchID: string;
-  yield: string;
-  bagCount: number;
-  vehicleNumber: string;
-  driverNIC: string;
-  date: string;
-  status: 'Delivered' | 'In Transit';
-}
+import { Report } from '../../../models/report.interface';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dahsboard.component.html', // Ensure this path is correct
-  styleUrls: ['./dahsboard.component.css'], // Ensure this path is correct
+  templateUrl: './dahsboard.component.html',
+  styleUrls: ['./dahsboard.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule] // Import necessary modules
+  imports: [FormsModule, CommonModule]
 })
 export class DashboardComponent implements OnInit {
   dispatchIDs = ['All Dispatch IDs', 'D-001', 'D-002', 'D-003'];
@@ -40,9 +30,14 @@ export class DashboardComponent implements OnInit {
   }
 
   loadReports(): void {
-    this.reportService.getReports().subscribe(data => {
-      this.reports = data;
-      this.filterReports();
+    this.reportService.getReports().subscribe({
+      next: (data) => {
+        this.reports = data;
+        this.filterReports();
+      },
+      error: (error) => {
+        console.error('Error loading reports:', error);
+      }
     });
   }
 
@@ -50,8 +45,8 @@ export class DashboardComponent implements OnInit {
     this.filteredReports = this.reports.filter(report => {
       const matchesDispatchID = this.selectedDispatchID === 'All Dispatch IDs' || report.dispatchID === this.selectedDispatchID;
       const matchesYield = this.selectedYield === 'All Yield' ||
-                           (this.selectedYield === 'More than 500' && report.bagCount > 500) ||
-                           (this.selectedYield === 'Less than 500' && report.bagCount <= 500);
+                         (this.selectedYield === 'More than 500' && report.bagCount > 500) ||
+                         (this.selectedYield === 'Less than 500' && report.bagCount <= 500);
       const matchesStatus = this.selectedStatus === 'All Statuses' || report.status === this.selectedStatus;
       const matchesDate = !this.selectedDate || new Date(report.date).toISOString().split('T')[0] === this.selectedDate;
 
@@ -60,15 +55,24 @@ export class DashboardComponent implements OnInit {
   }
 
   editReport(report: Report): void {
-    console.log('Edit report:', report);
-    this.reportService.updateReport(report).subscribe(() => {
-      this.loadReports();
+    this.reportService.updateReport(report).subscribe({
+      next: () => {
+        this.loadReports();
+      },
+      error: (error) => {
+        console.error('Error updating report:', error);
+      }
     });
   }
 
   deleteReport(dispatchID: string): void {
-    this.reportService.deleteReport(dispatchID).subscribe(() => {
-      this.loadReports();
+    this.reportService.deleteReport(dispatchID).subscribe({
+      next: () => {
+        this.loadReports();
+      },
+      error: (error) => {
+        console.error('Error deleting report:', error);
+      }
     });
   }
 

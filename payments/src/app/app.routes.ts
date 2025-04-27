@@ -11,7 +11,7 @@ import { MainLayoutComponent } from './components/layouts/main-layout/main-layou
 import { authGuard } from './shared/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 // Uncomment if you plan to use TransactionComponent
-// import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
+import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -22,8 +22,8 @@ export const routes: Routes = [
   { path: 'footer', component: FooterComponent },
   { path: 'about-us', component: AboutusComponent },
   { path: 'contact-us', component: ContactComponent },
-  // Uncomment if you plan to use TransactionComponent
-  // { path: 'viewtransaction', component: TransactionComponent },
+  {path: 'viewtrs', component: TransactionComponent}, // Assuming you have a SuccessComponent
+  { path: 'payments', component: PaymentComponent },
   {
     path: 'dashboard',
     component: MainLayoutComponent,
@@ -31,7 +31,7 @@ export const routes: Routes = [
     canActivateChild: [authGuard],
     children: [
       { path: '', component: SuccessComponent }, // Default dashboard view
-      { path: 'payments', component: PaymentComponent },
+      // { path: 'payments', component: PaymentComponent },
       // Add other admin operations here
     ]
   }

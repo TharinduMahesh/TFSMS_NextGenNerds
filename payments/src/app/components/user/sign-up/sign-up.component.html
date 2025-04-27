@@ -1,116 +1,112 @@
+<!-- Navigation -->
+<app-header></app-header>
 
-   <div class="page-container">
-    <!-- Navigation -->
-    <app-header></app-header>
-  
-    <!-- Main Content -->
-   <div class="auth-container">
-      <div class="auth-content">
-        <div class="left-content">
-          <img src="https://img.freepik.com/premium-photo/green-herbal-tea-wave-splash-with-leaves-flow_974206-2034.jpg" alt="Tea Leaf" class="tea-leaf" />
-        </div>
-        <div class="right-content">
-          <div class="auth-form">
-            <form [formGroup]="form" (ngSubmit)="onSubmit()">
-              <div class="form-row">
-                <div class="form-group">
-                  <label>First Name :</label>
-                  <input type="text" formControlName="firstName" placeholder="Enter your name..." />
-                  <div class="error" *ngIf="hasDisplayError('firstName') && form.get('firstName')?.hasError('required')">
-                    First name is required
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label>Last Name :</label>
-                  <input type="text" formControlName="lastName" placeholder="Enter your name..." />
-                  <div class="error" *ngIf="hasDisplayError('lastName') && form.get('lastName')?.hasError('required')">
-                    Last name is required
-                  </div>
-                </div>
+<!-- Main Content -->
+<div class="auth-container full-width">
+  <div class="auth-content">
+    <div class="left-content">
+      <img src="https://img.freepik.com/premium-photo/green-herbal-tea-wave-splash-with-leaves-flow_974206-2034.jpg" alt="Tea Leaf" class="tea-leaf" />
+    </div>
+    <div class="right-content">
+      <div class="auth-form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name :</label>
+              <input type="text" formControlName="firstName" placeholder="Enter your name..." />
+              <div class="error" *ngIf="hasDisplayError('firstName') && form.get('firstName')?.hasError('required')">
+                First name is required
               </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Email Id :</label>
-                  <input type="email" formControlName="Email" placeholder="info@xyz.com" />
-                  <div class="error" *ngIf="hasDisplayError('Email')">
-                    <div *ngIf="form.get('Email')?.hasError('required')">
-                      Please enter your email address
-                    </div>
-                    <div *ngIf="form.get('Email')?.hasError('Email')">                                 mobile
-                      Please enter a valid email address
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label>Mobile No. :</label>
-                  <input type="tel" formControlName="MobileNo" placeholder="+94 - 88598 58600" />
-                  <div class="error" *ngIf="hasDisplayError('MobileNo') && form.get('MobileNo')?.hasError('required')">
-                    Mobile number is required
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Password :</label>
-                  <input type="password" formControlName="password" placeholder="••••••••" />
-                  <div class="error" *ngIf="hasDisplayError('password')">
-
-                    <ng-container [ngSwitch]="form.controls.password.errors | firstKey">
-
-                      <div *ngSwitchCase="'required'">
-                        Please enter your password
-                      </div>
-                      <div *ngSwitchCase="'minlength'">
-                        Password must be at least 6 characters long
-                      </div>
-                      <div *ngSwitchCase="'pattern'">
-                        Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character
-                      </div>
-                    </ng-container>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label>Confirm Password :</label>
-                  <input type="password" formControlName="confirmPassword" placeholder="••••••••" />
-                  <div class="error" *ngIf="hasDisplayError('confirmPassword') && form.get('confirmPassword')?.hasError('mismatch')">
-                    Password does not match
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>Role :</label>
-                <select formControlName="role">
-                  <option value="" disabled>Enter company role...</option>
-                  <option value="admin">Admin</option>
-                  <option value="manager">Manager</option>
-                  <option value="employee">Employee</option>
-                </select>
-                <div class="error" *ngIf="hasDisplayError('role') && form.get('role')?.hasError('required')">
-                  Role is required
-                </div>
-              </div>
-
-              <button type="submit" class="sign-up-btn">SIGN UP</button>
-            </form>
-
-            <div class="divider">
-              <span>Or connect with</span>
             </div>
-            <div class="social-buttons">
-              <button class="google-btn">
-                <img src="https://techdocs.akamai.com/identity-cloud/img/social-login/identity-providers/iconfinder-new-google-favicon-682665.png" alt="Google" />
-              </button>
-              <button class="facebook-btn">
-                <img src="https://z-m-static.xx.fbcdn.net/rsrc.php/v4/yD/r/5D8s-GsHJlJ.png" alt="Facebook" />
-              </button>
+            <div class="form-group">
+              <label>Last Name :</label>
+              <input type="text" formControlName="lastName" placeholder="Enter your name..." />
+              <div class="error" *ngIf="hasDisplayError('lastName') && form.get('lastName')?.hasError('required')">
+                Last name is required
+              </div>
             </div>
           </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email Id :</label>
+              <input type="email" formControlName="Email" placeholder="info@xyz.com" />
+              <div class="error" *ngIf="hasDisplayError('Email')">
+                <div *ngIf="form.get('Email')?.hasError('required')">
+                  Please enter your email address
+                </div>
+                <div *ngIf="form.get('Email')?.hasError('Email')">
+                  Please enter a valid email address
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Mobile No. :</label>
+              <input type="tel" formControlName="MobileNo" placeholder="+94 - 88598 58600" />
+              <div class="error" *ngIf="hasDisplayError('MobileNo') && form.get('MobileNo')?.hasError('required')">
+                Mobile number is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Password :</label>
+              <input type="password" formControlName="password" placeholder="••••••••" />
+              <div class="error" *ngIf="hasDisplayError('password')">
+                <ng-container [ngSwitch]="form.controls.password.errors | firstKey">
+                  <div *ngSwitchCase="'required'">
+                    Please enter your password
+                  </div>
+                  <div *ngSwitchCase="'minlength'">
+                    Password must be at least 6 characters long
+                  </div>
+                  <div *ngSwitchCase="'pattern'">
+                    Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Confirm Password :</label>
+              <input type="password" formControlName="confirmPassword" placeholder="••••••••" />
+              <div class="error" *ngIf="hasDisplayError('confirmPassword') && form.get('confirmPassword')?.hasError('mismatch')">
+                Password does not match
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Role :</label>
+            <select formControlName="role">
+              <option value="" disabled>Enter company role...</option>
+              <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
+              <option value="employee">Employee</option>
+            </select>
+            <div class="error" *ngIf="hasDisplayError('role') && form.get('role')?.hasError('required')">
+              Role is required
+            </div>
+          </div>
+
+          <button type="submit" class="sign-up-btn">SIGN UP</button>
+        </form>
+
+        <div class="divider">
+          <span>Or connect with</span>
+        </div>
+        <div class="social-buttons">
+          <button class="google-btn">
+            <img src="https://techdocs.akamai.com/identity-cloud/img/social-login/identity-providers/iconfinder-new-google-favicon-682665.png" alt="Google" />
+          </button>
+          <button class="facebook-btn">
+            <img src="https://z-m-static.xx.fbcdn.net/rsrc.php/v4/yD/r/5D8s-GsHJlJ.png" alt="Facebook" />
+          </button>
         </div>
       </div>
     </div>
-    <!-- Footer -->
-    
-    <app-footer></app-footer>
+  </div>
+</div>
+
+<!-- Footer -->
+<app-footer></app-footer>

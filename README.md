@@ -1,4 +1,5 @@
 # 🍃 Tea Factory Management System
+(Mobile Application)
 
 A complete mobile-based solution for managing tea factory operations, built using **Flutter 3.29.2**, **ASP.NET Core Web API (.NET 8)**, and **MSSQL**. This application streamlines supplier management, production tracking, weighing operations, payments, reporting, and logistics to support efficient tea factory operations.
 

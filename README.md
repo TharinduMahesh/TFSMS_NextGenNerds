@@ -86,7 +86,4 @@ Figma UI link (https://www.figma.com/design/DWnJEQv2zgP056r6UKCRSX/NextGenNerds?
 
 ## 👤 Author
 
-**Nipun Nayodya**  
-📧 [nayodyaperea2022@gmail.com]  
-🌐 [www.linkedin.com/in/nipun-nayodya-b84a37339]
 

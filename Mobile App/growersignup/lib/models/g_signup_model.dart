@@ -1,17 +1,17 @@
 class GSignupModel {
-  final int GrowerId;
+  final int? GrowerId;
   final String GrowerEmail;
   final String GrowerPassword;
 
   const GSignupModel({
-    required this.GrowerId,
+    this.GrowerId,
     required this.GrowerEmail,
     required this.GrowerPassword,
   });
 
     factory GSignupModel.fromJson(Map<String, dynamic> json) {
         return GSignupModel(
-        GrowerId: json['GrowerId'] as int,
+        GrowerId: json['GrowerId'] as int?,
         GrowerEmail: json['GrowerEmail'] as String,
         GrowerPassword: json['GrowerPassword'] as String,
         );

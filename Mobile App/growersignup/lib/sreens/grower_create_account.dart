@@ -1,8 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For input formatters
-import 'package:http/http.dart' as http;
+import 'package:growersignup/models/grower_Account.dart';
+import 'package:growersignup/services/grower_create_api.dart';
+import 'package:growersignup/sreens/grower_account_success_pade.dart';
 import 'package:intl/intl.dart'; // For date formatting
 
 // Placeholder for success page or login page
@@ -11,8 +11,7 @@ import 'package:intl/intl.dart'; // For date formatting
 
 class GrowerCreateAccountPage extends StatefulWidget {
   final String email;
-  const GrowerCreateAccountPage({Key? key, required this.email})
-    : super(key: key);
+  const GrowerCreateAccountPage({super.key, required this.email});
 
   @override
   State<GrowerCreateAccountPage> createState() =>
@@ -32,6 +31,8 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
   final _postalCodeController = TextEditingController();
   final _dobController = TextEditingController(); // For display only
   final _phoneController = TextEditingController();
+
+  final _growerCreateApi = GrowerCreateApi(); // Assuming you have an API class
 
   // == State Variables for Dropdowns / Date Picker ==
   DateTime? _selectedDate;
@@ -77,96 +78,43 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
     super.dispose();
   }
 
-  // Future<void> _createAccount(GrowerAccount groweraccount) async {
-  //   if (_formKey.currentState!.validate()) {
-  //     final fname = _firstNameController.text.trim();
-  //     final lnamne = _lastNameController.text.trim();
-  //     final nic = _nicController.text.trim();
-  //     final address1 = _address1Controller.text.trim();
-  //     final address2 = _address2Controller.text.trim();
-  //     final city = _cityController.text.trim();
-  //     final postalCode = _postalCodeController.text.trim();
-  //     final dob = _selectedDate != null
-  //         ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
-  //         : null; // Format for API
-  //     final phone = _phoneController.text.trim();
-  //     final paymentMethod = _selectedPaymentMethod;
-  //     final email = widget.email; // Assuming passed via constructor
+  void _createAccount() async {
+  if (_formKey.currentState?.validate() ?? false) {
+    GrowerAccountModel? newGrower = GrowerAccountModel(
+      GrowerFirstName: _firstNameController.text,
+      GrowerLastName: _lastNameController.text,
+      GrowerNIC: _nicController.text,
+      GrowerAddressLine1: _address1Controller.text,
+      GrowerAddressLine2: _address2Controller.text,
+      GrowerCity: _cityController.text,
+      GrowerPostalCode: _postalCodeController.text,
+      GrowerGender: _selectedGender ?? '',
+      GrowerDOB: _selectedDate ?? DateTime.now(), // Use _selectedDate directly or a default value
+      GrowerPhoneNum: _phoneController.text,
+      MoneyMethod: _selectedPaymentMethod ?? '',
+      GrowerEmail: widget.email,
+    );
+    try {
+      
+        // Call the sign-in API
+        GrowerAccountModel newGAccountModel = await _growerCreateApi.groweraccount(newGrower);
+        // If successful, show success message or navigate to another page
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign in successful!')));
+        print('Sign in successful: ${newGAccountModel.toJson()}'); // Debugging output
 
-  //     // Show loading feedback
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Creating Account...'),
-  //         backgroundColor: Colors.blueAccent,
-  //       ),
-  //     );
+        // Navigate to another page if needed
+        Navigator.push(context, MaterialPageRoute(builder: (context) => GrowerSignInSuccessPage()));
+        
+      } catch (e) {
+        // Handle error if the API call fails
+        print('Error during sign in: $e');
+      }
 
-  //     try {
-  //       final uri = Uri.parse(
-  //         'https://localhost:7061/api/growersignup',
-  //       ); // 🔁 Replace with your API endpoint
+  }
+}
 
-  //       final response = await http.post(
-  //         uri,
-  //         headers: {'Content-Type': 'application/json'},
-  //         body: jsonEncode({
-  //           'GrowerFirstName': fname,
-  //           'GrowerLastName': lnamne,
-  //           'GrowerNIC': nic,
-  //           'GrowerAddress1': address1,
-  //           'GrowerAddress2': address2,
-  //           'GrowerCity': city,
-  //           'GrowerPostalCode': postalCode,
-  //           'GrowerGender': _selectedGender,
-  //           'GrowerDOB': dob,
-  //           'GrowerPhoneNum': phone,
-  //           'MoneyMethod': paymentMethod,
-  //           'GrowerEmail': email,
-  //         }),
-  //       );
 
-  //       if (response.statusCode == 200 || response.statusCode == 201) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(
-  //             content: Text('Signup successful!'),
-  //             backgroundColor: Colors.green,
-  //           ),
-  //         );
 
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => GrowerCreateAccountPage(email: email),
-  //           ),
-  //         );
-  //       } else {
-  //         final error = jsonDecode(response.body);
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(
-  //             content: Text(
-  //               'Signup failed: ${error['message'] ?? 'Unknown error'}',
-  //             ),
-  //             backgroundColor: Colors.redAccent,
-  //           ),
-  //         );
-  //       }
-  //     } catch (e) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text('Error connecting to server: $e'),
-  //           backgroundColor: Colors.red,
-  //         ),
-  //       );
-  //     }
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Please fix the errors in the form'),
-  //         backgroundColor: Colors.orangeAccent,
-  //       ),
-  //     );
-  //   }
-  // }
 
   // --- Date Picker Logic ---
   Future<void> _selectDate(BuildContext context) async {
@@ -202,84 +150,6 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
       });
     }
   }
-
-  // --- Final Account Creation Logic ---
-  // void _createAccount() {
-  //   // Validate the entire form
-  //   if (_formKey.currentState!.validate()) {
-  //     // Form is valid, gather all data
-  //     final accountData = {
-  //       'firstName': _firstNameController.text,
-  //       'lastName': _lastNameController.text,
-  //       'nic': _nicController.text,
-  //       'address1': _address1Controller.text,
-  //       'address2':
-  //           _address2Controller.text.isNotEmpty
-  //               ? _address2Controller.text
-  //               : null, // Send null if empty? Check API reqs
-  //       'city': _cityController.text,
-  //       'postalCode': _postalCodeController.text,
-  //       'gender': _selectedGender,
-  //       'dateOfBirth':
-  //           _selectedDate != null
-  //               ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
-  //               : null, // Format for API
-  //       'phoneNumber': _phoneController.text,
-  //       'paymentMethod': _selectedPaymentMethod,
-  //       'GrowerEmail': widget.email, // Assuming passed via constructor
-  //       // *** Include Email/Password if signup happens before this page ***
-  //       // If GrowerSignupPage comes first, you'd need to pass email/password here too.
-  //       // 'email': widget.email, // Assuming passed via constructor
-  //       // 'password': widget.password, // Assuming passed via constructor
-  //     };
-
-  //     // Optional: Remove null values if API doesn't expect them
-  //     accountData.removeWhere((key, value) => value == null);
-
-  //     print("--- Creating Account with All Details ---");
-  //     print(accountData);
-  //     print("---------------------------------------");
-
-  //     // *** TODO: Implement API Call to your ASP.NET Core backend ***
-  //     // Send `accountData` to your final registration endpoint
-  //     /*
-  //     try {
-  //         final apiService = Provider.of<ApiService>(context, listen: false);
-  //         await apiService.post('auth/grower/register', accountData); // Use your actual endpoint
-
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //            const SnackBar(content: Text('Account created successfully!'), backgroundColor: Colors.green),
-  //         );
-
-  //         // Navigate to a success page or login page, clearing the stack
-  //         Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false); // Example
-
-  //     } catch (e) {
-  //          ScaffoldMessenger.of(context).showSnackBar(
-  //            SnackBar(content: Text('Account creation failed: $e'), backgroundColor: Colors.redAccent),
-  //         );
-  //     }
-  //     */
-
-  //     // Placeholder success feedback
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Account creation successful (simulated)!'),
-  //         backgroundColor: Colors.green,
-  //       ),
-  //     );
-  //     // TODO: Navigate away (e.g., to login or a success screen)
-  //     // Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-  //   } else {
-  //     // Show validation error message
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Please fill all required fields correctly'),
-  //         backgroundColor: Colors.orangeAccent,
-  //       ),
-  //     );
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -454,25 +324,25 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
                     const SizedBox(height: 40), // Space before button
                     // == Submit Button ==
                     Center(
-                      // child: ElevatedButton(
-                        // onPressed: _createAccount,
-                      //   style: ElevatedButton.styleFrom(
-                      //     backgroundColor: buttonColor,
-                      //     foregroundColor: buttonTextColor,
-                      //     minimumSize: const Size(double.infinity, 50),
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(30.0),
-                      //     ),
-                      //     elevation: 3,
-                      //   ),
-                      //   child: const Text(
-                      //     'Create Account',
-                      //     style: TextStyle(
-                      //       fontSize: 16,
-                      //       fontWeight: FontWeight.bold,
-                      //     ),
-                      //   ),
-                      // ),
+                      child: ElevatedButton(
+                      onPressed: _createAccount,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: buttonColor,
+                          foregroundColor: buttonTextColor,
+                          minimumSize: const Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          elevation: 3,
+                        ),
+                        child: const Text(
+                          'Create Account',//here
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 10), // Padding at the bottom of card
                   ],
@@ -501,59 +371,39 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    TextInputType keyboardType = TextInputType.text,
-    bool obscureText = false,
-    String? Function(String?)? validator,
-    List<TextInputFormatter>? inputFormatters,
-    TextCapitalization textCapitalization = TextCapitalization.none,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      inputFormatters: inputFormatters,
-      textCapitalization: textCapitalization,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide(color: inputBorderColor.withOpacity(0.5)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide(color: inputBorderColor.withOpacity(0.5)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(
-            color: focusedInputBorderColor,
-            width: 1.5,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1.0),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 14.0,
-          horizontal: 15.0,
-        ),
-        isDense: true, // Makes field vertically smaller
+Widget _buildTextField({
+  required TextEditingController controller,
+  required String hintText,
+  TextInputType keyboardType = TextInputType.text,
+  bool obscureText = false,
+  String? Function(String?)? validator,
+  List<TextInputFormatter>? inputFormatters,
+  TextCapitalization textCapitalization = TextCapitalization.none,
+}) {
+  return TextFormField(
+    controller: controller,
+    obscureText: obscureText,
+    keyboardType: keyboardType,
+    validator: validator,
+    inputFormatters: inputFormatters,
+    textCapitalization: textCapitalization,
+    decoration: InputDecoration(
+      hintText: hintText,
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: const BorderSide(color: inputBorderColor),
       ),
-      validator: validator,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-    );
-  }
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: const BorderSide(color: focusedInputBorderColor, width: 2),
+      ),
+    ),
+  );
+}
+
 
   Widget _buildDateField(BuildContext context) {
     return TextFormField(

@@ -1,0 +1,49 @@
+/*Grower Place a Order*/
+
+CREATE DATABASE testteaDb;
+
+USE testteaDb;
+
+CREATE TABLE GrowerOrder (
+    GrowerOrderId INT IDENTITY(1,1) PRIMARY KEY,
+    SuperTeaQuantity DECIMAL(10, 2) NOT NULL,
+    GreenTeaQuantity DECIMAL(10, 2) NOT NULL,
+    TransportMethod NVARCHAR(25) NOT NULL,
+    PaymentMethod NVARCHAR(25) NOT NULL
+);
+
+
+
+
+/*Grower SignUp*/
+
+CREATE DATABASE test5Db;
+
+USE test5Db;
+
+CREATE TABLE GrowerSignUp (
+    GrowerId INT IDENTITY(1,1) PRIMARY KEY,
+    GrowerEmail NVARCHAR(100) NOT NULL UNIQUE,
+    GrowerPassword NVARCHAR(100) NOT NULL
+);
+
+
+
+/*Grower Create An Account*/
+
+
+CREATE TABLE GrowerCreateAccount (
+    GrowerAccountId INT PRIMARY KEY IDENTITY(1,1),
+    GrowerFirstName NVARCHAR(100) NOT NULL,
+    GrowerLastName NVARCHAR(100) NOT NULL,
+    GrowerNIC  NVARCHAR(100) NOT NULL,
+    GrowerAddressLine1 NVARCHAR(255) NOT NULL,
+    GrowerAddressLine2 NVARCHAR(255),
+    GrowerCity NVARCHAR(100) NOT NULL,
+    GrowerPostalCode NVARCHAR(20),
+    GrowerGender NVARCHAR(10),
+    GrowerDOB DATE,
+    GrowerPhoneNum NVARCHAR(20),
+    MoneyMethod NVARCHAR(50),
+    GrowerEmail NVARCHAR(100) NOT NULL 
+);

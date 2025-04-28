@@ -1,52 +1,37 @@
 import 'package:flutter/material.dart';
-import 'harvest_form_page.dart';
 
 class ConfirmationPage extends StatelessWidget {
+  const ConfirmationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: const Color(0xF3FAFFEC),
+      backgroundColor: const Color(0xFFF8FFF0),
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
-              child: Text("Got your harvest\ndetails.",
-                  style: TextStyle(fontSize: 24, color: Colors.green)),
+            const Text(
+              'Got your harvest details.',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => HarvestFormPage()),
-              ),
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green[900],
+                backgroundColor: const Color(0xFF0B3C16),
+                minimumSize: const Size(200, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
               ),
-              child: const Text("Continue", style: TextStyle(color: Colors.white)),
+              child: const Text('Continue', style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
-            const SizedBox(height: 60),
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavBar(),
-    );
-  }
-
-  Widget _buildBottomNavBar() {
-    return BottomNavigationBar(
-      currentIndex: 0,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.notifications), label: "Notification"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        BottomNavigationBarItem(icon: Icon(Icons.star_border), label: "Contact us"),
-      ],
     );
   }
 }

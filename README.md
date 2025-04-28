@@ -84,6 +84,3 @@ Figma UI link (https://www.figma.com/design/DWnJEQv2zgP056r6UKCRSX/NextGenNerds?
 
 
 
-## 👤 Author
-
-

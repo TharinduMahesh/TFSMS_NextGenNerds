@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:growersignup/models/g_signup_model.dart';
-import 'package:growersignup/sreens/GrowerCreateAccount.dart';
+import 'package:growersignup/sreens/grower_create_account.dart';
+import 'package:growersignup/sreens/grower_signin_page.dart';
 import 'package:http/http.dart' as http;
 
 class GrowerSignupPage extends StatefulWidget {
@@ -129,6 +130,13 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
     // Option 2: Navigate to a dedicated Sign In page
     // Use Navigator.pushReplacement if you don't want users going back to signup
     // Navigator.pushReplacementNamed(context, '/signin'); // Assuming you have routes defined
+    // Or use a direct widget navigation
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const GrowerSignInPage(),
+      ),
+    );
     print("Navigate to Sign In page");
     // Temporary toggle for demo
     setState(() {

@@ -1,7 +1,8 @@
-class GrowerAccount {
-  final int GrowerAccountId;
+class GrowerAccountModel {
+  final int? GrowerAccountId;
   final String GrowerFirstName;
   final String GrowerLastName;
+  final String GrowerNIC;
   final String GrowerAddressLine1;
   final String GrowerAddressLine2;
   final String GrowerCity;
@@ -12,10 +13,11 @@ class GrowerAccount {
   final String MoneyMethod;
   final String GrowerEmail;
 
-  const GrowerAccount({
-    required this.GrowerAccountId,
+  const GrowerAccountModel({
+    this.GrowerAccountId,
     required this.GrowerFirstName,  
     required this.GrowerLastName,
+    required this.GrowerNIC,
     required this.GrowerAddressLine1,
     required this.GrowerAddressLine2,
     required this.GrowerCity,
@@ -27,27 +29,30 @@ class GrowerAccount {
     required this.GrowerEmail,
   });
 
-  factory GrowerAccount.fromJson(Map<String, dynamic> json) {
-    return GrowerAccount(
-      GrowerAccountId: json['GrowerAccountId'] as int,
-      GrowerFirstName: json['GrowerFirstName'] as String,
-      GrowerLastName: json['GrowerLastName'] as String,
-      GrowerAddressLine1: json['GrowerAddressLine1'] as String,
-      GrowerAddressLine2: json['GrowerAddressLine2'] as String,
-      GrowerCity: json['GrowerCity'] as String,
-      GrowerPostalCode: json['GrowerPostalCode'] as String,
-      GrowerGender: json['GrowerGender'] as String,
-      GrowerDOB: DateTime.parse(json['GrowerDOB']),
-      GrowerPhoneNum: json['GrowerPhoneNum'] as String,
-      MoneyMethod: json['MoneyMethod'] as String,
-      GrowerEmail: json['GrowerEmail'] as String,
-    );
-  }
+factory GrowerAccountModel.fromJson(Map<String, dynamic> json) {
+  return GrowerAccountModel(
+    GrowerAccountId: json['GrowerAccountId'] != null ? json['GrowerAccountId'] as int : null,
+    GrowerFirstName: json['GrowerFirstName'] ?? '',
+    GrowerLastName: json['GrowerLastName'] ?? '',
+    GrowerNIC: json['GrowerNIC'] ?? '',
+    GrowerAddressLine1: json['GrowerAddressLine1'] ?? '',
+    GrowerAddressLine2: json['GrowerAddressLine2'] ?? '',
+    GrowerCity: json['GrowerCity'] ?? '',
+    GrowerPostalCode: json['GrowerPostalCode'] ?? '',
+    GrowerGender: json['GrowerGender'] ?? '',
+    GrowerDOB: json['GrowerDOB'] != null ? DateTime.parse(json['GrowerDOB']) : DateTime.now(),
+    GrowerPhoneNum: json['GrowerPhoneNum'] ?? '',
+    MoneyMethod: json['MoneyMethod'] ?? '',
+    GrowerEmail: json['GrowerEmail'] ?? '',
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {
       'GrowerFirstName': GrowerFirstName,
       'GrowerLastName': GrowerLastName,
+      'GrowerNIC': GrowerNIC,
       'GrowerAddressLine1': GrowerAddressLine1,
       'GrowerAddressLine2': GrowerAddressLine2,
       'GrowerCity': GrowerCity,

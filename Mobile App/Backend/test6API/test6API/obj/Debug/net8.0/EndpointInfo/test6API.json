@@ -1,0 +1,244 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "test6API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/GrowerCreateAccount": {
+      "post": {
+        "tags": [
+          "GrowerCreateAccount"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrowerCreateAccount"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrowerCreateAccount"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrowerCreateAccount"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "GrowerCreateAccount"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GrowerSignUp": {
+      "post": {
+        "tags": [
+          "GrowerSignUp"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrowerSignUp"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrowerSignUp"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrowerSignUp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "GrowerSignUp"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GrowerSignUp/login": {
+      "post": {
+        "tags": [
+          "GrowerSignUp"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GrowerCreateAccount": {
+        "required": [
+          "growerAddressLine1",
+          "growerCity",
+          "growerEmail",
+          "growerFirstName",
+          "growerLastName",
+          "growerNIC",
+          "growerPhoneNum",
+          "moneyMethod"
+        ],
+        "type": "object",
+        "properties": {
+          "growerAccountId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "growerFirstName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "growerLastName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "growerNIC": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "growerAddressLine1": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "growerAddressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "growerCity": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "growerPostalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "growerGender": {
+            "type": "string",
+            "nullable": true
+          },
+          "growerDOB": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "growerPhoneNum": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "moneyMethod": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "growerEmail": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GrowerSignUp": {
+        "required": [
+          "growerEmail",
+          "growerPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "growerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "growerEmail": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "growerPassword": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "twoFactorCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "twoFactorRecoveryCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

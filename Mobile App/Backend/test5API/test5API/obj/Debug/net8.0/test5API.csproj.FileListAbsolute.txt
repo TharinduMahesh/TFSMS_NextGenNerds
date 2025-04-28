@@ -1,7 +1,0 @@
-C:\Users\User\source\repos\test5API\test5API\obj\Debug\net8.0\test5API.csproj.AssemblyReference.cache
-C:\Users\User\source\repos\test5API\test5API\obj\Debug\net8.0\test5API.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\User\source\repos\test5API\test5API\obj\Debug\net8.0\test5API.AssemblyInfoInputs.cache
-C:\Users\User\source\repos\test5API\test5API\obj\Debug\net8.0\test5API.AssemblyInfo.cs
-C:\Users\User\source\repos\test5API\test5API\obj\Debug\net8.0\test5API.csproj.CoreCompileInputs.cache
-C:\Users\User\source\repos\test5API\test5API\obj\Debug\net8.0\test5API.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\User\source\repos\test5API\test5API\obj\Debug\net8.0\test5API.MvcApplicationPartsAssemblyInfo.cache

@@ -1,0 +1,70 @@
+[
+  {
+    "ContainingType": "test6API.Controllers.GrowerCreateAccountController",
+    "Method": "SignUp",
+    "RelativePath": "api/GrowerCreateAccount",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "growerAccount",
+        "Type": "test6API.Models.GrowerCreateAccount",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "test6API.Controllers.GrowerCreateAccountController",
+    "Method": "GetAll",
+    "RelativePath": "api/GrowerCreateAccount",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "test6API.Controllers.GrowerSignUpController",
+    "Method": "SignUp",
+    "RelativePath": "api/GrowerSignUp",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "grower",
+        "Type": "test6API.Models.GrowerSignUp",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "test6API.Controllers.GrowerSignUpController",
+    "Method": "GetAll",
+    "RelativePath": "api/GrowerSignUp",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "test6API.Controllers.GrowerSignUpController",
+    "Method": "Login",
+    "RelativePath": "api/GrowerSignUp/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Microsoft.AspNetCore.Identity.Data.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

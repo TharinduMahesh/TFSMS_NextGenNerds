@@ -1,15 +1,16 @@
 /*Grower Place a Order*/
 
-CREATE DATABASE testteaDb;
+CREATE DATABASE test5Db;
 
-USE testteaDb;
+USE test5Db;
 
-CREATE TABLE GrowerOrder (
-    GrowerOrderId INT IDENTITY(1,1) PRIMARY KEY,
+CREATE TABLE GrowerOrders (
+    GrowerOrderId INT PRIMARY KEY IDENTITY(1,1),
     SuperTeaQuantity DECIMAL(10, 2) NOT NULL,
     GreenTeaQuantity DECIMAL(10, 2) NOT NULL,
-    TransportMethod NVARCHAR(25) NOT NULL,
-    PaymentMethod NVARCHAR(25) NOT NULL
+    PlaceDate DATETIME NOT NULL,
+    TransportMethod NVARCHAR(100) NOT NULL,
+    PaymentMethod NVARCHAR(100) NOT NULL
 );
 
 
@@ -46,4 +47,17 @@ CREATE TABLE GrowerCreateAccount (
     GrowerPhoneNum NVARCHAR(20),
     MoneyMethod NVARCHAR(50),
     GrowerEmail NVARCHAR(100) NOT NULL 
+);
+
+
+
+/*Grower Bank Details*/
+
+
+CREATE TABLE GrowerBankDetails (
+    BankDetailId INT PRIMARY KEY IDENTITY(1,1),
+    BankName NVARCHAR(100) NOT NULL,
+    BranchName NVARCHAR(100) NOT NULL,
+    AccountHolderName NVARCHAR(100) NOT NULL,
+    GrowerEmail NVARCHAR(100) NOT NULL
 );

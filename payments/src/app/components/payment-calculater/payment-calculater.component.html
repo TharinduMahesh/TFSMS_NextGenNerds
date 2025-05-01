@@ -1,0 +1,162 @@
+<div class="calculator-content">
+    <div class="calculator-form">
+      <form [formGroup]="calculatorForm" (ngSubmit)="calculatePayment()">
+        <div class="form-group">
+          <label for="supplierId">Supplier</label>
+          <select id="supplierId" formControlName="supplierId" (change)="onSupplierChange()">
+            <option value="">Select Supplier</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+              {{ supplier.supplierId }} - {{ supplier.name }} {{ supplier.area ? '(' + supplier.area + ')' : '' }}
+            </option>
+          </select>
+          <div *ngIf="calculatorForm.get('supplierId')?.touched && calculatorForm.get('supplierId')?.invalid" class="error-message">
+            Supplier is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="leafWeight">Green Leaf Weight (kg)</label>
+          <input type="number" id="leafWeight" formControlName="leafWeight" placeholder="Enter weight">
+          <div *ngIf="calculatorForm.get('leafWeight')?.touched && calculatorForm.get('leafWeight')?.invalid" class="error-message">
+            Valid weight is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="rate">Rate per kg (LKR)</label>
+          <input type="number" id="rate" formControlName="rate" placeholder="Enter rate">
+          <div *ngIf="calculatorForm.get('rate')?.touched && calculatorForm.get('rate')?.invalid" class="error-message">
+            Valid rate is required
+          </div>
+        </div>
+        
+        <div class="adjustment-options">
+          <h4>Adjustment Options</h4>
+          
+          <div class="option-group">
+            <div class="checkbox-container">
+              <input type="checkbox" id="includeAdvances" formControlName="includeAdvances">
+              <label for="includeAdvances">Include Advance Deductions</label>
+            </div>
+            
+            <div *ngIf="calculatorForm.get('includeAdvances')?.value" class="sub-option">
+              <label for="advanceAmount">Advance Amount (LKR)</label>
+              <input type="number" id="advanceAmount" formControlName="advanceAmount">
+              <div *ngIf="advances.length > 0" class="info-text">
+                {{ advances.length }} advance(s) found for this supplier
+              </div>
+            </div>
+          </div>
+          
+          <div class="option-group">
+            <div class="checkbox-container">
+              <input type="checkbox" id="includeDebts" formControlName="includeDebts">
+              <label for="includeDebts">Include Debt Deductions</label>
+            </div>
+            
+            <div *ngIf="calculatorForm.get('includeDebts')?.value" class="sub-option">
+              <label for="debtAmount">Debt Amount (LKR)</label>
+              <input type="number" id="debtAmount" formControlName="debtAmount">
+              <div *ngIf="debts.length > 0" class="info-text">
+                {{ debts.length }} debt(s) found for this supplier
+              </div>
+            </div>
+          </div>
+          
+          <div class="option-group">
+            <div class="checkbox-container">
+              <input type="checkbox" id="includeIncentives" formControlName="includeIncentives">
+              <label for="includeIncentives">Include Incentives</label>
+            </div>
+            
+            <div *ngIf="calculatorForm.get('includeIncentives')?.value" class="sub-option incentives-group">
+              <div class="incentive-item">
+                <label for="qualityBonus">Quality Bonus (LKR)</label>
+                <input type="number" id="qualityBonus" formControlName="qualityBonus">
+              </div>
+              
+              <div class="incentive-item">
+                <label for="loyaltyBonus">Loyalty Bonus (LKR)</label>
+                <input type="number" id="loyaltyBonus" formControlName="loyaltyBonus">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="calculate-button" [disabled]="loading">
+            <span *ngIf="!loading">Calculate Payment</span>
+            <span *ngIf="loading">Calculating...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="calculation-result" *ngIf="calculationResult">
+      <h3>Payment Summary</h3>
+      
+      <div class="result-section">
+        <h4>Basic Calculation</h4>
+        <div class="result-item">
+          <span>Green Leaf Weight:</span>
+          <span>{{ calculatorForm.get('leafWeight')?.value }} kg</span>
+        </div>
+        <div class="result-item">
+          <span>Rate per kg:</span>
+          <span>LKR {{ calculatorForm.get('rate')?.value }}</span>
+        </div>
+        <div class="result-item highlight">
+          <span>Gross Amount:</span>
+          <span>LKR {{ calculationResult.grossAmount | number }}</span>
+        </div>
+      </div>
+      
+      <div class="result-section">
+        <h4>Deductions</h4>
+        <div *ngIf="calculatorForm.get('includeAdvances')?.value" class="result-item">
+          <span>Advance Recovery:</span>
+          <span>LKR {{ calculationResult.advanceDeduction | number }}</span>
+        </div>
+        <div *ngIf="calculatorForm.get('includeDebts')?.value" class="result-item">
+          <span>Debt Recovery:</span>
+          <span>LKR {{ calculationResult.debtDeduction | number }}</span>
+        </div>
+        <div class="result-item highlight">
+          <span>Total Deductions:</span>
+          <span>LKR {{ (calculationResult.advanceDeduction + calculationResult.debtDeduction) | number }}</span>
+        </div>
+      </div>
+      
+      <div class="result-section">
+        <h4>Additions</h4>
+        <div *ngIf="calculatorForm.get('includeIncentives')?.value" class="result-item">
+          <span>Quality Bonus:</span>
+          <span>LKR {{ calculatorForm.get('qualityBonus')?.value | number }}</span>
+        </div>
+        <div *ngIf="calculatorForm.get('includeIncentives')?.value" class="result-item">
+          <span>Loyalty Bonus:</span>
+          <span>LKR {{ calculatorForm.get('loyaltyBonus')?.value | number }}</span>
+        </div>
+        <div class="result-item highlight">
+          <span>Total Additions:</span>
+          <span>LKR {{ calculationResult.incentiveAddition | number }}</span>
+        </div>
+      </div>
+      
+      <div class="final-result">
+        <div class="calculation-flow">
+          <span>Gross Amount</span>
+          <span class="arrow">→</span>
+          <span>Deductions</span>
+          <span class="arrow">→</span>
+          <span>Additions</span>
+        </div>
+        <div class="net-amount">
+          <span>Net Payable Amount:</span>
+          <span>LKR {{ calculationResult.netAmount | number }}</span>
+        </div>
+      </div>
+      
+      <button class="use-result-btn" (click)="useCalculationValues()">Use These Values</button>
+    </div>
+  </div>

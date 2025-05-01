@@ -12,6 +12,7 @@ import { authGuard } from './shared/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 // Uncomment if you plan to use TransactionComponent
 import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
+import { PaymentCalculatorComponent } from './components/payment-calculater/payment-calculater.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -23,7 +24,8 @@ export const routes: Routes = [
   { path: 'about-us', component: AboutusComponent },
   { path: 'contact-us', component: ContactComponent },
   {path: 'viewtrs', component: TransactionComponent}, // Assuming you have a SuccessComponent
-  { path: 'payments', component: PaymentComponent },
+  { path: 'payment', component: PaymentComponent },
+  { path: 'payment-calculator', component: PaymentCalculatorComponent },
   {
     path: 'dashboard',
     component: MainLayoutComponent,

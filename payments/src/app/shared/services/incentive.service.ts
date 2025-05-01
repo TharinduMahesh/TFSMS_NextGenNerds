@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -25,13 +26,5 @@ export class IncentiveService {
 
   getCurrentIncentiveForSupplier(supplierId: number): Observable<Incentive> {
     return this.http.get<Incentive>(`${this.apiUrl}/supplier/${supplierId}/current`);
-  }
-
-  createIncentive(incentive: Incentive): Observable<Incentive> {
-    return this.http.post<Incentive>(this.apiUrl, incentive);
-  }
-
-  updateIncentive(incentive: Incentive): Observable<Incentive> {
-    return this.http.put<Incentive>(`${this.apiUrl}/${incentive.incentiveId}`, incentive);
   }
 }

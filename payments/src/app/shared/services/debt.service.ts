@@ -1,3 +1,5 @@
+
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -21,10 +23,6 @@ export class DebtService {
 
   getDebtsBySupplier(supplierId: number): Observable<Debt[]> {
     return this.http.get<Debt[]>(`${this.apiUrl}/supplier/${supplierId}`);
-  }
-
-  createDebt(debt: Debt): Observable<Debt> {
-    return this.http.post<Debt>(this.apiUrl, debt);
   }
 
   deductFromDebt(id: number, amount: number): Observable<any> {

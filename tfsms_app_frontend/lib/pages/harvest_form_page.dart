@@ -107,7 +107,6 @@ class _HarvestFormPageState extends State<HarvestFormPage> {
 
   void _saveForm() {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
-      final formData = _formKey.currentState?.value;
       Navigator.pushNamed(context, '/confirmation');
     }
   }

@@ -29,6 +29,13 @@ class HarvestScreen extends StatelessWidget {
             },
             child: const Text('Weighing report'),
           ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/request');
+            },
+            child: const Text('order request'),
+          ),
         ],
       ),
     );

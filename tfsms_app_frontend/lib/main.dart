@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tfsms_app_frontend/pages/home_page_weighing.dart';
+import 'package:tfsms_app_frontend/pages/order_accepted_page.dart';
+import 'package:tfsms_app_frontend/pages/order_details_page.dart';
+import 'package:tfsms_app_frontend/pages/order_rejected_page.dart';
 import 'pages/main_page.dart';
 import 'pages/confirmation_page.dart';
 import 'pages/harvest_form_page.dart';
@@ -29,6 +32,9 @@ class MyApp extends StatelessWidget {
         '/new-weighing': (context) => const NewWeighingPage(),   // New Weighing Entry
         '/report': (context) => const ReportPage(),      // Weighing Report
         '/home-weighing': (context) => const HomePageWeighing(), // Weighing Home Page
+        '/request': (context) => const  OrderDetailsPage(),
+        '/accept': (context) => const OrderAcceptedPage(),
+        '/reject': (context) => const OrderRejectedPage(),
       },
     );
   }

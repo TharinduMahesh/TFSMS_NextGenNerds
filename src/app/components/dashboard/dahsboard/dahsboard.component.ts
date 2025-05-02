@@ -103,7 +103,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  deleteReport(dispatchID: string): void {
+  private deleteReport(dispatchID: string): void {
     this.reportService.deleteReport(dispatchID).subscribe({
       next: () => {
         this.loadReports();

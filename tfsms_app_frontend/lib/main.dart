@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tfsms_app_frontend/pages/feedback_page.dart';
+import 'package:tfsms_app_frontend/pages/harvest_screen.dart';
 import 'package:tfsms_app_frontend/pages/home_page_weighing.dart';
 import 'package:tfsms_app_frontend/pages/order_accepted_page.dart';
 import 'package:tfsms_app_frontend/pages/order_details_page.dart';
@@ -32,9 +34,11 @@ class MyApp extends StatelessWidget {
         '/new-weighing': (context) => const NewWeighingPage(),   // New Weighing Entry
         '/report': (context) => const ReportPage(),      // Weighing Report
         '/home-weighing': (context) => const HomePageWeighing(), // Weighing Home Page
-        '/request': (context) => const  OrderDetailsPage(),
-        '/accept': (context) => const OrderAcceptedPage(),
-        '/reject': (context) => const OrderRejectedPage(),
+        '/request': (context) => const  RequestDetailsPage(),// Order Request Details
+        '/harvest': (context) => const HarvestScreen(), // Harvest Screen
+        '/accept': (context) => const OrderAcceptedPage(),// Order Accepted Page
+        '/reject': (context) => const OrderRejectedPage(),// Order Rejected Page
+        '/feedback': (context) => const FeedbackPage(), // Feedback Page
       },
     );
   }

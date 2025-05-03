@@ -2,18 +2,36 @@ import 'package:flutter/material.dart';
 import 'order_accepted_page.dart';
 import 'order_rejected_page.dart';
 
-class OrderDetailsPage extends StatelessWidget {
-  const OrderDetailsPage({super.key});
+class RequestDetailsPage extends StatefulWidget {
+  const RequestDetailsPage({super.key});
+
+  @override
+  State<RequestDetailsPage> createState() => _RequestDetailsPageState();
+}
+
+class _RequestDetailsPageState extends State<RequestDetailsPage> {
+  final dateController = TextEditingController();
+  final supperLeafController = TextEditingController();
+  final normalLeafController = TextEditingController();
+  final paymentMethodController = TextEditingController();
+  final timeController = TextEditingController();
+  final locationController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    dateController.dispose();
+    supperLeafController.dispose();
+    normalLeafController.dispose();
+    paymentMethodController.dispose();
+    timeController.dispose();
+    locationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final dateController = TextEditingController(text: '2025/02/17');
-    final supperLeafController = TextEditingController(text: '20kg');
-    final normalLeafController = TextEditingController(text: '15kg');
-    final paymentMethodController = TextEditingController(text: 'Cash');
-    final timeController = TextEditingController(text: '4:00PM');
-    final locationController = TextEditingController(text: '123,Main road ,Haputale');
-
     return Scaffold(
       backgroundColor: const Color(0xFFF8FFF0),
       appBar: AppBar(
@@ -35,74 +53,97 @@ class OrderDetailsPage extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Request Details',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              _readonlyField('Date you can give harvest:', dateController),
-              const SizedBox(height: 16),
-              _readonlyField('Supper Leaf Weight(kg):', supperLeafController),
-              const SizedBox(height: 16),
-              _readonlyField('Normal Leaf Weight(kg):', normalLeafController),
-              const SizedBox(height: 16),
-              _readonlyField('Payment method:', paymentMethodController),
-              const SizedBox(height: 16),
-              _readonlyField('Preferred Time:', timeController),
-              const SizedBox(height: 16),
-              _readonlyField('Location:', locationController),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const OrderAcceptedPage()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0B3C16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                        minimumSize: const Size.fromHeight(50),
-                      ),
-                      child: const Text('Accept'),
-                    ),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                const Center(
+                  child: Text(
+                    'Request Details',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const OrderRejectedPage()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                        minimumSize: const Size.fromHeight(50),
+                ),
+                const SizedBox(height: 20),
+                _formField('Date you can give harvest:', controller: dateController, readOnly: true, onTap: _pickDate),
+                const SizedBox(height: 16),
+                _formField('Supper Leaf Weight(kg):', controller: supperLeafController),
+                const SizedBox(height: 16),
+                _formField('Normal Leaf Weight(kg):', controller: normalLeafController),
+                const SizedBox(height: 16),
+                _formField('Payment method:', controller: paymentMethodController),
+                const SizedBox(height: 16),
+                _formField('Preferred Time:', controller: timeController),
+                const SizedBox(height: 16),
+                _formField('Location:', controller: locationController),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const OrderAcceptedPage()),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0B3C16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        child: const Text('Accept'),
                       ),
-                      child: const Text('Reject'),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const OrderRejectedPage()),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        child: const Text('Reject'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _readonlyField(String label, TextEditingController controller) {
-    return TextField(
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2024),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      dateController.text = '${picked.year}/${picked.month.toString().padLeft(2, '0')}/${picked.day.toString().padLeft(2, '0')}';
+    }
+  }
+
+  Widget _formField(String label, {required TextEditingController controller, bool readOnly = false, VoidCallback? onTap}) {
+    return TextFormField(
       controller: controller,
-      readOnly: true,
+      readOnly: readOnly,
+      onTap: onTap,
+      validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),

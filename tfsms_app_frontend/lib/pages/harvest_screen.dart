@@ -36,6 +36,13 @@ class HarvestScreen extends StatelessWidget {
             },
             child: const Text('order request'),
           ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/feedback');
+            },
+            child: const Text('rate us'),
+          ),
         ],
       ),
     );

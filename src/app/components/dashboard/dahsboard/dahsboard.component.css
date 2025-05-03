@@ -8,10 +8,8 @@
 .report-container {
   max-width: 1600px;
   margin: 20px;
-  margin-left: 50px;
   background-color: #ffffff;
   border-radius: 8px;
-  border-style: solid;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -59,6 +57,40 @@ select, input {
   border-radius: 4px;
   font-size: 14px;
   background-color: white;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced date picker styling */
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: white;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+  font-family: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: transparent;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: #f0f0f0;
+}
+
+input[type="date"]:focus,
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .report-details-section {

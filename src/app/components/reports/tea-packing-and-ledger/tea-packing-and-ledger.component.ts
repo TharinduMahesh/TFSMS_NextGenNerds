@@ -1,16 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface LedgerRecord {
-  saleId: string;
-  buyerName: string;
-  kilosSold: number;
-  soldPriceKg: number;
-  transactionType: string;
-  saleDate: string;
-  status: 'Completed' | 'Pending' | 'Cancelled';
-}
+import { TeaPackingLedgerService, TeaPackingLedger } from '../../../Services/tea-packing-and-ledger.service';
 
 @Component({
   selector: 'app-tea-packing-ledger',
@@ -26,20 +17,32 @@ export class TeaPackingLedgerComponent implements OnInit {
   selectedStartDate = '';
   selectedEndDate = '';
 
-  records: LedgerRecord[] = [
-    { saleId: 'S-001', buyerName: 'Ajith', kilosSold: 500, soldPriceKg: 300, transactionType: 'Cash', saleDate: '2024-12-17', status: 'Completed' },
-    { saleId: 'S-002', buyerName: 'Samantha', kilosSold: 0, soldPriceKg: 0, transactionType: 'Cash', saleDate: '2024-12-17', status: 'Pending' },
-    { saleId: 'S-003', buyerName: 'Amara', kilosSold: 400, soldPriceKg: 212, transactionType: 'Card', saleDate: '2024-12-17', status: 'Completed' }
-  ];
-
-  filteredRecords: LedgerRecord[] = [];
+  records: TeaPackingLedger[] = [];
+  filteredRecords: TeaPackingLedger[] = [];
   totalKilos: number = 0;
   totalSales: number = 0;
   totalCashSales: number = 0;
   totalCardSales: number = 0;
 
+  showEditModal = false;
+  editingRecord: TeaPackingLedger | null = null;
+
+  constructor(private ledgerService: TeaPackingLedgerService) {}
+
   ngOnInit(): void {
-    this.filterRecords();
+    this.loadRecords();
+  }
+
+  loadRecords(): void {
+    this.ledgerService.getLedgers().subscribe({
+      next: (data) => {
+        this.records = data;
+        this.filterRecords();
+      },
+      error: (error) => {
+        console.error('Error loading records:', error);
+      }
+    });
   }
 
   filterRecords(): void {
@@ -47,8 +50,13 @@ export class TeaPackingLedgerComponent implements OnInit {
       const matchesSaleID = this.selectedSaleID === 'All Sale IDs' || record.saleId === this.selectedSaleID;
       const matchesTransactionType = this.selectedTransactionType === 'All Types' || record.transactionType === this.selectedTransactionType;
       const matchesStatus = this.selectedStatus === 'All Statuses' || record.status === this.selectedStatus;
-      const matchesStartDate = !this.selectedStartDate || new Date(record.saleDate) >= new Date(this.selectedStartDate);
-      const matchesEndDate = !this.selectedEndDate || new Date(record.saleDate) <= new Date(this.selectedEndDate);
+      
+      const recordDate = new Date(record.saleDate);
+      const startDate = this.selectedStartDate ? new Date(this.selectedStartDate) : null;
+      const endDate = this.selectedEndDate ? new Date(this.selectedEndDate) : null;
+      
+      const matchesStartDate = !startDate || recordDate >= startDate;
+      const matchesEndDate = !endDate || recordDate <= endDate;
 
       return matchesSaleID && matchesTransactionType && matchesStatus && matchesStartDate && matchesEndDate;
     });
@@ -63,16 +71,45 @@ export class TeaPackingLedgerComponent implements OnInit {
     this.totalCardSales = this.filteredRecords.filter(record => record.transactionType === 'Card').length;
   }
 
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'Completed':
-        return 'completed';
-      case 'Pending':
-        return 'pending';
-      case 'Cancelled':
-        return 'cancelled';
-      default:
-        return '';
+  editRecord(record: TeaPackingLedger): void {
+    this.editingRecord = { ...record };
+    this.showEditModal = true;
+  }
+
+  saveEdit(): void {
+    if (this.editingRecord) {
+      this.ledgerService.updateLedger(this.editingRecord).subscribe({
+        next: () => {
+          this.loadRecords();
+          this.showEditModal = false;
+          this.editingRecord = null;
+        },
+        error: (error) => {
+          console.error('Error updating record:', error);
+        }
+      });
     }
+  }
+
+  cancelEdit(): void {
+    this.showEditModal = false;
+    this.editingRecord = null;
+  }
+
+  deleteRecord(saleId: string): void {
+    if (confirm('Are you sure you want to delete this record?')) {
+      this.ledgerService.deleteLedger(saleId).subscribe({
+        next: () => {
+          this.loadRecords();
+        },
+        error: (error) => {
+          console.error('Error deleting record:', error);
+        }
+      });
+    }
+  }
+
+  getStatusClass(status: string): string {
+    return status.toLowerCase();
   }
 }

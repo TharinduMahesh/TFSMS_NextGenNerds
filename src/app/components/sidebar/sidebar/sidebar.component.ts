@@ -18,7 +18,7 @@ export class SidebarComponent {
   currentPageTitle = 'Tea Packing and Ledger'; // Default title
 
   routeTitleMap: RouteTitleMap = {
-    '/dashboard': 'Reports',
+    '/dashboard': 'Dashboard',
     '/suppliers': 'Suppliers',
     '/collector': 'Collector',
     '/ledger-management': 'Ledger Management',

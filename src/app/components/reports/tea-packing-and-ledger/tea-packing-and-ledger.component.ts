@@ -96,17 +96,21 @@ export class TeaPackingLedgerComponent implements OnInit {
     this.editingRecord = null;
   }
 
-  deleteRecord(saleId: string): void {
+  confirmDelete(saleId: string): void {
     if (confirm('Are you sure you want to delete this record?')) {
-      this.ledgerService.deleteLedger(saleId).subscribe({
-        next: () => {
-          this.loadRecords();
-        },
-        error: (error) => {
-          console.error('Error deleting record:', error);
-        }
-      });
+      this.deleteRecord(saleId);
     }
+  }
+
+  deleteRecord(saleId: string): void {
+    this.ledgerService.deleteLedger(saleId).subscribe({
+      next: () => {
+        this.loadRecords();
+      },
+      error: (error) => {
+        console.error('Error deleting record:', error);
+      }
+    });
   }
 
   getStatusClass(status: string): string {

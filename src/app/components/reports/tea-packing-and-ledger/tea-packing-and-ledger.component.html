@@ -30,9 +30,7 @@
         <label class="filter-label">Sale ID:</label>
         <select [(ngModel)]="selectedSaleID" (change)="filterRecords()">
           <option value="All Sale IDs">All Sale IDs</option>
-          <option value="S-001">S-001</option>
-          <option value="S-002">S-002</option>
-          <option value="S-003">S-003</option>
+          <option *ngFor="let record of records" [value]="record.saleId">{{record.saleId}}</option>
         </select>
       </div>
 
@@ -79,6 +77,7 @@
           <th>Transaction Type</th>
           <th>Sale Date</th>
           <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -88,13 +87,61 @@
           <td>{{ record.kilosSold }}</td>
           <td>{{ record.soldPriceKg }}</td>
           <td>{{ record.transactionType }}</td>
-          <td>{{ record.saleDate }}</td>
+          <td>{{ record.saleDate | date:'yyyy-MM-dd' }}</td>
           <td [ngClass]="getStatusClass(record.status)">{{ record.status }}</td>
+          <td class="actions-cell">
+            <button class="action-btn edit-btn" (click)="editRecord(record)">Edit</button>
+            <button class="action-btn delete-btn" (click)="confirmDelete(record.saleId)">Delete</button>
+          </td>
         </tr>
         <tr *ngIf="filteredRecords.length === 0">
-          <td colspan="7" class="no-data">No data available for the selected filters</td>
+          <td colspan="8" class="no-data">No data available for the selected filters</td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal" *ngIf="showEditModal">
+    <div class="modal-content">
+      <h2>Edit Record</h2>
+      <form *ngIf="editingRecord" (ngSubmit)="saveEdit()">
+        <div class="form-group">
+          <label>Sale ID</label>
+          <input type="text" [(ngModel)]="editingRecord.saleId" name="saleId" readonly>
+        </div>
+        <div class="form-group">
+          <label>Buyer Name</label>
+          <input type="text" [(ngModel)]="editingRecord.buyerName" name="buyerName">
+        </div>
+        <div class="form-group">
+          <label>Kilos Sold</label>
+          <input type="number" [(ngModel)]="editingRecord.kilosSold" name="kilosSold">
+        </div>
+        <div class="form-group">
+          <label>Sold Price (Kg)</label>
+          <input type="number" [(ngModel)]="editingRecord.soldPriceKg" name="soldPriceKg">
+        </div>
+        <div class="form-group">
+          <label>Transaction Type</label>
+          <select [(ngModel)]="editingRecord.transactionType" name="transactionType">
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="editingRecord.status" name="status">
+            <option value="Completed">Completed</option>
+            <option value="Pending">Pending</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

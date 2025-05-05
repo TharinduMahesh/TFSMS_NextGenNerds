@@ -10,6 +10,6 @@ namespace test6API.Data
         public DbSet<GrowerSignUp> GrowerSignUps { get; set; }
         public DbSet<GrowerCreateAccount> GrowerCreateAccounts { get; set; }
         public DbSet<GrowerOrder> GrowerOrders { get; set; }
-
+        public DbSet<GrowerBankDetail> GrowerBankDetails { get; set; }
     }
 }

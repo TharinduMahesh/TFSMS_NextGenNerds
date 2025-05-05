@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:growersignup/models/grower_order_model.dart';
 import 'package:growersignup/services/grower_order_api.dart';
+import 'package:growersignup/sreens/grower_ordersucess_page.dart';
 import 'package:intl/intl.dart';
 
 class GrowerOrderPage extends StatefulWidget {
@@ -105,6 +106,7 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> {
       placeDate: harvestDate,
       transportMethod: transportMethod,
       paymentMethod: paymentMethod,
+      GrowerEmail: 'bb@gmail.com',
     );
 
     try {
@@ -113,6 +115,10 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> {
       if (response.growerOrderId != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Order saved successfully!'), backgroundColor: Colors.green),
+        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const GrowerOrdersucessPage()),
         );
         // You can clear the fields after saving
         _superLeafController.clear();

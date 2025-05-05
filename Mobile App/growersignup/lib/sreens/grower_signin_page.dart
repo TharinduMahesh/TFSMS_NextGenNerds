@@ -194,12 +194,6 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> {
                     ),
                   ),
                   const SizedBox(height: 30),
-
-                  // "or" Separator
-                  _buildOrSeparator(),
-                  const SizedBox(height: 30), // Add some space at the bottom if needed
-
-
                 ],
               ),
             ),
@@ -284,17 +278,4 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
       );
     }
-
-  Widget _buildOrSeparator() {
-    return Row(
-      children: [
-        const Expanded(child: Divider(thickness: 0.8)),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Text('or', style: TextStyle(color: secondaryTextColor.withOpacity(0.8), fontSize: 13)),
-        ),
-        const Expanded(child: Divider(thickness: 0.8)),
-      ],
-    );
-  }
 }

@@ -5,6 +5,7 @@ class GrowerOrderModel {
   final DateTime placeDate;
   final String transportMethod;
   final String paymentMethod;
+  final String GrowerEmail;
 
   const GrowerOrderModel({
     this.growerOrderId,
@@ -13,16 +14,19 @@ class GrowerOrderModel {
     required this.placeDate,
     required this.transportMethod,
     required this.paymentMethod,
+    required this.GrowerEmail,
   });
 
-  factory GrowerOrderModel.fromJson(Map<String, dynamic> json) => GrowerOrderModel(
-    growerOrderId: json['growerOrderId'] as int?,
-    superTeaQuantity: (json['superTeaQuantity'] as num).toDouble(),
-    greenTeaQuantity: (json['greenTeaQuantity'] as num).toDouble(),
-    placeDate: DateTime.parse(json['placeDate'] as String),
-    transportMethod: json['transportMethod'] as String,
-    paymentMethod: json['paymentMethod'] as String,
-  );
+  factory GrowerOrderModel.fromJson(Map<String, dynamic> json) =>
+      GrowerOrderModel(
+        growerOrderId: json['growerOrderId'] as int?,
+        superTeaQuantity: (json['superTeaQuantity'] as num).toDouble(),
+        greenTeaQuantity: (json['greenTeaQuantity'] as num).toDouble(),
+        placeDate: DateTime.parse(json['placeDate'] as String),
+        transportMethod: json['transportMethod'] as String,
+        paymentMethod: json['paymentMethod'] as String,
+        GrowerEmail: json['GrowerEmail'] as String,
+      );
 
   Map<String, dynamic> toJson() => {
     'superTeaQuantity': superTeaQuantity,
@@ -30,5 +34,6 @@ class GrowerOrderModel {
     'placeDate': placeDate.toIso8601String(),
     'transportMethod': transportMethod,
     'paymentMethod': paymentMethod,
+    'GrowerEmail': GrowerEmail,
   };
 }

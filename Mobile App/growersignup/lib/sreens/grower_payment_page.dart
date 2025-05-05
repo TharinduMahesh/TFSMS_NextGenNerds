@@ -1,172 +1,100 @@
 import 'package:flutter/material.dart';
-
+import 'package:growersignup/models/grower_payment_model.dart';
+import 'package:growersignup/services/grower_payment_api.dart';
 class GrowerPaymentsPage extends StatefulWidget {
-  const GrowerPaymentsPage({super.key});
+  const GrowerPaymentsPage({Key? key}) : super(key: key);
 
   @override
-  State<GrowerPaymentsPage> createState() => _PaymentsPageState();
+  State<GrowerPaymentsPage> createState() => _PaymentScreenState();
 }
 
-class _PaymentsPageState extends State<GrowerPaymentsPage> {
+class _PaymentScreenState extends State<GrowerPaymentsPage> {
+  late Future<PaymentResponse?> _paymentFuture;
+  final PaymentApiService apiService =
+      PaymentApiService(baseUrl: 'http://your-api-url.com'); // 👈 Replace this
+
+  @override
+  void initState() {
+    super.initState();
+    _paymentFuture = apiService.fetchPayments();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:const Color.fromARGB(255, 255, 255, 255),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.black),
-            onPressed: () {
-              // Handle settings press
-            },
-          ),
-        ],
+        title: const Text('Payments'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
-      body: Container(
-        color: Color(0xFFF8FFEA),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+      body: FutureBuilder<PaymentResponse?>(
+        future: _paymentFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(child: Text('No payment data found.'));
+          }
+
+          final paymentData = snapshot.data!;
+          return Column(
             children: [
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Color(0xFFDCF4A6),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
+                padding: const EdgeInsets.all(16),
+                color: Colors.teal[100],
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Total Payment",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
+                    const Text('Total Payment',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
                     Text(
-                      "Rs. 115 200",
+                      'Rs. ${paymentData.totalPayment.toStringAsFixed(2)}',
                       style: const TextStyle(
-                          fontSize: 28, fontWeight: FontWeight.bold),
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal,
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-        
-              // Payment History List
+              const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
-                  itemCount: 6, // Adjust as needed
+                  itemCount: paymentData.payments.length,
                   itemBuilder: (context, index) {
-                    return PaymentCard(
-                      refNumber: "000085752257",
-                      paymentTime: "25-02-2023,13:22",
-                      paymentMethod: "Bank Transfer",
+                    final payment = paymentData.payments[index];
+                    return Card(
+                      margin:
+                          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: ListTile(
+                        title: Text('Ref: ${payment.refNumber}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Method: ${payment.paymentMethod}'),
+                            Text(
+                                'Time: ${payment.paymentTime.toLocal().toString().substring(0, 16)}'),
+                          ],
+                        ),
+                        trailing: Text(
+                          'Rs. ${payment.amount.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     );
                   },
                 ),
               ),
-        
             ],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        onPressed: () {
-          // Handle FAB press
+          );
         },
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: navigationBar(),
-    );
-  }
-}
-
-class PaymentCard extends StatelessWidget {
-  const PaymentCard({
-    Key? key,
-    required this.refNumber,
-    required this.paymentTime,
-    required this.paymentMethod,
-  }) : super(key: key);
-
-  final String refNumber;
-  final String paymentTime;
-  final String paymentMethod;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Ref Number",
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-            ),
-            Text(
-              refNumber,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Payment Time",
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-            ),
-            Text(
-              paymentTime,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Payment Method",
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-            ),
-            Text(
-              paymentMethod,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
       ),
     );
   }
-}
-Widget navigationBar() {
-  return BottomNavigationBar(
-    type: BottomNavigationBarType.fixed,
-    items: const <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: 'Home',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.notifications),
-        label: 'Notifications',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: 'profile',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.contact_support),
-        label: 'contact',
-      ),   
-    ],
-    selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
-  );
 }

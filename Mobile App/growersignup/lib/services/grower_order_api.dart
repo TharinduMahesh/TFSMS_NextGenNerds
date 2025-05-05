@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class GrowerOrderApi {
   Future<GrowerOrderModel> getGrowerOrder(GrowerOrderModel growerModel) async {
-    const url = 'https://localhost:7196/api/growerorders'; // Replace with your API URL
+    const url = 'https://localhost:7061/api/growerorders'; // Replace with your API URL
 
     try{
       final response = await http.post(

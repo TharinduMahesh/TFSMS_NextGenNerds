@@ -33,4 +33,36 @@ class GrowerCreateApi {
       throw Exception('Failed to sign up: $e');
     }
   }
+    Future<GrowerAccountModel?> getGrowerAccountById(int growerId) async {
+    final url = Uri.parse('https://localhost:7061/api/growercreateaccount/$growerId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        return GrowerAccountModel.fromJson(jsonData);
+      } else {
+        print('Error ${response.statusCode}: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Exception occurred: $e');
+      return null;
+    }
+  }
+
+  Future<void> updateGrowerAccount(GrowerAccountModel grower) async {
+  final url = Uri.parse('https://localhost:7061/api/growercreateaccount/${grower.GrowerAccountId}');
+  final response = await http.put(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(grower.toJson()),
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('Failed to update grower');
+  }
+}
+
 }

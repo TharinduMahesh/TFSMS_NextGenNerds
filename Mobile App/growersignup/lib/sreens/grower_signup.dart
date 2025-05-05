@@ -286,27 +286,6 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
                     ),
                   ),
                   const SizedBox(height: 25),
-
-                  // "or" Separator
-                  _buildOrSeparator(),
-                  const SizedBox(height: 25),
-
-                  // --- Placeholder for Social Logins ---
-                  // Example:
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     IconButton(icon: Icon(Icons.facebook), onPressed: () {}),
-                  //     SizedBox(width: 20),
-                  //     IconButton(icon: Icon(Icons.g_mobiledata), onPressed: () {}), // Placeholder for Google
-                  //   ],
-                  // )
-                  const Text(
-                    '(Social Login Buttons Here)',
-                    style: TextStyle(color: secondaryTextColor),
-                  ),
-
-                  // --- End Placeholder ---
                 ],
               ),
             ),
@@ -428,26 +407,6 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
       validator: validator,
       autovalidateMode:
           AutovalidateMode.onUserInteraction, // Validate on change
-    );
-  }
-
-  // Helper Widget for the "or" Separator
-  Widget _buildOrSeparator() {
-    return Row(
-      children: [
-        const Expanded(child: Divider(thickness: 0.8)),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Text(
-            'or',
-            style: TextStyle(
-              color: secondaryTextColor.withOpacity(0.8),
-              fontSize: 13,
-            ),
-          ),
-        ),
-        const Expanded(child: Divider(thickness: 0.8)),
-      ],
     );
   }
 }

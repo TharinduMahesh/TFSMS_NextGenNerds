@@ -22,6 +22,18 @@ export class ExportService {
     return this.http.get(`${this.apiUrl}/supplier/${supplierId}/payments?format=${format}`, { responseType: 'blob' });
   }
 
+  exportAdvances(format: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/advances?format=${format}`, { responseType: 'blob' });
+  }
+
+  exportDebts(format: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/debts?format=${format}`, { responseType: 'blob' });
+  }
+
+  exportIncentives(format: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/incentives?format=${format}`, { responseType: 'blob' });
+  }
+
   downloadFile(data: Blob, filename: string): void {
     const blob = new Blob([data], { type: data.type });
     const url = window.URL.createObjectURL(blob);

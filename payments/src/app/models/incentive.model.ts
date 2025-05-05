@@ -3,10 +3,11 @@ export interface Incentive {
   supplierId: number;
   qualityBonus: number;
   loyaltyBonus: number;
-  month: string;
-  year: number;
+  totalAmount: number;  // Added this property
+  month: string;        // Format: YYYY-MM
+  notes?: string;       // Added this property
   createdBy?: string;
-  createdDate?: Date;
+  createdDate: Date;    // Changed to non-optional since it's used in the component
   
   // Optional navigation properties
   supplier?: any;

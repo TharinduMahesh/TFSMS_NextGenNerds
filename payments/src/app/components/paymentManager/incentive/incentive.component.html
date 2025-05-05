@@ -1,0 +1,148 @@
+<div class="incentive-page">
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="loading" class="loading-spinner">
+      Loading...
+    </div>
+  
+    <div class="summary-cards">
+      <div class="card light-blue">
+        <h2>{{ totalIncentives }}</h2>
+        <p>Total Incentives</p>
+      </div>
+      <div class="card light-yellow">
+        <h2>LKR {{ totalQualityBonus | number }}</h2>
+        <p>Total Quality Bonus</p>
+      </div>
+      <div class="card light-green">
+        <h2>LKR {{ totalLoyaltyBonus | number }}</h2>
+        <p>Total Loyalty Bonus</p>
+      </div>
+    </div>
+  
+    <div class="incentive-container">
+      <h3>Supplier Incentives</h3>
+      
+      <div class="filters">
+        <div class="filter-group">
+          <label>Supplier:</label>
+          <select [(ngModel)]="selectedSupplier" (change)="filterIncentives()">
+            <option value="">All Suppliers</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+              {{ supplier.supplierId }} - {{ supplier.name }}
+            </option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Filter by Month:</label>
+          <input type="month" [(ngModel)]="selectedMonth" (change)="filterIncentives()" />
+        </div>
+        <div class="filter-group">
+          <div class="export-buttons">
+            <button class="export-btn" (click)="exportIncentivesData('CSV')">Export CSV</button>
+            <button class="export-btn" (click)="exportIncentivesData('EXCEL')">Export Excel</button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="manual-entry">
+        <h4>Add New Incentive</h4>
+        <form [formGroup]="incentiveForm" (ngSubmit)="addIncentive()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Supplier:</label>
+              <select formControlName="supplierId">
+                <option value="">Select Supplier</option>
+                <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+                  {{ supplier.supplierId }} - {{ supplier.name }}
+                </option>
+              </select>
+              <div *ngIf="incentiveForm.get('supplierId')?.touched && incentiveForm.get('supplierId')?.invalid" class="error-message">
+                Supplier is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Month:</label>
+              <input type="month" formControlName="month" />
+              <div *ngIf="incentiveForm.get('month')?.touched && incentiveForm.get('month')?.invalid" class="error-message">
+                Month is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Quality Bonus (LKR):</label>
+              <input type="number" formControlName="qualityBonus" placeholder="Enter amount" />
+              <div *ngIf="incentiveForm.get('qualityBonus')?.touched && incentiveForm.get('qualityBonus')?.invalid" class="error-message">
+                Valid amount is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Loyalty Bonus (LKR):</label>
+              <input type="number" formControlName="loyaltyBonus" placeholder="Enter amount" />
+              <div *ngIf="incentiveForm.get('loyaltyBonus')?.touched && incentiveForm.get('loyaltyBonus')?.invalid" class="error-message">
+                Valid amount is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Notes:</label>
+              <textarea formControlName="notes" placeholder="Enter notes (optional)"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" class="add-btn" [disabled]="loading">
+                {{ loading ? 'Adding...' : 'Add Incentive' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+  
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Incentive ID</th>
+              <th>Supplier ID</th>
+              <th>Month</th>
+              <th>Quality Bonus</th>
+              <th>Loyalty Bonus</th>
+              <th>Total Amount</th>
+              <th>Created Date</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let incentive of filteredIncentives">
+              <td>{{ incentive.incentiveId }}</td>
+              <td>{{ incentive.supplierId }}</td>
+              <td>{{ incentive.month | date:'MMM yyyy' }}</td>
+              <td>LKR {{ incentive.qualityBonus | number }}</td>
+              <td>LKR {{ incentive.loyaltyBonus | number }}</td>
+              <td>LKR {{ incentive.totalAmount | number }}</td>
+              <td>{{ incentive.createdDate | date:'shortDate' }}</td>
+              <!-- <td>{{ incentive.notes }}</td> -->
+              <td>
+                <div class="action-buttons">
+                  <button class="edit-btn" title="Edit Incentive">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="delete-btn" title="Delete Incentive">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="filteredIncentives.length === 0">
+              <td colspan="9" class="no-data">No incentives found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

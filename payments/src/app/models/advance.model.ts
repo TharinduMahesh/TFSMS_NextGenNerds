@@ -1,9 +1,13 @@
 export interface Advance {
   advanceId: number;
   supplierId: number;
-  advanceAmount: number;
+  advanceType: string;     // Added this property
+  description: string;     // Changed from purpose to description
+  amount: number;          // Changed from advanceAmount
+  recoveredAmount: number; // Added this property
   balanceAmount: number;
-  purpose: string;
+  recoveryPercentage: number; // Added this property
+  status: string;          // Added this property
   issueDate: Date;
   createdBy?: string;
   createdDate?: Date;

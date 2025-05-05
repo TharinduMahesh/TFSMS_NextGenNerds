@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Payment } from '../../models/payment.model';
-import { Supplier } from '../../models/supplier.model';
-import { PaymentService } from '../../shared/services/payment.service';
-import { SupplierService } from '../../shared/services/supplier.service';
-import { GreenLeafService } from '../../shared/services/green-leaf.service';
-import { AdvanceService } from '../../shared/services/advance.service';
-import { DebtService } from '../../shared/services/debt.service';
-import { IncentiveService } from '../../shared/services/incentive.service';
-import { ReceiptService } from '../../shared/services/reciept.service';
-import { ExportService } from '../../shared/services/export.service';
-import { PaymentCalculationRequest, PaymentCalculationResult } from '../../models/payment-calculation.model';
+import { Payment } from '../../../models/payment.model';
+import { Supplier } from '../../../models/supplier.model';
+import { PaymentService } from '../../../shared/services/payment.service';
+import { SupplierService } from '../../../shared/services/supplier.service';
+import { GreenLeafService } from '../../../shared/services/green-leaf.service';
+import { AdvanceService } from '../../../shared/services/advance.service';
+import { DebtService } from '../../../shared/services/debt.service';
+import { IncentiveService } from '../../../shared/services/incentive.service';
+import { ReceiptService } from '../../../shared/services/reciept.service';
+import { ExportService } from '../../../shared/services/export.service';
+import { PaymentCalculationResult } from '../../../models/payment-calculation.model';
 import { PaymentCalculatorComponent } from '../payment-calculater/payment-calculater.component';
 
 @Component({
@@ -131,7 +131,7 @@ export class PaymentComponent implements OnInit {
 
     this.debtService.getDebtsBySupplier(supplierId).subscribe({
       next: (debts) => {
-        const totalDebts = debts.reduce((sum, debt) => sum + (debt.balanceAmount - debt.deductionsMade), 0);
+        const totalDebts = debts.reduce((sum, debt) => sum + debt.balanceAmount, 0);
         this.paymentForm.patchValue({ debtDeduction: totalDebts });
       },
       error: (err) => console.error('Error loading debts:', err)
@@ -149,9 +149,9 @@ export class PaymentComponent implements OnInit {
   }
 
   loadSummaryMetrics(): void {
-    this.paymentService.getTotalPaymentsAmount().subscribe({
+    this.paymentService.getTotalPaymentsCount().subscribe({
       next: (total) => {
-        this.totalPayments = this.payments.length;
+        this.totalPayments = total;
       }
     });
 
@@ -195,9 +195,6 @@ export class PaymentComponent implements OnInit {
       debtDeduction: result.debtDeduction,
       incentiveAddition: result.incentiveAddition
     });
-    
-    // Optionally hide calculator after applying values
-    // this.showCalculator = false;
   }
 
   addPayment(): void {
@@ -214,10 +211,16 @@ export class PaymentComponent implements OnInit {
     const netAmount = grossAmount - formValues.advanceDeduction - formValues.debtDeduction + formValues.incentiveAddition;
 
     const payment: Payment = {
-      ...formValues,
       paymentId: 0,
+      supplierId: formValues.supplierId,
+      leafWeight: formValues.leafWeight,
+      rate: formValues.rate,
       grossAmount: grossAmount,
+      advanceDeduction: formValues.advanceDeduction,
+      debtDeduction: formValues.debtDeduction,
+      incentiveAddition: formValues.incentiveAddition,
       netAmount: netAmount,
+      paymentMethod: formValues.paymentMethod,
       paymentDate: new Date(formValues.paymentDate)
     };
 

@@ -1,0 +1,185 @@
+<div class="advance-page">
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="loading" class="loading-spinner">
+      Loading...
+    </div>
+  
+    <div class="summary-cards">
+      <div class="card light-blue">
+        <h2>{{ totalAdvances }}</h2>
+        <p>Total Advances</p>
+      </div>
+      <div class="card light-yellow">
+        <h2>LKR {{ totalOutstandingAmount | number }}</h2>
+        <p>Outstanding Amount</p>
+      </div>
+      <div class="card light-green">
+        <h2>LKR {{ totalRecoveredAmount | number }}</h2>
+        <p>Total Recovered</p>
+      </div>
+    </div>
+  
+    <div class="advance-container">
+      <h3>Supplier Advances</h3>
+      
+      <div class="filters">
+        <div class="filter-group">
+          <label>Advance Type:</label>
+          <select [(ngModel)]="selectedType" (change)="filterAdvances()">
+            <option *ngFor="let type of advanceTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Supplier:</label>
+          <select [(ngModel)]="selectedSupplier" (change)="filterAdvances()">
+            <option value="">All Suppliers</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+              {{ supplier.supplierId }} - {{ supplier.name }}
+            </option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="export-buttons">
+            <button class="export-btn" (click)="exportAdvancesData('CSV')">Export CSV</button>
+            <button class="export-btn" (click)="exportAdvancesData('EXCEL')">Export Excel</button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="manual-entry">
+        <h4>Add New Advance</h4>
+        <form [formGroup]="advanceForm" (ngSubmit)="addAdvance()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Supplier:</label>
+              <select formControlName="supplierId">
+                <option value="">Select Supplier</option>
+                <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+                  {{ supplier.supplierId }} - {{ supplier.name }}
+                </option>
+              </select>
+              <div *ngIf="advanceForm.get('supplierId')?.touched && advanceForm.get('supplierId')?.invalid" class="error-message">
+                Supplier is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Advance Type:</label>
+              <select formControlName="advanceType">
+                <option value="">Select Type</option>
+                <option *ngFor="let type of advanceTypes.slice(1)" [value]="type">{{ type }}</option>
+              </select>
+              <div *ngIf="advanceForm.get('advanceType')?.touched && advanceForm.get('advanceType')?.invalid" class="error-message">
+                Advance type is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Description:</label>
+              <input type="text" formControlName="description" placeholder="Enter description" />
+              <div *ngIf="advanceForm.get('description')?.touched && advanceForm.get('description')?.invalid" class="error-message">
+                Description is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Amount (LKR):</label>
+              <input type="number" formControlName="amount" placeholder="Enter amount" />
+              <div *ngIf="advanceForm.get('amount')?.touched && advanceForm.get('amount')?.invalid" class="error-message">
+                Valid amount is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Issue Date:</label>
+              <input type="date" formControlName="issueDate" />
+              <div *ngIf="advanceForm.get('issueDate')?.touched && advanceForm.get('issueDate')?.invalid" class="error-message">
+                Issue date is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Recovered Amount (LKR):</label>
+              <input type="number" formControlName="recoveredAmount" />
+            </div>
+            
+            <div class="form-group">
+              <label>Balance Amount (LKR):</label>
+              <input type="number" formControlName="balanceAmount" readonly />
+              <div *ngIf="advanceForm.get('balanceAmount')?.touched && advanceForm.get('balanceAmount')?.invalid" class="error-message">
+                Valid balance amount is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Recovery Percentage (%):</label>
+              <input type="number" formControlName="recoveryPercentage" min="1" max="100" />
+              <div *ngIf="advanceForm.get('recoveryPercentage')?.touched && advanceForm.get('recoveryPercentage')?.invalid" class="error-message">
+                Valid percentage (1-100) is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" class="add-btn" [disabled]="loading">
+                {{ loading ? 'Adding...' : 'Add Advance' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+  
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Advance ID</th>
+              <th>Supplier ID</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Issue Date</th>
+              <th>Recovered Amount</th>
+              <th>Balance Amount</th>
+              <th>Recovery %</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let advance of filteredAdvances">
+              <td>{{ advance.advanceId }}</td>
+              <td>{{ advance.supplierId }}</td>
+              <td>{{ advance.advanceType }}</td>
+              <td>{{ advance.description }}</td>
+              <td>LKR {{ advance.amount | number }}</td>
+              <td>{{ advance.issueDate | date:'shortDate' }}</td>
+              <td>LKR {{ advance.recoveredAmount | number }}</td>
+              <td>LKR {{ advance.balanceAmount | number }}</td>
+              <td>{{ advance.recoveryPercentage }}%</td>
+              <td>
+                <span [ngClass]="{'status-active': advance.status === 'Active', 'status-settled': advance.status === 'Settled'}">
+                  {{ advance.status }}
+                </span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="edit-btn" title="Edit Advance">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="delete-btn" title="Delete Advance">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="filteredAdvances.length === 0">
+              <td colspan="11" class="no-data">No advances found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

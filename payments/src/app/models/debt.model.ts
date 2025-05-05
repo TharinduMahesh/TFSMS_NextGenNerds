@@ -1,9 +1,13 @@
 export interface Debt {
   debtId: number;
   supplierId: number;
+  debtType: string;         // Added this property
+  description: string;      // Added this property
+  totalAmount: number;      // Added this property
   balanceAmount: number;
   deductionsMade: number;
-  description: string;
+  deductionPercentage: number; // Added this property
+  status: string;           // Added this property
   issueDate: Date;
   createdBy?: string;
   createdDate?: Date;

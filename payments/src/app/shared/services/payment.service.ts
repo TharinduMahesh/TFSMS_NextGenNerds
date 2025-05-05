@@ -1,5 +1,3 @@
-
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,7 +8,7 @@ import { PaymentCalculationRequest, PaymentCalculationResult } from '../../model
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl ="http://localhost:5274/api/payments";
+  private apiUrl = "http://localhost:5274/api/payments";
 
   constructor(private http: HttpClient) { }
 
@@ -44,6 +42,10 @@ export class PaymentService {
 
   calculatePayment(request: PaymentCalculationRequest): Observable<PaymentCalculationResult> {
     return this.http.post<PaymentCalculationResult>(`${this.apiUrl}/calculate`, request);
+  }
+
+  getTotalPaymentsCount(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count`);
   }
 
   getTotalPaymentsAmount(): Observable<number> {

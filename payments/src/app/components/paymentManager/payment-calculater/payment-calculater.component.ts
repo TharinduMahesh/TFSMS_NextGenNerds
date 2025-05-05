@@ -1,16 +1,16 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Supplier } from '../../models/supplier.model';
-import { Advance } from '../../models/advance.model';
-import { Debt } from '../../models/debt.model';
-import { Incentive } from '../../models/incentive.model';
-import { PaymentCalculationResult } from '../../models/payment-calculation.model';
-import { SupplierService } from '../../shared/services/supplier.service';
-import { GreenLeafService } from '../../shared/services/green-leaf.service';
-import { AdvanceService } from '../../shared/services/advance.service';
-import { DebtService } from '../../shared/services/debt.service';
-import { IncentiveService } from '../../shared/services/incentive.service';
+import { Supplier } from '../../../models/supplier.model';
+import { Advance } from '../../../models/advance.model';
+import { Debt } from '../../../models/debt.model';
+import { Incentive } from '../../../models/incentive.model';
+import { PaymentCalculationResult } from '../../../models/payment-calculation.model';
+import { SupplierService } from '../../../shared/services/supplier.service';
+import { GreenLeafService } from '../../../shared/services/green-leaf.service';
+import { AdvanceService } from '../../../shared/services/advance.service';
+import { DebtService } from '../../../shared/services/debt.service';
+import { IncentiveService } from '../../../shared/services/incentive.service';
 
 @Component({
   selector: 'app-payment-calculator',
@@ -145,7 +145,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     this.debtService.getDebtsBySupplier(supplierId).subscribe({
       next: (data) => {
         this.debts = data;
-        const totalDebts = data.reduce((sum, debt) => sum + (debt.balanceAmount - debt.deductionsMade), 0);
+        const totalDebts = data.reduce((sum, debt) => sum + debt.balanceAmount, 0);
         this.calculatorForm.patchValue({ debtAmount: totalDebts });
       },
       error: (err) => console.error('Error loading debts:', err)

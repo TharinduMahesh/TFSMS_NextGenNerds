@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,6 +10,10 @@ export class IncentiveService {
   private apiUrl = "http://localhost:5274/api/incentives";
 
   constructor(private http: HttpClient) { }
+
+  getAllIncentives(): Observable<Incentive[]> {
+    return this.http.get<Incentive[]>(this.apiUrl);
+  }
 
   getIncentives(): Observable<Incentive[]> {
     return this.http.get<Incentive[]>(this.apiUrl);
@@ -26,5 +29,29 @@ export class IncentiveService {
 
   getCurrentIncentiveForSupplier(supplierId: number): Observable<Incentive> {
     return this.http.get<Incentive>(`${this.apiUrl}/supplier/${supplierId}/current`);
+  }
+
+  createIncentive(incentive: Incentive): Observable<Incentive> {
+    return this.http.post<Incentive>(this.apiUrl, incentive);
+  }
+
+  updateIncentive(incentive: Incentive): Observable<Incentive> {
+    return this.http.put<Incentive>(`${this.apiUrl}/${incentive.incentiveId}`, incentive);
+  }
+
+  deleteIncentive(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  getTotalIncentivesCount(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count`);
+  }
+
+  getTotalQualityBonusAmount(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/totalQualityBonus`);
+  }
+
+  getTotalLoyaltyBonusAmount(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/totalLoyaltyBonus`);
   }
 }

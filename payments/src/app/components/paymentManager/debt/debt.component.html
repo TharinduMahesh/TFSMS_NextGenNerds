@@ -1,0 +1,185 @@
+<div class="debt-page">
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="loading" class="loading-spinner">
+      Loading...
+    </div>
+  
+    <div class="summary-cards">
+      <div class="card light-blue">
+        <h2>{{ totalDebts }}</h2>
+        <p>Total Debts</p>
+      </div>
+      <div class="card light-yellow">
+        <h2>LKR {{ totalOutstandingAmount | number }}</h2>
+        <p>Outstanding Amount</p>
+      </div>
+      <div class="card light-green">
+        <h2>LKR {{ totalDeductionsMade | number }}</h2>
+        <p>Total Recovered</p>
+      </div>
+    </div>
+  
+    <div class="debt-container">
+      <h3>Supplier Debts</h3>
+      
+      <div class="filters">
+        <div class="filter-group">
+          <label>Debt Type:</label>
+          <select [(ngModel)]="selectedType" (change)="filterDebts()">
+            <option *ngFor="let type of debtTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Supplier:</label>
+          <select [(ngModel)]="selectedSupplier" (change)="filterDebts()">
+            <option value="">All Suppliers</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+              {{ supplier.supplierId }} - {{ supplier.name }}
+            </option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="export-buttons">
+            <button class="export-btn" (click)="exportDebtsData('CSV')">Export CSV</button>
+            <button class="export-btn" (click)="exportDebtsData('EXCEL')">Export Excel</button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="manual-entry">
+        <h4>Add New Debt</h4>
+        <form [formGroup]="debtForm" (ngSubmit)="addDebt()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Supplier:</label>
+              <select formControlName="supplierId">
+                <option value="">Select Supplier</option>
+                <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+                  {{ supplier.supplierId }} - {{ supplier.name }}
+                </option>
+              </select>
+              <div *ngIf="debtForm.get('supplierId')?.touched && debtForm.get('supplierId')?.invalid" class="error-message">
+                Supplier is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Debt Type:</label>
+              <select formControlName="debtType">
+                <option value="">Select Type</option>
+                <option *ngFor="let type of debtTypes.slice(1)" [value]="type">{{ type }}</option>
+              </select>
+              <div *ngIf="debtForm.get('debtType')?.touched && debtForm.get('debtType')?.invalid" class="error-message">
+                Debt type is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Description:</label>
+              <input type="text" formControlName="description" placeholder="Enter description" />
+              <div *ngIf="debtForm.get('description')?.touched && debtForm.get('description')?.invalid" class="error-message">
+                Description is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Total Amount (LKR):</label>
+              <input type="number" formControlName="totalAmount" placeholder="Enter amount" />
+              <div *ngIf="debtForm.get('totalAmount')?.touched && debtForm.get('totalAmount')?.invalid" class="error-message">
+                Valid amount is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Issue Date:</label>
+              <input type="date" formControlName="issueDate" />
+              <div *ngIf="debtForm.get('issueDate')?.touched && debtForm.get('issueDate')?.invalid" class="error-message">
+                Issue date is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Deductions Made (LKR):</label>
+              <input type="number" formControlName="deductionsMade" />
+            </div>
+            
+            <div class="form-group">
+              <label>Balance Amount (LKR):</label>
+              <input type="number" formControlName="balanceAmount" readonly />
+              <div *ngIf="debtForm.get('balanceAmount')?.touched && debtForm.get('balanceAmount')?.invalid" class="error-message">
+                Valid balance amount is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Deduction Percentage (%):</label>
+              <input type="number" formControlName="deductionPercentage" min="1" max="100" />
+              <div *ngIf="debtForm.get('deductionPercentage')?.touched && debtForm.get('deductionPercentage')?.invalid" class="error-message">
+                Valid percentage (1-100) is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" class="add-btn" [disabled]="loading">
+                {{ loading ? 'Adding...' : 'Add Debt' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+  
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Debt ID</th>
+              <th>Supplier ID</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Total Amount</th>
+              <th>Issue Date</th>
+              <th>Deductions Made</th>
+              <th>Balance Amount</th>
+              <th>Deduction %</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let debt of filteredDebts">
+              <td>{{ debt.debtId }}</td>
+              <td>{{ debt.supplierId }}</td>
+              <td>{{ debt.debtType }}</td>
+              <td>{{ debt.description }}</td>
+              <td>LKR {{ debt.totalAmount | number }}</td>
+              <td>{{ debt.issueDate | date:'shortDate' }}</td>
+              <td>LKR {{ debt.deductionsMade | number }}</td>
+              <td>LKR {{ debt.balanceAmount | number }}</td>
+              <td>{{ debt.deductionPercentage }}%</td>
+              <td>
+                <span [ngClass]="{'status-active': debt.status === 'Active', 'status-settled': debt.status === 'Settled'}">
+                  {{ debt.status }}
+                </span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="edit-btn" title="Edit Debt">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="delete-btn" title="Delete Debt">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="filteredDebts.length === 0">
+              <td colspan="11" class="no-data">No debts found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

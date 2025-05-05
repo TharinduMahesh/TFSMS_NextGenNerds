@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { SignInComponent } from './components/user/sign-in/sign-in.component';
 import { SignUpComponent } from './components/user/sign-up/sign-up.component';
-import { PaymentComponent } from './components/payment/payment.component';
+import { PaymentComponent } from './components/paymentManager/payment/payment.component';
 import { SuccessComponent } from './components/success/success.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -12,7 +12,7 @@ import { authGuard } from './shared/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 // Uncomment if you plan to use TransactionComponent
 import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
-import { PaymentCalculatorComponent } from './components/payment-calculater/payment-calculater.component';
+import { PaymentCalculatorComponent } from './components/paymentManager/payment-calculater/payment-calculater.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },

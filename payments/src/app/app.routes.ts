@@ -13,6 +13,7 @@ import { HomeComponent } from './components/home/home.component';
 // Uncomment if you plan to use TransactionComponent
 import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
 import { PaymentCalculatorComponent } from './components/paymentManager/payment-calculater/payment-calculater.component';
+import { PaymentManagmentComponent } from './components/paymentManager/payment-managment/payment-managment.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -26,6 +27,7 @@ export const routes: Routes = [
   {path: 'viewtrs', component: TransactionComponent}, // Assuming you have a SuccessComponent
   { path: 'payment', component: PaymentComponent },
   { path: 'payment-calculator', component: PaymentCalculatorComponent },
+  {path : 'payment-management', component: PaymentManagmentComponent},
   {
     path: 'dashboard',
     component: MainLayoutComponent,

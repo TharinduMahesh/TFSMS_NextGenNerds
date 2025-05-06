@@ -1,15 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Claim {
-  season: string;
-  gardenMark: string;
-  invoice: string;
-  returnDate: string;
-  kilosReturned: number;
-  status: 'Approved' | 'Pending' | 'Rejected';
-}
+import { ClaimsService } from '../../../Services/claims.service';
+import { Claim } from '../../../models/claim.interface';
 
 @Component({
   selector: 'app-claims-and-returns',
@@ -24,20 +17,32 @@ export class ClaimsAndReturnsComponent implements OnInit {
   selectedStartDate = '';
   selectedEndDate = '';
 
-  claims: Claim[] = [
-    { season: 'Season01', gardenMark: 'GM-001', invoice: 'INV123', returnDate: '2024-12-01', kilosReturned: 30, status: 'Approved' },
-    { season: 'Season02', gardenMark: 'GM-002', invoice: 'INV124', returnDate: '2024-12-05', kilosReturned: 30, status: 'Pending' },
-    { season: 'Season03', gardenMark: 'GM-003', invoice: 'INV125', returnDate: '2024-12-10', kilosReturned: 20, status: 'Rejected' }
-  ];
-
+  claims: Claim[] = [];
   filteredClaims: Claim[] = [];
   totalReturns: number = 0;
   totalClaimsApproved: number = 0;
   totalClaimsPending: number = 0;
   totalClaimsRejected: number = 0;
 
+  showEditModal = false;
+  editingClaim: Claim | null = null;
+
+  constructor(private claimsService: ClaimsService) {}
+
   ngOnInit(): void {
-    this.filterClaims();
+    this.loadClaims();
+  }
+
+  loadClaims(): void {
+    this.claimsService.getClaims().subscribe({
+      next: (data) => {
+        this.claims = data;
+        this.filterClaims();
+      },
+      error: (error) => {
+        console.error('Error loading claims:', error);
+      }
+    });
   }
 
   filterClaims(): void {
@@ -60,16 +65,49 @@ export class ClaimsAndReturnsComponent implements OnInit {
     this.totalClaimsRejected = this.filteredClaims.filter(claim => claim.status === 'Rejected').length;
   }
 
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'Approved':
-        return 'approved';
-      case 'Pending':
-        return 'pending';
-      case 'Rejected':
-        return 'rejected';
-      default:
-        return '';
+  editClaim(claim: Claim): void {
+    this.editingClaim = { ...claim };
+    this.showEditModal = true;
+  }
+
+  saveEdit(): void {
+    if (this.editingClaim) {
+      this.claimsService.updateClaim(this.editingClaim).subscribe({
+        next: () => {
+          this.loadClaims();
+          this.showEditModal = false;
+          this.editingClaim = null;
+        },
+        error: (error) => {
+          console.error('Error updating claim:', error);
+        }
+      });
     }
+  }
+
+  cancelEdit(): void {
+    this.showEditModal = false;
+    this.editingClaim = null;
+  }
+
+  confirmDelete(id: number): void {
+    if (confirm('Are you sure you want to delete this claim?')) {
+      this.deleteClaim(id);
+    }
+  }
+
+  deleteClaim(id: number): void {
+    this.claimsService.deleteClaim(id).subscribe({
+      next: () => {
+        this.loadClaims();
+      },
+      error: (error) => {
+        console.error('Error deleting claim:', error);
+      }
+    });
+  }
+
+  getStatusClass(status: string): string {
+    return status.toLowerCase();
   }
 }

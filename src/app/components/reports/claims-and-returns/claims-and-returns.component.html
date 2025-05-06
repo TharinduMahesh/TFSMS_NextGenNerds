@@ -30,9 +30,7 @@
         <label class="filter-label">Season:</label>
         <select [(ngModel)]="selectedSeason" (change)="filterClaims()">
           <option value="All Seasons">All Seasons</option>
-          <option value="Season01">Season 01</option>
-          <option value="Season02">Season 02</option>
-          <option value="Season03">Season 03</option>
+          <option *ngFor="let claim of claims" [value]="claim.season">{{ claim.season }}</option>
         </select>
       </div>
 
@@ -69,6 +67,7 @@
           <th>Return Date</th>
           <th>Kilos Returned</th>
           <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -76,14 +75,55 @@
           <td>{{ claim.season }}</td>
           <td>{{ claim.gardenMark }}</td>
           <td>{{ claim.invoice }}</td>
-          <td>{{ claim.returnDate }}</td>
+          <td>{{ claim.returnDate | date:'yyyy-MM-dd' }}</td>
           <td>{{ claim.kilosReturned }}</td>
           <td [ngClass]="getStatusClass(claim.status)">{{ claim.status }}</td>
+          <td class="actions-cell">
+            <button class="action-btn edit-btn" (click)="editClaim(claim)">Edit</button>
+            <button class="action-btn delete-btn" (click)="confirmDelete(claim.id)">Delete</button>
+          </td>
         </tr>
         <tr *ngIf="filteredClaims.length === 0">
-          <td colspan="6" class="no-data">No data available for the selected filters</td>
+          <td colspan="7" class="no-data">No data available for the selected filters</td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal" *ngIf="showEditModal">
+    <div class="modal-content">
+      <h2>Edit Claim</h2>
+      <form *ngIf="editingClaim" (ngSubmit)="saveEdit()">
+        <div class="form-group">
+          <label>Season</label>
+          <input type="text" [(ngModel)]="editingClaim.season" name="season">
+        </div>
+        <div class="form-group">
+          <label>Garden Mark</label>
+          <input type="text" [(ngModel)]="editingClaim.gardenMark" name="gardenMark">
+        </div>
+        <div class="form-group">
+          <label>Invoice</label>
+          <input type="text" [(ngModel)]="editingClaim.invoice" name="invoice">
+        </div>
+        <div class="form-group">
+          <label>Kilos Returned</label>
+          <input type="number" [(ngModel)]="editingClaim.kilosReturned" name="kilosReturned">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="editingClaim.status" name="status">
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

@@ -20,11 +20,19 @@ export class RtReviewComponent implements OnInit {
   isLoading = signal(false);
   error = signal<string | null>(null);
 
+    isModalOpen = signal(false);   //signals for view
+    routeToView = signal<Rview | null>(null);
+  
+    routeToEdit = signal<Rview| null>(null);  //signals for edit
+    isEditModalOpen = signal(false);
+    formModel = signal<Rview | null>(null);
+  
+
   filteredRoutes = computed(() => {
     return this.routes().filter(route => {
       const searchTerm = this.searchTerm().toLowerCase();
       const matchesSearch =
-        route.id?.toString().includes(searchTerm) ||
+        route.rId?.toString().includes(searchTerm) ||
         route.startLocation?.toLowerCase().includes(searchTerm) ||
         route.endLocation?.toLowerCase().includes(searchTerm) ||
         searchTerm === '';
@@ -73,32 +81,53 @@ export class RtReviewComponent implements OnInit {
     });
   }
 
+
+  selectedRoute = signal<Rview | null>(null);
+  
+  onSelectRoute(route: Rview): void {
+    this.selectedRoute.set(route);
+  }
+
   trackById(index: number, item: Rview): number {
-    return item.id ?? index;
+    return item.rId ?? index;
   }
 
   addNewRoute(): void {
-    this.router.navigate(['/rform']);
+    this.router.navigate(['/r-create']);
   }
 
-  onView(id?: number): void {
-    if (id) {
-      this.router.navigate(['/routes/view', id]);
+   //view logic begin
+   onView(): void {
+    const route = this.selectedRoute();
+    if (route?.rId) {
+        this.routeToView.set(route);
+        this.isModalOpen.set(true);
+        console.log('Viewing route:', route.rId);
+    }
+
+  }
+
+  closeModal(): void {
+    this.isModalOpen.set(false);
+    this.routeToView.set(null);
+  }
+  //view logic end
+
+  //edit logic begin
+  onEdit(): void {
+    const route = this.selectedRoute();
+    if (route) {
+      this.formModel.set(route); // <- make sure to set this
+      this.isEditModalOpen.set(true);
     }
   }
-
-  onEdit(id?: number): void {
-    if (id) {
-      this.router.navigate(['/routes/edit', id]);
-    }
-  }
-
   onDelete(id?: number): void {
     if (id && confirm('Are you sure you want to delete this route?')) {
       this.isLoading.set(true);
       this.rService.delete(id).subscribe({
         next: () => {
-          this.loadRoutes(); // Refresh the list
+          this.loadRoutes(); // Refresh after deletion
+          this.selectedRoute.set(null); // Clear selection
         },
         error: (err: Error) => {
           this.error.set(err.message || 'Failed to delete route');
@@ -107,4 +136,5 @@ export class RtReviewComponent implements OnInit {
       });
     }
   }
+
 }

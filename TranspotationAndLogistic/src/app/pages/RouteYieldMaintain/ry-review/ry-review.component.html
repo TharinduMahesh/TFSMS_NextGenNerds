@@ -49,7 +49,7 @@
         <!-- Delete Button -->
         <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to Delete Route'">
           <button
-            (click)="selectedRoute() ? deleteYield(selectedRoute()!.routeId) : null"
+            (click)="selectedRoute() ? deleteYield(selectedRoute()!.rId) : null"
             [disabled]="!selectedRoute()"
           >
             Delete
@@ -73,10 +73,10 @@
         @for (route of filteredYieldLists(); track trackById($index, route)) {
           <tr 
             (click)="onSelectRoute(route)" 
-            [class.selected]="selectedRoute()?.routeId === route.routeId"
+            [class.selected]="selectedRoute()?.rId === route.rId"
           >
-            <td>{{ route.routeId }}</td>
-            <td>{{ route.routeName }}</td>
+            <td>{{ route.rId }}</td>
+            <td>{{ route.rName }}</td>
             <td>{{ route.collected_Yield }}</td>
             <td>{{ route.golden_Tips_Present}}</td>
             <td>{{ route.collectorID }}</td>

@@ -20,6 +20,7 @@
     <button class="add-route" (click)="addNewRoute()">
       + Add New Route
     </button>
+
   </div>
 
   @if (isLoading()) {
@@ -30,6 +31,31 @@
   }
 
   <div class="route-list">
+    <div class="route-caption">
+      <h2>Routes</h2>
+      <div class="caption-actions">
+        <!-- View Button -->
+        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to View Route'">
+          <button (click)="onView()" [disabled]="!selectedRoute()">View</button>
+        </div>
+      
+        <!-- Edit Button -->
+        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to Edit Route'">
+        <button (click)="onEdit()" [disabled]="!selectedRoute()">Edit</button>
+        </div>
+
+        <!-- Delete Button -->
+        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to Delete Route'">
+          <button
+            (click)="selectedRoute() ? onDelete(selectedRoute()!.rId) : null"
+            [disabled]="!selectedRoute()"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+      
+    </div>
     <table>
       <thead>
         <tr>
@@ -40,12 +66,13 @@
           <th>Distance (km)</th>
           <th>Collector</th>
           <th>Vehicle</th>
-          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         @for (route of filteredRoutes(); track trackById($index, route)) {
-          <tr>
+          <tr 
+            (click)="onSelectRoute(route)"
+            [class.selected]="selectedRoute()?.rId === route.rId"  >
             <td>{{ route.rId }}</td>
             <td>{{ route.rName }}</td>
             <td>{{ route.startLocation }}</td>
@@ -53,11 +80,6 @@
             <td>{{ route.distance }}</td>
             <td>{{ route.collectorId }}</td>
             <td>{{ route.vehicleId }}</td>
-            <td class="actions">
-              <button (click)="onView(route.id)">View</button>
-              <button (click)="onEdit(route.id)">Edit</button>
-              <button (click)="onDelete(route.id)">Delete</button>
-            </td>
           </tr>
         } @empty {
           <tr>
@@ -65,6 +87,9 @@
           </tr>
         }
       </tbody>
+      
     </table>
   </div>
+
+
 </div>

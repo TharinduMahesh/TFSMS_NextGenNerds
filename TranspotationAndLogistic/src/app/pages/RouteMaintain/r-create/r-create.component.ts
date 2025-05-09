@@ -1,5 +1,4 @@
-// rform.component.ts
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, signal, WritableSignal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -13,44 +12,86 @@ import { RService } from '../../../services/RouteMaintainService/RouteMaintain.s
   templateUrl: './r-create.component.html',
   styleUrls: ['./r-create.component.scss']
 })
-export class RtCreateComponent {
+export class RtCreateComponent implements OnInit {
   formData = signal<Rview>({
-    id:0,
-    rName:'',
+    rId: 0,
+    rName: '',
     startLocation: '',
     endLocation: '',
-    distance: '',
-    collectorId:0,
-    vehicleId:0
+    distance: '0',
+    collectorId: 0,   
+    vehicleId: 0,     
+    growerLocations: []
   });
 
-  constructor(private router: Router , private rService: RService) {}
+  waypoints: { location: string }[] = [];
+
+  constructor(
+    private router: Router,
+    private rService: RService
+  ) {}
+
+  ngOnInit() {}
 
   handleInput(field: keyof Rview, event: Event) {
     const input = event.target as HTMLInputElement;
-    let value: string | number | null = input.value;
+    const value = input.value;
+  
+    this.formData.update(data => ({
+      ...data,
+      [field]: (field === 'collectorId' || field === 'vehicleId') ? Number(value) : value
+    }));
+  }
 
-    this.formData.update(data => ({ ...data, [field]: value }));
+  addWaypoint(location: string) {
+    if (!location) return;
+  
+    this.waypoints.push({ location });
+  
+    this.formData.update(data => ({
+      ...data,
+      growerLocations: [
+        ...data.growerLocations,
+        {
+          description: location,
+          latitude: 0,       // Optional: replace with actual lat
+          longitude: 0,      // Optional: replace with actual lng
+          RtListId: data.rId
+        }
+      ]
+    })); 
+  }
+
+  removeWaypoint(index: number) {
+    this.waypoints.splice(index, 1);
+    this.formData.update(data => {
+      const newLocations = [...data.growerLocations];
+      newLocations.splice(index, 1);
+      return { ...data, growerLocations: newLocations };
+    });
   }
 
   onSubmit(event: Event) {
     event.preventDefault();
     const formValue = this.formData();
-  
+    
+    // Ensure numeric IDs are numbers
+    formValue.collectorId = Number(formValue.collectorId);
+    formValue.vehicleId = Number(formValue.vehicleId);
+    
     this.rService.create(formValue).subscribe({
       next: (res) => {
         console.log('Route created successfully:', res);
-        this.router.navigate(['/rview']);
+        this.router.navigate(['/r-review']);
       },
       error: (err) => {
         console.error('Error creating route:', err);
-        alert(err.message); // optional: show user-friendly error
+        alert('Error creating route: ' + err.message);
       }
     });
   }
-  
 
   onCancel() {
-    this.router.navigate(['/rview']);
+    this.router.navigate(['/r-review']);
   }
 }

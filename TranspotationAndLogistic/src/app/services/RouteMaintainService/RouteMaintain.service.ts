@@ -7,7 +7,7 @@ import { Rview } from '../../models/rview.model';
   providedIn: 'root'
 })
 export class RService {
-  private apiUrl = 'https://localhost:7263/api/rview';
+  private apiUrl = 'https://localhost:7263/api/routemaintain';
 
   constructor(private http: HttpClient) { }
 
@@ -30,6 +30,7 @@ export class RService {
     return this.http.post<Rview>(this.apiUrl, rview).pipe(
       catchError(this.handleError)
     );
+    
   }
 
   // Update existing route

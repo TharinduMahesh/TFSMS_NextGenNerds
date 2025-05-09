@@ -1,111 +1,118 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TfactoryMng.Data;
-using TfactoryMng.Model;
+﻿//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using TfactoryMng.Data;
+//using TfactoryMng.Model;
 
-namespace TfactoryMng.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    public class TransportPerformanceController : ControllerBase
-    {
-        private readonly AppDbContext _context;
+//namespace TfactoryMng.Controllers
+//{
+//    [ApiController]
+//    [Route("api/[controller]")]
+//    public class TransportPerformanceController : ControllerBase
+//    {
+//        private readonly AppDbContext _context;
 
-        public TransportPerformanceController(AppDbContext context)
-        {
-            _context = context;
-        }
+//        public TransportPerformanceController(AppDbContext context)
+//        {
+//            _context = context;
+//        }
 
-        // GET: api/TransportPerformance
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TransportPerformance>>> GetAll()
-        {
-            return await _context.TransportPerformances
-                .Include(t => t.RtList)
-                .ToListAsync();
-        }
+//        // GET: api/TransportPerformance
+//        [HttpGet]
+//        public async Task<ActionResult<IEnumerable<TransportPerformance>>> GetAll()
+//        {
+//            return await _context.TransportPerformances.Include(t => t.TransportCost)
+//                .ToListAsync();
+//        }
 
-        // GET: api/TransportPerformance/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TransportPerformance>> GetById(int id)
-        {
-            var performance = await _context.TransportPerformances
-                .Include(t => t.RtList)
-                .FirstOrDefaultAsync(t => t.id == id);
+//        // GET: api/TransportPerformance/5
+//        [HttpGet("{id}")]
+//        public async Task<ActionResult<TransportPerformance>> GetById(int id)
+//        {
+//            var performance = await _context.TransportPerformances
+//                .Include(t => t.RtList)
+//                .Include(t => t.TransportCost)
+//                .FirstOrDefaultAsync(t => t.tpid == id);
 
-            return performance == null ? NotFound() : Ok(performance);
-        }
+//            return performance == null ? NotFound() : Ok(performance);
+//        }
 
-        // POST: api/TransportPerformance
-        [HttpPost]
-        public async Task<ActionResult<TransportPerformance>> Create(TransportPerformance performance)
-        {
-            if (!await _context.RtLists.AnyAsync(r => r.rName == performance.rName))
-            {
-                return BadRequest("Route does not exist");
-            }
+//        // POST: api/TransportPerformance
+//        [HttpPost]
+//        public async Task<ActionResult<TransportPerformance>> Create(TransportPerformance performance)
+//        {
+//            if (!await _context.RtLists.AnyAsync(r => r.rName == performance.rName))
+//            {
+//                return BadRequest("Route does not exist");
+//            }
 
-            // Calculate isOnTime automatically
-            performance.isOnTime = performance.arrivalTime <= performance.scheduledTime;
+//            if (!await _context.TransportCosts.AnyAsync(tc => tc.tId == performance.TransportCostId))
+//            {
+//                return BadRequest("Transport cost does not exist");
+//            }
 
-            _context.TransportPerformances.Add(performance);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = performance.id }, performance);
-        }
+//            performance.isOnTime = performance.arrivalTime <= performance.scheduledTime;
 
-        // PUT: api/TransportPerformance/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, TransportPerformance performance)
-        {
-            if (id != performance.id)
-            {
-                return BadRequest();
-            }
+//            _context.TransportPerformances.Add(performance);
+//            await _context.SaveChangesAsync();
+//            return CreatedAtAction(nameof(GetById), new { id = performance.tpid }, performance);
+//        }
 
-            if (!await _context.RtLists.AnyAsync(r => r.rName == performance.rName))
-            {
-                return BadRequest("Route does not exist");
-            }
+//        // PUT: api/TransportPerformance/5
+//        [HttpPut("{id}")]
+//        public async Task<IActionResult> Update(int id, TransportPerformance performance)
+//        {
+//            if (id != performance.tpid)
+//            {
+//                return BadRequest();
+//            }
 
-            // Recalculate isOnTime
-            performance.isOnTime = performance.arrivalTime <= performance.scheduledTime;
+//            if (!await _context.RtLists.AnyAsync(r => r.rName == performance.rName))
+//            {
+//                return BadRequest("Route does not exist");
+//            }
 
-            _context.Entry(performance).State = EntityState.Modified;
+//            if (!await _context.TransportCosts.AnyAsync(tc => tc.tId == performance.TransportCostId))
+//            {
+//                return BadRequest("Transport cost does not exist");
+//            }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TransportPerformanceExists(id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
+//            performance.isOnTime = performance.arrivalTime <= performance.scheduledTime;
+//            _context.Entry(performance).State = EntityState.Modified;
 
-            return NoContent();
-        }
+//            try
+//            {
+//                await _context.SaveChangesAsync();
+//            }
+//            catch (DbUpdateConcurrencyException)
+//            {
+//                if (!TransportPerformanceExists(id))
+//                {
+//                    return NotFound();
+//                }
+//                throw;
+//            }
 
-        // DELETE: api/TransportPerformance/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var performance = await _context.TransportPerformances.FindAsync(id);
-            if (performance == null)
-            {
-                return NotFound();
-            }
+//            return NoContent();
+//        }
 
-            _context.TransportPerformances.Remove(performance);
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
+//        // DELETE: api/TransportPerformance/5
+//        [HttpDelete("{id}")]
+//        public async Task<IActionResult> Delete(int id)
+//        {
+//            var performance = await _context.TransportPerformances.FindAsync(id);
+//            if (performance == null)
+//            {
+//                return NotFound();
+//            }
 
-        private bool TransportPerformanceExists(int id)
-        {
-            return _context.TransportPerformances.Any(e => e.id == id);
-        }
-    }
-}
+//            _context.TransportPerformances.Remove(performance);
+//            await _context.SaveChangesAsync();
+//            return NoContent();
+//        }
+
+//        private bool TransportPerformanceExists(int id)
+//        {
+//            return _context.TransportPerformances.Any(e => e.tpid == id);
+//        }
+//    }
+//}

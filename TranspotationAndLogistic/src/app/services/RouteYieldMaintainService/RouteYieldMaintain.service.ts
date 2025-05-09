@@ -9,7 +9,7 @@ import { YieldList } from '../../models/rview.model';
 })
 
 export class RyService {
-  private apiUrl = 'https://localhost:7263/api/rytrack';
+  private apiUrl = 'https://localhost:7263/api/routeyieldmaintain';
   constructor(private http: HttpClient) {}
 
   // Get all YieldLists

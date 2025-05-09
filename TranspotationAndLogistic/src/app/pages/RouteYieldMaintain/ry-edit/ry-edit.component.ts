@@ -21,8 +21,8 @@ export class RyEditComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   form = this.fb.group({
-    routeId: [0],
-    routeName: ['', Validators.required],
+    rId: [0],
+    rName: ['', Validators.required],
     collected_Yield: ['', Validators.required],
     golden_Tips_Present: ['false'],
     collectorID: [0, Validators.required],
@@ -42,7 +42,7 @@ export class RyEditComponent implements OnInit {
         ...this.form.getRawValue()
       };
   
-      this.ryService.updateYieldList(updatedRoute.routeId, updatedRoute).subscribe({
+      this.ryService.updateYieldList(updatedRoute.rId, updatedRoute).subscribe({
         next: () => this.close.emit(),
         error: (err) => console.error('Update failed', err)
       });

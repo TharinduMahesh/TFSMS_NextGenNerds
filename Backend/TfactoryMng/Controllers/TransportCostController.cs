@@ -1,105 +1,101 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TfactoryMng.Data;
-using TfactoryMng.Model;
+﻿//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using TfactoryMng.Data;
+//using TfactoryMng.Model;
 
-namespace TfactoryMng.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    public class TransportCostController : ControllerBase
-    {
-        private readonly AppDbContext _context;
+//namespace TfactoryMng.Controllers
+//{
+//    [ApiController]
+//    [Route("api/[controller]")]
+//    public class TransportCostController : ControllerBase
+//    {
+//        private readonly AppDbContext _context;
 
-        public TransportCostController(AppDbContext context)
-        {
-            _context = context;
-        }
+//        public TransportCostController(AppDbContext context)
+//        {
+//            _context = context;
+//        }
 
-        // GET: api/TransportCost
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TransportCost>>> GetAll()
-        {
-            return await _context.TransportCosts
-                .Include(t => t.RtList)
-                .ToListAsync();
-        }
+//        // GET: api/TransportCost
+//        [HttpGet]
+//        public async Task<ActionResult<IEnumerable<TransportCost>>> GetAll()
+//        {
+//            return await _context.TransportCosts.ToListAsync();
+//        }
 
-        // GET: api/TransportCost/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TransportCost>> GetById(int id)
-        {
-            var transportCost = await _context.TransportCosts
-                .Include(t => t.RtList)
-                .FirstOrDefaultAsync(t => t.id == id);
+//        // GET: api/TransportCost/5
+//        [HttpGet("{id}")]
+//        public async Task<ActionResult<TransportCost>> GetById(int id)
+//        {
+//            var transportCost = await _context.TransportCosts.FirstOrDefaultAsync(t => t.tId == id);
 
-            return transportCost == null ? NotFound() : Ok(transportCost);
-        }
+//            return transportCost == null ? NotFound() : Ok(transportCost);
+//        }
 
-        // POST: api/TransportCost
-        [HttpPost]
-        public async Task<ActionResult<TransportCost>> Create(TransportCost transportCost)
-        {
-            if (!await _context.RtLists.AnyAsync(r => r.rName == transportCost.rName))
-            {
-                return BadRequest("Route does not exist");
-            }
+//        // POST: api/TransportCost
+//        [HttpPost]
+//        public async Task<ActionResult<TransportCost>> Create(TransportCost transportCost)
+//        {
+//            if (!await _context.RtLists.AnyAsync(r => r.rName == transportCost.transporterName))
+//            {
+//                return BadRequest("Route does not exist");
+//            }
 
-            _context.TransportCosts.Add(transportCost);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = transportCost.id }, transportCost);
-        }
+//            _context.TransportCosts.Add(transportCost);
+//            await _context.SaveChangesAsync();
+//            return CreatedAtAction(nameof(GetById), new { id = transportCost.tId }, transportCost);
+//        }
 
-        // PUT: api/TransportCost/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, TransportCost transportCost)
-        {
-            if (id != transportCost.id)
-            {
-                return BadRequest();
-            }
+//        // PUT: api/TransportCost/5
+//        [HttpPut("{id}")]
+//        public async Task<IActionResult> Update(int id, TransportCost transportCost)
+//        {
+//            if (id != transportCost.tId)
+//            {
+//                return BadRequest();
+//            }
 
-            if (!await _context.RtLists.AnyAsync(r => r.rName == transportCost.rName))
-            {
-                return BadRequest("Route does not exist");
-            }
+//            if (!await _context.RtLists.AnyAsync(r => r.rName == transportCost.transporterName))
+//            {
+//                return BadRequest("Route does not exist");
+//            }
 
-            _context.Entry(transportCost).State = EntityState.Modified;
+//            _context.Entry(transportCost).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TransportCostExists(id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
+//            try
+//            {
+//                await _context.SaveChangesAsync();
+//            }
+//            catch (DbUpdateConcurrencyException)
+//            {
+//                if (!TransportCostExists(id))
+//                {
+//                    return NotFound();
+//                }
+//                throw;
+//            }
 
-            return NoContent();
-        }
+//            return NoContent();
+//        }
 
-        // DELETE: api/TransportCost/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var transportCost = await _context.TransportCosts.FindAsync(id);
-            if (transportCost == null)
-            {
-                return NotFound();
-            }
+//        // DELETE: api/TransportCost/5
+//        [HttpDelete("{id}")]
+//        public async Task<IActionResult> Delete(int id)
+//        {
+//            var transportCost = await _context.TransportCosts.FindAsync(id);
+//            if (transportCost == null)
+//            {
+//                return NotFound();
+//            }
 
-            _context.TransportCosts.Remove(transportCost);
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
+//            _context.TransportCosts.Remove(transportCost);
+//            await _context.SaveChangesAsync();
+//            return NoContent();
+//        }
 
-        private bool TransportCostExists(int id)
-        {
-            return _context.TransportCosts.Any(e => e.id == id);
-        }
-    }
-}
+//        private bool TransportCostExists(int id)
+//        {
+//            return _context.TransportCosts.Any(e => e.tId == id);
+//        }
+//    }
+//}

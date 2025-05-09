@@ -7,7 +7,7 @@ import { Debt } from '../../models/debt.model';
   providedIn: 'root'
 })
 export class DebtService {
-  private apiUrl = "http://localhost:5274/api/debts";
+  private apiUrl = "https://localhost:7203/api/debts";
 
   constructor(private http: HttpClient) { }
 
@@ -23,8 +23,8 @@ export class DebtService {
     return this.http.get<Debt>(`${this.apiUrl}/${id}`);
   }
 
-  getDebtsBySupplier(supplierId: number): Observable<Debt[]> {
-    return this.http.get<Debt[]>(`${this.apiUrl}/supplier/${supplierId}`);
+  getDebtsBySupplier(SupplierId: number): Observable<Debt[]> {
+    return this.http.get<Debt[]>(`${this.apiUrl}/supplier/${SupplierId}`);
   }
 
   createDebt(debt: Debt): Observable<Debt> {

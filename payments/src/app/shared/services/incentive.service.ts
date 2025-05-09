@@ -7,7 +7,7 @@ import { Incentive } from '../../models/incentive.model';
   providedIn: 'root'
 })
 export class IncentiveService {
-  private apiUrl = "http://localhost:5274/api/incentives";
+  private apiUrl = "https://localhost:7203/incentives";
 
   constructor(private http: HttpClient) { }
 
@@ -23,12 +23,12 @@ export class IncentiveService {
     return this.http.get<Incentive>(`${this.apiUrl}/${id}`);
   }
 
-  getIncentivesBySupplier(supplierId: number): Observable<Incentive[]> {
-    return this.http.get<Incentive[]>(`${this.apiUrl}/supplier/${supplierId}`);
+  getIncentivesBySupplier(SupplierId: number): Observable<Incentive[]> {
+    return this.http.get<Incentive[]>(`${this.apiUrl}/supplier/${SupplierId}`);
   }
 
-  getCurrentIncentiveForSupplier(supplierId: number): Observable<Incentive> {
-    return this.http.get<Incentive>(`${this.apiUrl}/supplier/${supplierId}/current`);
+  getCurrentIncentiveForSupplier(SupplierId: number): Observable<Incentive> {
+    return this.http.get<Incentive>(`${this.apiUrl}/supplier/${SupplierId}/current`);
   }
 
   createIncentive(incentive: Incentive): Observable<Incentive> {

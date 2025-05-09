@@ -1,5 +1,5 @@
 export interface Supplier {
-    supplierId: number;
+    SupplierId: number;
     name: string;
     contact: string;
     area: string;

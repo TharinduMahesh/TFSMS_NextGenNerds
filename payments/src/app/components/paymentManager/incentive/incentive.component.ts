@@ -36,7 +36,7 @@ export class IncentiveComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.incentiveForm = this.fb.group({
-      supplierId: ['', Validators.required],
+      SupplierId: ['', Validators.required],
       month: [new Date().toISOString().split('T')[0].substring(0, 7), Validators.required],
       qualityBonus: [0, [Validators.required, Validators.min(0)]],
       loyaltyBonus: [0, [Validators.required, Validators.min(0)]],
@@ -116,7 +116,7 @@ export class IncentiveComponent implements OnInit {
 
   filterIncentives(): void {
     this.filteredIncentives = this.incentives.filter(incentive => {
-      const supplierMatch = !this.selectedSupplier || incentive.supplierId.toString() === this.selectedSupplier;
+      const supplierMatch = !this.selectedSupplier || incentive.SupplierId.toString() === this.selectedSupplier;
       const monthMatch = !this.selectedMonth || incentive.month.includes(this.selectedMonth);
       return supplierMatch && monthMatch;
     });
@@ -134,7 +134,7 @@ export class IncentiveComponent implements OnInit {
     const formValues = this.incentiveForm.value;
     const incentive: Incentive = {
       incentiveId: 0,
-      supplierId: formValues.supplierId,
+      SupplierId: formValues.SupplierId,
       month: formValues.month,
       qualityBonus: formValues.qualityBonus,
       loyaltyBonus: formValues.loyaltyBonus,

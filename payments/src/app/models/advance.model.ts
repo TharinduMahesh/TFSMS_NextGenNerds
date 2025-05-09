@@ -1,6 +1,6 @@
 export interface Advance {
   advanceId: number;
-  supplierId: number;
+  SupplierId: number;
   advanceType: string;     // Added this property
   description: string;     // Changed from purpose to description
   amount: number;          // Changed from advanceAmount

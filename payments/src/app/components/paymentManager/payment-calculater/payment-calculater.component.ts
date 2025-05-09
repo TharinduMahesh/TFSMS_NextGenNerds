@@ -45,7 +45,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     private incentiveService: IncentiveService
   ) {
     this.calculatorForm = this.fb.group({
-      supplierId: ['', Validators.required],
+      SupplierId: ['', Validators.required],
       leafWeight: ['', [Validators.required, Validators.min(0.01)]],
       rate: [200, [Validators.required, Validators.min(0.01)]],
       includeAdvances: [true],
@@ -83,7 +83,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     const updates: any = {};
     
     if (this.initialSupplierId) {
-      updates.supplierId = this.initialSupplierId;
+      updates.SupplierId = this.initialSupplierId;
     }
     
     if (this.initialLeafWeight) {
@@ -116,13 +116,13 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
   }
 
   onSupplierChange(): void {
-    const supplierId = this.calculatorForm.get('supplierId')?.value;
-    if (!supplierId) return;
+    const SupplierId = this.calculatorForm.get('SupplierId')?.value;
+    if (!SupplierId) return;
 
     this.loading = true;
 
     // Get the latest green leaf weight for this supplier
-    this.greenLeafService.getLatestGreenLeafWeight(supplierId).subscribe({
+    this.greenLeafService.getLatestGreenLeafWeight(SupplierId).subscribe({
       next: (weight) => {
         if (weight > 0 && !this.initialLeafWeight) {
           this.calculatorForm.patchValue({ leafWeight: weight });
@@ -132,7 +132,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier advances
-    this.advanceService.getAdvancesBySupplier(supplierId).subscribe({
+    this.advanceService.getAdvancesBySupplier(SupplierId).subscribe({
       next: (data) => {
         this.advances = data;
         const totalAdvances = data.reduce((sum, advance) => sum + advance.balanceAmount, 0);
@@ -142,7 +142,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier debts
-    this.debtService.getDebtsBySupplier(supplierId).subscribe({
+    this.debtService.getDebtsBySupplier(SupplierId).subscribe({
       next: (data) => {
         this.debts = data;
         const totalDebts = data.reduce((sum, debt) => sum + debt.balanceAmount, 0);
@@ -152,7 +152,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier incentives
-    this.incentiveService.getCurrentIncentiveForSupplier(supplierId).subscribe({
+    this.incentiveService.getCurrentIncentiveForSupplier(SupplierId).subscribe({
       next: (data) => {
         if (data) {
           this.incentives = [data];

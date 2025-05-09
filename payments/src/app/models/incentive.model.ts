@@ -1,6 +1,6 @@
 export interface Incentive {
   incentiveId: number;
-  supplierId: number;
+  SupplierId: number;
   qualityBonus: number;
   loyaltyBonus: number;
   totalAmount: number;  // Added this property

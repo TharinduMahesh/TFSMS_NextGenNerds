@@ -36,8 +36,8 @@
           <label>Supplier:</label>
           <select [(ngModel)]="selectedSupplier" (change)="filterAdvances()">
             <option value="">All Suppliers</option>
-            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-              {{ supplier.supplierId }} - {{ supplier.name }}
+            <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+              {{ supplier.SupplierId }} - {{ supplier.name }}
             </option>
           </select>
         </div>
@@ -55,13 +55,13 @@
           <div class="form-grid">
             <div class="form-group">
               <label>Supplier:</label>
-              <select formControlName="supplierId">
+              <select formControlName="SupplierId">
                 <option value="">Select Supplier</option>
-                <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-                  {{ supplier.supplierId }} - {{ supplier.name }}
+                <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+                  {{ supplier.SupplierId }} - {{ supplier.name }}
                 </option>
               </select>
-              <div *ngIf="advanceForm.get('supplierId')?.touched && advanceForm.get('supplierId')?.invalid" class="error-message">
+              <div *ngIf="advanceForm.get('SupplierId')?.touched && advanceForm.get('SupplierId')?.invalid" class="error-message">
                 Supplier is required
               </div>
             </div>
@@ -151,7 +151,7 @@
           <tbody>
             <tr *ngFor="let advance of filteredAdvances">
               <td>{{ advance.advanceId }}</td>
-              <td>{{ advance.supplierId }}</td>
+              <td>{{ advance.SupplierId }}</td>
               <td>{{ advance.advanceType }}</td>
               <td>{{ advance.description }}</td>
               <td>LKR {{ advance.amount | number }}</td>

@@ -36,8 +36,8 @@
           <label>Supplier:</label>
           <select [(ngModel)]="selectedSupplier" (change)="filterDebts()">
             <option value="">All Suppliers</option>
-            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-              {{ supplier.supplierId }} - {{ supplier.name }}
+            <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+              {{ supplier.SupplierId }} - {{ supplier.name }}
             </option>
           </select>
         </div>
@@ -55,13 +55,13 @@
           <div class="form-grid">
             <div class="form-group">
               <label>Supplier:</label>
-              <select formControlName="supplierId">
+              <select formControlName="SupplierId">
                 <option value="">Select Supplier</option>
-                <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-                  {{ supplier.supplierId }} - {{ supplier.name }}
+                <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+                  {{ supplier.SupplierId }} - {{ supplier.name }}
                 </option>
               </select>
-              <div *ngIf="debtForm.get('supplierId')?.touched && debtForm.get('supplierId')?.invalid" class="error-message">
+              <div *ngIf="debtForm.get('SupplierId')?.touched && debtForm.get('SupplierId')?.invalid" class="error-message">
                 Supplier is required
               </div>
             </div>
@@ -151,7 +151,7 @@
           <tbody>
             <tr *ngFor="let debt of filteredDebts">
               <td>{{ debt.debtId }}</td>
-              <td>{{ debt.supplierId }}</td>
+              <td>{{ debt.SupplierId }}</td>
               <td>{{ debt.debtType }}</td>
               <td>{{ debt.description }}</td>
               <td>LKR {{ debt.totalAmount | number }}</td>

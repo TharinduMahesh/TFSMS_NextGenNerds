@@ -30,8 +30,8 @@
           <label>Supplier:</label>
           <select [(ngModel)]="selectedSupplier" (change)="filterIncentives()">
             <option value="">All Suppliers</option>
-            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-              {{ supplier.supplierId }} - {{ supplier.name }}
+            <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+              {{ supplier.SupplierId }} - {{ supplier.name }}
             </option>
           </select>
         </div>
@@ -53,13 +53,13 @@
           <div class="form-grid">
             <div class="form-group">
               <label>Supplier:</label>
-              <select formControlName="supplierId">
+              <select formControlName="SupplierId">
                 <option value="">Select Supplier</option>
-                <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-                  {{ supplier.supplierId }} - {{ supplier.name }}
+                <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+                  {{ supplier.SupplierId }} - {{ supplier.name }}
                 </option>
               </select>
-              <div *ngIf="incentiveForm.get('supplierId')?.touched && incentiveForm.get('supplierId')?.invalid" class="error-message">
+              <div *ngIf="incentiveForm.get('SupplierId')?.touched && incentiveForm.get('SupplierId')?.invalid" class="error-message">
                 Supplier is required
               </div>
             </div>
@@ -120,7 +120,7 @@
           <tbody>
             <tr *ngFor="let incentive of filteredIncentives">
               <td>{{ incentive.incentiveId }}</td>
-              <td>{{ incentive.supplierId }}</td>
+              <td>{{ incentive.SupplierId }}</td>
               <td>{{ incentive.month | date:'MMM yyyy' }}</td>
               <td>LKR {{ incentive.qualityBonus | number }}</td>
               <td>LKR {{ incentive.loyaltyBonus | number }}</td>

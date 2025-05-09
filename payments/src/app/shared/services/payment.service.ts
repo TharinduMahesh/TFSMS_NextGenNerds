@@ -8,7 +8,7 @@ import { PaymentCalculationRequest, PaymentCalculationResult } from '../../model
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = "http://localhost:5274/api/payments";
+  private apiUrl = "https://localhost:7203/api/Payments";
 
   constructor(private http: HttpClient) { }
 
@@ -20,8 +20,8 @@ export class PaymentService {
     return this.http.get<Payment>(`${this.apiUrl}/${id}`);
   }
 
-  getPaymentsBySupplier(supplierId: number): Observable<Payment[]> {
-    return this.http.get<Payment[]>(`${this.apiUrl}/supplier/${supplierId}`);
+  getPaymentsBySupplier(SupplierId: number): Observable<Payment[]> {
+    return this.http.get<Payment[]>(`${this.apiUrl}/supplier/${SupplierId}`);
   }
 
   getPaymentsByDateRange(startDate: string, endDate: string): Observable<Payment[]> {

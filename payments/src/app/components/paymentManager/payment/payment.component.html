@@ -58,7 +58,7 @@
     <div *ngIf="showCalculator" class="calculator-section">
       <app-payment-calculator 
         [suppliers]="suppliers"
-        [initialSupplierId]="paymentForm.get('supplierId')?.value"
+        [initialSupplierId]="paymentForm.get('SupplierId')?.value"
         [initialLeafWeight]="paymentForm.get('leafWeight')?.value"
         [initialRate]="paymentForm.get('rate')?.value"
         (calculationComplete)="handleCalculationResult($event)">
@@ -71,13 +71,13 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Supplier:</label>
-            <select formControlName="supplierId" (change)="onSupplierChange($event)">
+            <select formControlName="SupplierId" (change)="onSupplierChange($event)">
               <option value="">Select Supplier</option>
-              <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-                {{ supplier.supplierId }} - {{ supplier.name }}
+              <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+                {{ supplier.SupplierId }} - {{ supplier.name }}
               </option>
             </select>
-            <div *ngIf="paymentForm.get('supplierId')?.touched && paymentForm.get('supplierId')?.invalid" class="error-message">
+            <div *ngIf="paymentForm.get('SupplierId')?.touched && paymentForm.get('SupplierId')?.invalid" class="error-message">
               Supplier is required
             </div>
           </div>
@@ -161,7 +161,7 @@
         <tbody>
           <tr *ngFor="let payment of filteredPayments">
             <td>{{ payment.paymentId }}</td>
-            <td>{{ payment.supplierId }}</td>
+            <td>{{ payment.SupplierId }}</td>
             <td>{{ payment.leafWeight }} kg</td>
             <td>LKR {{ payment.rate }}</td>
             <td>LKR {{ payment.grossAmount | number }}</td>
@@ -251,7 +251,7 @@
     <div *ngIf="showCalculator" class="calculator-section">
       <app-payment-calculator 
         [suppliers]="suppliers"
-        [initialSupplierId]="paymentForm.get('supplierId')?.value"
+        [initialSupplierId]="paymentForm.get('SupplierId')?.value"
         [initialLeafWeight]="paymentForm.get('leafWeight')?.value"
         [initialRate]="paymentForm.get('rate')?.value"
         (calculationComplete)="handleCalculationResult($event)">
@@ -264,13 +264,13 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Supplier:</label>
-            <select formControlName="supplierId" (change)="onSupplierChange($event)">
+            <select formControlName="SupplierId" (change)="onSupplierChange($event)">
               <option value="">Select Supplier</option>
-              <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-                {{ supplier.supplierId }} - {{ supplier.name }}
+              <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+                {{ supplier.SupplierId }} - {{ supplier.name }}
               </option>
             </select>
-            <div *ngIf="paymentForm.get('supplierId')?.touched && paymentForm.get('supplierId')?.invalid" class="error-message">
+            <div *ngIf="paymentForm.get('SupplierId')?.touched && paymentForm.get('SupplierId')?.invalid" class="error-message">
               Supplier is required
             </div>
           </div>
@@ -354,7 +354,7 @@
         <tbody>
           <tr *ngFor="let payment of filteredPayments">
             <td>{{ payment.paymentId }}</td>
-            <td>{{ payment.supplierId }}</td>
+            <td>{{ payment.SupplierId }}</td>
             <td>{{ payment.leafWeight }} kg</td>
             <td>LKR {{ payment.rate }}</td>
             <td>LKR {{ payment.grossAmount | number }}</td>

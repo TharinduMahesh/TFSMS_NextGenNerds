@@ -7,7 +7,7 @@ import { Advance } from '../../models/advance.model';
   providedIn: 'root'
 })
 export class AdvanceService {
-  private apiUrl = "http://localhost:5274/api/advances";
+  private apiUrl = "https://localhost:7203/api/advances";
 
   constructor(private http: HttpClient) { }
 
@@ -23,8 +23,8 @@ export class AdvanceService {
     return this.http.get<Advance>(`${this.apiUrl}/${id}`);
   }
 
-  getAdvancesBySupplier(supplierId: number): Observable<Advance[]> {
-    return this.http.get<Advance[]>(`${this.apiUrl}/supplier/${supplierId}`);
+  getAdvancesBySupplier(SupplierId: number): Observable<Advance[]> {
+    return this.http.get<Advance[]>(`${this.apiUrl}/supplier/${SupplierId}`);
   }
 
   createAdvance(advance: Advance): Observable<Advance> {

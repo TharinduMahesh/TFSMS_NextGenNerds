@@ -10,7 +10,7 @@ import { SupplierService } from './supplier.service';
   providedIn: 'root'
 })
 export class ReceiptService {
-  private apiUrl =  "http://localhost:5274/api/receipts";
+  private apiUrl =  "https://localhost:7203/api/receipts";
 
   constructor(
     private http: HttpClient,
@@ -19,7 +19,7 @@ export class ReceiptService {
 
   generateReceipt(payment: Payment): Observable<Receipt> {
     // Get supplier details to include in the receipt
-    return this.supplierService.getSupplier(payment.supplierId).pipe(
+    return this.supplierService.getSupplier(payment.SupplierId).pipe(
       map(supplier => {
         return {
           receiptNumber: `REC-${payment.paymentId.toString().padStart(5, '0')}`,
@@ -45,8 +45,8 @@ export class ReceiptService {
     return this.http.get<Receipt>(`${this.apiUrl}/${receiptNumber}`);
   }
 
-  getReceiptsBySupplier(supplierId: number): Observable<Receipt[]> {
-    return this.http.get<Receipt[]>(`${this.apiUrl}/supplier/${supplierId}`);
+  getReceiptsBySupplier(SupplierId: number): Observable<Receipt[]> {
+    return this.http.get<Receipt[]>(`${this.apiUrl}/supplier/${SupplierId}`);
   }
 
   printReceipt(payment: Payment): void {
@@ -83,7 +83,7 @@ export class ReceiptService {
                     <h3>Supplier Information</h3>
                     <div class="row">
                       <div class="label">Supplier ID:</div>
-                      <div class="value">${receiptData.supplier.supplierId}</div>
+                      <div class="value">${receiptData.supplier.SupplierId}</div>
                     </div>
                     <div class="row">
                       <div class="label">Name:</div>

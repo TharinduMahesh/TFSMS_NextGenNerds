@@ -122,10 +122,11 @@ export class RtReviewComponent implements OnInit {
     this.isEditModalOpen.set(true);
   };
 
-  closeEditModal = () => {
-    this.isEditModalOpen.set(false);
-    this.routeBeingEdited.set(null);
-  };
+  // In your parent component
+closeEditModal(): void {
+  this.isEditModalOpen.set(false);
+  this.routeBeingEdited.set(null);
+}
 
   onSaveEdit(updatedRoute: Rview): void {
     if (!updatedRoute.rId) {

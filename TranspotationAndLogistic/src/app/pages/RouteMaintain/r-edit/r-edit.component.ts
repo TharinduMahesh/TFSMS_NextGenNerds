@@ -68,8 +68,8 @@ export class RtEditComponent {
     this.save.emit(payload);
   }
 
-  onCancel(): void {
-    // logic to close the form or reset
-    console.log('Edit cancelled');
-  }
+  // In r-edit.component.ts
+onCancel(): void {
+  this.close.emit();  // Make sure this emits the close event
+}
 }

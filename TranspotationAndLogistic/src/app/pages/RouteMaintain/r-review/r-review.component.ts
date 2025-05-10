@@ -5,13 +5,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RService } from '../../../services/RouteMaintainService/RouteMaintain.service';
+import { RtViewComponent } from '../r-view/r-view.component';
+import { RtEditComponent } from "../r-edit/r-edit.component";
 
 @Component({
   selector: 'app-rview',
   standalone: true,
   templateUrl: './r-review.component.html', 
   styleUrls: ['./r-review.component.scss'],
-  imports: [CommonModule, FormsModule, HttpClientModule]
+  imports: [CommonModule, FormsModule, HttpClientModule, RtViewComponent, RtEditComponent]
 })
 export class RtReviewComponent implements OnInit {
   searchTerm = signal('');
@@ -23,7 +25,7 @@ export class RtReviewComponent implements OnInit {
     isModalOpen = signal(false);   //signals for view
     routeToView = signal<Rview | null>(null);
   
-    routeToEdit = signal<Rview| null>(null);  //signals for edit
+    routeBeingEdited = signal<Rview | null>(null);
     isEditModalOpen = signal(false);
     formModel = signal<Rview | null>(null);
   
@@ -60,8 +62,10 @@ export class RtReviewComponent implements OnInit {
   }
 
   private parseDistance(distance: string | number | undefined): number {
-    if (!distance) return 0;
-    if (typeof distance === 'number') return distance;
+    if (!distance)
+       return 0;
+    if (typeof distance === 'number') 
+      return distance;
     return parseFloat(distance.toString().replace(/[^\d.-]/g, ''));
   }
 
@@ -97,15 +101,14 @@ export class RtReviewComponent implements OnInit {
   }
 
    //view logic begin
-   onView(): void {
-    const route = this.selectedRoute();
-    if (route?.rId) {
-        this.routeToView.set(route);
-        this.isModalOpen.set(true);
-        console.log('Viewing route:', route.rId);
-    }
-
+   onView(route: Rview): void {
+    this.routeToView.set(route);         // sets the selected route
+    this.isModalOpen.set(true);          // opens modal
+    console.log('Viewing route:', route.rId);
   }
+  
+  
+  
 
   closeModal(): void {
     this.isModalOpen.set(false);
@@ -114,13 +117,17 @@ export class RtReviewComponent implements OnInit {
   //view logic end
 
   //edit logic begin
-  onEdit(): void {
-    const route = this.selectedRoute();
-    if (route) {
-      this.formModel.set(route); // <- make sure to set this
-      this.isEditModalOpen.set(true);
-    }
+  onEdit(route: Rview): void {
+    this.routeBeingEdited.set(route);
+    this.isEditModalOpen.set(true);
   }
+
+  closeEditModal = () => {
+    this.isEditModalOpen.set(false);
+    this.routeBeingEdited.set(null);
+  };
+  
+
   onDelete(id?: number): void {
     if (id && confirm('Are you sure you want to delete this route?')) {
       this.isLoading.set(true);

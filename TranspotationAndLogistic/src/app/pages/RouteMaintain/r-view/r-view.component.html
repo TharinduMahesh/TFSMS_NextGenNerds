@@ -1,1 +1,31 @@
-<p>r-view works!</p>
+@if (route) {
+<div class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" (click)="close.emit()">X</button>
+        <h2>Route Details</h2>
+        <p><strong>ID:</strong> {{ route.rId }}</p>
+        <p><strong>Name:</strong> {{ route.rName }}</p>
+        <p><strong>Start Location:</strong> {{ route.startLocation }}</p>
+        <p><strong>End Location:</strong> {{ route.endLocation }}</p>
+        <p><strong>Distance:</strong> {{ route.distance }} km</p>
+        <p><strong>Collector ID:</strong> {{ route.collectorId }}</p>
+        <p><strong>Vehicle ID:</strong> {{ route.vehicleId }}</p>
+
+        <h3>Grower Locations</h3>
+        <ul>
+            
+            @for (location of route.growerLocations; track location?.gId) {
+            <li>
+                <!-- <p><strong>ID:</strong> {{ location.gId }}-->
+                <p> {{ location.description || 'No description available' }}</p>
+            </li>
+            }
+        </ul>
+
+    </div>
+</div>
+} @else {
+<div class="route-view">
+    <p>No route selected.</p>
+</div>
+}

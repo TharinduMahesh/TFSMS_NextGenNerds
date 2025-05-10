@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Rview } from '../../../models/rview.model'; // adjust import path
 
 @Component({
   selector: 'app-r-view',
-  imports: [],
+  standalone: true,
   templateUrl: './r-view.component.html',
-  styleUrl: './r-view.component.scss'
+  styleUrls: ['./r-view.component.scss']
 })
 export class RtViewComponent {
-
+  @Input() route: Rview | null = null;
+  @Output() close = new EventEmitter<void>();
 }

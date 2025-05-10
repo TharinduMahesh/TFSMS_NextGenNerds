@@ -1,1 +1,56 @@
-<p>r-edit works!</p>
+@if (formData()) {
+<div class="modal-overlay">
+    <div class="modal-content">
+        <h2>Edit Route</h2>
+
+        <form (submit)="onSubmit($event)" class="route-form">
+            <label>
+                Route Name:
+                <input type="text" [value]="formData()?.rName" (input)="handleInput('rName', $event)" />
+            </label>
+
+            <label>
+                Start Location:
+                <input type="text" [value]="formData()?.startLocation" (input)="handleInput('startLocation', $event)" />
+            </label>
+
+            <label>
+                End Location:
+                <input type="text" [value]="formData()?.endLocation" (input)="handleInput('endLocation', $event)" />
+            </label>
+
+            <label>
+                Distance (km):
+                <input type="text" [value]="formData()?.distance" (input)="handleInput('distance', $event)" />
+            </label>
+
+            <label>
+                Collector ID:
+                <input type="number" [value]="formData()?.collectorId" (input)="handleInput('collectorId', $event)" />
+            </label>
+
+            <label>
+                Vehicle ID:
+                <input type="number" [value]="formData()?.vehicleId" (input)="handleInput('vehicleId', $event)" />
+            </label>
+
+            <h3>Grower Locations</h3>
+            <ul>
+                @for (loc of formData()?.growerLocations; track loc?.gId) {
+                <li>
+                    <strong>Lat:</strong> {{ loc.latitude }},
+                    <strong>Lng:</strong> {{ loc.longitude }},
+                    <input type="text" [value]="loc.description"
+                        (input)="updateGrowerDescription(loc.gId!, ($event.target as HTMLInputElement).value)" />
+                </li>
+                }
+            </ul>
+
+            <div class="modal-actions">
+                <button type="submit">Save</button>
+                <button type="button" (click)="onCancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+}

@@ -36,12 +36,12 @@
       <div class="caption-actions">
         <!-- View Button -->
         <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to View Route'">
-          <button (click)="onView()" [disabled]="!selectedRoute()">View</button>
+          <button (click)="selectedRoute() && onView(selectedRoute()!)" [disabled]="!selectedRoute()">View</button>
         </div>
       
         <!-- Edit Button -->
         <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to Edit Route'">
-        <button (click)="onEdit()" [disabled]="!selectedRoute()">Edit</button>
+        <button (click)="selectedRoute() && onEdit(selectedRoute()!)" [disabled]="!selectedRoute()">Edit</button>
         </div>
 
         <!-- Delete Button -->
@@ -72,6 +72,7 @@
         @for (route of filteredRoutes(); track trackById($index, route)) {
           <tr 
             (click)="onSelectRoute(route)"
+            (dblclick)="selectedRoute() && onView(selectedRoute()!)" 
             [class.selected]="selectedRoute()?.rId === route.rId"  >
             <td>{{ route.rId }}</td>
             <td>{{ route.rName }}</td>
@@ -91,5 +92,17 @@
     </table>
   </div>
 
+<!-- Route View Component -->
+@if (isModalOpen()) {
+  <app-r-view 
+    [route]="routeToView()" 
+    (close)="isModalOpen.set(false)">
+  </app-r-view>
+}
 
+@if (isEditModalOpen()) {
+  <app-r-edit 
+    [route]="routeBeingEdited()" 
+    [close]="closeEditModal" />
+}
 </div>

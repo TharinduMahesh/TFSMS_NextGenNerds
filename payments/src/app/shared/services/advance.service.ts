@@ -1,61 +1,115 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { Advance } from '../../models/advance.model';
+import { environment } from '../../shared/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdvanceService {
-  private apiUrl = "https://localhost:7203/api/advances";
+  private apiUrl = `${environment.apiBaseUrl}/advances`;
 
   constructor(private http: HttpClient) { }
 
   getAllAdvances(): Observable<Advance[]> {
-    return this.http.get<Advance[]>(this.apiUrl);
+    return this.http.get<Advance[]>(this.apiUrl).pipe(
+      map(response => Array.isArray(response) ? response : []),
+      catchError(error => {
+        console.error('Error fetching all advances:', error);
+        return of([]);
+      })
+    );
   }
 
-  getAdvances(): Observable<Advance[]> {
-    return this.http.get<Advance[]>(this.apiUrl);
-  }
+  // Removed duplicate getAdvances() method
 
-  getAdvance(id: number): Observable<Advance> {
-    return this.http.get<Advance>(`${this.apiUrl}/${id}`);
+  getAdvance(id: number): Observable<Advance | null> {
+    return this.http.get<Advance>(`${this.apiUrl}/${id}`).pipe(
+      catchError(error => {
+        console.error(`Error fetching advance with id ${id}:`, error);
+        return of(null);
+      })
+    );
   }
 
   getAdvancesBySupplier(supplierId: number): Observable<Advance[]> {
-    return this.http.get<Advance[]>(`${this.apiUrl}/supplier/${supplierId}`);
+    return this.http.get<Advance[]>(`${this.apiUrl}/supplier/${supplierId}`).pipe(
+      map(response => Array.isArray(response) ? response : []),
+      catchError(error => {
+        console.error(`Error fetching advances for supplier ${supplierId}:`, error);
+        return of([]);
+      })
+    );
   }
 
-  createAdvance(advance: Advance): Observable<Advance> {
-    return this.http.post<Advance>(this.apiUrl, advance);
+  createAdvance(advance: Advance): Observable<Advance | null> {
+    return this.http.post<Advance>(this.apiUrl, advance).pipe(
+      catchError(error => {
+        console.error('Error creating advance:', error);
+        return of(null);
+      })
+    );
   }
 
-  updateAdvance(advance: Advance): Observable<Advance> {
-    return this.http.put<Advance>(`${this.apiUrl}/${advance.advanceId}`, advance);
+  updateAdvance(advance: Advance): Observable<Advance | null> {
+    return this.http.put<Advance>(`${this.apiUrl}/${advance.advanceId}`, advance).pipe(
+      catchError(error => {
+        console.error(`Error updating advance with id ${advance.advanceId}:`, error);
+        return of(null);
+      })
+    );
   }
 
-  deleteAdvance(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  deleteAdvance(id: number): Observable<boolean> {
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      map(() => true),
+      catchError(error => {
+        console.error(`Error deleting advance with id ${id}:`, error);
+        return of(false);
+      })
+    );
   }
 
-  deductFromAdvance(id: number, amount: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}/deduct/${amount}`, {});
+  deductFromAdvance(id: number, amount: number): Observable<boolean> {
+    return this.http.put(`${this.apiUrl}/${id}/deduct/${amount}`, {}).pipe(
+      map(() => true),
+      catchError(error => {
+        console.error(`Error deducting ${amount} from advance with id ${id}:`, error);
+        return of(false);
+      })
+    );
   }
 
   getTotalAdvancesCount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/count`);
+    return this.http.get<number>(`${this.apiUrl}/count`).pipe(
+      map(response => typeof response === 'number' ? response : 0),
+      catchError(error => {
+        console.error('Error fetching total advances count:', error);
+        return of(0);
+      })
+    );
   }
 
   getTotalOutstandingAmount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/totalOutstanding`);
+    return this.http.get<number>(`${this.apiUrl}/totalOutstanding`).pipe(
+      map(response => typeof response === 'number' ? response : 0),
+      catchError(error => {
+        console.error('Error fetching total outstanding amount:', error);
+        return of(0);
+      })
+    );
   }
 
   getTotalRecoveredAmount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/totalRecovered`);
+    return this.http.get<number>(`${this.apiUrl}/totalRecovered`).pipe(
+      map(response => typeof response === 'number' ? response : 0),
+      catchError(error => {
+        console.error('Error fetching total recovered amount:', error);
+        return of(0);
+      })
+    );
   }
 
-  getTotalOutstandingAdvances(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/totalOutstanding`);
-  }
+  // Removed duplicate getTotalOutstandingAdvances() method as it's the same as getTotalOutstandingAmount()
 }

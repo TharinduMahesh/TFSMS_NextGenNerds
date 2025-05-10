@@ -71,14 +71,24 @@ export class IncentiveComponent implements OnInit {
 
     this.incentiveService.getAllIncentives().subscribe({
       next: (data) => {
-        this.incentives = data;
-        this.filteredIncentives = [...data];
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.incentives = data;
+          this.filteredIncentives = [...data];
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.incentives = [];
+          this.filteredIncentives = [];
+          this.error = 'Invalid data format received from server';
+        }
         this.loading = false;
       },
       error: (err) => {
         console.error('Error loading incentives:', err);
         this.error = 'Failed to load incentives. Please try again later.';
         this.loading = false;
+        this.incentives = [];
+        this.filteredIncentives = [];
       }
     });
   }
@@ -86,10 +96,17 @@ export class IncentiveComponent implements OnInit {
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({
       next: (data) => {
-        this.suppliers = data;
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.suppliers = data;
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.suppliers = [];
+        }
       },
       error: (err) => {
         console.error('Error loading suppliers:', err);
+        this.suppliers = [];
       }
     });
   }
@@ -97,27 +114,41 @@ export class IncentiveComponent implements OnInit {
   loadSummaryMetrics(): void {
     this.incentiveService.getTotalIncentivesCount().subscribe({
       next: (total) => {
-        this.totalIncentives = total;
+        this.totalIncentives = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalIncentives = 0;
       }
     });
 
     this.incentiveService.getTotalQualityBonusAmount().subscribe({
       next: (total) => {
-        this.totalQualityBonus = total;
+        this.totalQualityBonus = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalQualityBonus = 0;
       }
     });
 
     this.incentiveService.getTotalLoyaltyBonusAmount().subscribe({
       next: (total) => {
-        this.totalLoyaltyBonus = total;
+        this.totalLoyaltyBonus = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalLoyaltyBonus = 0;
       }
     });
   }
 
   filterIncentives(): void {
+    if (!Array.isArray(this.incentives)) {
+      this.filteredIncentives = [];
+      return;
+    }
+    
     this.filteredIncentives = this.incentives.filter(incentive => {
       const supplierMatch = !this.selectedSupplier || incentive.supplierId.toString() === this.selectedSupplier;
-      const monthMatch = !this.selectedMonth || incentive.month.includes(this.selectedMonth);
+      const monthMatch = !this.selectedMonth || (incentive.month && incentive.month.includes(this.selectedMonth));
       return supplierMatch && monthMatch;
     });
   }

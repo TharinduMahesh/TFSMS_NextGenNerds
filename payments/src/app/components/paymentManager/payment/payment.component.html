@@ -1,8 +1,4 @@
-
-
 <div class="payment-page">
-  <h2 class="page-title">Payment Management</h2>
-
   <div *ngIf="error" class="alert alert-danger">
     {{ error }}
   </div>
@@ -17,64 +13,98 @@
       <p>Total Payments</p>
     </div>
     <div class="card light-yellow">
-      <h2>LKR {{ totalBankTransfer | number }}</h2>
-      <p>Total Bank Transfer</p>
+      <h2>LKR {{ totalAmount | number }}</h2>
+      <p>Total Amount Paid</p>
     </div>
     <div class="card light-green">
-      <h2>LKR {{ totalCash | number }}</h2>
-      <p>Total Cash</p>
+      <h2>{{ filteredPayments.length }}</h2>
+      <p>Filtered Payments</p>
     </div>
-    <div class="card light-orange">
-      <h2>LKR {{ totalCheques | number }}</h2>
-      <p>Total Cheque</p>
+  </div>
+
+  <div class="payment-methods">
+    <div class="method-card">
+      <h3>Cash</h3>
+      <p>LKR {{ paymentsByCash | number }}</p>
+    </div>
+    <div class="method-card">
+      <h3>Bank Transfer</h3>
+      <p>LKR {{ paymentsByBank | number }}</p>
+    </div>
+    <div class="method-card">
+      <h3>Cheque</h3>
+      <p>LKR {{ paymentsByCheque | number }}</p>
     </div>
   </div>
 
   <div class="payment-container">
-    <h3>Green Leaf Payment Details</h3>
+    <h3>Supplier Payments</h3>
     
     <div class="filters">
       <div class="filter-group">
-        <label>Payment Method:</label>
-        <select [(ngModel)]="selectedMethod" (change)="filterPayments()">
-          <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
+        <label>Supplier:</label>
+        <select [(ngModel)]="selectedSupplier" (change)="filterPayments()">
+          <option value="">All Suppliers</option>
+          <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
+            {{ supplier.supplierId }} - {{ supplier.name }}
+          </option>
         </select>
       </div>
+      
       <div class="filter-group">
-        <label>Filter by Date:</label>
-        <input type="date" [(ngModel)]="selectedDate" (change)="filterPayments()" />
+        <label>Date Range:</label>
+        <select [(ngModel)]="selectedDateRange" (change)="filterPayments()">
+          <option value="all">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
       </div>
-      <div class="filter-group">
-        <button class="calculator-btn" (click)="toggleCalculator()">
-          {{ showCalculator ? 'Hide Calculator' : 'Payment Calculator' }}
-        </button>
+      
+      <div *ngIf="selectedDateRange === 'custom'" class="custom-date-range">
+        <div class="date-input">
+          <label>From:</label>
+          <input type="date" [(ngModel)]="customStartDate" (change)="filterPayments()">
+        </div>
+        <div class="date-input">
+          <label>To:</label>
+          <input type="date" [(ngModel)]="customEndDate" (change)="filterPayments()">
+        </div>
       </div>
+      
       <div class="filter-group">
         <div class="export-buttons">
-          <button class="export-btn" (click)="exportPaymentsData('CSV')">Export CSV</button>
-          <button class="export-btn" (click)="exportPaymentsData('EXCEL')">Export Excel</button>
+          <button class="export-btn" (click)="exportPayments('CSV')">Export CSV</button>
+          <button class="export-btn" (click)="exportPayments('EXCEL')">Export Excel</button>
         </div>
       </div>
     </div>
 
-    <!-- Payment Calculator -->
-    <div *ngIf="showCalculator" class="calculator-section">
-      <app-payment-calculator 
-        [suppliers]="suppliers"
-        [initialsupplierId]="paymentForm.get('supplierId')?.value"
-        [initialLeafWeight]="paymentForm.get('leafWeight')?.value"
-        [initialRate]="paymentForm.get('rate')?.value"
-        (calculationComplete)="handleCalculationResult($event)">
-      </app-payment-calculator>
-    </div>
-
     <div class="manual-entry">
-      <h4>Add New Payment</h4>
-      <form [formGroup]="paymentForm" (ngSubmit)="addPayment()">
+      <h4>Create New Payment</h4>
+      
+      <div class="calculator-toggle">
+        <button (click)="toggleCalculator()" class="calculator-btn">
+          {{ showCalculator ? 'Hide Calculator' : 'Use Payment Calculator' }}
+        </button>
+      </div>
+      
+      <div *ngIf="showCalculator" class="calculator-container">
+        <app-payment-calculator 
+          [suppliers]="suppliers"
+          [initialsupplierId]="paymentForm.get('supplierId')?.value"
+          [initialLeafWeight]="paymentForm.get('leafWeight')?.value"
+          [initialRate]="paymentForm.get('rate')?.value"
+          (calculationComplete)="onCalculationComplete($event)">
+        </app-payment-calculator>
+      </div>
+      
+      <form [formGroup]="paymentForm" (ngSubmit)="createPayment()">
         <div class="form-grid">
           <div class="form-group">
             <label>Supplier:</label>
-            <select formControlName="supplierId" (change)="onSupplierChange($event)">
+            <select formControlName="supplierId">
               <option value="">Select Supplier</option>
               <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
                 {{ supplier.supplierId }} - {{ supplier.name }}
@@ -87,25 +117,51 @@
           
           <div class="form-group">
             <label>Green Leaf Weight (kg):</label>
-            <input type="number" formControlName="leafWeight" placeholder="Enter weight" />
+            <input type="number" formControlName="leafWeight" placeholder="Enter weight">
             <div *ngIf="paymentForm.get('leafWeight')?.touched && paymentForm.get('leafWeight')?.invalid" class="error-message">
               Valid weight is required
             </div>
           </div>
           
           <div class="form-group">
-            <label>Rate (LKR/kg):</label>
-            <input type="number" formControlName="rate" placeholder="Enter rate" />
+            <label>Rate per kg (LKR):</label>
+            <input type="number" formControlName="rate" placeholder="Enter rate">
             <div *ngIf="paymentForm.get('rate')?.touched && paymentForm.get('rate')?.invalid" class="error-message">
               Valid rate is required
             </div>
           </div>
           
           <div class="form-group">
+            <label>Gross Amount (LKR):</label>
+            <input type="number" formControlName="grossAmount" readonly>
+          </div>
+          
+          <div class="form-group">
+            <label>Advance Deduction (LKR):</label>
+            <input type="number" formControlName="advanceDeduction">
+          </div>
+          
+          <div class="form-group">
+            <label>Debt Deduction (LKR):</label>
+            <input type="number" formControlName="debtDeduction">
+          </div>
+          
+          <div class="form-group">
+            <label>Incentive Addition (LKR):</label>
+            <input type="number" formControlName="incentiveAddition">
+          </div>
+          
+          <div class="form-group">
+            <label>Net Amount (LKR):</label>
+            <input type="number" formControlName="netAmount" readonly>
+          </div>
+          
+          <div class="form-group">
             <label>Payment Method:</label>
             <select formControlName="paymentMethod">
-              <option value="">Select Method</option>
-              <option *ngFor="let method of paymentMethods.slice(1)" [value]="method">{{ method }}</option>
+              <option value="Cash">Cash</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Cheque">Cheque</option>
             </select>
             <div *ngIf="paymentForm.get('paymentMethod')?.touched && paymentForm.get('paymentMethod')?.invalid" class="error-message">
               Payment method is required
@@ -114,30 +170,20 @@
           
           <div class="form-group">
             <label>Payment Date:</label>
-            <input type="date" formControlName="paymentDate" />
+            <input type="date" formControlName="paymentDate">
             <div *ngIf="paymentForm.get('paymentDate')?.touched && paymentForm.get('paymentDate')?.invalid" class="error-message">
-              Payment date is required
+              Valid date is required
             </div>
           </div>
           
-          <div class="form-group">
-            <label>Advance Deduction:</label>
-            <input type="number" formControlName="advanceDeduction" />
+          <div class="form-group full-width">
+            <label>Notes:</label>
+            <textarea formControlName="notes" placeholder="Enter notes (optional)"></textarea>
           </div>
           
           <div class="form-group">
-            <label>Debt Deduction:</label>
-            <input type="number" formControlName="debtDeduction" />
-          </div>
-          
-          <div class="form-group">
-            <label>Incentive Addition:</label>
-            <input type="number" formControlName="incentiveAddition" />
-          </div>
-          
-          <div class="form-group">
-            <button type="submit" class="add-btn" [disabled]="loading">
-              {{ loading ? 'Adding...' : 'Add Payment' }}
+            <button type="submit" class="create-btn" [disabled]="loading">
+              {{ loading ? 'Creating...' : 'Create Payment' }}
             </button>
           </div>
         </div>
@@ -162,31 +208,32 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let payment of filteredPayments">
-            <td>{{ payment.paymentId }}</td>
-            <td>{{ payment.supplierId }}</td>
-            <td>{{ payment.leafWeight }} kg</td>
-            <td>LKR {{ payment.rate }}</td>
-            <td>LKR {{ payment.grossAmount | number }}</td>
-            <td>LKR {{ (payment.advanceDeduction + payment.debtDeduction) | number }}</td>
-            <td>LKR {{ payment.incentiveAddition | number }}</td>
-            <td>LKR {{ payment.netAmount | number }}</td>
-            <td>{{ payment.paymentMethod }}</td>
-            <td>{{ payment.paymentDate | date:'shortDate' }}</td>
-            <td>
-              <div class="action-buttons">
-                <button class="print-btn" (click)="printReceipt(payment)" title="Print Receipt">
-                  <i class="fa fa-print"></i>
-                </button>
-                <button class="download-btn" (click)="downloadReceipt(payment)" title="Download PDF">
-                  <i class="fa fa-download"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr *ngIf="filteredPayments.length === 0">
-            <td colspan="11" class="no-data">No payments found</td>
-          </tr>
+          <ng-container *ngIf="filteredPayments && filteredPayments.length > 0; else noPayments">
+            <tr *ngFor="let payment of filteredPayments">
+              <td>{{ payment.paymentId }}</td>
+              <td>{{ payment.supplierId }}</td>
+              <td>{{ payment.leafWeight }} kg</td>
+              <td>LKR {{ payment.rate }}</td>
+              <td>LKR {{ payment.grossAmount | number }}</td>
+              <td>LKR {{ (payment.advanceDeduction + payment.debtDeduction) | number }}</td>
+              <td>LKR {{ payment.incentiveAddition | number }}</td>
+              <td>LKR {{ payment.netAmount | number }}</td>
+              <td>{{ payment.paymentMethod }}</td>
+              <td>{{ payment.paymentDate | date:'shortDate' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="print-btn" title="Print Receipt" (click)="generateReceipt(payment)">
+                    <i class="fa fa-print"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-template #noPayments>
+            <tr>
+              <td colspan="11" class="no-data">No payments found</td>
+            </tr>
+          </ng-template>
         </tbody>
       </table>
     </div>

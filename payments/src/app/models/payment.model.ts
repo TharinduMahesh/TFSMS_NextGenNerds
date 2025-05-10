@@ -1,3 +1,7 @@
+import { Supplier } from './supplier.model';
+import { Receipt } from './receipt.model';
+// import { PaymentHistory } from './payment-history.model';
+
 export interface Payment {
   paymentId: number;
   supplierId: number;
@@ -12,7 +16,7 @@ export interface Payment {
   paymentDate: Date;
   createdBy?: string;
   createdDate?: Date;
-  
-  // Optional navigation properties
-  supplier?: any;
+  supplier: Supplier | null;
+  receipts: Receipt[];
+  // paymentHistories: PaymentHistory[];
 }

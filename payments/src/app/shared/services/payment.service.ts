@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Payment } from '../../models/payment.model';
 import { PaymentCalculationRequest, PaymentCalculationResult } from '../../models/payment-calculation.model';
+import { environment } from '../../shared/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = "https://localhost:7203/api/Payments";
+  private apiUrl = `${environment.apiBaseUrl}/api/Payments`;
 
   constructor(private http: HttpClient) { }
 
@@ -28,7 +29,8 @@ export class PaymentService {
       }),
       catchError(error => {
         console.error('Error fetching payments:', error);
-        return throwError(() => new Error('Failed to load payments'));
+        // Return empty array instead of throwing error to prevent app crash
+        return of([]);
       })
     );
   }
@@ -62,7 +64,8 @@ export class PaymentService {
       }),
       catchError(error => {
         console.error(`Error fetching payments for supplier ${supplierId}:`, error);
-        return throwError(() => new Error('Failed to load supplier payments'));
+        // Return empty array instead of throwing error
+        return of([]);
       })
     );
   }
@@ -79,7 +82,17 @@ export class PaymentService {
       }),
       catchError(error => {
         console.error('Error fetching payments by date range:', error);
-        return throwError(() => new Error('Failed to load payments by date range'));
+        return of([]);
+      })
+    );
+  }
+
+  calculatePayment(request: PaymentCalculationRequest): Observable<PaymentCalculationResult> {
+    return this.http.post<any>(`${this.apiUrl}/calculate`, request).pipe(
+      map(response => response.data || response),
+      catchError(error => {
+        console.error('Error calculating payment:', error);
+        return throwError(() => new Error('Failed to calculate payment'));
       })
     );
   }
@@ -113,16 +126,6 @@ export class PaymentService {
     );
   }
 
-  calculatePayment(request: PaymentCalculationRequest): Observable<PaymentCalculationResult> {
-    return this.http.post<any>(`${this.apiUrl}/calculate`, request).pipe(
-      map(response => response.data || response),
-      catchError(error => {
-        console.error('Error calculating payment:', error);
-        return throwError(() => new Error('Failed to calculate payment'));
-      })
-    );
-  }
-
   getTotalPaymentsCount(): Observable<number> {
     return this.http.get<any>(`${this.apiUrl}/count`).pipe(
       map(response => {
@@ -136,7 +139,8 @@ export class PaymentService {
       }),
       catchError(error => {
         console.error('Error fetching payments count:', error);
-        return throwError(() => new Error('Failed to load payments count'));
+        // Return 0 instead of throwing error
+        return of(0);
       })
     );
   }
@@ -153,7 +157,7 @@ export class PaymentService {
       }),
       catchError(error => {
         console.error('Error fetching total payments amount:', error);
-        return throwError(() => new Error('Failed to load total payments amount'));
+        return of(0);
       })
     );
   }
@@ -170,7 +174,7 @@ export class PaymentService {
       }),
       catchError(error => {
         console.error(`Error fetching total payments for method ${method}:`, error);
-        return throwError(() => new Error('Failed to load total payments by method'));
+        return of(0);
       })
     );
   }

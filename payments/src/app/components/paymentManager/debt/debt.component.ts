@@ -77,14 +77,24 @@ export class DebtComponent implements OnInit {
 
     this.debtService.getAllDebts().subscribe({
       next: (data) => {
-        this.debts = data;
-        this.filteredDebts = [...data];
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.debts = data;
+          this.filteredDebts = [...data];
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.debts = [];
+          this.filteredDebts = [];
+          this.error = 'Invalid data format received from server';
+        }
         this.loading = false;
       },
       error: (err) => {
         console.error('Error loading debts:', err);
         this.error = 'Failed to load debts. Please try again later.';
         this.loading = false;
+        this.debts = [];
+        this.filteredDebts = [];
       }
     });
   }
@@ -92,10 +102,17 @@ export class DebtComponent implements OnInit {
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({
       next: (data) => {
-        this.suppliers = data;
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.suppliers = data;
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.suppliers = [];
+        }
       },
       error: (err) => {
         console.error('Error loading suppliers:', err);
+        this.suppliers = [];
       }
     });
   }
@@ -103,24 +120,38 @@ export class DebtComponent implements OnInit {
   loadSummaryMetrics(): void {
     this.debtService.getTotalDebtsCount().subscribe({
       next: (total) => {
-        this.totalDebts = total;
+        this.totalDebts = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalDebts = 0;
       }
     });
 
     this.debtService.getTotalOutstandingAmount().subscribe({
       next: (total) => {
-        this.totalOutstandingAmount = total;
+        this.totalOutstandingAmount = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalOutstandingAmount = 0;
       }
     });
 
     this.debtService.getTotalDeductionsMade().subscribe({
       next: (total) => {
-        this.totalDeductionsMade = total;
+        this.totalDeductionsMade = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalDeductionsMade = 0;
       }
     });
   }
 
   filterDebts(): void {
+    if (!Array.isArray(this.debts)) {
+      this.filteredDebts = [];
+      return;
+    }
+    
     this.filteredDebts = this.debts.filter(debt => {
       const typeMatch = this.selectedType === 'All' || debt.debtType === this.selectedType;
       const supplierMatch = !this.selectedSupplier || debt.supplierId.toString() === this.selectedSupplier;

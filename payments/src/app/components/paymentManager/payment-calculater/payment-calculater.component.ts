@@ -106,11 +106,19 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({
       next: (data) => {
-        this.suppliers = data;
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.suppliers = data;
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.suppliers = [];
+          this.error = 'Invalid supplier data format received from server';
+        }
       },
       error: (err) => {
         console.error('Error loading suppliers:', err);
         this.error = 'Failed to load suppliers. Please try again.';
+        this.suppliers = [];
       }
     });
   }
@@ -134,21 +142,43 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     // Load supplier advances
     this.advanceService.getAdvancesBySupplier(supplierId).subscribe({
       next: (data) => {
-        this.advances = data;
-        const totalAdvances = data.reduce((sum, advance) => sum + advance.balanceAmount, 0);
-        this.calculatorForm.patchValue({ advanceAmount: totalAdvances });
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.advances = data;
+          const totalAdvances = data.reduce((sum, advance) => sum + advance.balanceAmount, 0);
+          this.calculatorForm.patchValue({ advanceAmount: totalAdvances });
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.advances = [];
+          this.calculatorForm.patchValue({ advanceAmount: 0 });
+        }
       },
-      error: (err) => console.error('Error loading advances:', err)
+      error: (err) => {
+        console.error('Error loading advances:', err);
+        this.advances = [];
+        this.calculatorForm.patchValue({ advanceAmount: 0 });
+      }
     });
 
     // Load supplier debts
     this.debtService.getDebtsBySupplier(supplierId).subscribe({
       next: (data) => {
-        this.debts = data;
-        const totalDebts = data.reduce((sum, debt) => sum + debt.balanceAmount, 0);
-        this.calculatorForm.patchValue({ debtAmount: totalDebts });
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.debts = data;
+          const totalDebts = data.reduce((sum, debt) => sum + debt.balanceAmount, 0);
+          this.calculatorForm.patchValue({ debtAmount: totalDebts });
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.debts = [];
+          this.calculatorForm.patchValue({ debtAmount: 0 });
+        }
       },
-      error: (err) => console.error('Error loading debts:', err)
+      error: (err) => {
+        console.error('Error loading debts:', err);
+        this.debts = [];
+        this.calculatorForm.patchValue({ debtAmount: 0 });
+      }
     });
 
     // Load supplier incentives
@@ -171,6 +201,11 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Error loading incentives:', err);
+        this.incentives = [];
+        this.calculatorForm.patchValue({
+          qualityBonus: 0,
+          loyaltyBonus: 0
+        });
         this.loading = false;
       }
     });

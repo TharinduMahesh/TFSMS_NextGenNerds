@@ -5,14 +5,9 @@ import { Payment } from '../../../models/payment.model';
 import { Supplier } from '../../../models/supplier.model';
 import { PaymentService } from '../../../shared/services/payment.service';
 import { SupplierService } from '../../../shared/services/supplier.service';
-import { GreenLeafService } from '../../../shared/services/green-leaf.service';
-import { AdvanceService } from '../../../shared/services/advance.service';
-import { DebtService } from '../../../shared/services/debt.service';
-import { IncentiveService } from '../../../shared/services/incentive.service';
 import { ReceiptService } from '../../../shared/services/reciept.service';
-import { ExportService } from '../../../shared/services/export.service';
-import { PaymentCalculationResult } from '../../../models/payment-calculation.model';
 import { PaymentCalculatorComponent } from '../payment-calculater/payment-calculater.component';
+import { PaymentCalculationResult } from '../../../models/payment-calculation.model';
 
 @Component({
   selector: 'app-payment',
@@ -25,42 +20,53 @@ export class PaymentComponent implements OnInit {
   payments: Payment[] = [];
   filteredPayments: Payment[] = [];
   suppliers: Supplier[] = [];
-  paymentMethods: string[] = ['All', 'Cash', 'Bank Transfer', 'Cheque'];
-  selectedMethod: string = 'All';
-  selectedDate: string = '';
   paymentForm: FormGroup;
   
   totalPayments: number = 0;
-  totalCash: number = 0;
-  totalBankTransfer: number = 0;
-  totalCheques: number = 0;
+  totalAmount: number = 0;
+  paymentsByCash: number = 0;
+  paymentsByBank: number = 0;
+  paymentsByCheque: number = 0;
+  
+  selectedSupplier: string = '';
+  selectedDateRange: string = 'all';
+  customStartDate: string = '';
+  customEndDate: string = '';
+  
+  showCalculator: boolean = false;
+  calculationResult: PaymentCalculationResult | null = null;
   
   loading: boolean = false;
   error: string | null = null;
-  showCalculator: boolean = false;
-  calculationResult: PaymentCalculationResult | null = null;
 
   constructor(
     private paymentService: PaymentService,
     private supplierService: SupplierService,
-    private greenLeafService: GreenLeafService,
-    private advanceService: AdvanceService,
-    private debtService: DebtService,
-    private incentiveService: IncentiveService,
     private receiptService: ReceiptService,
-    private exportService: ExportService,
     private fb: FormBuilder
   ) {
     this.paymentForm = this.fb.group({
       supplierId: ['', Validators.required],
       leafWeight: ['', [Validators.required, Validators.min(0.01)]],
       rate: [200, [Validators.required, Validators.min(0.01)]],
-      paymentMethod: ['', Validators.required],
-      paymentDate: [new Date().toISOString().split('T')[0], Validators.required],
+      grossAmount: [{value: 0, disabled: true}],
       advanceDeduction: [0],
       debtDeduction: [0],
-      incentiveAddition: [0]
+      incentiveAddition: [0],
+      netAmount: [{value: 0, disabled: true}],
+      paymentMethod: ['Cash', Validators.required],
+      paymentDate: [new Date().toISOString().split('T')[0], Validators.required],
+      notes: ['']
     });
+
+    // Update gross amount when leaf weight or rate changes
+    this.paymentForm.get('leafWeight')?.valueChanges.subscribe(() => this.updateGrossAmount());
+    this.paymentForm.get('rate')?.valueChanges.subscribe(() => this.updateGrossAmount());
+    
+    // Update net amount when deductions or additions change
+    this.paymentForm.get('advanceDeduction')?.valueChanges.subscribe(() => this.updateNetAmount());
+    this.paymentForm.get('debtDeduction')?.valueChanges.subscribe(() => this.updateNetAmount());
+    this.paymentForm.get('incentiveAddition')?.valueChanges.subscribe(() => this.updateNetAmount());
   }
 
   ngOnInit(): void {
@@ -69,20 +75,43 @@ export class PaymentComponent implements OnInit {
     this.loadSummaryMetrics();
   }
 
+  updateGrossAmount(): void {
+    const leafWeight = this.paymentForm.get('leafWeight')?.value || 0;
+    const rate = this.paymentForm.get('rate')?.value || 0;
+    const grossAmount = leafWeight * rate;
+    
+    this.paymentForm.get('grossAmount')?.setValue(grossAmount);
+    this.updateNetAmount();
+  }
+
+  updateNetAmount(): void {
+    const grossAmount = this.paymentForm.get('grossAmount')?.value || 0;
+    const advanceDeduction = this.paymentForm.get('advanceDeduction')?.value || 0;
+    const debtDeduction = this.paymentForm.get('debtDeduction')?.value || 0;
+    const incentiveAddition = this.paymentForm.get('incentiveAddition')?.value || 0;
+    
+    const netAmount = grossAmount - advanceDeduction - debtDeduction + incentiveAddition;
+    this.paymentForm.get('netAmount')?.setValue(netAmount > 0 ? netAmount : 0);
+  }
+
   loadPayments(): void {
     this.loading = true;
     this.error = null;
 
     this.paymentService.getPayments().subscribe({
       next: (data) => {
-        this.payments = data;
-        this.filteredPayments = [...data];
+        // Ensure data is an array
+        this.payments = Array.isArray(data) ? data : [];
+        this.filteredPayments = [...this.payments];
         this.loading = false;
       },
       error: (err) => {
         console.error('Error loading payments:', err);
         this.error = 'Failed to load payments. Please try again later.';
         this.loading = false;
+        // Initialize with empty arrays to prevent errors
+        this.payments = [];
+        this.filteredPayments = [];
       }
     });
   }
@@ -90,61 +119,13 @@ export class PaymentComponent implements OnInit {
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({
       next: (data) => {
-        this.suppliers = data;
+        // Ensure data is an array
+        this.suppliers = Array.isArray(data) ? data : [];
       },
       error: (err) => {
         console.error('Error loading suppliers:', err);
+        this.suppliers = [];
       }
-    });
-  }
-
-  onSupplierChange(event: any): void {
-    const supplierId = event.target.value;
-    if (!supplierId) return;
-
-    this.loading = true;
-
-    this.greenLeafService.getLatestGreenLeafWeight(supplierId).subscribe({
-      next: (weight) => {
-        if (weight > 0) {
-          this.paymentForm.patchValue({ leafWeight: weight });
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error loading green leaf data:', err);
-        this.loading = false;
-      }
-    });
-
-    this.loadSupplierFinancialData(supplierId);
-  }
-
-  loadSupplierFinancialData(supplierId: number): void {
-    this.advanceService.getAdvancesBySupplier(supplierId).subscribe({
-      next: (advances) => {
-        const totalAdvances = advances.reduce((sum, adv) => sum + adv.balanceAmount, 0);
-        this.paymentForm.patchValue({ advanceDeduction: totalAdvances });
-      },
-      error: (err) => console.error('Error loading advances:', err)
-    });
-
-    this.debtService.getDebtsBySupplier(supplierId).subscribe({
-      next: (debts) => {
-        const totalDebts = debts.reduce((sum, debt) => sum + debt.balanceAmount, 0);
-        this.paymentForm.patchValue({ debtDeduction: totalDebts });
-      },
-      error: (err) => console.error('Error loading debts:', err)
-    });
-
-    this.incentiveService.getCurrentIncentiveForSupplier(supplierId).subscribe({
-      next: (incentive) => {
-        if (incentive) {
-          const totalIncentive = incentive.qualityBonus + incentive.loyaltyBonus;
-          this.paymentForm.patchValue({ incentiveAddition: totalIncentive });
-        }
-      },
-      error: (err) => console.error('Error loading incentives:', err)
     });
   }
 
@@ -152,52 +133,123 @@ export class PaymentComponent implements OnInit {
     this.paymentService.getTotalPaymentsCount().subscribe({
       next: (total) => {
         this.totalPayments = total;
+      },
+      error: (err) => {
+        console.error('Error loading payments count:', err);
+        this.totalPayments = 0;
+      }
+    });
+
+    this.paymentService.getTotalPaymentsAmount().subscribe({
+      next: (total) => {
+        this.totalAmount = total;
+      },
+      error: (err) => {
+        console.error('Error loading total payments amount:', err);
+        this.totalAmount = 0;
       }
     });
 
     this.paymentService.getTotalPaymentsByMethod('Cash').subscribe({
       next: (total) => {
-        this.totalCash = total;
+        this.paymentsByCash = total;
+      },
+      error: (err) => {
+        console.error('Error loading cash payments:', err);
+        this.paymentsByCash = 0;
       }
     });
 
     this.paymentService.getTotalPaymentsByMethod('Bank Transfer').subscribe({
       next: (total) => {
-        this.totalBankTransfer = total;
+        this.paymentsByBank = total;
+      },
+      error: (err) => {
+        console.error('Error loading bank transfer payments:', err);
+        this.paymentsByBank = 0;
       }
     });
 
     this.paymentService.getTotalPaymentsByMethod('Cheque').subscribe({
       next: (total) => {
-        this.totalCheques = total;
+        this.paymentsByCheque = total;
+      },
+      error: (err) => {
+        console.error('Error loading cheque payments:', err);
+        this.paymentsByCheque = 0;
       }
     });
   }
 
   filterPayments(): void {
-    this.filteredPayments = this.payments.filter(payment => {
-      const methodMatch = this.selectedMethod === 'All' || payment.paymentMethod === this.selectedMethod;
-      const dateMatch = !this.selectedDate || payment.paymentDate.toString().includes(this.selectedDate);
-      return methodMatch && dateMatch;
-    });
+    let filtered = [...this.payments];
+    
+    // Filter by supplier
+    if (this.selectedSupplier) {
+      filtered = filtered.filter(payment => 
+        payment.supplierId.toString() === this.selectedSupplier
+      );
+    }
+    
+    // Filter by date range
+    const today = new Date();
+    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    
+    if (this.selectedDateRange === 'today') {
+      filtered = filtered.filter(payment => {
+        const paymentDate = new Date(payment.paymentDate);
+        return paymentDate >= startOfToday;
+      });
+    } else if (this.selectedDateRange === 'week') {
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay());
+      
+      filtered = filtered.filter(payment => {
+        const paymentDate = new Date(payment.paymentDate);
+        return paymentDate >= startOfWeek;
+      });
+    } else if (this.selectedDateRange === 'month') {
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      
+      filtered = filtered.filter(payment => {
+        const paymentDate = new Date(payment.paymentDate);
+        return paymentDate >= startOfMonth;
+      });
+    } else if (this.selectedDateRange === 'custom' && this.customStartDate && this.customEndDate) {
+      const startDate = new Date(this.customStartDate);
+      const endDate = new Date(this.customEndDate);
+      endDate.setHours(23, 59, 59); // Include the entire end date
+      
+      filtered = filtered.filter(payment => {
+        const paymentDate = new Date(payment.paymentDate);
+        return paymentDate >= startDate && paymentDate <= endDate;
+      });
+    }
+    
+    this.filteredPayments = filtered;
   }
 
   toggleCalculator(): void {
     this.showCalculator = !this.showCalculator;
   }
 
-  handleCalculationResult(result: PaymentCalculationResult): void {
+  onCalculationComplete(result: PaymentCalculationResult): void {
     this.calculationResult = result;
     
-    // Update the payment form with calculation results
+    // Update form with calculation results
     this.paymentForm.patchValue({
+      grossAmount: result.grossAmount,
       advanceDeduction: result.advanceDeduction,
       debtDeduction: result.debtDeduction,
-      incentiveAddition: result.incentiveAddition
+      incentiveAddition: result.incentiveAddition,
+      netAmount: result.netAmount
     });
+    
+    // Hide calculator after using values
+    this.showCalculator = false;
   }
 
-  addPayment(): void {
+  createPayment(): void {
     if (this.paymentForm.invalid) {
       this.markFormGroupTouched(this.paymentForm);
       return;
@@ -206,82 +258,98 @@ export class PaymentComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    const formValues = this.paymentForm.value;
-    const grossAmount = formValues.leafWeight * formValues.rate;
-    const netAmount = grossAmount - formValues.advanceDeduction - formValues.debtDeduction + formValues.incentiveAddition;
-
+    // Get form values
+    const formValues = this.paymentForm.getRawValue(); // Get disabled fields too
+    
+    // Create payment object
     const payment: Payment = {
-      paymentId: 0,
+      paymentId: 0, // New payment
       supplierId: formValues.supplierId,
       leafWeight: formValues.leafWeight,
       rate: formValues.rate,
-      grossAmount: grossAmount,
+      grossAmount: formValues.grossAmount,
       advanceDeduction: formValues.advanceDeduction,
       debtDeduction: formValues.debtDeduction,
       incentiveAddition: formValues.incentiveAddition,
-      netAmount: netAmount,
+      netAmount: formValues.netAmount,
       paymentMethod: formValues.paymentMethod,
-      paymentDate: new Date(formValues.paymentDate)
+      paymentDate: new Date(formValues.paymentDate),
+      createdBy: 'System', // This would come from auth service in a real app
+      createdDate: new Date(),
+      supplier: null, // Will be populated by backend
+      receipts: [],
+      // paymentHistories: []
     };
 
     this.paymentService.createPayment(payment).subscribe({
       next: (result) => {
+        // Refresh data
         this.loadPayments();
         this.loadSummaryMetrics();
+        
+        // Reset form
         this.resetForm();
+        
+        // Show success message
+        this.error = null;
         this.loading = false;
+        
+        // Generate receipt
+        this.generateReceipt(result);
       },
       error: (err) => {
-        console.error('Error adding payment:', err);
-        this.error = 'Failed to add payment. Please try again.';
+        console.error('Error creating payment:', err);
+        this.error = 'Failed to create payment. Please try again.';
         this.loading = false;
       }
     });
   }
 
-  printReceipt(payment: Payment): void {
+  generateReceipt(payment: Payment): void {
     this.receiptService.printReceipt(payment);
   }
 
-  downloadReceipt(payment: Payment): void {
-    this.receiptService.downloadReceiptPDF(payment).subscribe({
+  exportPayments(format: string): void {
+    let startDate = '';
+    let endDate = '';
+    
+    if (this.selectedDateRange === 'custom') {
+      startDate = this.customStartDate;
+      endDate = this.customEndDate;
+    }
+    
+    this.paymentService.exportPayments(format, startDate, endDate).subscribe({
       next: (blob) => {
-        const filename = `receipt-${payment.paymentId}.pdf`;
-        this.exportService.downloadFile(blob, filename);
-      },
-      error: (err) => {
-        console.error('Error downloading receipt:', err);
-        this.error = 'Failed to download receipt. Please try again.';
-      }
-    });
-  }
-
-  exportPaymentsData(format: string): void {
-    this.loading = true;
-
-    this.exportService.exportPayments(format).subscribe({
-      next: (blob) => {
-        const filename = `payments-export.${format.toLowerCase()}`;
-        this.exportService.downloadFile(blob, filename);
-        this.loading = false;
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `payments-export.${format.toLowerCase()}`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
       },
       error: (err) => {
         console.error('Error exporting payments:', err);
         this.error = 'Failed to export payments. Please try again.';
-        this.loading = false;
       }
     });
   }
 
   private resetForm(): void {
     this.paymentForm.reset({
+      supplierId: '',
+      leafWeight: '',
       rate: 200,
-      paymentDate: new Date().toISOString().split('T')[0],
+      grossAmount: 0,
       advanceDeduction: 0,
       debtDeduction: 0,
-      incentiveAddition: 0
+      incentiveAddition: 0,
+      netAmount: 0,
+      paymentMethod: 'Cash',
+      paymentDate: new Date().toISOString().split('T')[0],
+      notes: ''
     });
-    this.calculationResult = null;
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {

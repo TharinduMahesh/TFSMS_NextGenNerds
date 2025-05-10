@@ -77,14 +77,24 @@ export class AdvanceComponent implements OnInit {
 
     this.advanceService.getAllAdvances().subscribe({
       next: (data) => {
-        this.advances = data;
-        this.filteredAdvances = [...data];
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.advances = data;
+          this.filteredAdvances = [...data];
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.advances = [];
+          this.filteredAdvances = [];
+          this.error = 'Invalid data format received from server';
+        }
         this.loading = false;
       },
       error: (err) => {
         console.error('Error loading advances:', err);
         this.error = 'Failed to load advances. Please try again later.';
         this.loading = false;
+        this.advances = [];
+        this.filteredAdvances = [];
       }
     });
   }
@@ -92,10 +102,17 @@ export class AdvanceComponent implements OnInit {
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({
       next: (data) => {
-        this.suppliers = data;
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          this.suppliers = data;
+        } else {
+          console.error('Expected array but got:', typeof data);
+          this.suppliers = [];
+        }
       },
       error: (err) => {
         console.error('Error loading suppliers:', err);
+        this.suppliers = [];
       }
     });
   }
@@ -103,24 +120,38 @@ export class AdvanceComponent implements OnInit {
   loadSummaryMetrics(): void {
     this.advanceService.getTotalAdvancesCount().subscribe({
       next: (total) => {
-        this.totalAdvances = total;
+        this.totalAdvances = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalAdvances = 0;
       }
     });
 
     this.advanceService.getTotalOutstandingAmount().subscribe({
       next: (total) => {
-        this.totalOutstandingAmount = total;
+        this.totalOutstandingAmount = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalOutstandingAmount = 0;
       }
     });
 
     this.advanceService.getTotalRecoveredAmount().subscribe({
       next: (total) => {
-        this.totalRecoveredAmount = total;
+        this.totalRecoveredAmount = typeof total === 'number' ? total : 0;
+      },
+      error: () => {
+        this.totalRecoveredAmount = 0;
       }
     });
   }
 
   filterAdvances(): void {
+    if (!Array.isArray(this.advances)) {
+      this.filteredAdvances = [];
+      return;
+    }
+    
     this.filteredAdvances = this.advances.filter(advance => {
       const typeMatch = this.selectedType === 'All' || advance.advanceType === this.selectedType;
       const supplierMatch = !this.selectedSupplier || advance.supplierId.toString() === this.selectedSupplier;

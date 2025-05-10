@@ -1,56 +1,63 @@
-@if (formData()) {
-<div class="modal-overlay">
-    <div class="modal-content">
+@if (formModel()) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <button class="close-btn" (click)="onCancel()">X</button>
         <h2>Edit Route</h2>
-
+        
         <form (submit)="onSubmit($event)" class="route-form">
-            <label>
-                Route Name:
-                <input type="text" [value]="formData()?.rName" (input)="handleInput('rName', $event)" />
-            </label>
-
-            <label>
-                Start Location:
-                <input type="text" [value]="formData()?.startLocation" (input)="handleInput('startLocation', $event)" />
-            </label>
-
-            <label>
-                End Location:
-                <input type="text" [value]="formData()?.endLocation" (input)="handleInput('endLocation', $event)" />
-            </label>
-
-            <label>
-                Distance (km):
-                <input type="text" [value]="formData()?.distance" (input)="handleInput('distance', $event)" />
-            </label>
-
-            <label>
-                Collector ID:
-                <input type="number" [value]="formData()?.collectorId" (input)="handleInput('collectorId', $event)" />
-            </label>
-
-            <label>
-                Vehicle ID:
-                <input type="number" [value]="formData()?.vehicleId" (input)="handleInput('vehicleId', $event)" />
-            </label>
-
-            <h3>Grower Locations</h3>
-            <ul>
-                @for (loc of formData()?.growerLocations; track loc?.gId) {
-                <li>
-                    <strong>Lat:</strong> {{ loc.latitude }},
-                    <strong>Lng:</strong> {{ loc.longitude }},
-                    <input type="text" [value]="loc.description"
-                        (input)="updateGrowerDescription(loc.gId!, ($event.target as HTMLInputElement).value)" />
-                </li>
-                }
-            </ul>
-
-            <div class="modal-actions">
-                <button type="submit">Save</button>
-                <button type="button" (click)="onCancel()">Cancel</button>
-            </div>
+          <div class="form-group">
+            <label>Route Name:</label>
+            <input type="text" [value]="formModel().rName" (input)="handleInput('rName', $event)" />
+          </div>
+  
+          <div class="form-group">
+            <label>Start Location:</label>
+            <input type="text" [value]="formModel().startLocation" (input)="handleInput('startLocation', $event)" />
+          </div>
+  
+          <div class="form-group">
+            <label>End Location:</label>
+            <input type="text" [value]="formModel().endLocation" (input)="handleInput('endLocation', $event)" />
+          </div>
+  
+          <div class="form-group">
+            <label>Distance (km):</label>
+            <input type="text" [value]="formModel().distance" (input)="handleInput('distance', $event)" />
+          </div>
+  
+          <div class="form-group">
+            <label>Collector ID:</label>
+            <input type="number" [value]="formModel().collectorId" (input)="handleInput('collectorId', $event)" />
+          </div>
+  
+          <div class="form-group">
+            <label>Vehicle ID:</label>
+            <input type="number" [value]="formModel().vehicleId" (input)="handleInput('vehicleId', $event)" />
+          </div>
+  
+          <h3>Grower Locations</h3>
+          <ul class="grower-list">
+            @for (loc of formModel().growerLocations; track loc?.gId) {
+              <li>
+                <div class="location-info">
+                  <strong>Lat:</strong> {{ loc.latitude }},
+                  <strong>Lng:</strong> {{ loc.longitude }}
+                </div>
+                <input
+                  type="text"
+                  [value]="loc.description"
+                  (input)="updateGrowerDescription(loc.gId, $event)"
+                  placeholder="Location description"
+                />
+              </li>
+            }
+          </ul>
+  
+          <div class="form-actions">
+            <button type="submit" class="save-btn">Save</button>
+            <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+          </div>
         </form>
+      </div>
     </div>
-</div>
-}
+  }

@@ -1,0 +1,110 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .close-btn {
+    float: right;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+  
+  .route-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    label {
+      font-weight: bold;
+    }
+    
+    input {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  }
+  
+  .grower-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    
+    li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+      
+      .location-info {
+        margin-bottom: 0.5rem;
+        color: #666;
+      }
+      
+      input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+    }
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+    
+    button {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      
+      &.save-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        
+        &:hover {
+          background-color: #45a049;
+        }
+      }
+      
+      &.cancel-btn {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        
+        &:hover {
+          background-color: #d32f2f;
+        }
+      }
+    }
+  }

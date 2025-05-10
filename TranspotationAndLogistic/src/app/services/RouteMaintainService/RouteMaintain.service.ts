@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Rview } from '../../models/rview.model';
+import { tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +36,15 @@ export class RService {
 
   // Update existing route
   update(id: number, rview: Rview): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, rview).pipe(
-      catchError(this.handleError)
+    console.log('Sending update payload:', {id, rview});
+    const payload = {...rview, rId: id};
+    
+    return this.http.put<void>(`${this.apiUrl}/${id}`, payload).pipe(
+      tap(() => console.log('Update successful')),
+      catchError(err => {
+        console.error('Update error:', err);
+        return this.handleError(err);
+      })
     );
   }
 
@@ -47,7 +55,6 @@ export class RService {
     );
   }
 
-  // Centralized error handling
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
     
@@ -58,7 +65,6 @@ export class RService {
       // Server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
       
-      // Customize messages for specific status codes
       switch (error.status) {
         case 404:
           errorMessage = 'Route not found';

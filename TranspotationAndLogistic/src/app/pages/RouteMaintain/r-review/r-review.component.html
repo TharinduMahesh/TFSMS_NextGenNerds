@@ -100,9 +100,14 @@
   </app-r-view>
 }
 
-@if (isEditModalOpen()) {
+<!-- Edit Route Component -->
+<!-- Edit Route Component -->
+@if (isEditModalOpen() && routeBeingEdited()) {
   <app-r-edit 
-    [route]="routeBeingEdited()" 
-    [close]="closeEditModal" />
+    [route]="routeBeingEdited()!" 
+    (close)="closeEditModal()"
+    (save)="onSaveEdit($event)">
+  </app-r-edit>
 }
+
 </div>

@@ -6,14 +6,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RService } from '../../../services/RouteMaintainService/RouteMaintain.service';
 import { RtViewComponent } from '../r-view/r-view.component';
-import { RtEditComponent } from "../r-edit/r-edit.component";
+import { RtEditComponent } from '../r-edit/r-edit.component';
 
 @Component({
   selector: 'app-rview',
   standalone: true,
   templateUrl: './r-review.component.html', 
   styleUrls: ['./r-review.component.scss'],
-  imports: [CommonModule, FormsModule, HttpClientModule, RtViewComponent, RtEditComponent]
+  imports: [CommonModule, FormsModule, HttpClientModule, RtViewComponent,RtEditComponent]
 })
 export class RtReviewComponent implements OnInit {
   searchTerm = signal('');
@@ -120,12 +120,32 @@ export class RtReviewComponent implements OnInit {
   onEdit(route: Rview): void {
     this.routeBeingEdited.set(route);
     this.isEditModalOpen.set(true);
-  }
+  };
 
   closeEditModal = () => {
     this.isEditModalOpen.set(false);
     this.routeBeingEdited.set(null);
   };
+
+  onSaveEdit(updatedRoute: Rview): void {
+    if (!updatedRoute.rId) {
+      console.error('Cannot update route without ID');
+      return;
+    }
+  
+    this.isLoading.set(true);
+    this.rService.update(updatedRoute.rId, updatedRoute).subscribe({
+      next: () => {
+        this.loadRoutes(); // Refresh the list
+        this.closeEditModal();
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message || 'Failed to update route');
+        this.isLoading.set(false);
+      }
+    });
+  }
   
 
   onDelete(id?: number): void {

@@ -1,26 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, catchError, map, of, throwError } from 'rxjs';
 import { Payment } from '../../models/payment.model';
 import { Supplier } from '../../models/supplier.model';
 import { Receipt } from '../../models/receipt.model';
 import { SupplierService } from './supplier.service';
+import { environment } from '../../shared/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReceiptService {
-  private apiUrl =  "https://localhost:7203/api/receipts";
+  private apiUrl = `${environment.apiBaseUrl}/receipts`;
 
   constructor(
     private http: HttpClient,
     private supplierService: SupplierService
   ) { }
 
-  generateReceipt(payment: Payment): Observable<Receipt> {
+  generateReceipt(payment: Payment): Observable<Receipt | null> {
+    if (!payment) {
+      console.error('Cannot generate receipt: Payment is null or undefined');
+      return of(null);
+    }
+
     // Get supplier details to include in the receipt
     return this.supplierService.getSupplier(payment.supplierId).pipe(
       map(supplier => {
+        if (!supplier) {
+          throw new Error(`Supplier with ID ${payment.supplierId} not found`);
+        }
+        
         return {
           receiptNumber: `REC-${payment.paymentId.toString().padStart(5, '0')}`,
           date: payment.paymentDate,
@@ -33,28 +43,78 @@ export class ReceiptService {
             notes: 'Thank you for your business'
           }
         };
+      }),
+      catchError(error => {
+        console.error('Error generating receipt:', error);
+        return of(null);
       })
     );
   }
 
-  saveReceipt(receipt: Receipt): Observable<Receipt> {
-    return this.http.post<Receipt>(this.apiUrl, receipt);
+  saveReceipt(receipt: Receipt): Observable<Receipt | null> {
+    if (!receipt) {
+      console.error('Cannot save receipt: Receipt is null or undefined');
+      return of(null);
+    }
+
+    return this.http.post<Receipt>(this.apiUrl, receipt).pipe(
+      catchError(error => {
+        console.error('Error saving receipt:', error);
+        return of(null);
+      })
+    );
   }
 
-  getReceipt(receiptNumber: string): Observable<Receipt> {
-    return this.http.get<Receipt>(`${this.apiUrl}/${receiptNumber}`);
+  getReceipt(receiptNumber: string): Observable<Receipt | null> {
+    if (!receiptNumber) {
+      console.error('Cannot get receipt: Receipt number is null or undefined');
+      return of(null);
+    }
+
+    return this.http.get<Receipt>(`${this.apiUrl}/${receiptNumber}`).pipe(
+      catchError(error => {
+        console.error(`Error fetching receipt ${receiptNumber}:`, error);
+        return of(null);
+      })
+    );
   }
 
   getReceiptsBySupplier(supplierId: number): Observable<Receipt[]> {
-    return this.http.get<Receipt[]>(`${this.apiUrl}/supplier/${supplierId}`);
+    if (!supplierId) {
+      console.error('Cannot get receipts: Supplier ID is null or undefined');
+      return of([]);
+    }
+
+    return this.http.get<Receipt[]>(`${this.apiUrl}/supplier/${supplierId}`).pipe(
+      map(response => Array.isArray(response) ? response : []),
+      catchError(error => {
+        console.error(`Error fetching receipts for supplier ${supplierId}:`, error);
+        return of([]);
+      })
+    );
   }
 
   printReceipt(payment: Payment): void {
+    if (!payment) {
+      console.error('Cannot print receipt: Payment is null or undefined');
+      return;
+    }
+
     this.generateReceipt(payment).subscribe({
       next: (receiptData) => {
-        // Create a printable version of the receipt
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
+        if (!receiptData) {
+          console.error('Failed to generate receipt data for printing');
+          return;
+        }
+
+        try {
+          // Create a printable version of the receipt
+          const printWindow = window.open('', '_blank');
+          if (!printWindow) {
+            console.error('Failed to open print window. Pop-up might be blocked.');
+            return;
+          }
+
           printWindow.document.write(`
             <html>
               <head>
@@ -87,15 +147,15 @@ export class ReceiptService {
                     </div>
                     <div class="row">
                       <div class="label">Name:</div>
-                      <div class="value">${receiptData.supplier.name}</div>
+                      <div class="value">${receiptData.supplier.name || 'N/A'}</div>
                     </div>
                     <div class="row">
                       <div class="label">Area:</div>
-                      <div class="value">${receiptData.supplier.area}</div>
+                      <div class="value">${receiptData.supplier.area || 'N/A'}</div>
                     </div>
                     <div class="row">
                       <div class="label">Contact:</div>
-                      <div class="value">${receiptData.supplier.contact}</div>
+                      <div class="value">${receiptData.supplier.contact || 'N/A'}</div>
                     </div>
                   </div>
                   
@@ -127,7 +187,7 @@ export class ReceiptService {
                     </div>
                     <div class="row">
                       <div class="label">Payment Method:</div>
-                      <div class="value">${receiptData.payment.paymentMethod}</div>
+                      <div class="value">${receiptData.payment.paymentMethod || 'N/A'}</div>
                     </div>
                   </div>
                   
@@ -140,24 +200,80 @@ export class ReceiptService {
                   
                   <div class="footer">
                     <p>Issued by: ${receiptData.receiptDetails.issuedBy}</p>
-                    <p>Timestamp: ${receiptData.receiptDetails.timestamp.toLocaleString()}</p>
-                    <p>${receiptData.receiptDetails.notes}</p>
+                    <p>Timestamp: ${new Date(receiptData.receiptDetails.timestamp).toLocaleString()}</p>
+                    <p>${receiptData.receiptDetails.notes || ''}</p>
                   </div>
                 </div>
               </body>
             </html>
           `);
           printWindow.document.close();
-          printWindow.print();
+          
+          // Add a slight delay to ensure content is loaded before printing
+          setTimeout(() => {
+            printWindow.print();
+          }, 500);
+        } catch (err) {
+          console.error('Error printing receipt:', err);
         }
       },
       error: (err) => {
-        console.error('Error generating receipt:', err);
+        console.error('Error generating receipt for printing:', err);
       }
     });
   }
 
-  downloadReceiptPDF(payment: Payment): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/pdf/${payment.paymentId}`, { responseType: 'blob' });
+  downloadReceiptPDF(payment: Payment): Observable<Blob | null> {
+    if (!payment || !payment.paymentId) {
+      console.error('Cannot download receipt PDF: Invalid payment data');
+      return of(null);
+    }
+
+    return this.http.get(`${this.apiUrl}/pdf/${payment.paymentId}`, { responseType: 'blob' }).pipe(
+      catchError(error => {
+        console.error(`Error downloading receipt PDF for payment ${payment.paymentId}:`, error);
+        return of(null);
+      })
+    );
+  }
+
+  // New method to handle PDF download and save
+  downloadAndSaveReceiptPDF(payment: Payment): void {
+    if (!payment || !payment.paymentId) {
+      console.error('Cannot download receipt PDF: Invalid payment data');
+      return;
+    }
+
+    this.downloadReceiptPDF(payment).subscribe({
+      next: (blob) => {
+        if (!blob) {
+          console.error('Failed to download receipt PDF: No data received');
+          return;
+        }
+
+        try {
+          // Create a URL for the blob
+          const url = window.URL.createObjectURL(blob);
+          
+          // Create a link element
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `Receipt-${payment.paymentId}.pdf`;
+          
+          // Append to the document, click it, and remove it
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Release the URL object
+          window.URL.revokeObjectURL(url);
+        } catch (err) {
+          console.error('Error saving receipt PDF:', err);
+        }
+      },
+      error: (err) => {
+        console.error('Error downloading receipt PDF:', err);
+      }
+    });
   }
 }

@@ -52,7 +52,7 @@ export class PaymentComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.paymentForm = this.fb.group({
-      SupplierId: ['', Validators.required],
+      supplierId: ['', Validators.required],
       leafWeight: ['', [Validators.required, Validators.min(0.01)]],
       rate: [200, [Validators.required, Validators.min(0.01)]],
       paymentMethod: ['', Validators.required],
@@ -99,12 +99,12 @@ export class PaymentComponent implements OnInit {
   }
 
   onSupplierChange(event: any): void {
-    const SupplierId = event.target.value;
-    if (!SupplierId) return;
+    const supplierId = event.target.value;
+    if (!supplierId) return;
 
     this.loading = true;
 
-    this.greenLeafService.getLatestGreenLeafWeight(SupplierId).subscribe({
+    this.greenLeafService.getLatestGreenLeafWeight(supplierId).subscribe({
       next: (weight) => {
         if (weight > 0) {
           this.paymentForm.patchValue({ leafWeight: weight });
@@ -117,11 +117,11 @@ export class PaymentComponent implements OnInit {
       }
     });
 
-    this.loadSupplierFinancialData(SupplierId);
+    this.loadSupplierFinancialData(supplierId);
   }
 
-  loadSupplierFinancialData(SupplierId: number): void {
-    this.advanceService.getAdvancesBySupplier(SupplierId).subscribe({
+  loadSupplierFinancialData(supplierId: number): void {
+    this.advanceService.getAdvancesBySupplier(supplierId).subscribe({
       next: (advances) => {
         const totalAdvances = advances.reduce((sum, adv) => sum + adv.balanceAmount, 0);
         this.paymentForm.patchValue({ advanceDeduction: totalAdvances });
@@ -129,7 +129,7 @@ export class PaymentComponent implements OnInit {
       error: (err) => console.error('Error loading advances:', err)
     });
 
-    this.debtService.getDebtsBySupplier(SupplierId).subscribe({
+    this.debtService.getDebtsBySupplier(supplierId).subscribe({
       next: (debts) => {
         const totalDebts = debts.reduce((sum, debt) => sum + debt.balanceAmount, 0);
         this.paymentForm.patchValue({ debtDeduction: totalDebts });
@@ -137,7 +137,7 @@ export class PaymentComponent implements OnInit {
       error: (err) => console.error('Error loading debts:', err)
     });
 
-    this.incentiveService.getCurrentIncentiveForSupplier(SupplierId).subscribe({
+    this.incentiveService.getCurrentIncentiveForSupplier(supplierId).subscribe({
       next: (incentive) => {
         if (incentive) {
           const totalIncentive = incentive.qualityBonus + incentive.loyaltyBonus;
@@ -212,7 +212,7 @@ export class PaymentComponent implements OnInit {
 
     const payment: Payment = {
       paymentId: 0,
-      SupplierId: formValues.SupplierId,
+      supplierId: formValues.supplierId,
       leafWeight: formValues.leafWeight,
       rate: formValues.rate,
       grossAmount: grossAmount,

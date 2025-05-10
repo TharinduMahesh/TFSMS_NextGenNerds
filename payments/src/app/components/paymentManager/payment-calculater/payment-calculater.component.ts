@@ -21,7 +21,7 @@ import { IncentiveService } from '../../../shared/services/incentive.service';
 })
 export class PaymentCalculatorComponent implements OnInit, OnChanges {
   @Input() suppliers: Supplier[] = [];
-  @Input() initialSupplierId: string = '';
+  @Input() initialsupplierId: string = '';
   @Input() initialLeafWeight: number = 0;
   @Input() initialRate: number = 200;
   @Output() calculationComplete = new EventEmitter<PaymentCalculationResult>();
@@ -45,7 +45,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     private incentiveService: IncentiveService
   ) {
     this.calculatorForm = this.fb.group({
-      SupplierId: ['', Validators.required],
+      supplierId: ['', Validators.required],
       leafWeight: ['', [Validators.required, Validators.min(0.01)]],
       rate: [200, [Validators.required, Validators.min(0.01)]],
       includeAdvances: [true],
@@ -67,13 +67,13 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['initialSupplierId'] || changes['initialLeafWeight'] || changes['initialRate']) {
+    if (changes['initialsupplierId'] || changes['initialLeafWeight'] || changes['initialRate']) {
       this.updateFormWithInitialValues();
     }
     
     if (changes['suppliers'] && this.suppliers && this.suppliers.length > 0) {
       // Suppliers were provided externally
-      if (this.initialSupplierId) {
+      if (this.initialsupplierId) {
         this.onSupplierChange();
       }
     }
@@ -82,8 +82,8 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
   private updateFormWithInitialValues(): void {
     const updates: any = {};
     
-    if (this.initialSupplierId) {
-      updates.SupplierId = this.initialSupplierId;
+    if (this.initialsupplierId) {
+      updates.supplierId = this.initialsupplierId;
     }
     
     if (this.initialLeafWeight) {
@@ -97,7 +97,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     if (Object.keys(updates).length > 0) {
       this.calculatorForm.patchValue(updates);
       
-      if (this.initialSupplierId) {
+      if (this.initialsupplierId) {
         this.onSupplierChange();
       }
     }
@@ -116,13 +116,13 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
   }
 
   onSupplierChange(): void {
-    const SupplierId = this.calculatorForm.get('SupplierId')?.value;
-    if (!SupplierId) return;
+    const supplierId = this.calculatorForm.get('supplierId')?.value;
+    if (!supplierId) return;
 
     this.loading = true;
 
     // Get the latest green leaf weight for this supplier
-    this.greenLeafService.getLatestGreenLeafWeight(SupplierId).subscribe({
+    this.greenLeafService.getLatestGreenLeafWeight(supplierId).subscribe({
       next: (weight) => {
         if (weight > 0 && !this.initialLeafWeight) {
           this.calculatorForm.patchValue({ leafWeight: weight });
@@ -132,7 +132,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier advances
-    this.advanceService.getAdvancesBySupplier(SupplierId).subscribe({
+    this.advanceService.getAdvancesBySupplier(supplierId).subscribe({
       next: (data) => {
         this.advances = data;
         const totalAdvances = data.reduce((sum, advance) => sum + advance.balanceAmount, 0);
@@ -142,7 +142,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier debts
-    this.debtService.getDebtsBySupplier(SupplierId).subscribe({
+    this.debtService.getDebtsBySupplier(supplierId).subscribe({
       next: (data) => {
         this.debts = data;
         const totalDebts = data.reduce((sum, debt) => sum + debt.balanceAmount, 0);
@@ -152,7 +152,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier incentives
-    this.incentiveService.getCurrentIncentiveForSupplier(SupplierId).subscribe({
+    this.incentiveService.getCurrentIncentiveForSupplier(supplierId).subscribe({
       next: (data) => {
         if (data) {
           this.incentives = [data];

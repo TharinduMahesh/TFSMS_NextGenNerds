@@ -1,6 +1,6 @@
 export interface GreenLeaf {
     id: number;
-    SupplierId: number;
+    supplierId: number;
     weight: number;
     collectionDate: Date;
     quality: string;

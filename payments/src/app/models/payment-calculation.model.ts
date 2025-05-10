@@ -1,5 +1,5 @@
 export interface PaymentCalculationRequest {
-  SupplierId: number;
+  supplierId: number;
   leafWeight: number;
   rate: number;
   includeAdvances: boolean;

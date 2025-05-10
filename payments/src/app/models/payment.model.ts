@@ -1,6 +1,6 @@
 export interface Payment {
   paymentId: number;
-  SupplierId: number;
+  supplierId: number;
   leafWeight: number;
   rate: number;
   grossAmount: number;

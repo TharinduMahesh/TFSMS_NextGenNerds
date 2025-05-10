@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ExportService {
-  private apiUrl = "https://localhost:7203/api/export";
+  private apiUrl = "https://localhost:7203pi/export";
 
   constructor(private http: HttpClient) { }
 
@@ -18,8 +18,8 @@ export class ExportService {
     return this.http.get(url, { responseType: 'blob' });
   }
 
-  exportSupplierPayments(SupplierId: number, format: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/supplier/${SupplierId}/payments?format=${format}`, { responseType: 'blob' });
+  exportSupplierPayments(supplierId: number, format: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/supplier/${supplierId}/payments?format=${format}`, { responseType: 'blob' });
   }
 
   exportAdvances(format: string): Observable<Blob> {

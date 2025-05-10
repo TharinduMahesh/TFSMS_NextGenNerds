@@ -23,12 +23,12 @@ export class IncentiveService {
     return this.http.get<Incentive>(`${this.apiUrl}/${id}`);
   }
 
-  getIncentivesBySupplier(SupplierId: number): Observable<Incentive[]> {
-    return this.http.get<Incentive[]>(`${this.apiUrl}/supplier/${SupplierId}`);
+  getIncentivesBySupplier(supplierId: number): Observable<Incentive[]> {
+    return this.http.get<Incentive[]>(`${this.apiUrl}/supplier/${supplierId}`);
   }
 
-  getCurrentIncentiveForSupplier(SupplierId: number): Observable<Incentive> {
-    return this.http.get<Incentive>(`${this.apiUrl}/supplier/${SupplierId}/current`);
+  getCurrentIncentiveForSupplier(supplierId: number): Observable<Incentive> {
+    return this.http.get<Incentive>(`${this.apiUrl}/supplier/${supplierId}/current`);
   }
 
   createIncentive(incentive: Incentive): Observable<Incentive> {

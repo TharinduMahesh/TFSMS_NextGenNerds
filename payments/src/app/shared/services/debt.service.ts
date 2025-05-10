@@ -23,8 +23,8 @@ export class DebtService {
     return this.http.get<Debt>(`${this.apiUrl}/${id}`);
   }
 
-  getDebtsBySupplier(SupplierId: number): Observable<Debt[]> {
-    return this.http.get<Debt[]>(`${this.apiUrl}/supplier/${SupplierId}`);
+  getDebtsBySupplier(supplierId: number): Observable<Debt[]> {
+    return this.http.get<Debt[]>(`${this.apiUrl}/supplier/${supplierId}`);
   }
 
   createDebt(debt: Debt): Observable<Debt> {

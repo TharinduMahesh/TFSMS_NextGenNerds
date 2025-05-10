@@ -23,8 +23,8 @@ export class AdvanceService {
     return this.http.get<Advance>(`${this.apiUrl}/${id}`);
   }
 
-  getAdvancesBySupplier(SupplierId: number): Observable<Advance[]> {
-    return this.http.get<Advance[]>(`${this.apiUrl}/supplier/${SupplierId}`);
+  getAdvancesBySupplier(supplierId: number): Observable<Advance[]> {
+    return this.http.get<Advance[]>(`${this.apiUrl}/supplier/${supplierId}`);
   }
 
   createAdvance(advance: Advance): Observable<Advance> {

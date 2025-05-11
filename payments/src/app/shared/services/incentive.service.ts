@@ -9,7 +9,7 @@ import { environment } from '../../shared/environments/environment';
 })
 export class IncentiveService {
   // Fixed API URL - was missing /api
-  private apiUrl = `${environment.apiBaseUrl}/incentives`;
+  private apiUrl = `${environment.apiBaseUrl}/api/incentives`;
 
   constructor(private http: HttpClient) { }
 

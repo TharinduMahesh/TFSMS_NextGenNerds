@@ -52,8 +52,8 @@ export class PaymentService {
     );
   }
 
-  getPaymentsBySupplier(supplierId: number): Observable<Payment[]> {
-    return this.http.get<any>(`${this.apiUrl}/supplier/${supplierId}`).pipe(
+  getPaymentsBySupplier(SupplierId: number): Observable<Payment[]> {
+    return this.http.get<any>(`${this.apiUrl}/Supplier/${SupplierId}`).pipe(
       map(response => {
         if (Array.isArray(response)) {
           return response;
@@ -63,7 +63,7 @@ export class PaymentService {
         return [];
       }),
       catchError(error => {
-        console.error(`Error fetching payments for supplier ${supplierId}:`, error);
+        console.error(`Error fetching payments for supplier ${SupplierId}:`, error);
         // Return empty array instead of throwing error
         return of([]);
       })

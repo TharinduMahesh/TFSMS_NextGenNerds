@@ -46,7 +46,7 @@ export class PaymentComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.paymentForm = this.fb.group({
-      supplierId: ['', Validators.required],
+      SupplierId: ['', Validators.required],
       leafWeight: ['', [Validators.required, Validators.min(0.01)]],
       rate: [200, [Validators.required, Validators.min(0.01)]],
       grossAmount: [{value: 0, disabled: true}],
@@ -187,7 +187,7 @@ export class PaymentComponent implements OnInit {
     // Filter by supplier
     if (this.selectedSupplier) {
       filtered = filtered.filter(payment => 
-        payment.supplierId.toString() === this.selectedSupplier
+        payment.SupplierId.toString() === this.selectedSupplier
       );
     }
     
@@ -264,7 +264,7 @@ export class PaymentComponent implements OnInit {
     // Create payment object
     const payment: Payment = {
       paymentId: 0, // New payment
-      supplierId: formValues.supplierId,
+      SupplierId: formValues.SupplierId,
       leafWeight: formValues.leafWeight,
       rate: formValues.rate,
       grossAmount: formValues.grossAmount,
@@ -338,7 +338,7 @@ export class PaymentComponent implements OnInit {
 
   private resetForm(): void {
     this.paymentForm.reset({
-      supplierId: '',
+      SupplierId: '',
       leafWeight: '',
       rate: 200,
       grossAmount: 0,

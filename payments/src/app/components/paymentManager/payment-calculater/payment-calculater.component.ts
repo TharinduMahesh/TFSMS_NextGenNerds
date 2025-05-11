@@ -21,7 +21,7 @@ import { IncentiveService } from '../../../shared/services/incentive.service';
 })
 export class PaymentCalculatorComponent implements OnInit, OnChanges {
   @Input() suppliers: Supplier[] = [];
-  @Input() initialsupplierId: string = '';
+  @Input() initialSupplierId: string = '';
   @Input() initialLeafWeight: number = 0;
   @Input() initialRate: number = 200;
   @Output() calculationComplete = new EventEmitter<PaymentCalculationResult>();
@@ -45,7 +45,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     private incentiveService: IncentiveService
   ) {
     this.calculatorForm = this.fb.group({
-      supplierId: ['', Validators.required],
+      SupplierId: ['', Validators.required],
       leafWeight: ['', [Validators.required, Validators.min(0.01)]],
       rate: [200, [Validators.required, Validators.min(0.01)]],
       includeAdvances: [true],
@@ -67,13 +67,13 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['initialsupplierId'] || changes['initialLeafWeight'] || changes['initialRate']) {
+    if (changes['initialSupplierId'] || changes['initialLeafWeight'] || changes['initialRate']) {
       this.updateFormWithInitialValues();
     }
     
     if (changes['suppliers'] && this.suppliers && this.suppliers.length > 0) {
       // Suppliers were provided externally
-      if (this.initialsupplierId) {
+      if (this.initialSupplierId) {
         this.onSupplierChange();
       }
     }
@@ -82,8 +82,8 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
   private updateFormWithInitialValues(): void {
     const updates: any = {};
     
-    if (this.initialsupplierId) {
-      updates.supplierId = this.initialsupplierId;
+    if (this.initialSupplierId) {
+      updates.SupplierId = this.initialSupplierId;
     }
     
     if (this.initialLeafWeight) {
@@ -97,7 +97,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     if (Object.keys(updates).length > 0) {
       this.calculatorForm.patchValue(updates);
       
-      if (this.initialsupplierId) {
+      if (this.initialSupplierId) {
         this.onSupplierChange();
       }
     }
@@ -124,13 +124,13 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
   }
 
   onSupplierChange(): void {
-    const supplierId = this.calculatorForm.get('supplierId')?.value;
-    if (!supplierId) return;
+    const SupplierId = this.calculatorForm.get('SupplierId')?.value;
+    if (!SupplierId) return;
 
     this.loading = true;
 
     // Get the latest green leaf weight for this supplier
-    this.greenLeafService.getLatestGreenLeafWeight(supplierId).subscribe({
+    this.greenLeafService.getLatestGreenLeafWeight(SupplierId).subscribe({
       next: (weight) => {
         if (weight > 0 && !this.initialLeafWeight) {
           this.calculatorForm.patchValue({ leafWeight: weight });
@@ -140,7 +140,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier advances
-    this.advanceService.getAdvancesBySupplier(supplierId).subscribe({
+    this.advanceService.getAdvancesBySupplier(SupplierId).subscribe({
       next: (data) => {
         // Ensure data is an array
         if (Array.isArray(data)) {
@@ -161,7 +161,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier debts
-    this.debtService.getDebtsBySupplier(supplierId).subscribe({
+    this.debtService.getDebtsBySupplier(SupplierId).subscribe({
       next: (data) => {
         // Ensure data is an array
         if (Array.isArray(data)) {
@@ -182,7 +182,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
     });
 
     // Load supplier incentives
-    this.incentiveService.getCurrentIncentiveForSupplier(supplierId).subscribe({
+    this.incentiveService.getCurrentIncentiveForSupplier(SupplierId).subscribe({
       next: (data) => {
         if (data) {
           this.incentives = [data];

@@ -8,7 +8,7 @@ import { environment } from '../../shared/environments/environment';
   providedIn: 'root'
 })
 export class AdvanceService {
-  private apiUrl = `${environment.apiBaseUrl}/advances`;
+  private apiUrl = `${environment.apiBaseUrl}/api/Advances`;
 
   constructor(private http: HttpClient) { }
 
@@ -33,11 +33,11 @@ export class AdvanceService {
     );
   }
 
-  getAdvancesBySupplier(supplierId: number): Observable<Advance[]> {
-    return this.http.get<Advance[]>(`${this.apiUrl}/supplier/${supplierId}`).pipe(
+  getAdvancesBySupplier(SupplierId: number): Observable<Advance[]> {
+    return this.http.get<Advance[]>(`${this.apiUrl}/supplier/${SupplierId}`).pipe(
       map(response => Array.isArray(response) ? response : []),
       catchError(error => {
-        console.error(`Error fetching advances for supplier ${supplierId}:`, error);
+        console.error(`Error fetching advances for supplier ${SupplierId}:`, error);
         return of([]);
       })
     );

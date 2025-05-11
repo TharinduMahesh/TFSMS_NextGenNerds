@@ -45,8 +45,8 @@
         <label>Supplier:</label>
         <select [(ngModel)]="selectedSupplier" (change)="filterPayments()">
           <option value="">All Suppliers</option>
-          <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-            {{ supplier.supplierId }} - {{ supplier.name }}
+          <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+            {{ supplier.SupplierId }} - {{ supplier.Name }}
           </option>
         </select>
       </div>
@@ -93,7 +93,7 @@
       <div *ngIf="showCalculator" class="calculator-container">
         <app-payment-calculator 
           [suppliers]="suppliers"
-          [initialsupplierId]="paymentForm.get('supplierId')?.value"
+          [initialSupplierId]="paymentForm.get('SupplierId')?.value"
           [initialLeafWeight]="paymentForm.get('leafWeight')?.value"
           [initialRate]="paymentForm.get('rate')?.value"
           (calculationComplete)="onCalculationComplete($event)">
@@ -104,13 +104,13 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Supplier:</label>
-            <select formControlName="supplierId">
+            <select formControlName="SupplierId">
               <option value="">Select Supplier</option>
-              <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-                {{ supplier.supplierId }} - {{ supplier.name }}
+              <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+                {{ supplier.SupplierId }} - {{ supplier.Name }}
               </option>
             </select>
-            <div *ngIf="paymentForm.get('supplierId')?.touched && paymentForm.get('supplierId')?.invalid" class="error-message">
+            <div *ngIf="paymentForm.get('SupplierId')?.touched && paymentForm.get('SupplierId')?.invalid" class="error-message">
               Supplier is required
             </div>
           </div>
@@ -211,7 +211,7 @@
           <ng-container *ngIf="filteredPayments && filteredPayments.length > 0; else noPayments">
             <tr *ngFor="let payment of filteredPayments">
               <td>{{ payment.paymentId }}</td>
-              <td>{{ payment.supplierId }}</td>
+              <td>{{ payment.SupplierId }}</td>
               <td>{{ payment.leafWeight }} kg</td>
               <td>LKR {{ payment.rate }}</td>
               <td>LKR {{ payment.grossAmount | number }}</td>

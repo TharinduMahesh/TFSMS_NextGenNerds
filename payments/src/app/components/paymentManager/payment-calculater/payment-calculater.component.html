@@ -2,14 +2,14 @@
     <div class="calculator-form">
       <form [formGroup]="calculatorForm" (ngSubmit)="calculatePayment()">
         <div class="form-group">
-          <label for="supplierId">Supplier</label>
-          <select id="supplierId" formControlName="supplierId" (change)="onSupplierChange()">
+          <label for="SupplierId">Supplier</label>
+          <select id="SupplierId" formControlName="SupplierId" (change)="onSupplierChange()">
             <option value="">Select Supplier</option>
-            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-              {{ supplier.supplierId }} - {{ supplier.name }} {{ supplier.area ? '(' + supplier.area + ')' : '' }}
+            <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+              {{ supplier.SupplierId }} - {{ supplier.name }} {{ supplier.area ? '(' + supplier.area + ')' : '' }}
             </option>
           </select>
-          <div *ngIf="calculatorForm.get('supplierId')?.touched && calculatorForm.get('supplierId')?.invalid" class="error-message">
+          <div *ngIf="calculatorForm.get('SupplierId')?.touched && calculatorForm.get('SupplierId')?.invalid" class="error-message">
             Supplier is required
           </div>
         </div>
@@ -165,14 +165,14 @@
     <div class="calculator-form">
       <form [formGroup]="calculatorForm" (ngSubmit)="calculatePayment()">
         <div class="form-group">
-          <label for="supplierId">Supplier</label>
-          <select id="supplierId" formControlName="supplierId" (change)="onSupplierChange()">
+          <label for="SupplierId">Supplier</label>
+          <select id="SupplierId" formControlName="SupplierId" (change)="onSupplierChange()">
             <option value="">Select Supplier</option>
-            <option *ngFor="let supplier of suppliers" [value]="supplier.supplierId">
-              {{ supplier.supplierId }} - {{ supplier.name }} {{ supplier.area ? '(' + supplier.area + ')' : '' }}
+            <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+              {{ supplier.SupplierId }} - {{ supplier.Name }} {{ supplier.area ? '(' + supplier.area + ')' : '' }}
             </option>
           </select>
-          <div *ngIf="calculatorForm.get('supplierId')?.touched && calculatorForm.get('supplierId')?.invalid" class="error-message">
+          <div *ngIf="calculatorForm.get('SupplierId')?.touched && calculatorForm.get('SupplierId')?.invalid" class="error-message">
             Supplier is required
           </div>
         </div>

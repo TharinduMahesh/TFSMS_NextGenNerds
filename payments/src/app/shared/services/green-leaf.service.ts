@@ -15,17 +15,17 @@ export class GreenLeafService {
     return this.http.get<GreenLeaf[]>(this.apiUrl);
   }
 
-  getGreenLeafDataBySupplier(supplierId: number): Observable<GreenLeaf[]> {
-    return this.http.get<GreenLeaf[]>(`${this.apiUrl}/supplier/${supplierId}`);
+  getGreenLeafDataBySupplier(SupplierId: number): Observable<GreenLeaf[]> {
+    return this.http.get<GreenLeaf[]>(`${this.apiUrl}/supplier/${SupplierId}`);
   }
 
-  getLatestGreenLeafWeight(supplierId: number): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/supplier/${supplierId}/latest-weight`);
+  getLatestGreenLeafWeight(SupplierId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/supplier/${SupplierId}/latest-weight`);
   }
 
-  getTotalGreenLeafBySupplier(supplierId: number, startDate: string, endDate: string): Observable<number> {
+  getTotalGreenLeafBySupplier(SupplierId: number, startDate: string, endDate: string): Observable<number> {
     return this.http.get<number>(
-      `${this.apiUrl}/supplier/${supplierId}/total?startDate=${startDate}&endDate=${endDate}`
+      `${this.apiUrl}/supplier/${SupplierId}/total?startDate=${startDate}&endDate=${endDate}`
     );
   }
 

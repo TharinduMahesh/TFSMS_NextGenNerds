@@ -20,7 +20,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
 import { sslBypassInterceptor } from './shared/interceptors/ssl-bypass.interceptor';
-import { httpErrorInterceptor } from './shared/interceptors/http-error.interceptor';
+// import { httpErrorInterceptor } from './shared/interceptors/http-error.interceptor';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([
         authInterceptor,
         sslBypassInterceptor,
-        httpErrorInterceptor
+        // httpErrorInterceptor
       ])
     ),
     provideZoneChangeDetection({ eventCoalescing: true }),

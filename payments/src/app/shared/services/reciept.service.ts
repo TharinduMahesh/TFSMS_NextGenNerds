@@ -25,10 +25,10 @@ export class ReceiptService {
     }
 
     // Get supplier details to include in the receipt
-    return this.supplierService.getSupplier(payment.supplierId).pipe(
+    return this.supplierService.getSupplier(payment.SupplierId).pipe(
       map(supplier => {
         if (!supplier) {
-          throw new Error(`Supplier with ID ${payment.supplierId} not found`);
+          throw new Error(`Supplier with ID ${payment.SupplierId} not found`);
         }
         
         return {
@@ -79,16 +79,16 @@ export class ReceiptService {
     );
   }
 
-  getReceiptsBySupplier(supplierId: number): Observable<Receipt[]> {
-    if (!supplierId) {
+  getReceiptsBySupplier(SupplierId: number): Observable<Receipt[]> {
+    if (!SupplierId) {
       console.error('Cannot get receipts: Supplier ID is null or undefined');
       return of([]);
     }
 
-    return this.http.get<Receipt[]>(`${this.apiUrl}/supplier/${supplierId}`).pipe(
+    return this.http.get<Receipt[]>(`${this.apiUrl}/supplier/${SupplierId}`).pipe(
       map(response => Array.isArray(response) ? response : []),
       catchError(error => {
-        console.error(`Error fetching receipts for supplier ${supplierId}:`, error);
+        console.error(`Error fetching receipts for supplier ${SupplierId}:`, error);
         return of([]);
       })
     );
@@ -143,11 +143,11 @@ export class ReceiptService {
                     <h3>Supplier Information</h3>
                     <div class="row">
                       <div class="label">Supplier ID:</div>
-                      <div class="value">${receiptData.supplier.supplierId}</div>
+                      <div class="value">${receiptData.supplier.SupplierId}</div>
                     </div>
                     <div class="row">
                       <div class="label">Name:</div>
-                      <div class="value">${receiptData.supplier.name || 'N/A'}</div>
+                      <div class="value">${receiptData.supplier.Name || 'N/A'}</div>
                     </div>
                     <div class="row">
                       <div class="label">Area:</div>

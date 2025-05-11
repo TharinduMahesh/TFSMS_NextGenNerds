@@ -4,7 +4,7 @@ import { Receipt } from './receipt.model';
 
 export interface Payment {
   paymentId: number;
-  supplierId: number;
+  SupplierId: number;
   leafWeight: number;
   rate: number;
   grossAmount: number;

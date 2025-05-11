@@ -1,6 +1,6 @@
 export interface Debt {
   debtId: number;
-  supplierId: number;
+  SupplierId: number;
   debtType: string;         // Added this property
   description: string;      // Added this property
   totalAmount: number;      // Added this property

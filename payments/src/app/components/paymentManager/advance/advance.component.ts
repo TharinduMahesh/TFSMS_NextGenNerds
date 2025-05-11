@@ -37,7 +37,7 @@ export class AdvanceComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.advanceForm = this.fb.group({
-      supplierId: ['', Validators.required],
+      SupplierId: ['', Validators.required],
       advanceType: ['', Validators.required],
       description: ['', Validators.required],
       amount: ['', [Validators.required, Validators.min(0.01)]],
@@ -154,7 +154,7 @@ export class AdvanceComponent implements OnInit {
     
     this.filteredAdvances = this.advances.filter(advance => {
       const typeMatch = this.selectedType === 'All' || advance.advanceType === this.selectedType;
-      const supplierMatch = !this.selectedSupplier || advance.supplierId.toString() === this.selectedSupplier;
+      const supplierMatch = !this.selectedSupplier || advance.SupplierId.toString() === this.selectedSupplier;
       return typeMatch && supplierMatch;
     });
   }
@@ -173,7 +173,7 @@ export class AdvanceComponent implements OnInit {
     
     const advance: Advance = {
       advanceId: 0,
-      supplierId: formValues.supplierId,
+      SupplierId: formValues.SupplierId,
       advanceType: formValues.advanceType,
       description: formValues.description,
       amount: formValues.amount,

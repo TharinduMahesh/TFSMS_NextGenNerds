@@ -37,7 +37,7 @@ export class DebtComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.debtForm = this.fb.group({
-      supplierId: ['', Validators.required],
+      SupplierId: ['', Validators.required],
       debtType: ['', Validators.required],
       description: ['', Validators.required],
       totalAmount: ['', [Validators.required, Validators.min(0.01)]],
@@ -154,7 +154,7 @@ export class DebtComponent implements OnInit {
     
     this.filteredDebts = this.debts.filter(debt => {
       const typeMatch = this.selectedType === 'All' || debt.debtType === this.selectedType;
-      const supplierMatch = !this.selectedSupplier || debt.supplierId.toString() === this.selectedSupplier;
+      const supplierMatch = !this.selectedSupplier || debt.SupplierId.toString() === this.selectedSupplier;
       return typeMatch && supplierMatch;
     });
   }
@@ -173,7 +173,7 @@ export class DebtComponent implements OnInit {
     
     const debt: Debt = {
       debtId: 0,
-      supplierId: formValues.supplierId,
+      SupplierId: formValues.SupplierId,
       debtType: formValues.debtType,
       description: formValues.description,
       totalAmount: formValues.totalAmount,

@@ -18,8 +18,8 @@ export class ExportService {
     return this.http.get(url, { responseType: 'blob' });
   }
 
-  exportSupplierPayments(supplierId: number, format: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/supplier/${supplierId}/payments?format=${format}`, { responseType: 'blob' });
+  exportSupplierPayments(SupplierId: number, format: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/supplier/${SupplierId}/payments?format=${format}`, { responseType: 'blob' });
   }
 
   exportAdvances(format: string): Observable<Blob> {

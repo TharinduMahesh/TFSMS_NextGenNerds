@@ -11,6 +11,7 @@ import 'pages/harvest_form_page.dart';
 import 'pages/new_weighing_page.dart';
 import 'pages/report_page.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/confirmation': (context) => const ConfirmationPage(), // After Harvest Save
         '/new-weighing': (context) => const NewWeighingPage(),   // New Weighing Entry
         '/report': (context) => const ReportPage(),      // Weighing Report
-        '/home-weighing': (context) => const HomePageWeighing(), // Weighing Home Page
+        '/home-weighing': (context) => const WeighingListView(), // Weighing Home Page
         '/request': (context) => const  RequestDetailsPage(),// Order Request Details
         '/harvest': (context) => const HarvestScreen(), // Harvest Screen
         '/accept': (context) => const OrderAcceptedPage(),// Order Accepted Page

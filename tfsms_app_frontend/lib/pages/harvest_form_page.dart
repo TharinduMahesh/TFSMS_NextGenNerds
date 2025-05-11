@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HarvestFormPage extends StatefulWidget {
   const HarvestFormPage({super.key});
@@ -11,17 +13,54 @@ class HarvestFormPage extends StatefulWidget {
 class _HarvestFormPageState extends State<HarvestFormPage> {
   final _formKey = GlobalKey<FormBuilderState>();
 
+  Future<void> _saveForm() async {
+    if (_formKey.currentState?.saveAndValidate() ?? false) {
+      final formData = _formKey.currentState!.value;
+
+      final Map<String, dynamic> harvestData = {
+        'date': formData['date'].toIso8601String(),
+        'supperLeafWeight': double.parse(formData['supperLeafWeight']),
+        'normalLeafWeight': double.parse(formData['normalLeafWeight']),
+        'transportMethod': formData['transportMethod'],
+        'paymentMethod': formData['paymentMethod'],
+      };
+
+      try {
+        final response = await http.post(
+          Uri.parse('https://localhost:7211/api/harvests'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(harvestData),
+        );
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Harvest data saved successfully')),
+          );
+          Navigator.pushNamed(context, '/confirmation');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${response.body}')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to connect to server: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF9E5), // Light yellow background
+      backgroundColor: const Color(0xFFFFF9E5),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white, // White box for the form
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
@@ -84,7 +123,7 @@ class _HarvestFormPageState extends State<HarvestFormPage> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text('Save',  style: TextStyle(fontSize: 18, color: Colors.white)),
+                    child: const Text('Save', style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                 ],
               ),
@@ -103,11 +142,5 @@ class _HarvestFormPageState extends State<HarvestFormPage> {
         borderRadius: BorderRadius.circular(10),
       ),
     );
-  }
-
-  void _saveForm() {
-    if (_formKey.currentState?.saveAndValidate() ?? false) {
-      Navigator.pushNamed(context, '/confirmation');
-    }
   }
 }

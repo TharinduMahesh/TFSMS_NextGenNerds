@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClaimsService } from '../../../Services/claims.service';
 import { Claim } from '../../../models/claim.interface';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-claims-and-returns',
@@ -35,12 +36,13 @@ export class ClaimsAndReturnsComponent implements OnInit {
 
   loadClaims(): void {
     this.claimsService.getClaims().subscribe({
-      next: (data) => {
+      next: (data: Claim[]) => {
         this.claims = data;
         this.filterClaims();
       },
-      error: (error) => {
+      error: (error: unknown) => {
         console.error('Error loading claims:', error);
+        alert('Failed to load claims. Please try again.');
       }
     });
   }
@@ -65,25 +67,47 @@ export class ClaimsAndReturnsComponent implements OnInit {
     this.totalClaimsRejected = this.filteredClaims.filter(claim => claim.status === 'Rejected').length;
   }
 
+  addNewClaim(): void {
+    this.editingClaim = {
+      id: 0,
+      season: '',
+      gardenMark: '',
+      invoice: '',
+      returnDate: new Date().toISOString().split('T')[0],
+      kilosReturned: 0,
+      status: 'Pending'
+    };
+    this.showEditModal = true;
+  }
+
   editClaim(claim: Claim): void {
     this.editingClaim = { ...claim };
     this.showEditModal = true;
   }
 
   saveEdit(): void {
-    if (this.editingClaim) {
-      this.claimsService.updateClaim(this.editingClaim).subscribe({
-        next: () => {
-          this.loadClaims();
-          this.showEditModal = false;
-          this.editingClaim = null;
-        },
-        error: (error) => {
-          console.error('Error updating claim:', error);
-        }
-      });
+    if (!this.editingClaim) return;
+  
+    let operation: Observable<any>;
+    if (this.editingClaim.id === 0) {
+      operation = this.claimsService.createClaim(this.editingClaim);
+    } else {
+      operation = this.claimsService.updateClaim(this.editingClaim);
     }
+  
+    operation.subscribe({
+      next: () => {
+        this.loadClaims();
+        this.showEditModal = false;
+        this.editingClaim = null;
+      },
+      error: (error: unknown) => {
+        console.error('Error saving claim:', error);
+        alert('Failed to save claim. Please try again.');
+      }
+    });
   }
+  
 
   cancelEdit(): void {
     this.showEditModal = false;
@@ -101,8 +125,9 @@ export class ClaimsAndReturnsComponent implements OnInit {
       next: () => {
         this.loadClaims();
       },
-      error: (error) => {
+      error: (error: unknown) => {
         console.error('Error deleting claim:', error);
+        alert('Failed to delete claim. Please try again.');
       }
     });
   }

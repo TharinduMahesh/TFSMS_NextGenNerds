@@ -15,7 +15,7 @@ interface RouteTitleMap {
 export class SidebarComponent {
   isOpen = false; // For dropdown toggle
   currentUrl = '';
-  currentPageTitle = 'Tea Packing and Ledger'; // Default title
+  currentPageTitle = ''; // Default title
 
   routeTitleMap: RouteTitleMap = {
     '/dashboard': 'Dashboard',
@@ -29,7 +29,7 @@ export class SidebarComponent {
     '/reports/dashboard': 'Report Dashboard',
     '/reports/tea-packing-and-ledger': 'Tea Packing and Ledger',
     '/reports/claims-and-returns': 'Claims and Returns',
-    '/report/sales': 'Sales',
+    '/report/sales': 'Sales Reports',
     '/report/monthly-nsa': 'Monthly NSA'
   };
 

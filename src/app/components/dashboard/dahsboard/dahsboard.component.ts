@@ -40,6 +40,9 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading reports:', error);
+        if (typeof window !== 'undefined') {
+          alert(error.message); // Now shows proper error message
+        }
       }
     });
   }
@@ -97,20 +100,22 @@ export class DashboardComponent implements OnInit {
     this.editingReport = null;
   }
 
-  confirmDelete(dispatchID: string): void {
+  confirmDelete(id: number): void {
     if (confirm('Are you sure you want to delete this report?')) {
-      this.deleteReport(dispatchID);
+      this.deleteReport(id);
     }
   }
 
-  private deleteReport(dispatchID: string): void {
-    this.reportService.deleteReport(dispatchID).subscribe({
+  private deleteReport(id: number): void {
+    this.reportService.deleteReport(id).subscribe({
       next: () => {
         this.loadReports();
       },
       error: (error) => {
         console.error('Error deleting report:', error);
+        if (typeof window !== 'undefined'){
         alert('Failed to delete report. Please try again.');
+        }
       }
     });
   }

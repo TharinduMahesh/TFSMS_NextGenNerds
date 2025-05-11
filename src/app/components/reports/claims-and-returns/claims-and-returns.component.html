@@ -24,7 +24,6 @@
   <!-- Filter Section -->
   <div class="filter-section">
     <h2 class="filter-section-title">Filter Claims</h2>
-
     <div class="filters-container">
       <div class="filter-item">
         <label class="filter-label">Season:</label>
@@ -33,7 +32,6 @@
           <option *ngFor="let claim of claims" [value]="claim.season">{{ claim.season }}</option>
         </select>
       </div>
-
       <div class="filter-item">
         <label class="filter-label">Status:</label>
         <select [(ngModel)]="selectedStatus" (change)="filterClaims()">
@@ -43,12 +41,10 @@
           <option value="Rejected">Rejected</option>
         </select>
       </div>
-
       <div class="filter-item">
         <label class="filter-label">Start Date:</label>
         <input type="date" [(ngModel)]="selectedStartDate" (change)="filterClaims()">
       </div>
-
       <div class="filter-item">
         <label class="filter-label">End Date:</label>
         <input type="date" [(ngModel)]="selectedEndDate" (change)="filterClaims()">
@@ -58,6 +54,9 @@
 
   <!-- Claims Details Section -->
   <div class="claims-details-section">
+    <div class="table-header">
+      <h2>Claims List</h2>
+    </div>
     <table class="claims-table">
       <thead>
         <tr>
@@ -97,23 +96,27 @@
       <form *ngIf="editingClaim" (ngSubmit)="saveEdit()">
         <div class="form-group">
           <label>Season</label>
-          <input type="text" [(ngModel)]="editingClaim.season" name="season">
+          <input type="text" [(ngModel)]="editingClaim.season" name="season" required>
         </div>
         <div class="form-group">
           <label>Garden Mark</label>
-          <input type="text" [(ngModel)]="editingClaim.gardenMark" name="gardenMark">
+          <input type="text" [(ngModel)]="editingClaim.gardenMark" name="gardenMark" required>
         </div>
         <div class="form-group">
           <label>Invoice</label>
-          <input type="text" [(ngModel)]="editingClaim.invoice" name="invoice">
+          <input type="text" [(ngModel)]="editingClaim.invoice" name="invoice" required>
+        </div>
+        <div class="form-group">
+          <label>Return Date</label>
+          <input type="date" [(ngModel)]="editingClaim.returnDate" name="returnDate" required>
         </div>
         <div class="form-group">
           <label>Kilos Returned</label>
-          <input type="number" [(ngModel)]="editingClaim.kilosReturned" name="kilosReturned">
+          <input type="number" [(ngModel)]="editingClaim.kilosReturned" name="kilosReturned" required min="0">
         </div>
         <div class="form-group">
           <label>Status</label>
-          <select [(ngModel)]="editingClaim.status" name="status">
+          <select [(ngModel)]="editingClaim.status" name="status" required>
             <option value="Approved">Approved</option>
             <option value="Pending">Pending</option>
             <option value="Rejected">Rejected</option>

@@ -65,22 +65,34 @@ export class IncentiveComponent implements OnInit {
     // No need to set a form control, just calculate when needed
   }
 
+  private  normalizeIncentivesData(advances: any[]): Incentive[] {
+      return advances.map((incentive) => {
+
+        return {
+          IncentiveId: incentive.IncentiveId,
+          SupplierId: incentive.SupplierId,
+          QualityBonus: incentive.QualityBonus,
+          LoyaltyBonus: incentive.LoyaltyBonus,
+          TotalAmount: incentive.TotalAmount,
+          Month: incentive.Month,
+          Notes: incentive.Notes,
+          CreatedDate: new Date(incentive.CreatedDate),
+        }
+      })
+      }
   loadIncentives(): void {
     this.loading = true;
     this.error = null;
 
     this.incentiveService.getAllIncentives().subscribe({
       next: (data) => {
-        // Ensure data is an array
-        if (Array.isArray(data)) {
-          this.incentives = data;
-          this.filteredIncentives = [...data];
-        } else {
-          console.error('Expected array but got:', typeof data);
-          this.incentives = [];
-          this.filteredIncentives = [];
-          this.error = 'Invalid data format received from server';
-        }
+        const advancesArray = Array.isArray(data) ? data : []
+
+        // Normalize the data to ensure consistent property names
+        this.incentives = this.normalizeIncentivesData(advancesArray)
+
+
+        this.filteredIncentives= [...this.incentives]
         this.loading = false;
       },
       error: (err) => {
@@ -148,7 +160,7 @@ export class IncentiveComponent implements OnInit {
     
     this.filteredIncentives = this.incentives.filter(incentive => {
       const supplierMatch = !this.selectedSupplier || incentive.SupplierId.toString() === this.selectedSupplier;
-      const monthMatch = !this.selectedMonth || (incentive.month && incentive.month.includes(this.selectedMonth));
+      const monthMatch = !this.selectedMonth || (incentive.Month && incentive.Month.includes(this.selectedMonth));
       return supplierMatch && monthMatch;
     });
   }
@@ -164,14 +176,14 @@ export class IncentiveComponent implements OnInit {
 
     const formValues = this.incentiveForm.value;
     const incentive: Incentive = {
-      incentiveId: 0,
+      IncentiveId: 0,
       SupplierId: formValues.SupplierId,
-      month: formValues.month,
-      qualityBonus: formValues.qualityBonus,
-      loyaltyBonus: formValues.loyaltyBonus,
-      totalAmount: formValues.qualityBonus + formValues.loyaltyBonus,
-      notes: formValues.notes,
-      createdDate: new Date()
+      Month: formValues.month,
+      QualityBonus: formValues.qualityBonus,
+      LoyaltyBonus: formValues.loyaltyBonus,
+      TotalAmount: formValues.qualityBonus + formValues.loyaltyBonus,
+      Notes: formValues.notes,
+      CreatedDate: new Date()
     };
 
     this.incentiveService.createIncentive(incentive).subscribe({

@@ -187,8 +187,8 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
         if (data) {
           this.incentives = [data];
           this.calculatorForm.patchValue({
-            qualityBonus: data.qualityBonus,
-            loyaltyBonus: data.loyaltyBonus
+            qualityBonus: data.QualityBonus,
+            loyaltyBonus: data.LoyaltyBonus
           });
         } else {
           this.incentives = [];

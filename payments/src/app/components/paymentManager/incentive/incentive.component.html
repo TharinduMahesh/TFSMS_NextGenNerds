@@ -119,13 +119,13 @@
           </thead>
           <tbody>
             <tr *ngFor="let incentive of filteredIncentives">
-              <td>{{ incentive.incentiveId }}</td>
+              <td>{{ incentive.IncentiveId }}</td>
               <td>{{ incentive.SupplierId }}</td>
-              <td>{{ incentive.month | date:'MMM yyyy' }}</td>
-              <td>LKR {{ incentive.qualityBonus | number }}</td>
-              <td>LKR {{ incentive.loyaltyBonus | number }}</td>
-              <td>LKR {{ incentive.totalAmount | number }}</td>
-              <td>{{ incentive.createdDate | date:'shortDate' }}</td>
+              <td>{{ incentive.Month | date:'MMM yyyy' }}</td>
+              <td>LKR {{ incentive.QualityBonus | number }}</td>
+              <td>LKR {{ incentive.LoyaltyBonus | number }}</td>
+              <td>LKR {{ incentive.TotalAmount | number }}</td>
+              <td>{{ incentive.CreatedDate | date:'shortDate' }}</td>
               <!-- <td>{{ incentive.notes }}</td> -->
               <td>
                 <div class="action-buttons">

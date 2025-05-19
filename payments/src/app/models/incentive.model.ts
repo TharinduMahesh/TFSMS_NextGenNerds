@@ -1,14 +1,14 @@
 export interface Incentive {
-  incentiveId: number;
-  SupplierId: number;
-  qualityBonus: number;
-  loyaltyBonus: number;
-  totalAmount: number;  // Added this property
-  month: string;        // Format: YYYY-MM
-  notes?: string;       // Added this property
-  createdBy?: string;
-  createdDate: Date;    // Changed to non-optional since it's used in the component
-  
+  IncentiveId: number
+  SupplierId: number // Changed from SupplierId to match backend casing convention
+  QualityBonus: number
+  LoyaltyBonus: number
+  TotalAmount: number
+  Month: string // Format: YYYY-MM
+  Notes?: string
+  CreatedBy?: string
+  CreatedDate: Date
+
   // Optional navigation properties
-  supplier?: any;
+  Supplier?: any
 }

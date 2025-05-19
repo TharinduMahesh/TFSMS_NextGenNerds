@@ -132,17 +132,7 @@
       </div>
   
       <!-- Add debug section -->
-      <div class="debug-info" style="background-color: #fff3cd; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
-        <p><strong>Debug Info:</strong></p>
-        <p>Advances count: {{ advances.length }}</p>
-        <p>Filtered advances count: {{ filteredAdvances.length }}</p>
-        <p>Loading state: {{ loading ? 'Loading...' : 'Completed' }}</p>
-        <p>Error: {{ error || 'None' }}</p>
-        <div *ngIf="filteredAdvances.length > 0">
-          <p>First advance data:</p>
-          <pre style="background: #f5f5f5; padding: 8px; overflow: auto; max-height: 200px;">{{ filteredAdvances[0] | json }}</pre>
-        </div>
-      </div>
+      
   
       <div class="table-responsive">
         <table>

@@ -63,9 +63,9 @@ export class IncentiveService {
   }
 
   updateIncentive(incentive: Incentive): Observable<Incentive | null> {
-    return this.http.put<Incentive>(`${this.apiUrl}/${incentive.incentiveId}`, incentive).pipe(
+    return this.http.put<Incentive>(`${this.apiUrl}/${incentive.IncentiveId}`, incentive).pipe(
       catchError(error => {
-        console.error(`Error updating incentive with id ${incentive.incentiveId}:`, error);
+        console.error(`Error updating incentive with id ${incentive.IncentiveId}:`, error);
         return of(null);
       })
     );

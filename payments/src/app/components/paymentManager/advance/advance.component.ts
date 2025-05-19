@@ -100,7 +100,6 @@ export class AdvanceComponent implements OnInit {
 
     this.advanceService.getAllAdvances().subscribe({
       next: (data) => {
-        console.log("Raw advances data received:", data)
 
         // Ensure data is an array
         const advancesArray = Array.isArray(data) ? data : []
@@ -108,7 +107,6 @@ export class AdvanceComponent implements OnInit {
         // Normalize the data to ensure consistent property names
         this.advances = this.normalizeAdvanceData(advancesArray)
 
-        console.log("Normalized advances:", this.advances)
 
         this.filteredAdvances = [...this.advances]
         this.loading = false

@@ -1,128 +1,148 @@
+/**
+ * Header Component Styles
+ * 
+ * This stylesheet defines the appearance of the site header/navbar
+ * with a clean, modern design featuring green accent colors.
+ */
+
 /* ===== NAVBAR STYLES ===== */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  position: sticky; /* Sticky positioning for better UX */
+  top: 0;
+  z-index: 100; /* Ensure navbar stays above other content */
+}
+
+/* Logo styling */
+.logo img {
+  height: 70px;
+}
+
+/* ===== NAVIGATION LINKS ===== */
+.nav-links {
+  display: flex;
+  gap: 3.5rem; /* Generous spacing between links */
+  align-items: center;
+}
+
+/* Standard navigation links */
+.nav-links a:not(.register):not(.sign-in) {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  position: relative; /* For underline animation */
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+
+/* Hover and active states for nav links */
+.nav-links a:not(.register):not(.sign-in):hover,
+.nav-links a:not(.register):not(.sign-in).active {
+  transform: scale(1.1); /* Slight scale effect on hover */
+  color: #4a9e0f; /* Brand green */
+}
+
+/* Animated underline effect for nav links */
+.nav-links a:not(.register):not(.sign-in):after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #4a9e0f; /* Brand green */
+  box-shadow: 0 2px 4px rgba(74, 158, 15, 0.4); /* Subtle shadow */
+  transition: width 0.3s ease;
+}
+
+.nav-links a:not(.register):not(.sign-in):hover:after,
+.nav-links a:not(.register):not(.sign-in).active:after {
+  width: 100%; /* Expand underline on hover/active */
+}
+
+/* ===== AUTHENTICATION BUTTONS ===== */
+/* Sign in button - Secondary CTA */
+.sign-in {
+  text-decoration: none;
+  color: #333;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sign-in:hover {
+  color: #4a9e0f; /* Brand green on hover */
+}
+
+/* Register button - Primary CTA */
+.register {
+  text-decoration: none;
+  padding: 0.5rem 2rem;
+  background-color: #4a9e0f; /* Brand green */
+  color: white;
+  border: none;
+  border-radius: 25px; /* Rounded corners */
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); /* Subtle shadow */
+  transition: all 0.3s ease;
+}
+
+.register:hover {
+  transform: translateY(-2px); /* Lift effect */
+  background-color: #3f8a0c; /* Darker on hover */
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5); /* Enhanced shadow */
+}
+
+/* ===== MOBILE MENU TOGGLE ===== */
+.hamburger {
+  display: none; /* Hidden on desktop */
+  font-size: 2rem;
+  cursor: pointer;
+  color: #4a9e0f; /* Brand green */
+}
+
+/* ===== RESPONSIVE STYLES ===== */
+@media (max-width: 968px) {
+  /* Show hamburger menu on mobile */
+  .hamburger {
+    display: block;
+  }
+
+  /* Mobile navigation menu */
+  .nav-links {
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 100;
   }
-  
-  .logo img {
-    height: 70px;
-  }
-  
-  .nav-links {
+
+  /* Show mobile menu when active */
+  .nav-links.show {
     display: flex;
-    gap: 3.5rem;
-    align-items: center;
   }
   
-  .nav-links a:not(.register):not(.sign-in) {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    position: relative;
-    padding: 0.5rem 0;
-    transition: all 0.3s ease;
+  .nav-links a:last-child {
+    border-bottom: none;
   }
   
-  .nav-links a:not(.register):not(.sign-in):hover,
-  .nav-links a:not(.register):not(.sign-in).active {
-    transform: scale(1.1);
-    color: #4a9e0f;
+  /* Adjust register button in mobile menu */
+  .nav-links .register {
+    margin-top: 0.5rem;
+    text-align: center;
   }
-  
-  .nav-links a:not(.register):not(.sign-in):after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: #4a9e0f;
-    box-shadow: 0 2px 4px rgba(74, 158, 15, 0.4);
-    transition: width 0.3s ease;
-  }
-  
-  .nav-links a:not(.register):not(.sign-in):hover:after,
-  .nav-links a:not(.register):not(.sign-in).active:after {
-    width: 100%;
-  }
-  
-  .sign-in {
-    text-decoration: none;
-    color: #333;
-    padding: 0.5rem 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-  
-  .sign-in:hover {
-    color: #4a9e0f;
-  }
-  
-  .register {
-    text-decoration: none;
-    padding: 0.5rem 2rem;
-    background-color: #4a9e0f;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 500;
-    box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3);
-    transition: all 0.3s ease;
-  }
-  
-  .register:hover {
-    transform: translateY(-2px);
-    background-color: #3f8a0c;
-    box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5);
-  }
-  
-  .hamburger {
-    display: none;
-    font-size: 2rem;
-    cursor: pointer;
-    color: #4a9e0f;
-  }
-  
-  /* ===== RESPONSIVE STYLES ===== */
-  @media (max-width: 968px) {
-    .hamburger {
-      display: block;
-    }
-  
-    .nav-links {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 80px;
-      left: 0;
-      width: 100%;
-      background: white;
-      padding: 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      z-index: 100;
-    }
-  
-    .nav-links.show {
-      display: flex;
-    }
-    
-    .nav-links a:last-child {
-      border-bottom: none;
-    }
-    
-    .nav-links .register {
-      margin-top: 0.5rem;
-      text-align: center;
-    }
-  }
+}

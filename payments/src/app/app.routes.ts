@@ -7,7 +7,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AboutusComponent } from './components/aboutus/aboutus.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { MainLayoutComponent } from './components/layouts/main-layout/main-layout.component';
 import { authGuard } from './shared/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 // Uncomment if you plan to use TransactionComponent
@@ -30,7 +29,6 @@ export const routes: Routes = [
   {path : 'payment-management', component: PaymentManagmentComponent},
   {
     path: 'dashboard',
-    component: MainLayoutComponent,
     canActivate: [authGuard],
     canActivateChild: [authGuard],
     children: [

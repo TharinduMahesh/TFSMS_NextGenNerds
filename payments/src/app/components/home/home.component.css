@@ -1,3 +1,10 @@
+/**
+ * Home Component Styles
+ * 
+ * This stylesheet defines the appearance of the home page with a hero section,
+ * featuring a clean, modern design with green accent colors.
+ */
+
 /* ===== GLOBAL STYLES ===== */
 * {
   box-sizing: border-box;
@@ -8,7 +15,7 @@
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
     "Helvetica Neue", sans-serif;
-  background-color: #f9f9f5;
+  background-color: #f9f9f5; /* Light background color */
 }
 
 /* ===== HERO SECTION STYLES ===== */
@@ -22,6 +29,7 @@ body {
   justify-content: center;
 }
 
+/* Semi-transparent background image */
 .hero-container::before {
   content: "";
   position: absolute;
@@ -36,15 +44,17 @@ body {
   z-index: 0;
 }
 
+/* ===== HERO CONTENT ===== */
 .hero-content {
   display: flex;
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  z-index: 1;
+  z-index: 1; /* Above the background */
   align-items: center;
 }
 
+/* Hero text section */
 .hero-text {
   flex: 1;
   padding-right: 2rem;
@@ -52,7 +62,7 @@ body {
 
 .hero-text h1 {
   font-size: 2.8rem;
-  color: #1b5e20;
+  color: #1b5e20; /* Dark green for contrast */
   margin-bottom: 1.5rem;
   font-weight: 700;
   line-height: 1.2;
@@ -65,6 +75,7 @@ body {
   line-height: 1.6;
 }
 
+/* ===== HERO BUTTONS ===== */
 .hero-buttons {
   display: flex;
   gap: 1rem;
@@ -79,19 +90,21 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Primary action button */
 .btn-primary {
-  background: linear-gradient(to right, #4a9e0f, #56ae12);
+  background: linear-gradient(to right, #4a9e0f, #56ae12); /* Gradient background */
   color: white;
-  box-shadow: 0 4px 10px rgba(74, 158, 15, 0.3);
+  box-shadow: 0 4px 10px rgba(74, 158, 15, 0.3); /* Subtle shadow */
 }
 
 .btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(74, 158, 15, 0.4);
+  transform: translateY(-3px); /* Lift effect */
+  box-shadow: 0 6px 15px rgba(74, 158, 15, 0.4); /* Enhanced shadow */
 }
 
+/* Secondary action button */
 .btn-outline {
-  border: 2px solid #4a9e0f;
+  border: 2px solid #4a9e0f; /* Brand green border */
   color: #4a9e0f;
   background: transparent;
 }
@@ -99,10 +112,11 @@ body {
 .btn-outline:hover {
   background-color: #4a9e0f;
   color: white;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(74, 158, 15, 0.2);
+  transform: translateY(-3px); /* Lift effect */
+  box-shadow: 0 6px 15px rgba(74, 158, 15, 0.2); /* Subtle shadow */
 }
 
+/* ===== HERO IMAGES ===== */
 .hero-image {
   flex: 1;
   display: flex;
@@ -115,12 +129,12 @@ body {
   max-width: 150%;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .hero-image img.side-image {
   position: absolute;
-  right: 20%; /* Move more to the left from its current right position */
+  right: 20%; /* Position relative to container */
   top: 50%;
   transform: translateY(-50%);
   max-width: 10050px; /* Increased from 250px */
@@ -128,9 +142,10 @@ body {
   z-index: 2;
   background-color: transparent;
   object-fit: contain;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15)); /* Shadow effect */
 }
 
+/* ===== HERO DESCRIPTION ===== */
 .hero-description {
   max-width: 1200px;
   margin: 3rem auto 2rem;
@@ -146,14 +161,9 @@ body {
   max-width: 350px; /* Adjusted to match side-image size */
   height: auto;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Subtle shadow */
   object-fit: cover;
   opacity: 0.5;
-  
-
-  /* Add a subtle blur to the corners with mask-image */
-  /* mask-image: radial-gradient(circle at 10px 10px, transparent 0, transparent 5px, black 5px);
-  -webkit-mask-image: radial-gradient(circle at 10px 10px, transparent 0, transparent 5px, black 5px); */
 }
 
 .hero-description p {
@@ -164,6 +174,7 @@ body {
   margin: 0;
 }
 
+/* ===== SCROLL INDICATOR ===== */
 .scroll-indicator {
   position: absolute;
   bottom: 2rem;
@@ -177,11 +188,12 @@ body {
 }
 
 .scroll-icon {
-  color: #4a9e0f;
+  color: #4a9e0f; /* Brand green */
   font-size: 2rem;
-  animation: bounce 2s infinite;
+  animation: bounce 2s infinite; /* Bouncing animation */
 }
 
+/* Bounce animation keyframes */
 @keyframes bounce {
   0%,
   20%,
@@ -200,7 +212,7 @@ body {
 
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 968px) {
-  /* Hero responsive */
+  /* Hero responsive layout */
   .hero-content {
     flex-direction: column;
     gap: 2rem;
@@ -215,6 +227,7 @@ body {
     justify-content: center;
   }
 
+  /* Adjust side image positioning */
   .hero-image img.side-image {
     position: relative;
     right: 0;
@@ -224,6 +237,7 @@ body {
     margin: 0 auto;
   }
 
+  /* Stack description vertically */
   .hero-description {
     flex-direction: column;
     text-align: center;
@@ -235,6 +249,7 @@ body {
   }
 }
 
+/* Small mobile devices */
 @media (max-width: 480px) {
   .hero-container {
     padding: 1rem;

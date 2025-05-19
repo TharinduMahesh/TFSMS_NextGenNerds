@@ -23,11 +23,11 @@ export class DebtComponent implements OnInit {
   selectedSupplier: string = '';
   debtForm: FormGroup;
   
-  totalDebts: number = 0;
-  totalOutstandingAmount: number = 0;
-  totalDeductionsMade: number = 0;
+  totalDebts = 0;
+  totalOutstandingAmount = 0;
+  totalDeductionsMade = 0;
   
-  loading: boolean = false;
+  loading = false;
   error: string | null = null;
 
   constructor(
@@ -71,22 +71,45 @@ export class DebtComponent implements OnInit {
     this.debtForm.get('balanceAmount')?.setValue(balanceAmount >= 0 ? balanceAmount : 0);
   }
 
+  // Add this method to normalize the data
+  private normalizeDebtData(debts: any[]): Debt[] {
+    return debts.map((debt) => {
+      // Handle both camelCase and PascalCase property names
+      return {
+        debtId: debt.debtId || debt.DebtId || 0,
+        SupplierId: debt.SupplierId || debt.supplierId || 0,
+        SupplierName: debt.SupplierName || debt.supplierName || '',
+        debtType: debt.debtType || debt.DebtType || '',
+        description: debt.description || debt.Description || '',
+        totalAmount: debt.totalAmount || debt.TotalAmount || 0,
+        balanceAmount: debt.balanceAmount || debt.BalanceAmount || 0,
+        deductionsMade: debt.deductionsMade || debt.DeductionsMade || 0,
+        deductionPercentage: debt.deductionPercentage || debt.DeductionPercentage || 0,
+        status: debt.status || debt.Status || 'Active',
+        issueDate: debt.issueDate || debt.IssueDate,
+        createdBy: debt.createdBy || debt.CreatedBy || '',
+        createdDate: debt.createdDate || debt.CreatedDate || new Date(),
+        Supplier: debt.Supplier || debt.supplier,
+      }
+    })
+  }
+
   loadDebts(): void {
     this.loading = true;
     this.error = null;
 
     this.debtService.getAllDebts().subscribe({
       next: (data) => {
+        console.log("Raw debts data:", data);
+        
         // Ensure data is an array
-        if (Array.isArray(data)) {
-          this.debts = data;
-          this.filteredDebts = [...data];
-        } else {
-          console.error('Expected array but got:', typeof data);
-          this.debts = [];
-          this.filteredDebts = [];
-          this.error = 'Invalid data format received from server';
-        }
+        const debtsArray = Array.isArray(data) ? data : [];
+
+        // Normalize the data to ensure consistent property names
+        this.debts = this.normalizeDebtData(debtsArray);
+        console.log("Normalized debts:", this.debts);
+
+        this.filteredDebts = [...this.debts];
         this.loading = false;
       },
       error: (err) => {

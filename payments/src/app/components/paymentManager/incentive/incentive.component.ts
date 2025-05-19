@@ -22,11 +22,11 @@ export class IncentiveComponent implements OnInit {
   selectedMonth: string = '';
   incentiveForm: FormGroup;
   
-  totalIncentives: number = 0;
-  totalQualityBonus: number = 0;
-  totalLoyaltyBonus: number = 0;
+  totalIncentives = 0;
+  totalQualityBonus = 0;
+  totalLoyaltyBonus = 0;
   
-  loading: boolean = false;
+  loading = false;
   error: string | null = null;
 
   constructor(
@@ -65,34 +65,41 @@ export class IncentiveComponent implements OnInit {
     // No need to set a form control, just calculate when needed
   }
 
-  private  normalizeIncentivesData(advances: any[]): Incentive[] {
-      return advances.map((incentive) => {
-
-        return {
-          IncentiveId: incentive.IncentiveId,
-          SupplierId: incentive.SupplierId,
-          QualityBonus: incentive.QualityBonus,
-          LoyaltyBonus: incentive.LoyaltyBonus,
-          TotalAmount: incentive.TotalAmount,
-          Month: incentive.Month,
-          Notes: incentive.Notes,
-          CreatedDate: new Date(incentive.CreatedDate),
-        }
-      })
+  // Add this method to normalize the data - similar to the advances component
+  private normalizeIncentiveData(incentives: any[]): Incentive[] {
+    return incentives.map((incentive) => {
+      // Handle both camelCase and PascalCase property names
+      return {
+        IncentiveId: incentive.IncentiveId || incentive.incentiveId || 0,
+        SupplierId: incentive.SupplierId || incentive.supplierId || 0,
+        SupplierName: incentive.SupplierName || incentive.supplierName || '',
+        QualityBonus: incentive.QualityBonus || incentive.qualityBonus || 0,
+        LoyaltyBonus: incentive.LoyaltyBonus || incentive.loyaltyBonus || 0,
+        TotalAmount: incentive.TotalAmount || incentive.totalAmount || 0,
+        Month: incentive.Month || incentive.month || '',
+        Notes: incentive.Notes || incentive.notes || '',
+        CreatedDate: new Date(incentive.CreatedDate || incentive.createdDate || new Date()),
+        Supplier: incentive.Supplier || incentive.supplier,
       }
+    })
+  }
+
   loadIncentives(): void {
     this.loading = true;
     this.error = null;
 
     this.incentiveService.getAllIncentives().subscribe({
       next: (data) => {
-        const advancesArray = Array.isArray(data) ? data : []
+        console.log("Raw incentives data:", data);
+        
+        // Ensure data is an array
+        const incentivesArray = Array.isArray(data) ? data : [];
 
         // Normalize the data to ensure consistent property names
-        this.incentives = this.normalizeIncentivesData(advancesArray)
+        this.incentives = this.normalizeIncentiveData(incentivesArray);
+        console.log("Normalized incentives:", this.incentives);
 
-
-        this.filteredIncentives= [...this.incentives]
+        this.filteredIncentives = [...this.incentives];
         this.loading = false;
       },
       error: (err) => {

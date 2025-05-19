@@ -8,22 +8,62 @@ import { environment } from '../../shared/environments/environment';
   providedIn: 'root'
 })
 export class IncentiveService {
-  // Fixed API URL - was missing /api
   private apiUrl = `${environment.apiBaseUrl}/api/incentives`;
 
   constructor(private http: HttpClient) { }
 
   getAllIncentives(): Observable<Incentive[]> {
-    return this.http.get<Incentive[]>(this.apiUrl).pipe(
-      map(response => Array.isArray(response) ? response : []),
-      catchError(error => {
-        console.error('Error fetching all incentives:', error);
+    console.log("Fetching incentives from:", this.apiUrl);
+    return this.http.get<any>(this.apiUrl).pipe(
+      map((response) => {
+        console.log("Raw API response for incentives:", response);
+
+        // Handle the response based on its structure
+        if (Array.isArray(response)) {
+          console.log("Response is an array with length:", response.length);
+          return response;
+        } else if (response && typeof response === "object") {
+          // If the response is an object, extract the data
+          if (Array.isArray(response.data)) {
+            console.log("Response has data array with length:", response.data.length);
+            return response.data;
+          } else if (response.data) {
+            console.log("Response has data object, converting to array");
+            return [response.data];
+          } else {
+            // Check if the response itself might be a single incentive object
+            if (response.IncentiveId !== undefined || response.incentiveId !== undefined) {
+              console.log("Response appears to be a single incentive object, converting to array");
+              return [response];
+            }
+
+            // Last resort: try to extract any array-like property from the response
+            const possibleArrayProps = Object.keys(response).filter(
+              (key) =>
+                Array.isArray(response[key]) &&
+                response[key].length > 0 &&
+                (response[key][0].IncentiveId !== undefined || response[key][0].incentiveId !== undefined),
+            );
+
+            if (possibleArrayProps.length > 0) {
+              console.log(`Found possible incentives array in property: ${possibleArrayProps[0]}`);
+              return response[possibleArrayProps[0]];
+            }
+
+            console.log("Could not find incentives data in response, returning empty array");
+            return [];
+          }
+        }
+
+        console.log("Response format not recognized, returning empty array");
+        return [];
+      }),
+      catchError((error) => {
+        console.error("Error fetching all incentives:", error);
         return of([]);
-      })
+      }),
     );
   }
-
-  // Removed duplicate getIncentives() method
 
   getIncentive(id: number): Observable<Incentive | null> {
     return this.http.get<Incentive>(`${this.apiUrl}/${id}`).pipe(
@@ -35,8 +75,15 @@ export class IncentiveService {
   }
 
   getIncentivesBySupplier(supplierId: number): Observable<Incentive[]> {
-    return this.http.get<Incentive[]>(`${this.apiUrl}/supplier/${supplierId}`).pipe(
-      map(response => Array.isArray(response) ? response : []),
+    return this.http.get<any>(`${this.apiUrl}/supplier/${supplierId}`).pipe(
+      map((response) => {
+        if (Array.isArray(response)) {
+          return response;
+        } else if (response && typeof response === "object") {
+          return Array.isArray(response.data) ? response.data : [response];
+        }
+        return [];
+      }),
       catchError(error => {
         console.error(`Error fetching incentives for supplier ${supplierId}:`, error);
         return of([]);

@@ -1,17 +1,20 @@
+// Updated Advance interface to match the C# DTO properties
 export interface Advance {
-  advanceId: number;
-  SupplierId: number;
-  advanceType: string;     // Added this property
-  description: string;     // Changed from purpose to description
-  amount: number;          // Changed from advanceAmount
-  recoveredAmount: number; // Added this property
-  balanceAmount: number;
-  recoveryPercentage: number; // Added this property
-  status: string;          // Added this property
-  issueDate: Date;
-  createdBy?: string;
-  createdDate?: Date;
-  
+  // Use PascalCase to match C# model properties
+  AdvanceId: number
+  SupplierId: number
+  SupplierName?: string
+  AdvanceAmount: number // Changed from amount
+  BalanceAmount: number
+  Purpose: string // Changed from description
+  AdvanceType: string
+  RecoveredAmount: number
+  RecoveryPercentage: number
+  Status: string
+  IssueDate: Date
+  CreatedBy?: string
+  CreatedDate?: Date
+
   // Optional navigation properties
-  supplier?: any;
+  Supplier?: any
 }

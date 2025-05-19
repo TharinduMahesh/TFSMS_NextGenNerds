@@ -32,11 +32,11 @@ export class ReceiptService {
         }
         
         return {
-          receiptNumber: `REC-${payment.paymentId.toString().padStart(5, '0')}`,
-          date: payment.paymentDate,
+          receiptNumber: `REC-${payment.PaymentId.toString().padStart(5, '0')}`,
+          date: payment.PaymentDate,
           supplier: supplier,
           payment: payment,
-          totalDeductions: payment.advanceDeduction + payment.debtDeduction,
+          totalDeductions: payment.AdvanceDeduction + payment.DebtDeduction,
           receiptDetails: {
             issuedBy: 'System',
             timestamp: new Date(),
@@ -163,38 +163,38 @@ export class ReceiptService {
                     <h3>Payment Details</h3>
                     <div class="row">
                       <div class="label">Green Leaf Weight:</div>
-                      <div class="value">${receiptData.payment.leafWeight} kg</div>
+                      <div class="value">${receiptData.payment.LeafWeight} kg</div>
                     </div>
                     <div class="row">
                       <div class="label">Rate:</div>
-                      <div class="value">LKR ${receiptData.payment.rate} per kg</div>
+                      <div class="value">LKR ${receiptData.payment.Rate} per kg</div>
                     </div>
                     <div class="row">
                       <div class="label">Gross Amount:</div>
-                      <div class="value">LKR ${receiptData.payment.grossAmount.toLocaleString()}</div>
+                      <div class="value">LKR ${receiptData.payment.GrossAmount.toLocaleString()}</div>
                     </div>
                     <div class="row">
                       <div class="label">Advance Deduction:</div>
-                      <div class="value">LKR ${receiptData.payment.advanceDeduction.toLocaleString()}</div>
+                      <div class="value">LKR ${receiptData.payment.AdvanceDeduction.toLocaleString()}</div>
                     </div>
                     <div class="row">
                       <div class="label">Debt Deduction:</div>
-                      <div class="value">LKR ${receiptData.payment.debtDeduction.toLocaleString()}</div>
+                      <div class="value">LKR ${receiptData.payment.DebtDeduction.toLocaleString()}</div>
                     </div>
                     <div class="row">
                       <div class="label">Incentive Addition:</div>
-                      <div class="value">LKR ${receiptData.payment.incentiveAddition.toLocaleString()}</div>
+                      <div class="value">LKR ${receiptData.payment.IncentiveAddition.toLocaleString()}</div>
                     </div>
                     <div class="row">
                       <div class="label">Payment Method:</div>
-                      <div class="value">${receiptData.payment.paymentMethod || 'N/A'}</div>
+                      <div class="value">${receiptData.payment.PaymentMethod || 'N/A'}</div>
                     </div>
                   </div>
                   
                   <div class="total">
                     <div class="row">
                       <div class="label">Net Amount Paid:</div>
-                      <div class="value">LKR ${receiptData.payment.netAmount.toLocaleString()}</div>
+                      <div class="value">LKR ${receiptData.payment.NetAmount.toLocaleString()}</div>
                     </div>
                   </div>
                   
@@ -224,14 +224,14 @@ export class ReceiptService {
   }
 
   downloadReceiptPDF(payment: Payment): Observable<Blob | null> {
-    if (!payment || !payment.paymentId) {
+    if (!payment || !payment.PaymentId) {
       console.error('Cannot download receipt PDF: Invalid payment data');
       return of(null);
     }
 
-    return this.http.get(`${this.apiUrl}/pdf/${payment.paymentId}`, { responseType: 'blob' }).pipe(
+    return this.http.get(`${this.apiUrl}/pdf/${payment.PaymentId}`, { responseType: 'blob' }).pipe(
       catchError(error => {
-        console.error(`Error downloading receipt PDF for payment ${payment.paymentId}:`, error);
+        console.error(`Error downloading receipt PDF for payment ${payment.PaymentId}:`, error);
         return of(null);
       })
     );
@@ -239,7 +239,7 @@ export class ReceiptService {
 
   // New method to handle PDF download and save
   downloadAndSaveReceiptPDF(payment: Payment): void {
-    if (!payment || !payment.paymentId) {
+    if (!payment || !payment.PaymentId) {
       console.error('Cannot download receipt PDF: Invalid payment data');
       return;
     }
@@ -258,7 +258,7 @@ export class ReceiptService {
           // Create a link element
           const link = document.createElement('a');
           link.href = url;
-          link.download = `Receipt-${payment.paymentId}.pdf`;
+          link.download = `Receipt-${payment.PaymentId}.pdf`;
           
           // Append to the document, click it, and remove it
           document.body.appendChild(link);

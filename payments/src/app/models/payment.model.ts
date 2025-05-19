@@ -2,21 +2,22 @@ import { Supplier } from './supplier.model';
 import { Receipt } from './receipt.model';
 // import { PaymentHistory } from './payment-history.model';
 
+// Update the Payment interface to match the C# model property names
 export interface Payment {
-  paymentId: number;
-  SupplierId: number;
-  leafWeight: number;
-  rate: number;
-  grossAmount: number;
-  advanceDeduction: number;
-  debtDeduction: number;
-  incentiveAddition: number;
-  netAmount: number;
-  paymentMethod: string;
-  paymentDate: Date;
-  createdBy?: string;
-  createdDate?: Date;
-  supplier: Supplier | null;
-  receipts: Receipt[];
-  // paymentHistories: PaymentHistory[];
+  PaymentId: number
+  SupplierId: number
+  LeafWeight: number
+  Rate: number
+  GrossAmount: number
+  AdvanceDeduction: number
+  DebtDeduction: number
+  IncentiveAddition: number
+  NetAmount: number
+  PaymentMethod: string
+  PaymentDate: Date
+  CreatedBy?: string
+  CreatedDate?: Date
+  Supplier: Supplier | null
+  Receipts: Receipt[]
+  // PaymentHistories: PaymentHistory[];
 }

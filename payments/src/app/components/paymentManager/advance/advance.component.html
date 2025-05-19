@@ -68,56 +68,56 @@
             
             <div class="form-group">
               <label>Advance Type:</label>
-              <select formControlName="advanceType">
+              <select formControlName="AdvanceType">
                 <option value="">Select Type</option>
                 <option *ngFor="let type of advanceTypes.slice(1)" [value]="type">{{ type }}</option>
               </select>
-              <div *ngIf="advanceForm.get('advanceType')?.touched && advanceForm.get('advanceType')?.invalid" class="error-message">
+              <div *ngIf="advanceForm.get('AdvanceType')?.touched && advanceForm.get('AdvanceType')?.invalid" class="error-message">
                 Advance type is required
               </div>
             </div>
             
             <div class="form-group">
               <label>Description:</label>
-              <input type="text" formControlName="description" placeholder="Enter description" />
-              <div *ngIf="advanceForm.get('description')?.touched && advanceForm.get('description')?.invalid" class="error-message">
+              <input type="text" formControlName="Purpose" placeholder="Enter description" />
+              <div *ngIf="advanceForm.get('Purpose')?.touched && advanceForm.get('Purpose')?.invalid" class="error-message">
                 Description is required
               </div>
             </div>
             
             <div class="form-group">
               <label>Amount (LKR):</label>
-              <input type="number" formControlName="amount" placeholder="Enter amount" />
-              <div *ngIf="advanceForm.get('amount')?.touched && advanceForm.get('amount')?.invalid" class="error-message">
+              <input type="number" formControlName="AdvanceAmount" placeholder="Enter amount" />
+              <div *ngIf="advanceForm.get('AdvanceAmount')?.touched && advanceForm.get('AdvanceAmount')?.invalid" class="error-message">
                 Valid amount is required
               </div>
             </div>
             
             <div class="form-group">
               <label>Issue Date:</label>
-              <input type="date" formControlName="issueDate" />
-              <div *ngIf="advanceForm.get('issueDate')?.touched && advanceForm.get('issueDate')?.invalid" class="error-message">
+              <input type="date" formControlName="IssueDate" />
+              <div *ngIf="advanceForm.get('IssueDate')?.touched && advanceForm.get('IssueDate')?.invalid" class="error-message">
                 Issue date is required
               </div>
             </div>
             
             <div class="form-group">
               <label>Recovered Amount (LKR):</label>
-              <input type="number" formControlName="recoveredAmount" />
+              <input type="number" formControlName="RecoveredAmount" />
             </div>
             
             <div class="form-group">
               <label>Balance Amount (LKR):</label>
-              <input type="number" formControlName="balanceAmount" readonly />
-              <div *ngIf="advanceForm.get('balanceAmount')?.touched && advanceForm.get('balanceAmount')?.invalid" class="error-message">
+              <input type="number" formControlName="BalanceAmount" readonly />
+              <div *ngIf="advanceForm.get('BalanceAmount')?.touched && advanceForm.get('BalanceAmount')?.invalid" class="error-message">
                 Valid balance amount is required
               </div>
             </div>
             
             <div class="form-group">
               <label>Recovery Percentage (%):</label>
-              <input type="number" formControlName="recoveryPercentage" min="1" max="100" />
-              <div *ngIf="advanceForm.get('recoveryPercentage')?.touched && advanceForm.get('recoveryPercentage')?.invalid" class="error-message">
+              <input type="number" formControlName="RecoveryPercentage" min="1" max="100" />
+              <div *ngIf="advanceForm.get('RecoveryPercentage')?.touched && advanceForm.get('RecoveryPercentage')?.invalid" class="error-message">
                 Valid percentage (1-100) is required
               </div>
             </div>
@@ -129,6 +129,19 @@
             </div>
           </div>
         </form>
+      </div>
+  
+      <!-- Add debug section -->
+      <div class="debug-info" style="background-color: #fff3cd; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
+        <p><strong>Debug Info:</strong></p>
+        <p>Advances count: {{ advances.length }}</p>
+        <p>Filtered advances count: {{ filteredAdvances.length }}</p>
+        <p>Loading state: {{ loading ? 'Loading...' : 'Completed' }}</p>
+        <p>Error: {{ error || 'None' }}</p>
+        <div *ngIf="filteredAdvances.length > 0">
+          <p>First advance data:</p>
+          <pre style="background: #f5f5f5; padding: 8px; overflow: auto; max-height: 200px;">{{ filteredAdvances[0] | json }}</pre>
+        </div>
       </div>
   
       <div class="table-responsive">
@@ -150,18 +163,18 @@
           </thead>
           <tbody>
             <tr *ngFor="let advance of filteredAdvances">
-              <td>{{ advance.advanceId }}</td>
+              <td>{{ advance.AdvanceId }}</td>
               <td>{{ advance.SupplierId }}</td>
-              <td>{{ advance.advanceType }}</td>
-              <td>{{ advance.description }}</td>
-              <td>LKR {{ advance.amount | number }}</td>
-              <td>{{ advance.issueDate | date:'shortDate' }}</td>
-              <td>LKR {{ advance.recoveredAmount | number }}</td>
-              <td>LKR {{ advance.balanceAmount | number }}</td>
-              <td>{{ advance.recoveryPercentage }}%</td>
+              <td>{{ advance.AdvanceType }}</td>
+              <td>{{ advance.Purpose }}</td>
+              <td>LKR {{ advance.AdvanceAmount | number }}</td>
+              <td>{{ advance.IssueDate | date:'shortDate' }}</td>
+              <td>LKR {{ advance.RecoveredAmount | number }}</td>
+              <td>LKR {{ advance.BalanceAmount | number }}</td>
+              <td>{{ advance.RecoveryPercentage }}%</td>
               <td>
-                <span [ngClass]="{'status-active': advance.status === 'Active', 'status-settled': advance.status === 'Settled'}">
-                  {{ advance.status }}
+                <span [ngClass]="{'status-active': advance.Status === 'Active', 'status-settled': advance.Status === 'Settled'}">
+                  {{ advance.Status }}
                 </span>
               </td>
               <td>

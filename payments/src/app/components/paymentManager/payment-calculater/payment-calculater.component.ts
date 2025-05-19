@@ -145,7 +145,7 @@ export class PaymentCalculatorComponent implements OnInit, OnChanges {
         // Ensure data is an array
         if (Array.isArray(data)) {
           this.advances = data;
-          const totalAdvances = data.reduce((sum, advance) => sum + advance.balanceAmount, 0);
+          const totalAdvances = data.reduce((sum, advance) => sum + advance.BalanceAmount, 0);
           this.calculatorForm.patchValue({ advanceAmount: totalAdvances });
         } else {
           console.error('Expected array but got:', typeof data);

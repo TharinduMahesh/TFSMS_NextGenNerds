@@ -190,52 +190,57 @@
       </form>
     </div>
 
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>Payment ID</th>
-            <th>Supplier ID</th>
-            <th>Leaf Weight</th>
-            <th>Rate</th>
-            <th>Gross Amount</th>
-            <th>Deductions</th>
-            <th>Incentives</th>
-            <th>Net Amount</th>
-            <th>Method</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngIf="filteredPayments && filteredPayments.length > 0; else noPayments">
-            <tr *ngFor="let payment of filteredPayments">
-              <td>{{ payment.paymentId }}</td>
-              <td>{{ payment.SupplierId }}</td>
-              <td>{{ payment.leafWeight }} kg</td>
-              <td>LKR {{ payment.rate }}</td>
-              <td>LKR {{ payment.grossAmount | number }}</td>
-              <td>LKR {{ (payment.advanceDeduction + payment.debtDeduction) | number }}</td>
-              <td>LKR {{ payment.incentiveAddition | number }}</td>
-              <td>LKR {{ payment.netAmount | number }}</td>
-              <td>{{ payment.paymentMethod }}</td>
-              <td>{{ payment.paymentDate | date:'shortDate' }}</td>
-              <td>
-                <div class="action-buttons">
-                  <button class="print-btn" title="Print Receipt" (click)="generateReceipt(payment)">
-                    <i class="fa fa-print"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </ng-container>
-          <ng-template #noPayments>
-            <tr>
-              <td colspan="11" class="no-data">No payments found</td>
-            </tr>
-          </ng-template>
-        </tbody>
-      </table>
-    </div>
-  </div>
+    <!-- Add a debug section at the top of the table to help diagnose issues -->
+
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Payment ID</th>
+        <th>Supplier ID</th>
+        <th>Leaf Weight</th>
+        <th>Rate</th>
+        <th>Gross Amount</th>
+        <th>Deductions</th>
+        <th>Incentives</th>
+        <th>Net Amount</th>
+        <th>Method</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="filteredPayments && filteredPayments.length > 0; else noPayments">
+        <tr *ngFor="let payment of filteredPayments">
+          <td>{{ payment.PaymentId || payment.PaymentId }}</td>
+          <td>{{ payment.SupplierId || payment.SupplierId }}</td>
+          <td>{{ payment.LeafWeight || payment.LeafWeight }} kg</td>
+          <td>LKR {{ payment.Rate || payment.Rate }}</td>
+          <td>LKR {{ (payment.GrossAmount || payment.GrossAmount) | number }}</td>
+          <td>LKR {{ ((payment.AdvanceDeduction || payment.AdvanceDeduction || 0) + (payment.DebtDeduction || payment.DebtDeduction || 0)) | number }}</td>
+          <td>LKR {{ (payment.IncentiveAddition || payment.IncentiveAddition || 0) | number }}</td>
+          <td>LKR {{ (payment.NetAmount || payment.NetAmount) | number }}</td>
+          <td>{{ payment.PaymentMethod || payment.PaymentMethod }}</td>
+          <td>{{ (payment.PaymentDate || payment.PaymentDate) | date:'shortDate' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="print-btn" title="Print Receipt" (click)="generateReceipt(payment)">
+                <i class="fa fa-print"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+      <ng-template #noPayments>
+        <tr>
+          <td colspan="11" class="no-data">
+            No payments found. 
+            <span *ngIf="error" class="error-text">Error: {{ error }}</span>
+          </td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
 </div>
+  </div>
+

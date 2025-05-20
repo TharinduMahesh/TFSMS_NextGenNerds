@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/models/g_signin_model.dart';
-import 'package:growersignup/services/grower_signin_api.dart';
-import 'package:growersignup/sreens/grower_home_page.dart';
-import 'package:growersignup/sreens/grower_signup.dart';
+import 'package:growersignup/models/c_signin_model.dart';
+import 'package:growersignup/services/collector_signin_api.dart';
+import 'package:growersignup/sreens/collector_signup.dart';
 
-
-class GrowerSignInPage extends StatefulWidget {
-  const GrowerSignInPage({super.key});
+class CollectorSignInPage extends StatefulWidget {
+  const CollectorSignInPage({super.key});
 
   @override
-  State<GrowerSignInPage> createState() => _GrowerSignInPageState();
+  State<CollectorSignInPage> createState() => _CollectorSignInPageState();
 }
 
-class _GrowerSignInPageState extends State<GrowerSignInPage> {
+class _CollectorSignInPageState extends State<CollectorSignInPage> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  final _gSignInApi = GSigninApi(); // Placeholder for API class
+  final _gSignInApi = CSigninApi(); // Placeholder for API class
 
   // State
   bool _isPasswordVisible = false;
   bool _isSignInSelected = true; // Default to Sign In selected
 
-  // Colors 
+  // --- Define Colors (estimated from Sign Up page) ---
   static const Color pageBackgroundColor = Color(0xFFF0FBEF); // Very light green
   static const Color cardBackgroundColor = Colors.white;
   static const Color primaryColor = Color(0xFFB2E7AE); // Light green buttons/selection
@@ -35,7 +33,7 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> {
   static const Color toggleSelectedTextColor = primaryTextColor;
   static const Color toggleUnselectedTextColor = secondaryTextColor;
   static const Color forgotPasswordColor = primaryTextColor; // Or a blue link color
-
+  // --- End Colors ---
 
 
   @override
@@ -47,21 +45,21 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> {
   void _signIn() async {
     if (_formKey.currentState?.validate() ?? false) {
       // Create a GSigninModel object with the data from the text controllers
-      GSigninModel gSigninModel = GSigninModel(
+      CSigninModel gSigninModel = CSigninModel(
         email: _emailController.text,
         password: _passwordController.text,
       );
 
       try {
         // Call the sign-in API
-        GSigninModel newGsigninModel = await _gSignInApi.growersignnp(gSigninModel);
+        CSigninModel newGsigninModel = await _gSignInApi.Collectorsignnp(gSigninModel);
 
         // If successful, show success message or navigate to another page
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign in successful!')));
         print('Sign in successful: ${newGsigninModel.toJson()}'); // Debugging output
 
         // Navigate to another page if needed
-        Navigator.push(context, MaterialPageRoute(builder: (context) => GrowerHomePage()));
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => CollectorHomePage()));
       } catch (e) {
         // Handle error if the API call fails
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to sign in: $e')));
@@ -74,13 +72,16 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> {
   void _navigateToSignUp() {
      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => GrowerSignupPage()), // Replace with your sign up page
+        MaterialPageRoute(builder: (context) => CollectorSignupPage()), // Replace with your sign up page
       );
     print("Navigate to Sign Up page");
   }
 
   void _navigateToForgotPassword() {
-
+    // Navigator.push(
+    //    context,
+    //    MaterialPageRoute(builder: (context) => const ForgotPasswordPage()), // Replace with your forgot password page
+    //  );
     print("Navigate to Forgot Password page");
      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Forgot Password flow not implemented yet'), backgroundColor: Colors.grey),

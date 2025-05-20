@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:growersignup/assets/constants/contant_colors.dart';
 import 'package:growersignup/welcome_screens/welcome_collector.dart';
 import 'package:growersignup/welcome_screens/welcome_grower.dart';
 
@@ -22,23 +23,8 @@ class WelcomePage4 extends StatefulWidget {
 }
 
 class _WelcomePage4State extends State<WelcomePage4> {
-  // State variable to hold the selected role
-  UserRole? _selectedRole; // Use the enum type
-
-  // --- Define Colors (adjust/reuse) ---
-  static const Color titleColor = Color(0xFFFAFAFA); // Off-white for title
-  // Role Buttons
-  static const Color buttonBackgroundColor = Color(0xFF0a4e41); // Dark green/teal estimate
-  static const Color buttonTextColor = Color(0xFFFAFAFA); // Off-white text
-  static const Color selectedButtonBackgroundColor = Color(0xFF157463); // Slightly lighter green
-  static const Color selectedButtonTextColor = Colors.white;
-  // Next Button colors
-  static const Color nextButtonBackgroundColor = Color(0xFFc8e6c9);
-  static const Color nextButtonTextColor = Color(0xFF0a4e41);
-  // Indicator colors
-  static const Color activeIndicatorColor = Colors.white;
-  static const Color inactiveIndicatorColor = Colors.white54;
-  // --- End Colors ---
+  // select role
+  UserRole? _selectedRole; 
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +43,7 @@ class _WelcomePage4State extends State<WelcomePage4> {
             colorBlendMode: BlendMode.darken,
           ),
 
-          // 2. Content Column
+          // Content Column
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: screenWidth * 0.08,
@@ -74,22 +60,15 @@ class _WelcomePage4State extends State<WelcomePage4> {
                   'You are a',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: titleColor,
-                    fontSize: 30.0, // Increased size
+                    color: primaryTextColor,
+                    fontSize: 30.0, 
                     fontWeight: FontWeight.bold,
-                     shadows: [ // Optional shadow for contrast
-                       Shadow(
-                         blurRadius: 6.0,
-                         color: Colors.black54,
-                         offset: Offset(1.0, 1.0),
-                       ),
-                     ],
                   ),
                 ),
                 const SizedBox(height: 35.0), // Space before buttons
 
                 // Role Buttons
-                _buildRoleButton(UserRole.supplier, 'Supplier'),
+                _buildRoleButton(UserRole.supplier, 'Grower'),
                 const SizedBox(height: 15.0),
                 _buildRoleButton(UserRole.collector, 'Collector'),
 
@@ -101,26 +80,25 @@ class _WelcomePage4State extends State<WelcomePage4> {
                      if (_selectedRole != null) {
                          if(_selectedRole == UserRole.supplier) {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeSupplierPage()));
-                             print('Supplier role selected');
+                             print('Grower role selected');
                          } else if(_selectedRole == UserRole.collector) {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeCollectorPage()));
                              print('Collector role selected');
                          }
-                         // Call the callback, passing the selected role
                          widget.onNextPressed?.call(_selectedRole);
                      } else {
-                         // Prompt user to select a role
+                         // select a role msg
                          ScaffoldMessenger.of(context).showSnackBar(
                            const SnackBar(content: Text('Please select your role'), duration: Duration(seconds: 2), backgroundColor: Colors.orangeAccent,),
                          );
                      }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: nextButtonBackgroundColor,
-                    foregroundColor: nextButtonTextColor,
-                    minimumSize: Size(screenWidth * 0.6, 50),
+                    backgroundColor: buttonBackgroundColor,
+                    foregroundColor: primaryTextColor,
+                    minimumSize: Size(screenWidth * 0.8, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     elevation: 3,
                   ),
@@ -134,10 +112,10 @@ class _WelcomePage4State extends State<WelcomePage4> {
                 ),
                 const SizedBox(height: 20.0),
 
-                // Page Indicator (Highlighting the fourth dot - index 3)
+                // dots
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) { // Assuming 5 total pages
+                  children: List.generate(5, (index) { 
                     return Container(
                       width: 8.0,
                       height: 8.0,
@@ -150,7 +128,7 @@ class _WelcomePage4State extends State<WelcomePage4> {
                     );
                   }),
                 ),
-                SizedBox(height: screenHeight * 0.05), // Bottom padding
+                SizedBox(height: screenHeight * 0.05),
               ],
             ),
           ),
@@ -159,31 +137,23 @@ class _WelcomePage4State extends State<WelcomePage4> {
     );
   }
 
-  // --- Helper Widget to build Role Buttons ---
   Widget _buildRoleButton(UserRole role, String label) {
     final bool isSelected = _selectedRole == role;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ElevatedButton(
       onPressed: () {
-        // Update the state when a button is tapped
         setState(() {
           _selectedRole = role;
         });
-        // Optional: Call specific role selection callback if needed
-        // widget.onRoleSelected?.call(role);
         print('Selected role: $label');
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? selectedButtonBackgroundColor : buttonBackgroundColor,
-        foregroundColor: isSelected ? selectedButtonTextColor : buttonTextColor,
-         minimumSize: Size(screenWidth * 0.65, 50), // Button size
+        backgroundColor: isSelected ? buttonBackgroundColor : pageBackgroundColor,
+        foregroundColor: isSelected ? buttonTextColor : primaryTextColor,
+         minimumSize: Size(screenWidth * 0.8, 50), 
          shape: RoundedRectangleBorder(
-           borderRadius: BorderRadius.circular(30.0),
-           // Optional: Add a border to the selected button
-           // side: isSelected
-           //     ? const BorderSide(color: Colors.white, width: 1.5)
-           //     : BorderSide.none,
+           borderRadius: BorderRadius.circular(10.0),
          ),
          elevation: isSelected ? 4 : 2,
       ),

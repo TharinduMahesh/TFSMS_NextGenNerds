@@ -22,10 +22,11 @@ CREATE DATABASE test5Db;
 
 USE test5Db;
 
-CREATE TABLE GrowerSignUp (
+CREATE TABLE GrowerSignUps (
     GrowerId INT IDENTITY(1,1) PRIMARY KEY,
     GrowerEmail NVARCHAR(100) NOT NULL UNIQUE,
-    GrowerPassword NVARCHAR(100) NOT NULL
+    GrowerPassword NVARCHAR(100) NOT NULL,
+    GrowerSignUpDate DATETIME DEFAULT GETDATE()
 );
 
 
@@ -33,7 +34,7 @@ CREATE TABLE GrowerSignUp (
 /*Grower Create An Account*/
 
 
-CREATE TABLE GrowerCreateAccount (
+CREATE TABLE GrowerCreateAccounts (
     GrowerAccountId INT PRIMARY KEY IDENTITY(1,1),
     GrowerFirstName NVARCHAR(100) NOT NULL,
     GrowerLastName NVARCHAR(100) NOT NULL,
@@ -61,3 +62,43 @@ CREATE TABLE GrowerBankDetails (
     AccountHolderName NVARCHAR(100) NOT NULL,
     GrowerEmail NVARCHAR(100) NOT NULL
 );
+
+
+
+//////Collector
+
+
+CREATE TABLE CollectorSignUps (
+    CollectorId INT IDENTITY(1,1) PRIMARY KEY,
+    CollectorEmail NVARCHAR(100) NOT NULL UNIQUE,
+    CollectorPassword NVARCHAR(100) NOT NULL,
+    CollectorSignUpDate DATETIME DEFAULT GETDATE()
+);
+
+
+CREATE TABLE CollectorCreateAccounts (
+    CollectorAccountId INT PRIMARY KEY IDENTITY(1,1),
+    CollectorFirstName NVARCHAR(100) NOT NULL,
+    CollectorLastName NVARCHAR(100) NOT NULL,
+    CollectorNIC  NVARCHAR(100) NOT NULL,
+    CollectorAddressLine1 NVARCHAR(255) NOT NULL,
+    CollectorAddressLine2 NVARCHAR(255),
+    CollectorCity NVARCHAR(100) NOT NULL,
+    CollectorPostalCode NVARCHAR(20),
+    CollectorGender NVARCHAR(10),
+    CollectorDOB DATE,
+    CollectorPhoneNum NVARCHAR(20),
+    CollectorVehicleNum NVARCHAR(50),
+    CollectorEmail NVARCHAR(100) NOT NULL  
+);
+
+
+CREATE TABLE CollectorBankDetails (
+    CollectorDetailId INT PRIMARY KEY IDENTITY(1,1),
+    CollectorName NVARCHAR(100) NOT NULL,
+    BranchName NVARCHAR(100) NOT NULL,
+    AccountHolderName NVARCHAR(100) NOT NULL,
+    CollectorEmail NVARCHAR(100) NOT NULL
+);
+
+

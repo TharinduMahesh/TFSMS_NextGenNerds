@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:growersignup/sreens/collector_signup.dart';
 
 class WelcomeCollectorPage extends StatelessWidget {
   // Callback for the 'Let's Start' button press
@@ -60,9 +60,9 @@ class WelcomeCollectorPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8.0), // Space between text lines
 
-                // "As a Supplier" Text
+                // "As a Collector" Text
                 const Text(
-                  'As a Supplier',
+                  'As a Collector',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: primaryTextColor,
@@ -83,9 +83,9 @@ class WelcomeCollectorPage extends StatelessWidget {
                 // Let's Start Button
                 ElevatedButton(
                   onPressed: onStartPressed ?? () {
-                     print('Let\'s Start button tapped! (Supplier)');
-                     // Add navigation logic to Supplier Login/Signup or Main App
-                    
+                     print('Let\'s Start button tapped! (Collector)');
+                     Navigator.push(context, MaterialPageRoute(builder: (context) => const CollectorSignupPage()));
+                     // Add navigation logic to Collector Login/Signup or Main App
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: startButtonBackgroundColor,

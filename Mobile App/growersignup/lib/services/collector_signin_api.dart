@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:growersignup/models/g_signin_model.dart';
+import 'package:growersignup/models/c_signin_model.dart';
 import 'package:http/http.dart' as http;
 
-class GSigninApi {
+class CSigninApi {
 
-  Future <GSigninModel> growersignnp(GSigninModel gSigninModel) async {
-    const url = 'https://localhost:7061/api/growersignup/login'; // Replace with your API endpoint
+  Future <CSigninModel> Collectorsignnp(CSigninModel cSigninModel) async {
+    const url = 'https://localhost:7061/api/Collectorsignup/login'; // Replace with your API endpoint
 
     try{
       final response = await http.post(
@@ -14,14 +14,14 @@ class GSigninApi {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(gSigninModel.toJson()),
+        body: jsonEncode(cSigninModel.toJson()),
       );
       print('response status code: ${response.statusCode}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('response body: ${response.body}');
-        GSigninModel newGsignupModel = GSigninModel.fromJson(jsonDecode(response.body));
-        return newGsignupModel;
+        CSigninModel newCsignupModel = CSigninModel.fromJson(jsonDecode(response.body));
+        return newCsignupModel;
       } else {
         print('response status code: ${response.statusCode}');
         print('response body: ${response.body}');

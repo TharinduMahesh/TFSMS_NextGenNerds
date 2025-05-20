@@ -1,19 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:growersignup/models/g_signup_model.dart';
-import 'package:growersignup/sreens/grower_create_account.dart';
-import 'package:growersignup/sreens/grower_signin_page.dart';
+import 'package:growersignup/models/c_signup_model.dart';
+import 'package:growersignup/sreens/collector_signin_page.dart';
 import 'package:http/http.dart' as http;
 
-class GrowerSignupPage extends StatefulWidget {
-  const GrowerSignupPage({super.key});
+class CollectorSignupPage extends StatefulWidget {
+  const CollectorSignupPage({super.key});
 
   @override
-  State<GrowerSignupPage> createState() => _GrowerSignupPageState();
+  State<CollectorSignupPage> createState() => _CollectorSignupPageState();
 }
 
-class _GrowerSignupPageState extends State<GrowerSignupPage> {
+class _CollectorSignupPageState extends State<CollectorSignupPage> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for text fields
@@ -25,24 +24,23 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
-  // Sign Up 
-  bool _isSignUpSelected = true; 
+  // State for the Sign In/Sign Up toggle (true if Sign Up selected)
+  bool _isSignUpSelected = true; // Default to Sign Up
 
-  // Colors
+  // --- Define Colors (estimated) ---
   static const Color pageBackgroundColor = Color(
     0xFFF0FBEF,
-  ); 
+  ); // Very light green
   static const Color cardBackgroundColor = Colors.white;
   static const Color primaryColor = Color(
     0xFFB2E7AE,
-  ); 
+  ); // Light green for buttons/selection
   static const Color primaryTextColor = Color(0xFF0a4e41); // Dark green text
   static const Color secondaryTextColor = Colors.black54; // Grey text
   static const Color toggleUnselectedColor = Colors.transparent;
   static const Color toggleSelectedTextColor = primaryTextColor;
   static const Color toggleUnselectedTextColor = secondaryTextColor;
-  // --- 
-
+  // --- End Colors ---
 
   @override
   void dispose() {
@@ -52,7 +50,7 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
     super.dispose();
   }
 
-  Future<void> _signup(GSignupModel growerModel) async {
+  Future<void> _signup(CSignupModel CollectorModel) async {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text.trim();
       final password = _passwordController.text;
@@ -68,8 +66,8 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
 
       try {
         final uri = Uri.parse(
-          'https://localhost:7061/api/GrowerSignUp/register',
-        ); 
+          'https://localhost:7061/api/CollectorSignUp/register',
+        ); // 🔁 Replace with your API endpoint
         
         
         final response = await http.post(
@@ -79,6 +77,13 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
         },
         body: jsonEncode({'gEmail': email, 'gPassword': password,"gConfirmPassword":confirmPassword}),
       );
+        
+
+        // final response = await http.post(
+        //   uri,
+        //   headers: {'Content-Type': 'application/json'},
+        //   body: jsonEncode({'email': email, 'password': password,"confirmPassword":confirmPassword}),
+        // );
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -88,12 +93,12 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
             ),
           );
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => GrowerCreateAccountPage(email: email),
-            ),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => CollectorCreateAccountPage(email: email),
+          //   ),
+          // );
         } else {
           final error = jsonDecode(response.body);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -124,13 +129,23 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
     }
   }
 
-  // Navigation to sign in page
+  // --- Navigation Helper (Example) ---
   void _navigateToSignIn() {
+    // Option 1: If Sign In is the same page structure, just toggle state
+    // setState(() {
+    //   _isSignUpSelected = false;
+    // });
+
+    // Option 2: Navigate to a dedicated Sign In page
+    // Use Navigator.pushReplacement if you don't want users going back to signup
+    // Navigator.pushReplacementNamed(context, '/signin'); // Assuming you have routes defined
+    // Or use a direct widget navigation
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const GrowerSignInPage()),
+      MaterialPageRoute(builder: (context) => const CollectorSignInPage()),
     );
     print("Navigate to Sign In page");
+    // Temporary toggle for demo
     setState(() {
       _isSignUpSelected = false;
     });
@@ -253,11 +268,11 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
                   ElevatedButton(
                     onPressed:
                         () => _signup(
-                          GSignupModel(
-                            GrowerId:
-                                0, // auto-generated id
-                            GrowerEmail: _emailController.text.trim(),
-                            GrowerPassword: _passwordController.text,
+                          CSignupModel(
+                            CollectorId:
+                                0, // Assuming ID is auto-generated or not needed for signup
+                            CollectorEmail: _emailController.text.trim(),
+                            CollectorPassword: _passwordController.text,
                           ),
                         ),
                     style: ElevatedButton.styleFrom(
@@ -287,7 +302,7 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
     );
   }
 
-  // ign Up 
+  // Helper Widget for the Sign In/Sign Up Toggle
   Widget _buildSignInSignUpToggle() {
     return Container(
       height: 45,
@@ -323,7 +338,7 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                // Already on Sign Up
+                // Already on Sign Up, or toggle back if needed
                 if (!_isSignUpSelected) {
                   setState(() {
                     _isSignUpSelected = true;
@@ -355,6 +370,7 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
     );
   }
 
+  // Helper Widget for TextFields with Underline Border
   Widget _buildTextField({
     required TextEditingController controller,
     required String labelText,
@@ -371,7 +387,7 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
         labelText: labelText,
         labelStyle: const TextStyle(color: secondaryTextColor, fontSize: 14),
         suffixIcon: suffixIcon,
-        // border style
+        // Underline border style
         border: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
         ),
@@ -397,7 +413,7 @@ class _GrowerSignupPageState extends State<GrowerSignupPage> {
       ),
       validator: validator,
       autovalidateMode:
-          AutovalidateMode.onUserInteraction,
+          AutovalidateMode.onUserInteraction, // Validate on change
     );
   }
 }

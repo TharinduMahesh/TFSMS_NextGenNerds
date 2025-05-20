@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:growersignup/assets/constants/contant_colors.dart';
 import 'package:growersignup/sreens/grower_signup.dart';
 
 class WelcomeSupplierPage extends StatelessWidget {
-  // Callback for the 'Let's Start' button press
+  // button press
   final VoidCallback? onStartPressed;
-
-  // --- Define Colors (reuse/adjust) ---
-  static const Color primaryTextColor = Color(0xFFFAFAFA); // Off-white for main text
-  static const Color secondaryTextColor = Color(0xFFE0E0E0); // Lighter gray for "Let's start"
-  // Button colors
-  static const Color startButtonBackgroundColor = Color(0xFFc8e6c9);
-  static const Color startButtonTextColor = Color(0xFF0a4e41);
-  // Indicator colors
-  static const Color activeIndicatorColor = Colors.white;
-  static const Color inactiveIndicatorColor = Colors.white54;
-  // --- End Colors ---
 
 
   const WelcomeSupplierPage({super.key, this.onStartPressed});
@@ -28,11 +18,11 @@ class WelcomeSupplierPage extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Background Image
+          //  Background Image
           Image.asset(
-            'lib/assets/images/tea.png', // *** YOUR IMAGE PATH ***
+            'lib/assets/images/tea.png', 
             fit: BoxFit.cover,
-             color: Colors.black.withOpacity(0.3), // Apply consistent overlay
+             color: Colors.black.withOpacity(0.3), 
              colorBlendMode: BlendMode.darken,
           ),
 
@@ -46,53 +36,45 @@ class WelcomeSupplierPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Spacer(flex: 2), // Adjust spacing
+                const Spacer(flex: 2), 
 
-                // "Let's start" Text
+                // Let's start Text
                 const Text(
                   "Let's start",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: secondaryTextColor,
+                    color: primaryTextColor,
                     fontSize: 18.0,
-                    fontWeight: FontWeight.w500, // Medium weight
+                    fontWeight: FontWeight.w500, 
                   ),
                 ),
-                const SizedBox(height: 8.0), // Space between text lines
+                const SizedBox(height: 8.0), 
 
-                // "As a Supplier" Text
+                // As a Grower Text
                 const Text(
-                  'As a Supplier',
+                  'As a Grower',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: primaryTextColor,
-                    fontSize: 36.0, // Larger size
+                    fontSize: 36.0,
                     fontWeight: FontWeight.bold,
-                     shadows: [ // Optional shadow for better contrast
-                       Shadow(
-                         blurRadius: 8.0,
-                         color: Colors.black54,
-                         offset: Offset(1.0, 1.0),
-                       ),
-                     ],
                   ),
                 ),
 
-                const Spacer(flex: 3), // Pushes button down
+                const Spacer(flex: 3), 
 
                 // Let's Start Button
                 ElevatedButton(
                   onPressed: onStartPressed ?? () {
-                     print('Let\'s Start button tapped! (Supplier)');
+                     print('Let\'s Start button tapped! (Grower)');
                      Navigator.push(context, MaterialPageRoute(builder: (context) => const GrowerSignupPage()));
-                     // Add navigation logic to Supplier Login/Signup or Main App
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: startButtonBackgroundColor,
-                    foregroundColor: startButtonTextColor,
-                    minimumSize: Size(screenWidth * 0.6, 50),
+                    backgroundColor: buttonBackgroundColor,
+                    foregroundColor: primaryTextColor,
+                    minimumSize: Size(screenWidth * 0.8, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     elevation: 3,
                   ),
@@ -104,12 +86,12 @@ class WelcomeSupplierPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20.0), // Space below button
+                const SizedBox(height: 20.0), 
 
-                // Page Indicator (Highlighting the last dot - index 4)
+                // dots
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) { // Assuming 5 total pages
+                  children: List.generate(5, (index) { 
                     return Container(
                       width: 8.0,
                       height: 8.0,

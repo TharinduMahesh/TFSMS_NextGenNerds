@@ -1,11 +1,3 @@
-/**
- * Success Component Styles
- * 
- * This stylesheet defines the appearance of the success page with decorative
- * tea leaf elements and a clean, modern design with green accent colors.
- */
-
-/* ===== RESET & BASE STYLES ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,25 +7,22 @@
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
     "Helvetica Neue", sans-serif;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-x: hidden;
 }
 
-/* ===== PAGE CONTAINER ===== */
 .page-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f8fdf6; /* Light green background */
+  background-color: #f8fdf6;
   position: relative;
   width: 100%;
-  overflow: hidden; /* Prevent content from causing overflow */
+  overflow: hidden;
 }
 
-/* ===== DECORATIVE BACKGROUNDS ===== */
-/* Add blurred tea leaf background */
 .page-container::before {
   content: "";
-  position: fixed; /* Fixed positioning for smooth scrolling */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -41,21 +30,20 @@ body {
   background-image: url("https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 80%; /* Reduced size to prevent overflow */
+  background-size: 80%;
   opacity: 0.2;
   filter: blur(8px);
   z-index: 0;
-  pointer-events: none; /* Allow clicks to pass through */
+  pointer-events: none;
 }
 
-/* Add a second, larger tea leaf in the corner */
 .page-container::after {
   content: "";
-  position: fixed; /* Fixed positioning for smooth scrolling */
+  position: fixed;
   bottom: -100px;
   right: -100px;
-  width: 500px; /* Reduced size */
-  height: 500px; /* Reduced size */
+  width: 500px;
+  height: 500px;
   background-image: url("https://png.pngtree.com/png-vector/20241105/ourmid/pngtree-tea-leaf-image-png-image_14287414.png");
   background-repeat: no-repeat;
   background-position: center;
@@ -63,29 +51,27 @@ body {
   opacity: 0.05;
   transform: rotate(45deg);
   z-index: 0;
-  pointer-events: none; /* Allow clicks to pass through */
+  pointer-events: none;
 }
 
-/* ===== USER NAME STYLING ===== */
 .user-name {
   padding: 0.5rem 1.5rem;
   background-color: #f0f8eb;
   border-radius: 25px;
-  color: #4a9e0f; /* Brand green */
+  color: #4a9e0f;
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 8px rgba(74, 158, 15, 0.15); /* Subtle shadow */
+  box-shadow: 0 2px 8px rgba(74, 158, 15, 0.15);
   transition: all 0.3s ease;
 }
 
 .user-name:hover {
-  transform: translateY(-2px); /* Lift effect */
-  box-shadow: 0 4px 12px rgba(74, 158, 15, 0.2); /* Enhanced shadow */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 158, 15, 0.2);
 }
 
-/* ===== SUCCESS CONTAINER ===== */
 .success-container {
   flex: 1;
   display: flex;
@@ -93,10 +79,9 @@ body {
   justify-content: center;
   padding: 3rem;
   position: relative;
-  z-index: 1; /* Ensure content is above the background */
+  z-index: 1;
 }
 
-/* Transparent success content container */
 .success-content {
   display: flex;
   align-items: center;
@@ -108,8 +93,6 @@ body {
   z-index: 1;
 }
 
-/* ===== SUCCESS ICON SECTION ===== */
-/* Left side with success icon */
 .success-icon-container {
   flex: 1;
   display: flex;
@@ -118,16 +101,14 @@ body {
   position: relative;
 }
 
-/* Animated success icon with glow effect */
 .success-icon {
   width: 220px;
   height: 220px;
-  filter: drop-shadow(0 10px 25px rgba(74, 158, 15, 0.25)); /* Glow effect */
+  filter: drop-shadow(0 10px 25px rgba(74, 158, 15, 0.25));
   transition: all 0.5s ease;
-  animation: float 3s ease-in-out infinite; /* Floating animation */
+  animation: float 3s ease-in-out infinite;
 }
 
-/* Floating animation keyframes */
 @keyframes float {
   0% {
     transform: translateY(0px);
@@ -141,11 +122,10 @@ body {
 }
 
 .success-icon:hover {
-  transform: scale(1.08) rotate(5deg); /* Scale and rotate on hover */
-  filter: drop-shadow(0 15px 30px rgba(74, 158, 15, 0.35)); /* Enhanced glow */
+  transform: scale(1.08) rotate(5deg);
+  filter: drop-shadow(0 15px 30px rgba(74, 158, 15, 0.35));
 }
 
-/* Add decorative circle behind icon */
 .success-icon-container::before {
   content: "";
   position: absolute;
@@ -156,8 +136,6 @@ body {
   z-index: -1;
 }
 
-/* ===== SUCCESS TEXT SECTION ===== */
-/* Right side with text content */
 .success-text {
   flex: 1;
   padding-left: 3rem;
@@ -166,16 +144,15 @@ body {
 
 .success-content h1 {
   font-size: 3.8rem;
-  color: #4a9e0f; /* Brand green */
+  color: #4a9e0f;
   margin-bottom: 1rem;
   font-weight: 700;
   line-height: 1.1;
   position: relative;
   display: inline-block;
-  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8); /* Text shadow for legibility */
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
 }
 
-/* Add underline effect to heading */
 .success-content h1::after {
   content: "";
   position: absolute;
@@ -183,7 +160,7 @@ body {
   bottom: 0;
   width: 80px;
   height: 4px;
-  background: linear-gradient(to right, #4a9e0f, transparent); /* Gradient underline */
+  background: linear-gradient(to right, #4a9e0f, transparent);
   border-radius: 2px;
 }
 
@@ -192,11 +169,9 @@ body {
   color: #555;
   margin-bottom: 2.5rem;
   line-height: 1.5;
-  text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8); /* Text shadow for legibility */
+  text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8);
 }
 
-/* ===== DASHBOARD BUTTON ===== */
-/* Enhanced dashboard button with effects */
 .dashboard-btn {
   position: relative;
   display: inline-block;
@@ -209,14 +184,13 @@ body {
   letter-spacing: 0.7px;
   overflow: hidden;
   z-index: 1;
-  background: linear-gradient(90deg, #4a9e0f 0%, #56ae12 50%, #3f8a0c 100%); /* Gradient background */
+  background: linear-gradient(90deg, #4a9e0f 0%, #56ae12 50%, #3f8a0c 100%);
   background-size: 200% auto;
   transition: all 0.5s ease;
-  box-shadow: 0 10px 20px rgba(74, 158, 15, 0.25); /* Subtle shadow */
+  box-shadow: 0 10px 20px rgba(74, 158, 15, 0.25);
   cursor: pointer;
 }
 
-/* Shine effect overlay */
 .dashboard-btn::before {
   content: "";
   position: absolute;
@@ -230,21 +204,20 @@ body {
 }
 
 .dashboard-btn:hover {
-  transform: translateY(-5px); /* Lift effect */
-  box-shadow: 0 15px 30px rgba(74, 158, 15, 0.35); /* Enhanced shadow */
-  background-position: right center; /* Shift gradient */
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(74, 158, 15, 0.35);
+  background-position: right center;
 }
 
 .dashboard-btn:hover::before {
-  left: 100%; /* Animate shine effect */
+  left: 100%;
 }
 
 .dashboard-btn:active {
-  transform: translateY(-2px); /* Reduced lift on active */
-  box-shadow: 0 8px 15px rgba(74, 158, 15, 0.3); /* Reduced shadow */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(74, 158, 15, 0.3);
 }
 
-/* Add tea leaf decoration to the button */
 .dashboard-btn::after {
   content: "";
   position: absolute;
@@ -257,11 +230,9 @@ body {
   background-repeat: no-repeat;
   opacity: 0.2;
   transform: rotate(30deg);
-  pointer-events: none; /* Allow clicks to pass through */
+  pointer-events: none;
 }
 
-/* ===== DECORATIVE FLOATING LEAVES ===== */
-/* Add small floating tea leaves for decoration */
 .success-container::before {
   content: "";
   position: absolute;
@@ -274,8 +245,8 @@ body {
   background-repeat: no-repeat;
   opacity: 0.1;
   transform: rotate(-15deg);
-  animation: floatLeaf1 8s ease-in-out infinite; /* Floating animation */
-  pointer-events: none; /* Allow clicks to pass through */
+  animation: floatLeaf1 8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .success-container::after {
@@ -290,11 +261,10 @@ body {
   background-repeat: no-repeat;
   opacity: 0.1;
   transform: rotate(25deg);
-  animation: floatLeaf2 10s ease-in-out infinite; /* Floating animation */
-  pointer-events: none; /* Allow clicks to pass through */
+  animation: floatLeaf2 10s ease-in-out infinite;
+  pointer-events: none;
 }
 
-/* Floating animation keyframes */
 @keyframes floatLeaf1 {
   0% {
     transform: translateY(0) rotate(-15deg);
@@ -319,7 +289,6 @@ body {
   }
 }
 
-/* ===== LOADING SPINNER ===== */
 .loading-spinner {
   display: flex;
   flex-direction: column;
@@ -330,10 +299,10 @@ body {
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(74, 158, 15, 0.1); /* Light border */
+  border: 4px solid rgba(74, 158, 15, 0.1);
   border-radius: 50%;
-  border-top-color: #4a9e0f; /* Brand green for spinner */
-  animation: spin 1s ease-in-out infinite; /* Spinning animation */
+  border-top-color: #4a9e0f;
+  animation: spin 1s ease-in-out infinite;
   margin-bottom: 0.5rem;
 }
 
@@ -348,24 +317,22 @@ body {
   margin-bottom: 0;
 }
 
-/* ===== ERROR MESSAGE ===== */
 .error-message {
-  background-color: rgba(244, 67, 54, 0.1); /* Light red background */
-  color: #f44336; /* Red text */
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   font-size: 1rem;
 }
 
-/* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 968px) {
   .success-container {
     padding: 2rem;
   }
 
   .success-content {
-    flex-direction: column; /* Stack content vertically */
+    flex-direction: column;
     padding: 2rem 1rem;
   }
 
@@ -386,10 +353,9 @@ body {
 
   .success-content h1::after {
     left: 50%;
-    transform: translateX(-50%); /* Center underline */
+    transform: translateX(-50%);
   }
 
-  /* Adjust background image size for mobile */
   .page-container::before {
     background-size: 150%;
   }
@@ -402,7 +368,6 @@ body {
   }
 }
 
-/* Small mobile devices */
 @media (max-width: 480px) {
   .success-container {
     padding: 1rem;

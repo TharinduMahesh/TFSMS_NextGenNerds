@@ -1,14 +1,6 @@
-/**
- * Sign-In Component Styles
- * 
- * This stylesheet defines the appearance of the sign-in page with a clean,
- * modern design featuring green accent colors.
- */
-
-/* ===== IMPORTS ===== */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
 
-/* ===== RESET & BASE STYLES ===== */
+/* base */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -20,15 +12,14 @@ body {
     "Helvetica Neue", sans-serif;
 }
 
-/* ===== LAYOUT CONTAINER ===== */
 .page-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* ===== NAVIGATION BUTTONS ===== */
-/* Sign-in link styles */
+/* Navigation */
+/*  sign-in link */
 .sign-in {
   text-decoration: none;
   color: #333;
@@ -41,31 +32,31 @@ body {
 }
 
 .sign-in:hover {
-  color: #56ae12; /* Green accent color on hover */
+  color: #56ae12;
 }
 
-/* Register button styles - Primary CTA */
+/*  register button */
 .register {
   text-decoration: none;
   padding: 0.5rem 2rem;
-  background-color: #4a9e0f; /* Darkened from #56ae12 for better contrast */
+  background-color: #4a9e0f;
   color: white;
   border: none;
-  border-radius: 25px; /* Rounded corners for modern look */
+  border-radius: 25px;
   cursor: pointer;
   font-weight: 500;
-  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.4); /* Subtle shadow for depth */
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.4);
   transition: all 0.3s ease;
 }
 
-/* Enhance register button on hover with micro-interactions */
+/* Hover  register button */
 .register:hover {
-  transform: translateY(-2px); /* Slight lift effect */
-  background-color: #3f8a0c; /* Darker on hover for feedback */
-  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.6); /* Enhanced shadow */
+  transform: translateY(-2px);
+  background-color: #3f8a0c;
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.6);
 }
 
-/* ===== AUTHENTICATION CONTAINER ===== */
+/* Authentication container styles */
 .auth-container {
   flex: 1;
   display: flex;
@@ -82,7 +73,7 @@ body {
   margin: 0 auto;
 }
 
-/* ===== LEFT CONTENT - BRANDING & MESSAGING ===== */
+/* Left content  */
 .left-content {
   flex: 1;
   position: relative;
@@ -93,7 +84,7 @@ body {
 
 .left-content h1 {
   font-size: 3rem;
-  color: #56ae12; /* Brand green */
+  color: #56ae12;
   font-weight: 500;
 }
 
@@ -103,29 +94,29 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Enhanced explore button - Secondary CTA */
+/*  explore button */
 .explore-btn {
-  background: #4a9e0f; /* Darkened from #56ae12 */
+  background: #4a9e0f;
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
-  border-radius: 10px; /* Increased border radius */
+  border-radius: 10px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   width: fit-content;
-  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); /* Added shadow */
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3);
   margin-top: 1.5rem;
 }
 
-/* Enhanced hover effect for explore button */
+/* Hover  explore button */
 .explore-btn:hover {
-  background: #3f8a0c; /* Darker on hover */
-  transform: translateY(-3px); /* Lift effect */
-  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5); /* Enhanced shadow on hover */
+  background: #3f8a0c;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5);
 }
 
-/* Tea leaf image styling */
+/*  tea leaf image */
 .tea-leaf {
   max-width: 100%;
   height: auto;
@@ -135,7 +126,7 @@ body {
   display: block;
 }
 
-/* ===== RIGHT CONTENT - SIGN IN FORM ===== */
+/* Right Sign in form */
 .right-content {
   flex: 1;
   padding: 2rem;
@@ -150,35 +141,35 @@ body {
   margin-bottom: 1.5rem;
 }
 
-/* Enhanced input fields with better borders and radius */
+/* input fields */
 .form-group input[type="email"],
 .form-group input[type="password"] {
   width: 100%;
   padding: 1rem;
-  border: 2px solid #ddd; /* Thicker border */
-  border-radius: 10px; /* Increased border radius */
+  border: 2px solid #ddd;
+  border-radius: 10px;
   font-size: 1rem;
   background-color: #f8f8f8;
   transition: all 0.3s ease;
 }
 
-/* Add focus effect to input fields for better UX */
+/*  input fields */
 .form-group input[type="email"]:focus,
 .form-group input[type="password"]:focus {
-  border-color: #56ae12; /* Brand green on focus */
-  box-shadow: 0 0 0 3px rgba(86, 174, 18, 0.2); /* Subtle focus ring */
+  border-color: #56ae12;
+  box-shadow: 0 0 0 3px rgba(86, 174, 18, 0.2);
   outline: none;
 }
 
-/* Error message styling */
+/*   error messages */
 .error {
-  color: #e53935; /* Red for errors */
+  color: #e53935;
   font-size: 0.85rem;
   margin-top: 0.5rem;
   padding-left: 0.5rem;
 }
 
-/* ===== PASSWORD OPTIONS ===== */
+/* Password   */
 .password-options {
   display: flex;
   justify-content: space-between;
@@ -201,41 +192,41 @@ body {
 }
 
 .password-options a:hover {
-  color: #56ae12; /* Brand green on hover */
+  color: #56ae12;
   text-decoration: underline;
 }
 
-/* ===== SIGN IN BUTTON ===== */
+/*  sign-in button */
 .sign-in-btn {
   width: 100%;
   padding: 1rem;
-  background: #4a9e0f; /* Darkened from #56ae12 */
+  background: #4a9e0f;
   color: white;
   border: none;
-  border-radius: 10px; /* Increased border radius */
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); /* Added shadow */
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3);
 }
 
-/* Enhanced hover effect for sign-in button */
+/* Hover  sign-in  */
 .sign-in-btn:hover:not(:disabled) {
-  background: #3f8a0c; /* Darker on hover */
-  transform: translateY(-2px); /* Lift effect */
-  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5); /* Enhanced shadow on hover */
+  background: #3f8a0c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5);
 }
 
-/* Disabled state styling */
+/* disabled state */
 .sign-in-btn:disabled {
-  background-color: #90a4ae; /* Muted color when disabled */
+  background-color: #90a4ae;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-/* ===== DIVIDER ===== */
+/* Divider styles */
 .divider {
   text-align: center;
   margin: 1.5rem 0;
@@ -267,33 +258,33 @@ body {
   font-size: 0.9rem;
 }
 
-/* ===== SOCIAL LOGIN BUTTONS ===== */
+/*  login buttons  */
 .social-buttons {
   display: flex;
-  gap: 1.5rem; /* Increased gap for better spacing */
+  gap: 1.5rem;
   justify-content: center;
 }
 
-/* Enhanced social buttons with shadows */
+/*   social buttons */
 .social-buttons button {
-  width: 52px; /* Slightly larger for better touch targets */
-  height: 52px; /* Slightly larger for better touch targets */
+  width: 52px;
+  height: 52px;
   border: 1px solid #ddd;
-  border-radius: 10px; /* Increased border radius */
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added shadow */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Enhanced hover effect for social buttons */
+/* Hover social buttons */
 .social-buttons button:hover {
-  transform: translateY(-3px); /* Lift effect */
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-  border-color: #56ae12; /* Brand green border on hover */
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  border-color: #56ae12;
 }
 
 .social-buttons img {
@@ -301,9 +292,9 @@ body {
   height: 24px;
 }
 
-/* ===== RESPONSIVE STYLES ===== */
+/* Responsive styles */
 @media (max-width: 968px) {
-  /* Mobile navigation styles */
+  /* Mobile   */
   .hamburger {
     display: block;
   }
@@ -338,7 +329,7 @@ body {
     color: #56ae12;
   }
 
-  /* Responsive layout for auth content */
+  /* Responsive   auth content */
   .auth-content {
     flex-direction: column;
     padding: 1rem;

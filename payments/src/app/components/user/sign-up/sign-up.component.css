@@ -1,14 +1,6 @@
-/**
- * Sign-Up Component Styles
- * 
- * This stylesheet defines the appearance of the sign-up page with a clean,
- * modern design featuring green accent colors and a full-height layout.
- */
-
-/* ===== IMPORTS ===== */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
 
-/* ===== RESET & BASE STYLES ===== */
+/* base */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -16,9 +8,8 @@
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-    "Helvetica Neue", sans-serif;
-  background-color: #f9f9f5; /* Light background color */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #f9f9f5;
 }
 
 .page-container {
@@ -27,8 +18,7 @@ body {
   flex-direction: column;
 }
 
-/* ===== AUTHENTICATION CONTAINER ===== */
-/* Full-width auth container with full height */
+/* Authentication container styles */
 .auth-container {
   min-height: 100vh;
   display: flex;
@@ -48,7 +38,7 @@ body {
   overflow: hidden;
 }
 
-/* ===== LEFT CONTENT - BRANDING IMAGE ===== */
+/* Left content - branding image */
 .left-content {
   flex: 1;
   position: relative;
@@ -66,7 +56,7 @@ body {
   left: 170px;
 }
 
-/* ===== RIGHT CONTENT - SIGN UP FORM ===== */
+/* Right sign-up form */
 .right-content {
   flex: 1;
   padding: 4rem;
@@ -82,8 +72,7 @@ body {
   max-width: 700px;
 }
 
-/* ===== FORM LAYOUT ===== */
-/* Two-column form layout */
+/* Form layout - two columns */
 .form-row {
   display: flex;
   gap: 1.5rem;
@@ -102,7 +91,7 @@ body {
   font-weight: 500;
 }
 
-/* ===== FORM CONTROLS ===== */
+/* Input and select fields */
 .form-group input,
 .form-group select {
   width: 100%;
@@ -114,27 +103,27 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Focus states for better UX */
+/* Focus state for inputs */
 .form-group input:focus,
 .form-group select:focus {
-  border-color: #56ae12; /* Brand green on focus */
-  box-shadow: 0 0 0 3px rgba(86, 174, 18, 0.2); /* Subtle focus ring */
+  border-color: #56ae12;
+  box-shadow: 0 0 0 3px rgba(86, 174, 18, 0.2);
   outline: none;
 }
 
-/* Error message styling */
+/* Error messages */
 .error {
-  color: #e53935; /* Red for errors */
+  color: #e53935;
   font-size: 0.85rem;
   margin-top: 0.5rem;
   padding-left: 0.5rem;
 }
 
-/* ===== SIGN UP BUTTON ===== */
+/* Sign-up button */
 .sign-up-btn {
   width: 100%;
   padding: 1rem;
-  background: #4a9e0f; /* Brand green */
+  background: #4a9e0f;
   color: white;
   border: none;
   border-radius: 10px;
@@ -142,25 +131,25 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); /* Subtle shadow */
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3);
 }
 
-/* Hover effect for sign-up button */
+/* Hover sign-up button */
 .sign-up-btn:hover:not(:disabled) {
-  background: #3f8a0c; /* Darker on hover */
-  transform: translateY(-2px); /* Lift effect */
-  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5); /* Enhanced shadow */
+  background: #3f8a0c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5);
 }
 
-/* Disabled state styling */
+/* Disabled button state */
 .sign-up-btn:disabled {
-  background-color: #90a4ae; /* Muted color when disabled */
+  background-color: #90a4ae;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-/* ===== DIVIDER ===== */
+/* Divider */
 .divider {
   text-align: center;
   margin: 1.5rem 0;
@@ -192,7 +181,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ===== SOCIAL LOGIN BUTTONS ===== */
+/* Social login buttons */
 .social-buttons {
   display: flex;
   gap: 1.5rem;
@@ -210,14 +199,14 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Hover effect for social buttons */
+/* Hover social login buttons */
 .social-buttons button:hover {
-  transform: translateY(-3px); /* Lift effect */
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
-  border-color: #56ae12; /* Brand green border */
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  border-color: #56ae12;
 }
 
 .social-buttons img {
@@ -225,18 +214,17 @@ body {
   height: 24px;
 }
 
-/* ===== RESPONSIVE STYLES ===== */
-/* Tablet devices */
+/* Responsive - tablet */
 @media (max-width: 1200px) {
   .right-content {
     padding: 3rem;
   }
 }
 
-/* Mobile devices */
+/* Responsive - mobile */
 @media (max-width: 968px) {
   .auth-content {
-    flex-direction: column; /* Stack content vertically */
+    flex-direction: column;
   }
 
   .left-content {
@@ -249,14 +237,13 @@ body {
     padding: 2.5rem;
   }
 
-  /* Stack form fields vertically on mobile */
   .form-row {
     flex-direction: column;
     gap: 0;
   }
 }
 
-/* Small mobile devices */
+/* Responsive - small mobile */
 @media (max-width: 480px) {
   .auth-container {
     padding: 0;

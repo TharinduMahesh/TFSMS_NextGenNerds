@@ -28,6 +28,9 @@
       border: none;
       cursor: pointer;
       
+      &:hover {
+        background-color: #27ae60;
+      }
     }
 
     .route-yield {
@@ -38,6 +41,10 @@
       border: none;
       cursor: pointer;
       margin: 0px 20px;
+
+      &:hover {
+        background-color: #1e88e5;
+      }
     }
   }
 
@@ -57,28 +64,61 @@
       padding: 18px;
       border-bottom: 1px solid #ddd;
       text-align: left;
-      background-color: transparent; /* Added to remove cell backgrounds */
+      background-color: transparent; /* Remove cell backgrounds */
     }
 
     th {
       font-weight: bold;
       color: #55555565;
     }
-    
-    /* Removed the tr:nth-child(even) rule completely */
 
     td {
       color: #333;
-    }
 
-    button {
-      border: none;
-      background: none;
+      button {
+      margin-right: 3px;  /* Small space between buttons */
+      padding: 3px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      font-weight: 500;
       cursor: pointer;
-      font-size: 16px;
+      border: none;
+      color: white;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.10);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+      &.edit-btn,
+      &.delete-btn {
+        width: 60px;       /* Fixed width for equal size */
+        text-align: center;
+        display: inline-block;
+      }
+
+      &.view-btn {
+        background-color: #3f51b5;
+        &:hover {
+          background-color: #2c387e;
+        }
+      }
+
+      &.edit-btn {
+        background-color: #ff9800;
+        &:hover {
+          background-color: #c77700;
+        }
+      }
+
+      &.delete-btn {
+        background-color: #e53935;
+        &:hover {
+          background-color: #ab2c28;
+        }
+      }
+    }
     }
   }
-  .addr{
+
+  .addr {
     width: 100%;
     margin-left: 259px;
   }
@@ -88,15 +128,15 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-  
+
     h2 {
       margin: 0;
     }
-  
+
     .caption-actions {
       display: flex;
       gap: 0.5rem;
-  
+
       button {
         padding: 0.4rem 0.8rem;
         background-color: #007bff;
@@ -104,7 +144,7 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
-  
+
         &:disabled {
           background-color: #cccccc;
           cursor: not-allowed;
@@ -112,9 +152,8 @@
       }
     }
   }
-  
+
   .route-list table tr.selected {
     background-color: rgba(0, 123, 255, 0.15); // Soft Power Blue
   }
-  
 }

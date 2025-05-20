@@ -1,63 +1,163 @@
-@if (formModel()) {
-    <div class="modal-overlay">
-      <div class="modal-content">
-        <button class="close-btn" (click)="onCancel()">X</button>
-        <h2>Edit Route</h2>
-        
-        <form (submit)="onSubmit($event)" class="route-form">
-          <div class="form-group">
-            <label>Route Name:</label>
-            <input type="text" [value]="formModel().rName" (input)="handleInput('rName', $event)" />
-          </div>
-  
-          <div class="form-group">
-            <label>Start Location:</label>
-            <input type="text" [value]="formModel().startLocation" (input)="handleInput('startLocation', $event)" />
-          </div>
-  
-          <div class="form-group">
-            <label>End Location:</label>
-            <input type="text" [value]="formModel().endLocation" (input)="handleInput('endLocation', $event)" />
-          </div>
-  
-          <div class="form-group">
-            <label>Distance (km):</label>
-            <input type="text" [value]="formModel().distance" (input)="handleInput('distance', $event)" />
-          </div>
-  
-          <div class="form-group">
-            <label>Collector ID:</label>
-            <input type="number" [value]="formModel().collectorId" (input)="handleInput('collectorId', $event)" />
-          </div>
-  
-          <div class="form-group">
-            <label>Vehicle ID:</label>
-            <input type="number" [value]="formModel().vehicleId" (input)="handleInput('vehicleId', $event)" />
-          </div>
-  
-          <h3>Grower Locations</h3>
-          <ul class="grower-list">
-            @for (loc of formModel().growerLocations; track loc?.gId) {
-              <li>
-                <div class="location-info">
-                  <strong>Lat:</strong> {{ loc.latitude }},
-                  <strong>Lng:</strong> {{ loc.longitude }}
-                </div>
-                <input
-                  type="text"
-                  [value]="loc.description"
-                  (input)="updateGrowerDescription(loc.gId, $event)"
-                  placeholder="Location description"
-                />
-              </li>
-            }
-          </ul>
-  
-          <div class="form-actions">
-            <button type="submit" class="save-btn">Save</button>
-            <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
-          </div>
-        </form>
+<div class="modal-overlay" [class.visible]="modalVisible">
+  <div class="modal-content" [class.visible]="modalVisible">
+    <button class="close-btn" (click)="onCancel()">X</button>
+    <h2>Edit Route</h2>
+
+    <div class="edit-modal-container">
+      <!-- Map Preview -->
+      <div class="map-preview">
+        <p>Map Preview Placeholder</p>
       </div>
+
+      <!-- Form -->
+      <form (submit)="onSubmit($event)" class="route-form">
+        <div class="form-container">
+          <div class="form-group">
+            <label for="rName">Route Name</label>
+            <input
+              id="rName"
+              type="text"
+              [value]="formData().rName"
+              (input)="handleInput('rName', $event)"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startLocation">Start Location</label>
+              <input
+                id="startLocation"
+                type="text"
+                [value]="formData().startLocation"
+                (input)="handleInput('startLocation', $event)"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="endLocation">End Location</label>
+              <input
+                id="endLocation"
+                type="text"
+                [value]="formData().endLocation"
+                (input)="handleInput('endLocation', $event)"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="distance">Distance (km)</label>
+            <input
+              id="distance"
+              type="text"
+              [value]="formData().distance"
+              (input)="handleInput('distance', $event)"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="collectorId">Collector ID</label>
+              <input
+                id="collectorId"
+                type="number"
+                [value]="formData().collectorId"
+                (input)="handleInput('collectorId', $event)"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="vehicleId">Vehicle ID</label>
+              <input
+                id="vehicleId"
+                type="number"
+                [value]="formData().vehicleId"
+                (input)="handleInput('vehicleId', $event)"
+                required
+              />
+            </div>
+          </div>
+
+          <h3>Grower Locations</h3>
+
+          <!-- Manually render grower locations up to 5 -->
+          <div class="grower-list">
+            <div class="grower-item" [hidden]="!getGrowerLocation(0)">
+              <div class="location-info">
+                <strong>Lat:</strong> {{ getGrowerLocation(0)?.latitude }},
+                <strong>Lng:</strong> {{ getGrowerLocation(0)?.longitude }}
+              </div>
+              <input
+                type="text"
+                [value]="getGrowerLocation(0)?.description"
+                (input)="updateGrowerDescription(getGrowerLocation(0)?.gId, $event)"
+                placeholder="Location description"
+              />
+            </div>
+
+            <div class="grower-item" [hidden]="!getGrowerLocation(1)">
+              <div class="location-info">
+                <strong>Lat:</strong> {{ getGrowerLocation(1)?.latitude }},
+                <strong>Lng:</strong> {{ getGrowerLocation(1)?.longitude }}
+              </div>
+              <input
+                type="text"
+                [value]="getGrowerLocation(1)?.description"
+                (input)="updateGrowerDescription(getGrowerLocation(1)?.gId, $event)"
+                placeholder="Location description"
+              />
+            </div>
+
+            <div class="grower-item" [hidden]="!getGrowerLocation(2)">
+              <div class="location-info">
+                <strong>Lat:</strong> {{ getGrowerLocation(2)?.latitude }},
+                <strong>Lng:</strong> {{ getGrowerLocation(2)?.longitude }}
+              </div>
+              <input
+                type="text"
+                [value]="getGrowerLocation(2)?.description"
+                (input)="updateGrowerDescription(getGrowerLocation(2)?.gId, $event)"
+                placeholder="Location description"
+              />
+            </div>
+
+            <div class="grower-item" [hidden]="!getGrowerLocation(3)">
+              <div class="location-info">
+                <strong>Lat:</strong> {{ getGrowerLocation(3)?.latitude }},
+                <strong>Lng:</strong> {{ getGrowerLocation(3)?.longitude }}
+              </div>
+              <input
+                type="text"
+                [value]="getGrowerLocation(3)?.description"
+                (input)="updateGrowerDescription(getGrowerLocation(3)?.gId, $event)"
+                placeholder="Location description"
+              />
+            </div>
+
+            <div class="grower-item" [hidden]="!getGrowerLocation(4)">
+              <div class="location-info">
+                <strong>Lat:</strong> {{ getGrowerLocation(4)?.latitude }},
+                <strong>Lng:</strong> {{ getGrowerLocation(4)?.longitude }}
+              </div>
+              <input
+                type="text"
+                [value]="getGrowerLocation(4)?.description"
+                (input)="updateGrowerDescription(getGrowerLocation(4)?.gId, $event)"
+                placeholder="Location description"
+              />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
     </div>
-  }
+  </div>
+</div>

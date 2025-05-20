@@ -118,11 +118,10 @@ export class RtReviewComponent implements OnInit {
 
   //edit logic begin
   onEdit(route: Rview): void {
-    this.routeBeingEdited.set(route);
-    this.isEditModalOpen.set(true);
-  };
+  this.routeBeingEdited.set(route);
+  this.isEditModalOpen.set(true);
+}
 
-  // In your parent component
 closeEditModal(): void {
   this.isEditModalOpen.set(false);
   this.routeBeingEdited.set(null);

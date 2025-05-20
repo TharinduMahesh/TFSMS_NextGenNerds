@@ -9,14 +9,24 @@ namespace TfactoryMng.Data
 
         public DbSet<RtList> RtLists { get; set; }
         public DbSet<GrowerLocation> GrowerLocations { get; set; }
+        public DbSet<YieldList> YieldLists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<RtList>(entity =>
             {
                 entity.HasKey(e => e.rId);
                 entity.Property(e => e.rName).IsRequired().HasMaxLength(100);
                 entity.HasIndex(e => e.rName).IsUnique();
+            });
+
+            modelBuilder.Entity<YieldList>(entity =>
+            {
+                entity.HasOne(y => y.RtList)
+                    .WithMany()
+                    .HasForeignKey(y => y.rId)  // Points to RtList.rId
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<GrowerLocation>(entity =>
@@ -29,6 +39,7 @@ namespace TfactoryMng.Data
                     .HasForeignKey(g => g.RtListId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
         }
     }
 }

@@ -8,11 +8,15 @@ import { Rview, GrowerLocation } from '../../../models/rview.model';
   styleUrls: ['./r-edit.component.scss']
 })
 export class RtEditComponent {
-  @Input() set route(value: Rview) {
+  private isOpen = signal(false);
+
+  @Input() set route(value: Rview | null) {
     if (value) {
-      this.formModel.set({...value});
+      this.formModel.set({ ...value });
+      this.open();
     }
   }
+
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<Rview>();
 
@@ -29,6 +33,19 @@ export class RtEditComponent {
 
   formData = this.formModel.asReadonly();
 
+  get modalVisible() {
+    return this.isOpen();
+  }
+
+  open() {
+    this.isOpen.set(true);
+  }
+
+  closeModal() {
+    this.isOpen.set(false);
+    this.close.emit();
+  }
+
   handleInput(field: keyof Rview, event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.formModel.update(model => ({
@@ -36,11 +53,11 @@ export class RtEditComponent {
       [field]: field === 'collectorId' || field === 'vehicleId' ? Number(value) : value
     }));
   }
-  
+
   updateGrowerDescription(gId: number | undefined, event: Event): void {
     const newDescription = (event.target as HTMLInputElement).value;
     if (gId === undefined) return;
-  
+
     this.formModel.update(model => ({
       ...model,
       growerLocations: model.growerLocations?.map(loc =>
@@ -56,20 +73,27 @@ export class RtEditComponent {
       console.error('Cannot update route without ID');
       return;
     }
-    
+
     const payload: Rview = {
       ...formData,
       growerLocations: formData.growerLocations.map(loc => ({
         ...loc,
-        RtListId: formData.rId  
+        RtListId: formData.rId
       }))
     };
-    
+
     this.save.emit(payload);
+    this.closeModal();
+    
   }
 
-  // In r-edit.component.ts
-onCancel(): void {
-  this.close.emit();  // Make sure this emits the close event
-}
+  onCancel(): void {
+    this.closeModal();
+  }
+
+  // Helper to get grower location by index safely
+  getGrowerLocation(index: number): GrowerLocation | null {
+    const locations = this.formModel().growerLocations;
+    return locations && index < locations.length ? locations[index] : null;
+  }
 }

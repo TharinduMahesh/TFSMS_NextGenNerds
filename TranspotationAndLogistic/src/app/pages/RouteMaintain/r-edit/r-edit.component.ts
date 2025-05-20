@@ -25,7 +25,7 @@ export class RtEditComponent {
     rName: '',
     startLocation: '',
     endLocation: '',
-    distance: '',
+    distance:0,
     collectorId: 0,
     vehicleId: 0,
     growerLocations: []
@@ -47,12 +47,19 @@ export class RtEditComponent {
   }
 
   handleInput(field: keyof Rview, event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.formModel.update(model => ({
-      ...model,
-      [field]: field === 'collectorId' || field === 'vehicleId' ? Number(value) : value
-    }));
+  const input = event.target as HTMLInputElement;
+  let value: string | number = input.value;
+
+  if (field === 'collectorId' || field === 'vehicleId') {
+    value = Number(value);
   }
+
+  this.formModel.update(model => ({
+    ...model,
+    [field]: value
+  }));
+}
+
 
   updateGrowerDescription(gId: number | undefined, event: Event): void {
     const newDescription = (event.target as HTMLInputElement).value;
@@ -84,6 +91,8 @@ export class RtEditComponent {
 
     this.save.emit(payload);
     this.closeModal();
+
+    
     
   }
 

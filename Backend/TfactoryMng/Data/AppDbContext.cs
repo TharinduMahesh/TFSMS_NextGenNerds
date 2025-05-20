@@ -25,7 +25,7 @@ namespace TfactoryMng.Data
             {
                 entity.HasOne(y => y.RtList)
                     .WithMany()
-                    .HasForeignKey(y => y.rId)  // Points to RtList.rId
+                    .HasForeignKey(y => y.rId) 
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

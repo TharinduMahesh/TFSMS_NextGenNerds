@@ -5,7 +5,7 @@
 
     <select [value]="selectedFilter()" (change)="selectedFilter.set($any($event.target).value)">
       <option value="all">All Routes</option>
-      <option value="short">Short Distance (<20km)< /option>
+      <option value="short">Short Distance</option>
       <option value="medium">Medium Distance (20-50km)</option>
       <option value="long">Long Distance (>50km)</option>
     </select>
@@ -52,7 +52,7 @@
           <td>{{ route.collectorId }}</td>
           <td>{{ route.vehicleId }}</td>
           <td>
-            
+
             <button class="edit-btn" (click)="onEdit(route)" title="Edit Route">
               Edit
             </button>
@@ -79,7 +79,6 @@
   </app-r-view>
   }
 
-  <!-- Edit Route Component -->
   <!-- Edit Route Component -->
   @if (isEditModalOpen() && routeBeingEdited()) {
   <app-r-edit [route]="routeBeingEdited()!" (close)="closeEditModal()" (save)="onSaveEdit($event)">

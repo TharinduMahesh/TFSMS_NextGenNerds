@@ -12,7 +12,7 @@ export interface Rview {
   rName: string;
   startLocation: string;
   endLocation: string;
-  distance: string;
+  distance: number;
   collectorId?: number;  
   vehicleId?: number;   
   growerLocations: GrowerLocation[];

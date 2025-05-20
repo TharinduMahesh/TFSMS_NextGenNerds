@@ -11,9 +11,9 @@ import { RtEditComponent } from '../r-edit/r-edit.component';
 @Component({
   selector: 'app-rview',
   standalone: true,
-  templateUrl: './r-review.component.html', 
+  templateUrl: './r-review.component.html',
   styleUrls: ['./r-review.component.scss'],
-  imports: [CommonModule, FormsModule, HttpClientModule, RtViewComponent,RtEditComponent]
+  imports: [CommonModule, FormsModule, HttpClientModule, RtViewComponent, RtEditComponent]
 })
 export class RtReviewComponent implements OnInit {
   searchTerm = signal('');
@@ -22,24 +22,35 @@ export class RtReviewComponent implements OnInit {
   isLoading = signal(false);
   error = signal<string | null>(null);
 
-    isModalOpen = signal(false);   //signals for view
-    routeToView = signal<Rview | null>(null);
-  
-    routeBeingEdited = signal<Rview | null>(null);
-    isEditModalOpen = signal(false);
-    formModel = signal<Rview | null>(null);
-  
+  selectedRoute = signal<Rview | null>(null);
+
+  //signals for view
+  isModalOpen = signal(false);   
+  routeToView = signal<Rview | null>(null);
+
+  //signal for edit
+  routeBeingEdited = signal<Rview | null>(null);
+  isEditModalOpen = signal(false);
+  formModel = signal<Rview | null>(null);
+
+
+  constructor(
+    private router: Router,
+    private rService: RService
+  ) { }
+
 
   filteredRoutes = computed(() => {
     return this.routes().filter(route => {
       const searchTerm = this.searchTerm().toLowerCase();
       const matchesSearch =
+        route.rName.toLowerCase().includes(searchTerm) ||
         route.rId?.toString().includes(searchTerm) ||
-        route.startLocation?.toLowerCase().includes(searchTerm) ||
-        route.endLocation?.toLowerCase().includes(searchTerm) ||
+        // route.startLocation?.toLowerCase().includes(searchTerm) ||
+        // route.endLocation?.toLowerCase().includes(searchTerm) ||
         searchTerm === '';
 
-      const distanceValue = this.parseDistance(route.distance);
+      const distanceValue = route.distance;
       let matchesFilter = true;
 
       switch (this.selectedFilter()) {
@@ -52,22 +63,12 @@ export class RtReviewComponent implements OnInit {
     });
   });
 
-  constructor(
-    private router: Router,
-    private rService: RService
-  ) {}
-
+  
+  //load the routes
   ngOnInit(): void {
     this.loadRoutes();
   }
 
-  private parseDistance(distance: string | number | undefined): number {
-    if (!distance)
-       return 0;
-    if (typeof distance === 'number') 
-      return distance;
-    return parseFloat(distance.toString().replace(/[^\d.-]/g, ''));
-  }
 
   loadRoutes(): void {
     this.isLoading.set(true);
@@ -86,8 +87,8 @@ export class RtReviewComponent implements OnInit {
   }
 
 
-  selectedRoute = signal<Rview | null>(null);
-  
+
+
   onSelectRoute(route: Rview): void {
     this.selectedRoute.set(route);
   }
@@ -100,15 +101,12 @@ export class RtReviewComponent implements OnInit {
     this.router.navigate(['/r-create']);
   }
 
-   //view logic begin
-   onView(route: Rview): void {
-    this.routeToView.set(route);         // sets the selected route
-    this.isModalOpen.set(true);          // opens modal
+  //view logic begin
+  onView(route: Rview): void {
+    this.routeToView.set(route);        
+    this.isModalOpen.set(true);        
     console.log('Viewing route:', route.rId);
   }
-  
-  
-  
 
   closeModal(): void {
     this.isModalOpen.set(false);
@@ -116,27 +114,31 @@ export class RtReviewComponent implements OnInit {
   }
   //view logic end
 
+
+  
   //edit logic begin
   onEdit(route: Rview): void {
-  this.routeBeingEdited.set(route);
-  this.isEditModalOpen.set(true);
-}
+    this.routeBeingEdited.set(route);
+    this.isEditModalOpen.set(true);
+  }
 
-closeEditModal(): void {
-  this.isEditModalOpen.set(false);
-  this.routeBeingEdited.set(null);
-}
+  closeEditModal(): void {
+    this.isEditModalOpen.set(false);
+    this.routeBeingEdited.set(null);
+  }
+
+
 
   onSaveEdit(updatedRoute: Rview): void {
     if (!updatedRoute.rId) {
       console.error('Cannot update route without ID');
       return;
     }
-  
+
     this.isLoading.set(true);
     this.rService.update(updatedRoute.rId, updatedRoute).subscribe({
       next: () => {
-        this.loadRoutes(); // Refresh the list
+        this.loadRoutes(); 
         this.closeEditModal();
         this.isLoading.set(false);
       },
@@ -146,15 +148,17 @@ closeEditModal(): void {
       }
     });
   }
-  
+
+
+    //delete logic for the route
 
   onDelete(id?: number): void {
     if (id && confirm('Are you sure you want to delete this route?')) {
       this.isLoading.set(true);
       this.rService.delete(id).subscribe({
         next: () => {
-          this.loadRoutes(); // Refresh after deletion
-          this.selectedRoute.set(null); // Clear selection
+          this.loadRoutes(); 
+          this.selectedRoute.set(null); 
         },
         error: (err: Error) => {
           this.error.set(err.message || 'Failed to delete route');

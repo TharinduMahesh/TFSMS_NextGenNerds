@@ -18,25 +18,28 @@ export class RtCreateComponent implements OnInit {
     rName: '',
     startLocation: '',
     endLocation: '',
-    distance: '0',
-    collectorId: 0,   
-    vehicleId: 0,     
+    distance: 0,
+    collectorId: 0,
+    vehicleId: 0,
     growerLocations: []
   });
+
+
+  successMessage = signal<string | null>(null);
 
   waypoints: { location: string }[] = [];
 
   constructor(
     private router: Router,
     private rService: RService
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   handleInput(field: keyof Rview, event: Event) {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-  
+
     this.formData.update(data => ({
       ...data,
       [field]: (field === 'collectorId' || field === 'vehicleId') ? Number(value) : value
@@ -45,9 +48,9 @@ export class RtCreateComponent implements OnInit {
 
   addWaypoint(location: string) {
     if (!location) return;
-  
+
     this.waypoints.push({ location });
-  
+
     this.formData.update(data => ({
       ...data,
       growerLocations: [
@@ -59,7 +62,7 @@ export class RtCreateComponent implements OnInit {
           RtListId: data.rId
         }
       ]
-    })); 
+    }));
   }
 
   removeWaypoint(index: number) {
@@ -71,17 +74,29 @@ export class RtCreateComponent implements OnInit {
     });
   }
 
+
+  showSuccessMessage(message: string) {
+    this.successMessage.set(message);
+
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+      this.successMessage.set(null);
+    }, 3000);
+  }
+
+
   onSubmit(event: Event) {
     event.preventDefault();
     const formValue = this.formData();
-    
+
     // Ensure numeric IDs are numbers
     formValue.collectorId = Number(formValue.collectorId);
     formValue.vehicleId = Number(formValue.vehicleId);
-    
+
     this.rService.create(formValue).subscribe({
       next: (res) => {
         console.log('Route created successfully:', res);
+        this.showSuccessMessage('Form submitted successfully!');
         this.router.navigate(['/r-review']);
       },
       error: (err) => {
@@ -89,6 +104,7 @@ export class RtCreateComponent implements OnInit {
         alert('Error creating route: ' + err.message);
       }
     });
+    
   }
 
   onCancel() {

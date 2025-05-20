@@ -147,3 +147,73 @@
     font-size: 18px;
     font-weight: 600;
   }
+
+
+  /* responsiveness */
+  @media (max-width: 1024px) {
+  .sidebar {
+    width: 180px;
+    padding: 15px;
+  }
+  .user-info img {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+    padding: 10px 5px;
+  }
+  .sidebar .logo-title,
+  .sidebar .user-info,
+  .sidebar ul li a span,
+  .sidebar .dropdown .dropdown-toggle span,
+  .sidebar .logout-button span {
+    display: none !important;
+  }
+  .sidebar ul li a,
+  .sidebar .dropdown .dropdown-toggle {
+    justify-content: center;
+    padding: 12px 0;
+  }
+  .sidebar ul li a i,
+  .sidebar .dropdown .dropdown-toggle i {
+    margin-right: 0;
+    font-size: 1.4rem;
+  }
+  .dropdown-menu {
+    left: 60px;
+    min-width: 120px;
+  }
+  .logout-button {
+    margin-top: 30px;
+    padding: 8px 0;
+  }
+}
+
+/* Hamburger toggle button styles (optional) */
+@media (max-width: 768px) {
+  .sidebar {
+    left: -60px;
+  }
+  .sidebar.active {
+    left: 0;
+  }
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 200;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}

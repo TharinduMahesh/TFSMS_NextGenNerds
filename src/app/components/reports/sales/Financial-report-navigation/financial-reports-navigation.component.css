@@ -1,0 +1,79 @@
+.financial-reports-nav {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 40px 24px 24px 24px;
+  background: #f9fafb;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: solid;
+}
+
+.nav-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #22223b;
+  margin-bottom: 36px;
+  letter-spacing: -0.5px;
+}
+
+.nav-cards {
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px 32px;
+  min-width: 260px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+
+.nav-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+  transform: translateY(-3px) scale(1.03);
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  background: #e3e8f7;
+  color: #4361ee;
+}
+
+.nav-icon-blue { background: #e3e8f7; color: #4361ee; }
+.nav-icon-green { background: #e6f4ea; color: #3bb273; }
+.nav-icon-yellow { background: #fff8e1; color: #f7b731; }
+.nav-icon-purple { background: #f3e8fd; color: #a259d9; }
+
+.nav-card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #22223b;
+  margin-bottom: 2px;
+}
+
+.nav-card-desc {
+  font-size: 1.0rem;
+  color: #6c757d;
+  opacity: 0.88;
+}
+
+@media (max-width: 900px) {
+  .nav-cards { flex-direction: column; gap: 18px; }
+  .nav-card { width: 100%; min-width: unset; justify-content: flex-start; }
+}

@@ -1,4 +1,8 @@
-<div class="sidebar">
+<button class="sidebar-toggle" (click)="sidebarOpen = !sidebarOpen">
+  <i class="fas fa-bars"></i>
+</button>
+
+<div class="sidebar" [class.active]="sidebarOpen">
     <!-- Logo and Title -->
     <div class="logo-title">
       <div class="title-indicator"></div>

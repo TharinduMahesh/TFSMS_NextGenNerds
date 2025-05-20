@@ -25,13 +25,17 @@ export class SidebarComponent {
     '/green-leaf-collection': 'Green Leaf Collection',
     '/process-management': 'Process Management',
     '/payment': 'Payment',
-    '/reports': 'Reports',
-    '/reports/dashboard': 'Report Dashboard',
-    '/reports/tea-packing-and-ledger': 'Tea Packing and Ledger',
-    '/reports/claims-and-returns': 'Claims and Returns',
+    '/report': 'Reports',
+    '/report/dashboard': 'Report Dashboard',
+    '/report/tea-packing-and-ledger': 'Tea Packing and Ledger',
+    '/report/claims-and-returns': 'Claims and Returns',
     '/report/sales': 'Sales Reports',
     '/report/monthly-nsa': 'Monthly NSA'
   };
+
+  //Responsivity
+  sidebarOpen = false;
+
 
   constructor(
     private router: Router,

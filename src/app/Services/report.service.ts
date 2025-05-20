@@ -39,7 +39,7 @@ export class ReportService {
   }
   
   updateReport(report: Report): Observable<Report> {
-    const url = `${this.apiUrl}/${report.dispatchID}`;
+    const url = `${this.apiUrl}/${report.id}`;
     return this.http.put<Report>(url, report, { 
       headers: this.getHeaders()
     });

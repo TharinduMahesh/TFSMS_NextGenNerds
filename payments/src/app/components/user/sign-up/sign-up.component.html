@@ -82,7 +82,6 @@
               <option value="" disabled>Enter company role...</option>
               <option value="admin">Admin</option>
               <option value="manager">Manager</option>
-              <option value="employee">Employee</option>
             </select>
             <div class="error" *ngIf="hasDisplayError('role') && form.get('role')?.hasError('required')">
               Role is required

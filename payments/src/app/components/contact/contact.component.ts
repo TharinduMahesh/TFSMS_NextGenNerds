@@ -71,6 +71,10 @@ export class ContactComponent implements OnInit {
       }, 3000)
     }, 1500)
 
+   ondisable(){
+    this.isSubmitting = false
+   }
+
     // In a real application, you would send the form data to your backend:
     /*
     this.http.post('your-api-endpoint/contact', this.contactForm).subscribe({

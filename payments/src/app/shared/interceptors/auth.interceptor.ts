@@ -19,7 +19,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             authService.deletetoken();
             setTimeout(() => {
               alert('Session expired. Please login again.');
-            }, 1000);
+            }, 7000);
             router.navigate(['/sign-in']);
           } else if (err.status === 403) {
             alert('Oops! You do not have access to this resource.');

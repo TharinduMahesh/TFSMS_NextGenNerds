@@ -1,10 +1,10 @@
-import { Component, type OnInit } from "@angular/core"
+import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule } from "@angular/forms"
 import { RouterModule } from "@angular/router"
 import { HeaderComponent } from "../../header/header.component"
 import { FooterComponent } from "../../footer/footer.component"
-import {  AbstractControl, FormBuilder, type ValidatorFn, Validators } from "@angular/forms"
+import {  AbstractControl,  FormBuilder,  ValidatorFn, Validators } from "@angular/forms"
 import  { AuthService } from "../../../shared/services/auth.service"
 import  { Router } from "@angular/router"
 import { FirstKeyPipe } from "../../../shared/pipes/first-key-pipe.pipe"
@@ -32,6 +32,10 @@ export class SignUpComponent implements OnInit {
   menuOpen = false
   isLoading = false
 
+  // Add alert message properties
+  alertMessage = ""
+  showAlert = false
+  alertType = "" // 'success', 'error', or 'warning'
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): null => {
     const password = control.get("password")
@@ -72,31 +76,88 @@ export class SignUpComponent implements OnInit {
     if (typeof window !== "undefined" && this.authService.isLoggedIn()) {
       this.router.navigateByUrl("/dashboard")
     }
+
+    // Check if there's a success message in localStorage from a previous registration
+    if (typeof window !== "undefined") {
+      const successMsg = localStorage.getItem("signupSuccess")
+      if (successMsg) {
+        this.showAlertMessage(successMsg, "success")
+        localStorage.removeItem("signupSuccess")
+      }
+    }
+  }
+
+  // Add method to show alert messages
+  showAlertMessage(message: string, type: string) {
+    this.alertMessage = message
+    this.alertType = type
+    this.showAlert = true
+
+    // Auto-hide the alert after 5 seconds
+    setTimeout(() => {
+      this.showAlert = false
+    }, 5000)
   }
 
   onSubmit() {
     this.isSubmitted = true
+    this.isLoading = true
+
     if (this.form.valid) {
       this.authService.createUser(this.form.value).subscribe({
         next: (response: any) => {
+          this.isLoading = false
+
           if (response.succeeded) {
             console.log("User registered successfully", response)
             this.form.reset()
             this.isSubmitted = false
 
+            // Show success message
+            this.showAlertMessage("Your account has been created successfully. Please sign in.", "success")
+
             if (typeof window !== "undefined") {
               localStorage.setItem("signupSuccess", "Your account has been created successfully. Please sign in.")
             }
 
-            // Redirect to sign-in page
-            this.router.navigateByUrl("/sign-in")
+            // Redirect to sign-in page after a short delay
+            setTimeout(() => {
+              this.router.navigateByUrl("/sign-in")
+            }, 2000)
+          } else {
+            // Handle different error cases from the API
+            if (response.error === "existing_user") {
+              this.showAlertMessage(
+                "A user with this email already exists. Please use a different email or sign in.",
+                "warning",
+              )
+            } else {
+              this.showAlertMessage("Registration failed: " + (response.message || "Unknown error"), "error")
+            }
           }
-          console.log(response)
         },
         error: (error) => {
+          this.isLoading = false
           console.error("Error registering user", error)
+
+          // Show error message
+          if (error.status === 400) {
+            // HTTP 409 Conflict - typically used for duplicate resource
+            this.showAlertMessage(
+              "A user with this email already exists. Please use a different email or sign in.",
+              "warning",
+            )
+          } else {
+            this.showAlertMessage(
+              "Registration failed: " + (error.message || "Server error. Please try again later."),
+              "error",
+            )
+          }
         },
       })
+    } else {
+      this.isLoading = false
+      this.showAlertMessage("Please fill in all required fields correctly.", "error")
     }
   }
 
@@ -108,5 +169,10 @@ export class SignUpComponent implements OnInit {
   toggleMenu(): void {
     console.log("Hamburger menu clicked!")
     this.menuOpen = !this.menuOpen
+  }
+
+  // Method to close the alert
+  closeAlert() {
+    this.showAlert = false
   }
 }

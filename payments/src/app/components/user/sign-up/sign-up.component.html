@@ -9,6 +9,14 @@
     </div>
     <div class="right-content">
       <div class="auth-form">
+        <!-- Alert Message -->
+        <div *ngIf="showAlert" class="alert" [ngClass]="{'alert-success': alertType === 'success', 'alert-error': alertType === 'error', 'alert-warning': alertType === 'warning'}">
+          <div class="alert-content">
+            <span>{{ alertMessage }}</span>
+          </div>
+          <button class="alert-close" (click)="closeAlert()">×</button>
+        </div>
+
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="form-row">
             <div class="form-group">
@@ -88,7 +96,10 @@
             </div>
           </div>
 
-          <button type="submit" class="sign-up-btn">SIGN UP</button>
+          <button type="submit" class="sign-up-btn" [disabled]="isLoading">
+            <span *ngIf="!isLoading">SIGN UP</span>
+            <span *ngIf="isLoading">SIGNING UP...</span>
+          </button>
         </form>
 
         <div class="divider">

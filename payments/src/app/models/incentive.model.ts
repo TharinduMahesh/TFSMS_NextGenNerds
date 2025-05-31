@@ -4,11 +4,6 @@ export interface Incentive {
   QualityBonus: number
   LoyaltyBonus: number
   TotalAmount: number
-  Month: string // Format: YYYY-MM
-  Notes?: string
-  CreatedBy?: string
-  CreatedDate: Date
 
   // Optional navigation properties
-  Supplier?: any
 }

@@ -216,51 +216,51 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     })
   }
 
-  filterPayments(): void {
-    let filtered = [...this.payments]
+  // filterPayments(): void {
+  //   let filtered = [...this.payments]
 
-    // Filter by supplier
-    if (this.selectedSupplier) {
-      filtered = filtered.filter((payment) => payment.SupplierId.toString() === this.selectedSupplier)
-    }
+  //   // Filter by supplier
+  //   if (this.selectedSupplier) {
+  //     filtered = filtered.filter((payment) => payment.SupplierId.toString() === this.selectedSupplier)
+  //   }
 
-    // Filter by date range
-    const today = new Date()
-    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  //   // Filter by date range
+  //   const today = new Date()
+  //   const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 
-    if (this.selectedDateRange === "today") {
-      filtered = filtered.filter((payment) => {
-        const paymentDate = new Date(payment.PaymentDate)
-        return paymentDate >= startOfToday
-      })
-    } else if (this.selectedDateRange === "week") {
-      const startOfWeek = new Date(today)
-      startOfWeek.setDate(today.getDate() - today.getDay())
+  //   if (this.selectedDateRange === "today") {
+  //     filtered = filtered.filter((payment) => {
+  //       const paymentDate = new Date(payment.PaymentDate)
+  //       return paymentDate >= startOfToday
+  //     })
+  //   } else if (this.selectedDateRange === "week") {
+  //     const startOfWeek = new Date(today)
+  //     startOfWeek.setDate(today.getDate() - today.getDay())
 
-      filtered = filtered.filter((payment) => {
-        const paymentDate = new Date(payment.PaymentDate)
-        return paymentDate >= startOfWeek
-      })
-    } else if (this.selectedDateRange === "month") {
-      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+  //     filtered = filtered.filter((payment) => {
+  //       const paymentDate = new Date(payment.PaymentDate)
+  //       return paymentDate >= startOfWeek
+  //     })
+  //   } else if (this.selectedDateRange === "month") {
+  //     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
 
-      filtered = filtered.filter((payment) => {
-        const paymentDate = new Date(payment.PaymentDate)
-        return paymentDate >= startOfMonth
-      })
-    } else if (this.selectedDateRange === "custom" && this.customStartDate && this.customEndDate) {
-      const startDate = new Date(this.customStartDate)
-      const endDate = new Date(this.customEndDate)
-      endDate.setHours(23, 59, 59) // Include the entire end date
+  //     filtered = filtered.filter((payment) => {
+  //       const paymentDate = new Date(payment.PaymentDate)
+  //       return paymentDate >= startOfMonth
+  //     })
+  //   } else if (this.selectedDateRange === "custom" && this.customStartDate && this.customEndDate) {
+  //     const startDate = new Date(this.customStartDate)
+  //     const endDate = new Date(this.customEndDate)
+  //     endDate.setHours(23, 59, 59) // Include the entire end date
 
-      filtered = filtered.filter((payment) => {
-        const paymentDate = new Date(payment.PaymentDate)
-        return paymentDate >= startDate && paymentDate <= endDate
-      })
-    }
+  //     filtered = filtered.filter((payment) => {
+  //       const paymentDate = new Date(payment.PaymentDate)
+  //       return paymentDate >= startDate && paymentDate <= endDate
+  //     })
+  //   }
 
-    this.filteredPayments = filtered
-  }
+  //   this.filteredPayments = filtered
+  // }
 
   toggleCalculator(): void {
     this.showCalculator = !this.showCalculator

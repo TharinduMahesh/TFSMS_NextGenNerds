@@ -16,10 +16,10 @@
       <h2>LKR {{ totalAmount | number }}</h2>
       <p>Total Amount Paid</p>
     </div>
-    <div class="card light-green">
+    <!-- <div class="card light-green">
       <h2>{{ filteredPayments.length }}</h2>
       <p>Filtered Payments</p>
-    </div>
+    </div> -->
   </div>
 
   <div class="payment-methods">
@@ -40,7 +40,7 @@
   <div class="payment-container">
     <h3>Supplier Payments</h3>
     
-    <div class="filters">
+    <!-- <div class="filters">
       <div class="filter-group">
         <label>Supplier:</label>
         <select [(ngModel)]="selectedSupplier" (change)="filterPayments()">
@@ -75,11 +75,10 @@
       
       <div class="filter-group">
         <div class="export-buttons">
-          <button class="export-btn" (click)="exportPayments('CSV')">Export CSV</button>
           <button class="export-btn" (click)="exportPayments('EXCEL')">Export Excel</button>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="manual-entry">
       <h4>Create New Payment</h4>
@@ -176,10 +175,7 @@
             </div>
           </div>
           
-          <div class="form-group full-width">
-            <label>Notes:</label>
-            <textarea formControlName="notes" placeholder="Enter notes (optional)"></textarea>
-          </div>
+          
           
           <div class="form-group">
             <button type="submit" class="create-btn" [disabled]="loading">

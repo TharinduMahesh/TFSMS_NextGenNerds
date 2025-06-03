@@ -223,11 +223,7 @@
           <td>{{ payment.PaymentMethod || payment.PaymentMethod }}</td>
           <td>{{ (payment.PaymentDate || payment.PaymentDate) | date:'shortDate' }}</td>
           <td>
-            <div class="action-buttons">
-              <button class="print-btn" title="Print Receipt" (click)="generateReceipt(payment)">
-                <i class="fa fa-print"></i>
-              </button>
-            </div>
+            
           </td>
         </tr>
       </ng-container>

@@ -74,10 +74,7 @@ export class SupplierService {
     return {
       SupplierId: data.SupplierId,
       Name: data.Name,
-      area: data.Area,
       contact: data.Contact,
-      joinDate: data.JoinDate,
-      isActive: data.IsActive
       // Add any other properties needed
     };
   }

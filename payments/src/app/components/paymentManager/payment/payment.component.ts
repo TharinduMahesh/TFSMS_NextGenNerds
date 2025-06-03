@@ -5,7 +5,6 @@ import  { Payment } from "../../../models/payment.model"
 import  { Supplier } from "../../../models/supplier.model"
 import  { PaymentService } from "../../../shared/services/payment.service"
 import  { SupplierService } from "../../../shared/services/supplier.service"
-import  { ReceiptService } from "../../../shared/services/reciept.service"
 import { PaymentCalculatorComponent } from "../payment-calculater/payment-calculater.component"
 import  { PaymentCalculationResult } from "../../../models/payment-calculation.model"
 
@@ -42,7 +41,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   constructor(
     private paymentService: PaymentService,
     private supplierService: SupplierService,
-    private receiptService: ReceiptService,
     private fb: FormBuilder,
   ) {
     this.paymentForm = this.fb.group({
@@ -309,10 +307,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       NetAmount: formValues.netAmount,
       PaymentMethod: formValues.paymentMethod,
       PaymentDate: new Date(formValues.paymentDate),
-      CreatedBy: "System", // This would come from auth service in a real app
-      CreatedDate: new Date(),
-      Supplier: null, // Will be populated by backend
-      Receipts: [],
       // PaymentHistories: []
     }
 
@@ -330,7 +324,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
         this.loading = false
 
         // Generate receipt
-        this.generateReceipt(result)
       },
       error: (err) => {
         console.error("Error creating payment:", err)
@@ -340,10 +333,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     })
   }
 
-  generateReceipt(payment: Payment): void {
-    this.receiptService.printReceipt(payment)
-  }
-
+  
   exportPayments(format: string): void {
     let startDate = ""
     let endDate = ""

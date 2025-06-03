@@ -167,8 +167,7 @@ export class IncentiveComponent implements OnInit {
     
     this.filteredIncentives = this.incentives.filter(incentive => {
       const supplierMatch = !this.selectedSupplier || incentive.SupplierId.toString() === this.selectedSupplier;
-      const monthMatch = !this.selectedMonth || (incentive.Month && incentive.Month.includes(this.selectedMonth));
-      return supplierMatch && monthMatch;
+      return supplierMatch;
     });
   }
 
@@ -185,12 +184,9 @@ export class IncentiveComponent implements OnInit {
     const incentive: Incentive = {
       IncentiveId: 0,
       SupplierId: formValues.SupplierId,
-      Month: formValues.month,
       QualityBonus: formValues.qualityBonus,
       LoyaltyBonus: formValues.loyaltyBonus,
       TotalAmount: formValues.qualityBonus + formValues.loyaltyBonus,
-      Notes: formValues.notes,
-      CreatedDate: new Date()
     };
 
     this.incentiveService.createIncentive(incentive).subscribe({

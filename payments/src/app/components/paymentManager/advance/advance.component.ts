@@ -199,11 +199,8 @@ export class AdvanceComponent implements OnInit {
       AdvanceType: formValues.AdvanceType,
       Purpose: formValues.Purpose,
       AdvanceAmount: formValues.AdvanceAmount,
-      IssueDate: new Date(formValues.IssueDate),
       RecoveredAmount: formValues.RecoveredAmount,
       BalanceAmount: balanceAmount,
-      RecoveryPercentage: formValues.RecoveryPercentage,
-      Status: balanceAmount > 0 ? "Active" : "Settled",
     }
 
     this.advanceService.createAdvance(advance).subscribe({

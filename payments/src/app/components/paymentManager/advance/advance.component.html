@@ -158,15 +158,8 @@
               <td>{{ advance.AdvanceType }}</td>
               <td>{{ advance.Purpose }}</td>
               <td>LKR {{ advance.AdvanceAmount | number }}</td>
-              <td>{{ advance.IssueDate | date:'shortDate' }}</td>
               <td>LKR {{ advance.RecoveredAmount | number }}</td>
               <td>LKR {{ advance.BalanceAmount | number }}</td>
-              <td>{{ advance.RecoveryPercentage }}%</td>
-              <td>
-                <span [ngClass]="{'status-active': advance.Status === 'Active', 'status-settled': advance.Status === 'Settled'}">
-                  {{ advance.Status }}
-                </span>
-              </td>
               <td>
                 <div class="action-buttons">
                   <button class="edit-btn" title="Edit Advance">

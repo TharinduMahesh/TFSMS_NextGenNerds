@@ -169,7 +169,7 @@
           <select id="SupplierId" formControlName="SupplierId" (change)="onSupplierChange()">
             <option value="">Select Supplier</option>
             <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
-              {{ supplier.SupplierId }} - {{ supplier.Name }} {{ supplier.area ? '(' + supplier.area + ')' : '' }}
+              {{ supplier.SupplierId }} - {{ supplier.Name }} 
             </option>
           </select>
           <div *ngIf="calculatorForm.get('SupplierId')?.touched && calculatorForm.get('SupplierId')?.invalid" class="error-message">

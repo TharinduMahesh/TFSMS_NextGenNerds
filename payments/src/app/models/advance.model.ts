@@ -9,12 +9,4 @@ export interface Advance {
   Purpose: string // Changed from description
   AdvanceType: string
   RecoveredAmount: number
-  RecoveryPercentage: number
-  Status: string
-  IssueDate: Date
-  CreatedBy?: string
-  CreatedDate?: Date
-
-  // Optional navigation properties
-  Supplier?: any
 }

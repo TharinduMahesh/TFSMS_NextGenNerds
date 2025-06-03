@@ -204,9 +204,7 @@
         <th>Deductions</th>
         <th>Incentives</th>
         <th>Net Amount</th>
-        <th>Method</th>
-        <th>Date</th>
-        <th>Actions</th>
+        
       </tr>
     </thead>
     <tbody>
@@ -221,7 +219,6 @@
           <td>LKR {{ (payment.IncentiveAddition || payment.IncentiveAddition || 0) | number }}</td>
           <td>LKR {{ (payment.NetAmount || payment.NetAmount) | number }}</td>
           <td>{{ payment.PaymentMethod || payment.PaymentMethod }}</td>
-          <td>{{ (payment.PaymentDate || payment.PaymentDate) | date:'shortDate' }}</td>
           <td>
             
           </td>

@@ -2,11 +2,9 @@
   <div *ngIf="error" class="alert alert-danger">
     {{ error }}
   </div>
-
   <div *ngIf="loading" class="loading-spinner">
     Loading...
   </div>
-
   <div class="summary-cards">
     <div class="card light-blue">
       <h2>{{ totalPayments }}</h2>
@@ -16,12 +14,7 @@
       <h2>LKR {{ totalAmount | number }}</h2>
       <p>Total Amount Paid</p>
     </div>
-    <!-- <div class="card light-green">
-      <h2>{{ filteredPayments.length }}</h2>
-      <p>Filtered Payments</p>
-    </div> -->
   </div>
-
   <div class="payment-methods">
     <div class="method-card">
       <h3>Cash</h3>
@@ -36,50 +29,9 @@
       <p>LKR {{ paymentsByCheque | number }}</p>
     </div>
   </div>
-
   <div class="payment-container">
     <h3>Supplier Payments</h3>
     
-    <!-- <div class="filters">
-      <div class="filter-group">
-        <label>Supplier:</label>
-        <select [(ngModel)]="selectedSupplier" (change)="filterPayments()">
-          <option value="">All Suppliers</option>
-          <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
-            {{ supplier.SupplierId }} - {{ supplier.Name }}
-          </option>
-        </select>
-      </div>
-      
-      <div class="filter-group">
-        <label>Date Range:</label>
-        <select [(ngModel)]="selectedDateRange" (change)="filterPayments()">
-          <option value="all">All Time</option>
-          <option value="today">Today</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="custom">Custom Range</option>
-        </select>
-      </div>
-      
-      <div *ngIf="selectedDateRange === 'custom'" class="custom-date-range">
-        <div class="date-input">
-          <label>From:</label>
-          <input type="date" [(ngModel)]="customStartDate" (change)="filterPayments()">
-        </div>
-        <div class="date-input">
-          <label>To:</label>
-          <input type="date" [(ngModel)]="customEndDate" (change)="filterPayments()">
-        </div>
-      </div>
-      
-      <div class="filter-group">
-        <div class="export-buttons">
-          <button class="export-btn" (click)="exportPayments('EXCEL')">Export Excel</button>
-        </div>
-      </div>
-    </div> -->
-
     <div class="manual-entry">
       <h4>Create New Payment</h4>
       
@@ -116,7 +68,7 @@
           
           <div class="form-group">
             <label>Green Leaf Weight (kg):</label>
-            <input type="number" formControlName="leafWeight" placeholder="Enter weight">
+            <input type="number" formControlName="leafWeight" placeholder="Auto-loaded from supplier">
             <div *ngIf="paymentForm.get('leafWeight')?.touched && paymentForm.get('leafWeight')?.invalid" class="error-message">
               Valid weight is required
             </div>
@@ -175,8 +127,6 @@
             </div>
           </div>
           
-          
-          
           <div class="form-group">
             <button type="submit" class="create-btn" [disabled]="loading">
               {{ loading ? 'Creating...' : 'Create Payment' }}
@@ -186,50 +136,43 @@
       </form>
     </div>
 
-    <!-- Add a debug section at the top of the table to help diagnose issues -->
-
-  
-  <table>
-    <thead>
-      <tr>
-        <th>Payment ID</th>
-        <th>Supplier ID</th>
-        <th>Leaf Weight</th>
-        <th>Rate</th>
-        <th>Gross Amount</th>
-        <th>Deductions</th>
-        <th>Incentives</th>
-        <th>Net Amount</th>
-        
-      </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngIf="filteredPayments && filteredPayments.length > 0; else noPayments">
-        <tr *ngFor="let payment of filteredPayments">
-          <td>{{ payment.PaymentId || payment.PaymentId }}</td>
-          <td>{{ payment.SupplierId || payment.SupplierId }}</td>
-          <td>{{ payment.LeafWeight || payment.LeafWeight }} kg</td>
-          <td>LKR {{ payment.Rate || payment.Rate }}</td>
-          <td>LKR {{ (payment.GrossAmount || payment.GrossAmount) | number }}</td>
-          <td>LKR {{ ((payment.AdvanceDeduction || payment.AdvanceDeduction || 0) + (payment.DebtDeduction || payment.DebtDeduction || 0)) | number }}</td>
-          <td>LKR {{ (payment.IncentiveAddition || payment.IncentiveAddition || 0) | number }}</td>
-          <td>LKR {{ (payment.NetAmount || payment.NetAmount) | number }}</td>
-          <td>{{ payment.PaymentMethod || payment.PaymentMethod }}</td>
-          <td>
-            
-          </td>
-        </tr>
-      </ng-container>
-      <ng-template #noPayments>
+    <table>
+      <thead>
         <tr>
-          <td colspan="11" class="no-data">
-            No payments found. 
-            <span *ngIf="error" class="error-text">Error: {{ error }}</span>
-          </td>
+          <th>Payment ID</th>
+          <th>Supplier ID</th>
+          <th>Leaf Weight</th>
+          <th>Rate</th>
+          <th>Gross Amount</th>
+          <th>Deductions</th>
+          <th>Incentives</th>
+          <th>Net Amount</th>
+          <th>Method</th>
         </tr>
-      </ng-template>
-    </tbody>
-  </table>
-</div>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="filteredPayments && filteredPayments.length > 0; else noPayments">
+          <tr *ngFor="let payment of filteredPayments">
+            <td>{{ payment.PaymentId }}</td>
+            <td>{{ payment.SupplierId }}</td>
+            <td>{{ payment.LeafWeight }} kg</td>
+            <td>LKR {{ payment.Rate }}</td>
+            <td>LKR {{ payment.GrossAmount | number }}</td>
+            <td>LKR {{ ((payment.AdvanceDeduction || 0) + (payment.DebtDeduction || 0)) | number }}</td>
+            <td>LKR {{ (payment.IncentiveAddition || 0) | number }}</td>
+            <td>LKR {{ payment.NetAmount | number }}</td>
+            <td>{{ payment.PaymentMethod }}</td>
+          </tr>
+        </ng-container>
+        <ng-template #noPayments>
+          <tr>
+            <td colspan="9" class="no-data">
+              No payments found. 
+              <span *ngIf="error" class="error-text">Error: {{ error }}</span>
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
   </div>
-
+</div>

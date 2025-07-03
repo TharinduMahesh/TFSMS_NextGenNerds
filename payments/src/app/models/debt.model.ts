@@ -7,9 +7,6 @@ export interface Debt {
   balanceAmount: number;
   deductionsMade: number;
   deductionPercentage: number; // Added this property
-  status: string;           // Added this property
-  issueDate: Date;
-  createdBy?: string;
   createdDate?: Date;
   
   // Optional navigation properties

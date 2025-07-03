@@ -155,14 +155,12 @@
               <td>{{ debt.debtType }}</td>
               <td>{{ debt.description }}</td>
               <td>LKR {{ debt.totalAmount | number }}</td>
-              <td>{{ debt.issueDate | date:'shortDate' }}</td>
               <td>LKR {{ debt.deductionsMade | number }}</td>
               <td>LKR {{ debt.balanceAmount | number }}</td>
               <td>{{ debt.deductionPercentage }}%</td>
+              <td>{{ debt.createdDate }}</td>
               <td>
-                <span [ngClass]="{'status-active': debt.status === 'Active', 'status-settled': debt.status === 'Settled'}">
-                  {{ debt.status }}
-                </span>
+                
               </td>
               <td>
                 <div class="action-buttons">

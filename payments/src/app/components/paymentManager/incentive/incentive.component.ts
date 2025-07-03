@@ -80,6 +80,7 @@ export class IncentiveComponent implements OnInit {
         Notes: incentive.Notes || incentive.notes || '',
         CreatedDate: new Date(incentive.CreatedDate || incentive.createdDate || new Date()),
         Supplier: incentive.Supplier || incentive.supplier,
+        createdDate: new Date(incentive.createdDate || incentive.createdDate || new Date())
       }
     })
   }
@@ -187,6 +188,7 @@ export class IncentiveComponent implements OnInit {
       QualityBonus: formValues.qualityBonus,
       LoyaltyBonus: formValues.loyaltyBonus,
       TotalAmount: formValues.qualityBonus + formValues.loyaltyBonus,
+      createdDate: new Date(), // Set to current date
     };
 
     this.incentiveService.createIncentive(incentive).subscribe({

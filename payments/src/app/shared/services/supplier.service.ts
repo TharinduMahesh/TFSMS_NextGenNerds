@@ -74,7 +74,6 @@ export class SupplierService {
     return {
       SupplierId: data.SupplierId,
       Name: data.Name,
-      contact: data.Contact,
       // Add any other properties needed
     };
   }

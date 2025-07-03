@@ -4,6 +4,7 @@ export interface Incentive {
   QualityBonus: number
   LoyaltyBonus: number
   TotalAmount: number
+  createdDate : Date; // Added to match backend model
 
   // Optional navigation properties
 }

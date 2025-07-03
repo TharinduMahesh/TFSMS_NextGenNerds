@@ -200,11 +200,9 @@ export class DebtComponent implements OnInit {
       debtType: formValues.debtType,
       description: formValues.description,
       totalAmount: formValues.totalAmount,
-      issueDate: new Date(formValues.issueDate),
       deductionsMade: formValues.deductionsMade,
       balanceAmount: balanceAmount,
       deductionPercentage: formValues.deductionPercentage,
-      status: balanceAmount > 0 ? 'Active' : 'Settled'
     };
 
     this.debtService.createDebt(debt).subscribe({

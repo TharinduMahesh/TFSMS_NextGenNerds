@@ -9,4 +9,5 @@ export interface Advance {
   Purpose: string // Changed from description
   AdvanceType: string
   RecoveredAmount: number
+  createdDate?: Date;
 }

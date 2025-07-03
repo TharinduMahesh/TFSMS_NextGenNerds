@@ -10,5 +10,6 @@ export interface Payment {
   NetAmount: number
   PaymentMethod: string
   PaymentDate: Date
+  createdDate?: Date;
   
 }

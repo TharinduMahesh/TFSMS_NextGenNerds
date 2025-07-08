@@ -85,9 +85,6 @@ export class AdvanceComponent implements OnInit {
         AdvanceType: advance.AdvanceType || advance.advanceType,
         RecoveredAmount: advance.RecoveredAmount || advance.recoveredAmount || 0,
         RecoveryPercentage: advance.RecoveryPercentage || advance.recoveryPercentage || 0,
-        Status: advance.Status || advance.status || "Active",
-        IssueDate: advance.IssueDate || advance.issueDate,
-        CreatedBy: advance.CreatedBy || advance.createdBy,
         CreatedDate: advance.CreatedDate || advance.createdDate,
         Supplier: advance.Supplier || advance.supplier,
       }

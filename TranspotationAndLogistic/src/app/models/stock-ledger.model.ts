@@ -1,5 +1,7 @@
-export interface StockLedger {
-  id?: string;
+// src/app/models/stock-ledger.model.ts
+
+export interface StockLedgerRecord {
+  id: number;
   date: string;
   grade: string;
   gardenMark: string;
@@ -11,18 +13,8 @@ export interface StockLedger {
 }
 
 export interface StockLedgerFilter {
-  grade?: string;
-  gardenMark?: string;
-  financialYear?: string;
-  packingType?: string;
+  grade: string;
+  gardenMark: string;
+  financialYear: string;
+  packingType: string;
 }
-
-export const STOCK_PACKING_TYPES: { value: string; label: string }[] = [
-  { value: '', label: 'All Packing Type' },
-  { value: 'bulk', label: 'Bulk' },
-  { value: 'retail', label: 'Retail' },
-  { value: 'loose', label: 'Loose Tea' },
-  { value: 'bags', label: 'Tea Bags' },
-  { value: 'boxes', label: 'Tea Boxes' },
-  { value: 'pouches', label: 'Tea Pouches' }
-];

@@ -1,0 +1,163 @@
+:host {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+// --- Variable Definitions from Image ---
+$page-bg: #dcdcdc;
+$text-color: #333;
+$label-text: #4a4a4a;
+$input-bg: #fff;
+$input-border: #ccc;
+$table-header-bg: #f5f5f5;
+$table-border: #e0e0e0;
+$error-color: #d9534f; // A standard error red
+
+// Button Colors
+$btn-clear: #f39c12;
+$btn-add: #007bff;
+$btn-exit: #2ecc71;
+
+// --- Main Layout ---
+.page-container {
+  background-color: $page-bg;
+  padding: 30px 40px;
+  max-width: 950px;
+  margin: 2rem auto;
+  border-radius: 8px;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: $text-color;
+  margin-top: 0;
+  margin-bottom: 35px;
+}
+
+// --- Form ---
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+  margin-bottom: 40px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  position: relative; // Needed for error message positioning
+  
+  label {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: $label-text;
+  }
+  
+  input {
+    padding: 10px 12px;
+    border: 1px solid $input-border;
+    border-radius: 6px;
+    background-color: $input-bg;
+    font-size: 1rem;
+    &:focus {
+      outline: 2px solid $btn-add;
+      border-color: transparent;
+    }
+    
+    // ** NEW: Style for invalid inputs **
+    &.is-invalid {
+      border-color: $error-color;
+      &:focus {
+        outline: 2px solid lighten($error-color, 20%);
+      }
+    }
+  }
+}
+
+// ** NEW: Style for the validation error message **
+.error-message {
+  color: $error-color;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 15px;
+  padding-bottom: 2px;
+}
+
+// --- Buttons ---
+.btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  &:hover { opacity: 0.9; }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-clear { background-color: $btn-clear; }
+.btn-add { background-color: $btn-add; }
+.btn-exit {
+  background-color: $btn-exit;
+  border-radius: 50px;
+}
+
+// --- Table (Unchanged) ---
+.records-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: $text-color;
+  margin-bottom: 15px;
+}
+
+.table-wrapper {
+  border: 1px solid $table-border;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-right: 1px solid $table-border;
+    &:last-child {
+      border-right: none;
+    }
+  }
+  thead th {
+    background-color: $table-header-bg;
+    font-weight: 600;
+    color: $label-text;
+  }
+  .no-records-cell {
+    text-align: center;
+    color: #888;
+    padding: 30px;
+  }
+}
+
+// --- Footer (Unchanged) ---
+.page-footer {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+}

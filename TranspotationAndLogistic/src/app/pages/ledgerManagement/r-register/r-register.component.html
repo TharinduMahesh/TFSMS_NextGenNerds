@@ -1,0 +1,46 @@
+<div class="">
+  <h2 class="page-title">Return Register</h2>
+
+  <div class="filters-container">
+    <input type="date" class="filter-input" placeholder="mm/dd/yyyy" [(ngModel)]="dateFilter">
+    <input type="text" class="filter-input" placeholder="Filter by Season" [(ngModel)]="seasonFilter">
+    <input type="text" class="filter-input" placeholder="Filter by Reason" [(ngModel)]="reasonFilter">
+    <input type="text" class="filter-input" placeholder="Filter by Invoice" [(ngModel)]="invoiceFilter">
+    <button class="btn btn-filter" (click)="onApplyFilter()">Apply Filter</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Return Date</th>
+          <th>Season</th>
+          <th>Reason</th>
+          <th>Invoice</th>
+          <th>Kilos Returned</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (record of records(); track record.id) {
+          <tr>
+            <td>{{ record.returnDate }}</td>
+            <td>{{ record.season }}</td>
+            <td>{{ record.reason }}</td>
+            <td>{{ record.invoice }}</td>
+            <td>{{ record.kilosReturned }}</td>
+            <td>{{ record.remarks }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="no-records-cell">No records to display.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="page-footer">
+    <button class="btn btn-exit" (click)="onExit()">Exit</button>
+  </footer>
+</div>

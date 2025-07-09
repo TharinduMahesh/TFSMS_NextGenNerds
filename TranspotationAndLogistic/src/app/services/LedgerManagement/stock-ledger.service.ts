@@ -1,87 +1,57 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { StockLedger, StockLedgerFilter } from '../../models/stock-ledger.model';
+import { StockLedgerRecord, StockLedgerFilter } from '../../models/stock-ledger.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockLedgerService {
-  private stockRecords = signal<StockLedger[]>([
-    {
-      id: '1',
-      date: '2024-12-20',
-      grade: 'A',
-      gardenMark: 'Mark1',
-      financialYear: '2024',
-      packingType: 'bulk',
-      quantityIn: 500,
-      quantityOut: 200,
-      remarks: 'Initial Stock'
-    },
-    {
-      id: '2',
-      date: '2024-12-21',
-      grade: 'B',
-      gardenMark: 'Mark2',
-      financialYear: '2024',
-      packingType: 'retail',
-      quantityIn: 300,
-      quantityOut: 100,
-      remarks: 'New Shipment'
-    }
-  ]);
-
-  private filters = signal<StockLedgerFilter>({
+  // --- State ---
+  private allRecords = signal<StockLedgerRecord[]>([]);
+  private activeFilters = signal<StockLedgerFilter>({
     grade: '',
     gardenMark: '',
     financialYear: '',
     packingType: ''
   });
 
-  // Expose as readonly signals
-  readonly records = this.stockRecords.asReadonly();
-  readonly currentFilters = this.filters.asReadonly();
+  // --- Computed Data ---
+  public filteredRecords = computed(() => {
+    const records = this.allRecords();
+    const filters = this.activeFilters();
 
-  // Computed filtered records
-  readonly filteredRecords = computed(() => {
-    const records = this.stockRecords();
-    const filter = this.filters();
-
+    // If no filters are active, return an empty array or all records.
+    // Let's return empty initially until the user clicks "Filter".
+    // For this example, we will filter live.
+    if (!filters.grade && !filters.gardenMark && !filters.financialYear && !filters.packingType) {
+      return records; // Show all records if no filters are set
+    }
+    
     return records.filter(record => {
-      return (!filter.grade || record.grade.toLowerCase().includes(filter.grade.toLowerCase())) &&
-             (!filter.gardenMark || record.gardenMark.toLowerCase().includes(filter.gardenMark.toLowerCase())) &&
-             (!filter.financialYear || record.financialYear.includes(filter.financialYear)) &&
-             (!filter.packingType || record.packingType === filter.packingType);
+      const gradeMatch = !filters.grade || record.grade.toLowerCase().includes(filters.grade.toLowerCase());
+      const gardenMarkMatch = !filters.gardenMark || record.gardenMark.toLowerCase().includes(filters.gardenMark.toLowerCase());
+      const financialYearMatch = !filters.financialYear || record.financialYear.includes(filters.financialYear);
+      const packingTypeMatch = !filters.packingType || record.packingType === filters.packingType;
+      
+      return gradeMatch && gardenMarkMatch && financialYearMatch && packingTypeMatch;
     });
   });
 
-  addRecord(record: StockLedger): void {
-    const newRecord = {
-      ...record,
-      id: this.generateId()
-    };
-    this.stockRecords.update(records => [...records, newRecord]);
+  constructor() {
+    this.loadInitialData();
   }
 
-  removeRecord(id: string): void {
-    this.stockRecords.update(records => 
-      records.filter(record => record.id !== id)
-    );
+  // Updates the filters, triggering the computed signal to re-evaluate.
+  public updateFilters(filters: StockLedgerFilter): void {
+    this.activeFilters.set(filters);
   }
 
-  updateFilters(filters: Partial<StockLedgerFilter>): void {
-    this.filters.update(current => ({ ...current, ...filters }));
-  }
-
-  clearFilters(): void {
-    this.filters.set({
-      grade: '',
-      gardenMark: '',
-      financialYear: '',
-      packingType: ''
-    });
-  }
-
-  private generateId(): string {
-    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  // Populates the service with mock data.
+  private loadInitialData(): void {
+    const mockData: StockLedgerRecord[] = [
+      { id: 1, date: '2024-05-20', grade: 'BOP', gardenMark: 'Evergreen', financialYear: '2024-2025', packingType: 'bulk', quantityIn: 500, quantityOut: 0, remarks: 'Received' },
+      { id: 2, date: '2024-05-21', grade: 'FBOP', gardenMark: 'Sunleaf', financialYear: '2024-2025', packingType: 'retail', quantityIn: 0, quantityOut: 150, remarks: 'Sold to RetailCo' },
+      { id: 3, date: '2024-05-22', grade: 'BOP', gardenMark: 'Evergreen', financialYear: '2024-2025', packingType: 'bulk', quantityIn: 0, quantityOut: 200, remarks: 'Sold to Wholesale Inc' }
+    ];
+    this.allRecords.set(mockData);
   }
 }

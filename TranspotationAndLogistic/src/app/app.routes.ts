@@ -12,7 +12,13 @@ import { TeaPackingComponent } from './pages/ledgerManagement/tea-packing/tea-pa
 import { StockLedgerComponent } from './pages/ledgerManagement/stock-ledger/stock-ledger.component';
 import { InvoiceManagementComponent } from './pages/ledgerManagement/invoice-management/invoice-management.component';
 import { DispatchRegisterComponent } from './pages/ledgerManagement/dispatch-regis/dispatch-regis.component';
-
+import { DispatchRegisterService } from './services/LedgerManagement/dispatch-view.service';
+import { DispatchViewComponent } from './pages/ledgerManagement/dispatch-view/dispatch-view.component';
+import { SalesEntryComponent } from './pages/ledgerManagement/sales-entry/sales-entry.component';
+import { DenaturedTeaEntryComponent } from './pages/ledgerManagement/denatured-t-entry/denatured-t-entry.component';
+import { DenaturedTeaReportComponent } from './pages/ledgerManagement/denatured-t-report/denatured-t-report.component';
+import { TeaReturnEntryComponent } from './pages/ledgerManagement/t-return-entry/t-return-entry.component';
+import { ReturnRegisterComponent } from './pages/ledgerManagement/r-register/r-register.component';
 export const routes: Routes = [
     {
       path : 'ry-review',
@@ -65,5 +71,29 @@ export const routes: Routes = [
   {
     path : 'dis-reg',
     component : DispatchRegisterComponent
+  },
+  {
+    path : 'dis-view',
+    component : DispatchViewComponent
+  },
+  {
+    path : 's-entry',
+    component : SalesEntryComponent
+  },
+  {
+    path : 'd-t-entry',
+    component : DenaturedTeaEntryComponent
+  },
+  {
+    path : 'd-t-report',
+    component : DenaturedTeaReportComponent
+  },
+  {
+    path : 't-return-entry',
+    component : TeaReturnEntryComponent
+  },
+  {
+    path : 'r-register',
+    component : ReturnRegisterComponent
   }
   ];

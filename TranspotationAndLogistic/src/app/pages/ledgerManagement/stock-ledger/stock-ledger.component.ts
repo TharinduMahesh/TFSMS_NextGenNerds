@@ -1,13 +1,13 @@
 import { Component, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StockLedgerService } from '../../../services/LedgerManagement/stock-ledger.service';
-import { STOCK_PACKING_TYPES } from '../../../models/stock-ledger.model';
+import { StockLedgerRecord } from '../../../models/stock-ledger.model';
 
 @Component({
   selector: 'app-stock-ledger',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TitleCasePipe],
   templateUrl: './stock-ledger.component.html',
   styleUrls: ['./stock-ledger.component.scss']
 })
@@ -20,8 +20,16 @@ export class StockLedgerComponent {
   financialYearFilter = signal('');
   packingTypeFilter = signal('');
 
-  // Data
-  packingTypes = STOCK_PACKING_TYPES; 
+  // The constant is now defined directly in the component.
+  packingTypes = [
+    { value: 'bulk', label: 'Bulk' },
+    { value: 'retail', label: 'Retail' },
+    { value: 'loose', label: 'Loose Tea' },
+    { value: 'bags', label: 'Tea Bags' },
+    { value: 'boxes', label: 'Tea Boxes' },
+    { value: 'pouches', label: 'Tea Pouches' }
+  ];
+  
   filteredRecords = this.stockService.filteredRecords;
 
   onGradeFilterChange(event: Event): void {
@@ -46,11 +54,9 @@ export class StockLedgerComponent {
 
   onFilter(): void {
     this.updateFilters();
-    console.log('Filtering records...');
   }
 
   onExit(): void {
-    // Navigate back or close the component
     console.log('Exit clicked');
   }
 

@@ -1,0 +1,72 @@
+<div class="page-wrapper">
+  <div class="header-bar">
+    <h2>Denatured Tea Entry</h2>
+  </div>
+
+  <div class="content-body">
+    <!-- Entry Form -->
+    <form (ngSubmit)="addEntry()" #teaForm="ngForm" class="entry-form">
+      <div class="form-field">
+        <label for="teaGrade">Tea Grade:</label>
+        <input id="teaGrade" type="text" name="teaGrade" [(ngModel)]="teaGrade" 
+               (blur)="touched.teaGrade.set(true)" [class.is-invalid]="teaGradeError()">
+        @if (teaGradeError()) { <div class="error-message">{{ teaGradeError() }}</div> }
+      </div>
+      
+      <div class="form-row">
+        <div class="form-field quantity-field">
+          <label for="quantity">Quantity (kg):</label>
+          <input id="quantity" type="number" name="quantity" [(ngModel)]="quantity"
+                 (blur)="touched.quantity.set(true)" [class.is-invalid]="quantityError()">
+          @if (quantityError()) { <div class="error-message">{{ quantityError() }}</div> }
+        </div>
+        <div class="form-field reason-field">
+          <label for="reason">Reason:</label>
+          <input id="reason" type="text" name="reason" [(ngModel)]="reason"
+                 (blur)="touched.reason.set(true)" [class.is-invalid]="reasonError()">
+          @if (reasonError()) { <div class="error-message">{{ reasonError() }}</div> }
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-clear" (click)="clearForm()">Clear Form</button>
+        <button type="submit" class="btn btn-add" [disabled]="!isFormValid()">Add Entry</button>
+      </div>
+    </form>
+
+    <!-- Records Section -->
+    <section class="records-section">
+      <h3>Denatured Tea Records</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Record No.</th>
+              <th>Tea Grade</th>
+              <th>Quantity (kg)</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (record of records(); track record.id) {
+              <tr>
+                <td>{{ record.recordNo }}</td>
+                <td>{{ record.teaGrade }}</td>
+                <td>{{ record.quantity }}</td>
+                <td>{{ record.reason }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="no-records-cell">No records found.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer-actions">
+      <button class="btn btn-exit" (click)="onExit()">Exit</button>
+    </footer>
+  </div>
+</div>

@@ -17,12 +17,16 @@ export class AdvanceService {
     return this.http.get<any>(this.apiUrl).pipe(
       map((response) => {
         console.log("Raw API response for advances:", response)
-
         // Handle the response based on its structure
         if (Array.isArray(response)) {
           console.log("Response is an array with length:", response.length)
           return response
         } else if (response && typeof response === "object") {
+          // Handle .NET Core JSON serialization format
+          if (Array.isArray(response.$values)) {
+            console.log("Response has $values array with length:", response.$values.length)
+            return response.$values
+          }
           // If the response is an object, extract the data
           if (Array.isArray(response.data)) {
             console.log("Response has data array with length:", response.data.length)
@@ -36,7 +40,6 @@ export class AdvanceService {
               console.log("Response appears to be a single advance object, converting to array")
               return [response]
             }
-
             // Last resort: try to extract any array-like property from the response
             const possibleArrayProps = Object.keys(response).filter(
               (key) =>
@@ -44,17 +47,14 @@ export class AdvanceService {
                 response[key].length > 0 &&
                 (response[key][0].AdvanceId !== undefined || response[key][0].advanceId !== undefined),
             )
-
             if (possibleArrayProps.length > 0) {
               console.log(`Found possible advances array in property: ${possibleArrayProps[0]}`)
               return response[possibleArrayProps[0]]
             }
-
             console.log("Could not find advances data in response, returning empty array")
             return []
           }
         }
-
         console.log("Response format not recognized, returning empty array")
         return []
       }),
@@ -66,7 +66,14 @@ export class AdvanceService {
   }
 
   getAdvance(id: number): Observable<Advance | null> {
-    return this.http.get<Advance>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map((response) => {
+        // Handle wrapped response
+        if (response && response.data) {
+          return response.data
+        }
+        return response
+      }),
       catchError((error) => {
         console.error(`Error fetching advance with id ${id}:`, error)
         return of(null)
@@ -79,8 +86,12 @@ export class AdvanceService {
       map((response) => {
         if (Array.isArray(response)) {
           return response
+        } else if (response && Array.isArray(response.$values)) {
+          return response.$values
+        } else if (response && Array.isArray(response.data)) {
+          return response.data
         } else if (response && typeof response === "object") {
-          return Array.isArray(response.data) ? response.data : [response]
+          return [response]
         }
         return []
       }),
@@ -92,7 +103,14 @@ export class AdvanceService {
   }
 
   createAdvance(advance: Advance): Observable<Advance | null> {
-    return this.http.post<Advance>(this.apiUrl, advance).pipe(
+    return this.http.post<any>(this.apiUrl, advance).pipe(
+      map((response) => {
+        // Handle wrapped response
+        if (response && response.data) {
+          return response.data
+        }
+        return response
+      }),
       catchError((error) => {
         console.error("Error creating advance:", error)
         return of(null)
@@ -101,7 +119,14 @@ export class AdvanceService {
   }
 
   updateAdvance(advance: Advance): Observable<Advance | null> {
-    return this.http.put<Advance>(`${this.apiUrl}/${advance.AdvanceId}`, advance).pipe(
+    return this.http.put<any>(`${this.apiUrl}/${advance.AdvanceId}`, advance).pipe(
+      map((response) => {
+        // Handle wrapped response
+        if (response && response.data) {
+          return response.data
+        }
+        return response
+      }),
       catchError((error) => {
         console.error(`Error updating advance with id ${advance.AdvanceId}:`, error)
         return of(null)
@@ -130,8 +155,17 @@ export class AdvanceService {
   }
 
   getTotalAdvancesCount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/count`).pipe(
-      map((response) => (typeof response === "number" ? response : 0)),
+    return this.http.get<any>(`${this.apiUrl}/count`).pipe(
+      map((response) => {
+        if (typeof response === "number") {
+          return response
+        } else if (response && typeof response.data === "number") {
+          return response.data
+        } else if (response && typeof response.count === "number") {
+          return response.count
+        }
+        return 0
+      }),
       catchError((error) => {
         console.error("Error fetching total advances count:", error)
         return of(0)
@@ -140,8 +174,17 @@ export class AdvanceService {
   }
 
   getTotalOutstandingAmount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/totalOutstanding`).pipe(
-      map((response) => (typeof response === "number" ? response : 0)),
+    return this.http.get<any>(`${this.apiUrl}/totalOutstanding`).pipe(
+      map((response) => {
+        if (typeof response === "number") {
+          return response
+        } else if (response && typeof response.data === "number") {
+          return response.data
+        } else if (response && typeof response.total === "number") {
+          return response.total
+        }
+        return 0
+      }),
       catchError((error) => {
         console.error("Error fetching total outstanding amount:", error)
         return of(0)
@@ -150,8 +193,17 @@ export class AdvanceService {
   }
 
   getTotalRecoveredAmount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/totalRecovered`).pipe(
-      map((response) => (typeof response === "number" ? response : 0)),
+    return this.http.get<any>(`${this.apiUrl}/totalRecovered`).pipe(
+      map((response) => {
+        if (typeof response === "number") {
+          return response
+        } else if (response && typeof response.data === "number") {
+          return response.data
+        } else if (response && typeof response.total === "number") {
+          return response.total
+        }
+        return 0
+      }),
       catchError((error) => {
         console.error("Error fetching total recovered amount:", error)
         return of(0)

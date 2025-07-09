@@ -21,17 +21,21 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   filteredPayments: Payment[] = []
   suppliers: Supplier[] = []
   paymentForm: FormGroup
+
   totalPayments = 0
   totalAmount = 0
   paymentsByCash = 0
   paymentsByBank = 0
   paymentsByCheque = 0
+
   selectedSupplier = ""
   selectedDateRange = "all"
   customStartDate = ""
   customEndDate = ""
+
   showCalculator = false
   calculationResult: PaymentCalculationResult | null = null
+
   loading = false
   error: string | null = null
 
@@ -52,8 +56,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       netAmount: [{ value: 0, disabled: true }],
       paymentMethod: ["Cash", Validators.required],
       paymentDate: [new Date().toISOString().split("T")[0], Validators.required],
-      notes: [""],
-    })
+         })
 
     // Subscribe to supplier changes to load green leaf weight
     this.paymentForm.get("SupplierId")?.valueChanges.subscribe((supplierId) => {
@@ -119,32 +122,31 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     const advanceDeduction = this.paymentForm.get("advanceDeduction")?.value || 0
     const debtDeduction = this.paymentForm.get("debtDeduction")?.value || 0
     const incentiveAddition = this.paymentForm.get("incentiveAddition")?.value || 0
+
     const netAmount = grossAmount - advanceDeduction - debtDeduction + incentiveAddition
     this.paymentForm.get("netAmount")?.setValue(netAmount > 0 ? netAmount : 0)
   }
 
   private normalizePaymentData(payments: any[]): Payment[] {
     return payments.map((payment) => {
-      if (payment.paymentId !== undefined && payment.PaymentId === undefined) {
-        return {
-          PaymentId: payment.paymentId,
-          SupplierId: payment.supplierId || payment.SupplierId,
-          LeafWeight: payment.leafWeight || payment.LeafWeight,
-          Rate: payment.rate || payment.Rate,
-          GrossAmount: payment.grossAmount || payment.GrossAmount,
-          AdvanceDeduction: payment.advanceDeduction || payment.AdvanceDeduction || 0,
-          DebtDeduction: payment.debtDeduction || payment.DebtDeduction || 0,
-          IncentiveAddition: payment.incentiveAddition || payment.IncentiveAddition || 0,
-          NetAmount: payment.netAmount || payment.NetAmount,
-          PaymentMethod: payment.paymentMethod || payment.PaymentMethod,
-          PaymentDate: payment.paymentDate || payment.PaymentDate,
-          CreatedBy: payment.createdBy || payment.CreatedBy || "System",
-          CreatedDate: payment.createdDate || payment.CreatedDate || new Date(),
-          Supplier: payment.supplier || payment.Supplier || null,
-          Receipts: payment.receipts || payment.Receipts || [],
-        }
+      // Handle both camelCase and PascalCase property names
+      return {
+        PaymentId: payment.PaymentId || payment.paymentId || 0,
+        SupplierId: payment.SupplierId || payment.supplierId || 0,
+        LeafWeight: payment.LeafWeight || payment.leafWeight || 0,
+        Rate: payment.Rate || payment.rate || 0,
+        GrossAmount: payment.GrossAmount || payment.grossAmount || 0,
+        AdvanceDeduction: payment.AdvanceDeduction || payment.advanceDeduction || 0,
+        DebtDeduction: payment.DebtDeduction || payment.debtDeduction || 0,
+        IncentiveAddition: payment.IncentiveAddition || payment.incentiveAddition || 0,
+        NetAmount: payment.NetAmount || payment.netAmount || 0,
+        PaymentMethod: payment.PaymentMethod || payment.paymentMethod || "",
+        PaymentDate: payment.PaymentDate || payment.paymentDate,
+        CreatedBy: payment.CreatedBy || payment.createdBy || "System",
+        CreatedDate: payment.CreatedDate || payment.createdDate || new Date(),
+        Supplier: payment.Supplier || payment.supplier || null,
+        Receipts: payment.Receipts || payment.receipts || [],
       }
-      return payment
     })
   }
 
@@ -241,6 +243,9 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   onCalculationComplete(result: PaymentCalculationResult): void {
     this.calculationResult = result
     this.paymentForm.patchValue({
+      SupplierId: result.supplierId,
+      leafWeight: result.leafWeight,
+      rate: result.rate,
       grossAmount: result.grossAmount,
       advanceDeduction: result.advanceDeduction,
       debtDeduction: result.debtDeduction,
@@ -260,7 +265,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     this.error = null
 
     const formValues = this.paymentForm.getRawValue()
-
     const payment: Payment = {
       PaymentId: 0,
       SupplierId: formValues.SupplierId,
@@ -298,6 +302,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       startDate = this.customStartDate
       endDate = this.customEndDate
     }
+
     this.paymentService.exportPayments(format, startDate, endDate).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob)

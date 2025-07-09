@@ -19,12 +19,16 @@ export class PaymentService {
     return this.http.get<any>(this.apiUrl).pipe(
       map((response) => {
         console.log("Raw API response:", response)
-
         // Handle the response based on its structure
         if (Array.isArray(response)) {
           console.log("Response is an array with length:", response.length)
           return response
         } else if (response && typeof response === "object") {
+          // Handle .NET Core JSON serialization format
+          if (Array.isArray(response.$values)) {
+            console.log("Response has $values array with length:", response.$values.length)
+            return response.$values
+          }
           // If the response is an object, extract the data
           if (Array.isArray(response.data)) {
             console.log("Response has data array with length:", response.data.length)
@@ -38,7 +42,6 @@ export class PaymentService {
               console.log("Response appears to be a single payment object, converting to array")
               return [response]
             }
-
             // Last resort: try to extract any array-like property from the response
             const possibleArrayProps = Object.keys(response).filter(
               (key) =>
@@ -46,17 +49,14 @@ export class PaymentService {
                 response[key].length > 0 &&
                 (response[key][0].PaymentId !== undefined || response[key][0].paymentId !== undefined),
             )
-
             if (possibleArrayProps.length > 0) {
               console.log(`Found possible payments array in property: ${possibleArrayProps[0]}`)
               return response[possibleArrayProps[0]]
             }
-
             console.log("Could not find payments data in response, returning empty array")
             return []
           }
         }
-
         console.log("Response format not recognized, returning empty array")
         return []
       }),
@@ -68,19 +68,23 @@ export class PaymentService {
     )
   }
 
-  getPayment(id: number): Observable<Payment> {
+  getPayment(id: number): Observable<Payment | null> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map((response) => {
         // Handle the response based on its structure
         if (response && typeof response === "object") {
-          // If it's a direct object or has a data property
-          return response.data || response
+          // Handle wrapped response
+          if (response.data) {
+            return response.data
+          }
+          // Direct response
+          return response
         }
-        throw new Error("Invalid payment data received")
+        return null
       }),
       catchError((error) => {
         console.error(`Error fetching payment ${id}:`, error)
-        return throwError(() => new Error("Failed to load payment"))
+        return of(null)
       }),
     )
   }
@@ -91,25 +95,45 @@ export class PaymentService {
         if (Array.isArray(response)) {
           return response
         } else if (response && typeof response === "object") {
-          return Array.isArray(response.data) ? response.data : [response]
+          // Handle .NET Core JSON serialization format
+          if (Array.isArray(response.$values)) {
+            return response.$values
+          }
+          // Handle wrapped response
+          if (Array.isArray(response.data)) {
+            return response.data
+          }
+          // Single object response
+          return [response]
         }
         return []
       }),
       catchError((error) => {
         console.error(`Error fetching payments for supplier ${SupplierId}:`, error)
-        // Return empty array instead of throwing error
         return of([])
       }),
     )
   }
 
   getPaymentsByDateRange(startDate: string, endDate: string): Observable<Payment[]> {
-    return this.http.get<any>(`${this.apiUrl}/date-range?startDate=${startDate}&endDate=${endDate}`).pipe(
+    const encodedStartDate = encodeURIComponent(startDate)
+    const encodedEndDate = encodeURIComponent(endDate)
+
+    return this.http.get<any>(`${this.apiUrl}/date-range?startDate=${encodedStartDate}&endDate=${encodedEndDate}`).pipe(
       map((response) => {
         if (Array.isArray(response)) {
           return response
         } else if (response && typeof response === "object") {
-          return Array.isArray(response.data) ? response.data : [response]
+          // Handle .NET Core JSON serialization format
+          if (Array.isArray(response.$values)) {
+            return response.$values
+          }
+          // Handle wrapped response
+          if (Array.isArray(response.data)) {
+            return response.data
+          }
+          // Single object response
+          return [response]
         }
         return []
       }),
@@ -120,41 +144,83 @@ export class PaymentService {
     )
   }
 
-  calculatePayment(request: PaymentCalculationRequest): Observable<PaymentCalculationResult> {
+  getPaymentsByMethod(method: string): Observable<Payment[]> {
+    return this.http.get<any>(`${this.apiUrl}/method/${encodeURIComponent(method)}`).pipe(
+      map((response) => {
+        if (Array.isArray(response)) {
+          return response
+        } else if (response && typeof response === "object") {
+          if (Array.isArray(response.$values)) {
+            return response.$values
+          }
+          if (Array.isArray(response.data)) {
+            return response.data
+          }
+          return [response]
+        }
+        return []
+      }),
+      catchError((error) => {
+        console.error(`Error fetching payments by method ${method}:`, error)
+        return of([])
+      }),
+    )
+  }
+
+  calculatePayment(request: PaymentCalculationRequest): Observable<PaymentCalculationResult | null> {
     return this.http.post<any>(`${this.apiUrl}/calculate`, request).pipe(
-      map((response) => response.data || response),
+      map((response) => {
+        // Handle wrapped response
+        if (response && response.data) {
+          return response.data
+        }
+        return response
+      }),
       catchError((error) => {
         console.error("Error calculating payment:", error)
-        return throwError(() => new Error("Failed to calculate payment"))
+        return of(null)
       }),
     )
   }
 
-  createPayment(payment: Payment): Observable<Payment> {
+  createPayment(payment: Payment): Observable<Payment | null> {
     return this.http.post<any>(this.apiUrl, payment).pipe(
-      map((response) => response.data || response),
+      map((response) => {
+        // Handle wrapped response
+        if (response && response.data) {
+          return response.data
+        }
+        return response
+      }),
       catchError((error) => {
         console.error("Error creating payment:", error)
-        return throwError(() => new Error("Failed to create payment"))
+        return of(null)
       }),
     )
   }
 
-  updatePayment(payment: Payment): Observable<Payment> {
+  updatePayment(payment: Payment): Observable<Payment | null> {
     return this.http.put<any>(`${this.apiUrl}/${payment.PaymentId}`, payment).pipe(
-      map((response) => response.data || response),
+      map((response) => {
+        // Handle wrapped response
+        if (response && response.data) {
+          return response.data
+        }
+        return response
+      }),
       catchError((error) => {
         console.error(`Error updating payment ${payment.PaymentId}:`, error)
-        return throwError(() => new Error("Failed to update payment"))
+        return of(null)
       }),
     )
   }
 
-  deletePayment(id: number): Observable<any> {
+  deletePayment(id: number): Observable<boolean> {
     return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      map(() => true),
       catchError((error) => {
         console.error(`Error deleting payment ${id}:`, error)
-        return throwError(() => new Error("Failed to delete payment"))
+        return of(false)
       }),
     )
   }
@@ -162,17 +228,22 @@ export class PaymentService {
   getTotalPaymentsCount(): Observable<number> {
     return this.http.get<any>(`${this.apiUrl}/count`).pipe(
       map((response) => {
-        // The response might be a direct number or an object with a data property
+        // Handle different response formats for numeric values
         if (typeof response === "number") {
           return response
         } else if (response && typeof response === "object") {
-          return typeof response.data === "number" ? response.data : 0
+          if (typeof response.data === "number") {
+            return response.data
+          } else if (typeof response.count === "number") {
+            return response.count
+          } else if (typeof response.total === "number") {
+            return response.total
+          }
         }
         return 0
       }),
       catchError((error) => {
         console.error("Error fetching payments count:", error)
-        // Return 0 instead of throwing error
         return of(0)
       }),
     )
@@ -184,7 +255,13 @@ export class PaymentService {
         if (typeof response === "number") {
           return response
         } else if (response && typeof response === "object") {
-          return typeof response.data === "number" ? response.data : 0
+          if (typeof response.data === "number") {
+            return response.data
+          } else if (typeof response.total === "number") {
+            return response.total
+          } else if (typeof response.amount === "number") {
+            return response.amount
+          }
         }
         return 0
       }),
@@ -196,12 +273,18 @@ export class PaymentService {
   }
 
   getTotalPaymentsByMethod(method: string): Observable<number> {
-    return this.http.get<any>(`${this.apiUrl}/totalByMethod/${method}`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/totalByMethod/${encodeURIComponent(method)}`).pipe(
       map((response) => {
         if (typeof response === "number") {
           return response
         } else if (response && typeof response === "object") {
-          return typeof response.data === "number" ? response.data : 0
+          if (typeof response.data === "number") {
+            return response.data
+          } else if (typeof response.total === "number") {
+            return response.total
+          } else if (typeof response.amount === "number") {
+            return response.amount
+          }
         }
         return 0
       }),
@@ -212,15 +295,91 @@ export class PaymentService {
     )
   }
 
-  exportPayments(format: string, startDate?: string, endDate?: string): Observable<Blob> {
-    let url = `${this.apiUrl}/export?format=${format}`
-    if (startDate && endDate) {
-      url += `&startDate=${startDate}&endDate=${endDate}`
+  getPaymentSummary(startDate?: string, endDate?: string): Observable<any> {
+    let url = `${this.apiUrl}/summary`
+    const params: string[] = []
+
+    if (startDate) {
+      params.push(`startDate=${encodeURIComponent(startDate)}`)
     }
+    if (endDate) {
+      params.push(`endDate=${encodeURIComponent(endDate)}`)
+    }
+
+    if (params.length > 0) {
+      url += `?${params.join("&")}`
+    }
+
+    return this.http.get<any>(url).pipe(
+      map((response) => {
+        // Handle wrapped response
+        if (response && response.data) {
+          return response.data
+        }
+        return response || {}
+      }),
+      catchError((error) => {
+        console.error("Error fetching payment summary:", error)
+        return of({})
+      }),
+    )
+  }
+
+  exportPayments(format: string, startDate?: string, endDate?: string): Observable<Blob> {
+    let url = `${this.apiUrl}/export?format=${encodeURIComponent(format)}`
+
+    if (startDate && endDate) {
+      url += `&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`
+    }
+
     return this.http.get(url, { responseType: "blob" }).pipe(
       catchError((error) => {
         console.error("Error exporting payments:", error)
         return throwError(() => new Error("Failed to export payments"))
+      }),
+    )
+  }
+
+  // Additional utility methods
+  validatePayment(payment: Payment): Observable<{ isValid: boolean; errors: string[] }> {
+    return this.http.post<any>(`${this.apiUrl}/validate`, payment).pipe(
+      map((response) => {
+        if (response && response.data) {
+          return response.data
+        }
+        return response || { isValid: false, errors: ["Unknown validation error"] }
+      }),
+      catchError((error) => {
+        console.error("Error validating payment:", error)
+        return of({ isValid: false, errors: ["Validation service unavailable"] })
+      }),
+    )
+  }
+
+  getPaymentHistory(paymentId: number): Observable<any[]> {
+    return this.http.get<any>(`${this.apiUrl}/${paymentId}/history`).pipe(
+      map((response) => {
+        if (Array.isArray(response)) {
+          return response
+        } else if (response && Array.isArray(response.$values)) {
+          return response.$values
+        } else if (response && Array.isArray(response.data)) {
+          return response.data
+        }
+        return []
+      }),
+      catchError((error) => {
+        console.error(`Error fetching payment history for ${paymentId}:`, error)
+        return of([])
+      }),
+    )
+  }
+
+  generatePaymentReceipt(paymentId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${paymentId}/receipt`, { responseType: "blob" }).pipe(
+      catchError((error) => {
+        console.error(`Error generating receipt for payment ${paymentId}:`, error)
+        return throwError(() => new Error("Failed to generate payment receipt"))
       }),
     )
   }

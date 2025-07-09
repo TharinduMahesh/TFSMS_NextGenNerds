@@ -1,26 +1,28 @@
+/* app.component.scss */
+
 .app-container {
   display: flex;
-  min-height: 95vh; /* Ensure full viewport height */
-  width: 98vw;      /* Full viewport width */
+  height: 100vh;
 }
 
-/* Sidebar Container (Fixed Position) */
-app-slidebar {
-  position: fixed;    /* Fix sidebar to viewport */
-  top: 0;
+/* Make sidebar fixed width */
+app-sidebar {
+  width: 250px;
+  min-width: 250px;
+  position: fixed;
   left: 0;
-  height: 100vh;      /* Full viewport height */
-  width: 25%;         /* Match your desired width */
-  z-index: 1000;      /* Ensure sidebar stays above content */
-  overflow-y: auto;   /* Allow sidebar to scroll internally if needed */
+  top: 0;
+  height: 100vh;
+  background-color: #b8e4c9; /* Light green color */
+  z-index: 1001; /* Higher than navbar */
 }
 
-/* Content Area (Scrollable) */
+/* Adjust main content area to not overlap with navbar and sidebar */
 .content {
-  flex: 1;
-  margin-left: 25%;   /* Offset by sidebar width */
-  padding: 0%;
-  background-color: #ecf0f1;
-  overflow-y: auto;   /* Enable vertical scrolling */
-  min-height: 100vh;  /* Ensure full height */
+  margin-left: 250px; /* Equal to sidebar width */
+  margin-top: 60px; /* Equal to navbar height */
+  padding: 20px;
+  background-color: #f5f5f5;
+  width: calc(100% - 250px);
+  min-height: auto;
 }

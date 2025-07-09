@@ -1,0 +1,95 @@
+<div class="dispatch-container">
+  <!-- New header bar as seen in the image -->
+  <header class="main-header">
+    <h1 class="header-title">Dispatch Register</h1>
+  </header>
+
+  <div class="form-wrapper">
+    <form (ngSubmit)="onSubmit()" class="dispatch-form">
+      <div class="form-grid">
+        
+        <!-- Garden Mark -->
+        <div class="form-group grid-col-span-2">
+          <label for="gardenMark">Garden Mark</label>
+          <input id="gardenMark" type="text" [(ngModel)]="gardenMark" name="gardenMark" [class.is-invalid]="gardenMarkError()">
+          @if (gardenMarkError()) { <div class="error-message">{{ gardenMarkError() }}</div> }
+        </div>
+
+        <!-- Driver NIC -->
+        <div class="form-group">
+          <label for="driverNic">Driver NIC:</label>
+          <input id="driverNic" type="text" [(ngModel)]="driverNic" name="driverNic" [class.is-invalid]="driverNicError()">
+          @if (driverNicError()) { <div class="error-message">{{ driverNicError() }}</div> }
+        </div>
+
+        <!-- Vehicle Number -->
+        <div class="form-group">
+          <label for="vehicleNumber">Vehicle Number:</label>
+          <input id="vehicleNumber" type="text" [(ngModel)]="vehicleNumber" name="vehicleNumber" [class.is-invalid]="vehicleNumberError()">
+          @if (vehicleNumberError()) { <div class="error-message">{{ vehicleNumberError() }}</div> }
+        </div>
+
+        <!-- Bag Count -->
+        <div class="form-group">
+          <label for="bagCount">Bag Count:</label>
+          <input id="bagCount" type="number" [(ngModel)]="bagCount" name="bagCount" [class.is-invalid]="bagCountError()">
+          @if (bagCountError()) { <div class="error-message">{{ bagCountError() }}</div> }
+        </div>
+
+        <!-- Dispatch Date -->
+        <div class="form-group">
+          <label for="dispatchDate">Dispatch Date</label>
+          <input id="dispatchDate" type="date" [(ngModel)]="dispatchDate" name="dispatchDate" [class.is-invalid]="dispatchDateError()">
+          @if (dispatchDateError()) { <div class="error-message">{{ dispatchDateError() }}</div> }
+        </div>
+        
+        <!-- Seal Number (Inferred from table) -->
+        <div class="form-group grid-col-span-2">
+          <label for="sealNumber">Seal Number</label>
+          <input id="sealNumber" type="text" [(ngModel)]="sealNumber" name="sealNumber" [class.is-invalid]="sealNumberError()">
+          @if (sealNumberError()) { <div class="error-message">{{ sealNumberError() }}</div> }
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="button-group">
+        <button type="button" class="btn btn-exit" (click)="onExit()">Exit</button>
+        <button type="button" (click)="clearForm()" class="btn btn-clear">Clear Form</button>
+        <button type="submit" class="btn btn-add" [disabled]="!isFormValid()">Add Dispatch</button>
+      </div>
+    </form>
+
+    <!-- Dispatch Records Table -->
+    @if (records().length > 0) {
+      <div class="records-section">
+        <div class="table-container">
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>Dispatch No.</th>
+                <th>Garden Mark</th>
+                <th>Vehicle Number</th>
+                <th>Driver NIC</th>
+                <th>Bag Count</th>
+                <th>Seal Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (record of records(); track record.id) {
+                <tr>
+                  <td>{{ record.dispatchNo }}</td>
+                  <td>{{ record.gardenMark }}</td>
+                  <td>{{ record.vehicleNumber }}</td>
+                  <td>{{ record.driverNic }}</td>
+                  <td>{{ record.bagCount }}</td>
+                  <td>{{ record.sealNumber }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</div>

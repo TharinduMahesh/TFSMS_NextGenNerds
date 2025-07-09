@@ -7,6 +7,11 @@ import { RtViewComponent } from './pages/RouteMaintain/r-view/r-view.component';
 import { RyViewComponent } from './pages/RouteYieldMaintain/ry-view/ry-view.component';
 import { RtReviewComponent } from './pages/RouteMaintain/r-review/r-review.component';
 import { RyEditComponent } from './pages/RouteYieldMaintain/ry-edit/ry-edit.component';
+import { LedgerDashboardComponent } from './pages/ledgerManagement/ledger-dashboard/ledger-dashboard.component';
+import { TeaPackingComponent } from './pages/ledgerManagement/tea-packing/tea-packing.component';
+import { StockLedgerComponent } from './pages/ledgerManagement/stock-ledger/stock-ledger.component';
+import { InvoiceManagementComponent } from './pages/ledgerManagement/invoice-management/invoice-management.component';
+import { DispatchRegisterComponent } from './pages/ledgerManagement/dispatch-regis/dispatch-regis.component';
 
 export const routes: Routes = [
     {
@@ -40,5 +45,25 @@ export const routes: Routes = [
   {
     path : 'r-view',
     component : RtViewComponent
+  },
+  {
+    path : 'l-dash',
+    component : LedgerDashboardComponent
+  },
+  {
+    path : 't-pack',
+    component : TeaPackingComponent
+  },
+  {
+    path : 's-ledger',
+    component : StockLedgerComponent
+  },
+  {
+    path : 'in-manage',
+    component : InvoiceManagementComponent
+  },
+  {
+    path : 'dis-reg',
+    component : DispatchRegisterComponent
   }
   ];

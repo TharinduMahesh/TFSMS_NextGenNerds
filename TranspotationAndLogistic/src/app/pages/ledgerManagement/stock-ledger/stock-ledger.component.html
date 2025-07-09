@@ -1,0 +1,91 @@
+<!-- This is the content that will be displayed in the main area of your dashboard -->
+<div class="stock-ledger-content">
+  <h2 class="title">Stock Ledger</h2>
+
+  <!-- Filter Section -->
+  <div class="filter-controls">
+    <label for="grade">Grade:</label>
+    <input
+      type="text"
+      id="grade"
+      [value]="gradeFilter()"
+      (input)="onGradeFilterChange($event)"
+    />
+
+    <label for="gardenMark">Garden Mark:</label>
+    <input
+      type="text"
+      id="gardenMark"
+      [value]="gardenMarkFilter()"
+      (input)="onGardenMarkFilterChange($event)"
+    />
+
+    <label for="financialYear">Financial Year:</label>
+    <input
+      type="text"
+      id="financialYear"
+      [value]="financialYearFilter()"
+      (input)="onFinancialYearFilterChange($event)"
+    />
+
+    <select
+      id="packingType"
+      [value]="packingTypeFilter()"
+      (change)="onPackingTypeFilterChange($event)"
+    >
+      <option value="">All Packing Type</option>
+      @for (type of packingTypes; track type.value) {
+        <option [value]="type.value">{{ type.label }}</option>
+      }
+    </select>
+
+    <button type="button" (click)="onFilter()" class="btn btn-filter">
+      Filter
+    </button>
+  </div>
+
+  <!-- Data Table Section -->
+  <div class="table-container">
+    <table class="stock-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Grade</th>
+          <th>Garden Mark</th>
+          <th>Financial Year</th>
+          <th>Packing Type</th>
+          <th>Quantity In</th>
+          <th>Quantity Out</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (filteredRecords().length > 0) {
+          @for (record of filteredRecords(); track record.id) {
+            <tr>
+              <td>{{ record.date }}</td>
+              <td>{{ record.grade }}</td>
+              <td>{{ record.gardenMark | titlecase }}</td>
+              <td>{{ record.financialYear }}</td>
+              <td>{{ record.packingType | titlecase }}</td>
+              <td>{{ record.quantityIn }}</td>
+              <td>{{ record.quantityOut }}</td>
+              <td>{{ record.remarks }}</td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="8" class="no-data">No records to display.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Exit Button -->
+  <div class="actions">
+    <button type="button" (click)="onExit()" class="btn btn-exit">
+      Exit
+    </button>
+  </div>
+</div>

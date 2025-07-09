@@ -1,0 +1,86 @@
+<div class="invoice-container">
+  <div class="form-wrapper">
+    <h1 class="form-title">Invoice Management</h1>
+
+    <form (ngSubmit)="onSubmit()" class="invoice-form">
+      <!-- Grid layout for the form fields -->
+      <div class="form-grid">
+        <!-- All form groups remain the same -->
+        <div class="form-group grid-col-span-2">
+          <label for="season">Season:</label>
+          <input id="season" type="text" [(ngModel)]="season" name="season" [class.is-invalid]="seasonError()">
+          @if (seasonError()) { <div class="error-message">{{ seasonError() }}</div> }
+        </div>
+        <div class="form-group grid-col-span-2">
+          <label for="brokerName">Broker Name:</label>
+          <input id="brokerName" type="text" [(ngModel)]="brokerName" name="brokerName" [class.is-invalid]="brokerNameError()">
+          @if (brokerNameError()) { <div class="error-message">{{ brokerNameError() }}</div> }
+        </div>
+        <div class="form-group grid-col-span-2">
+          <label for="packingType">Packing Type:</label>
+          <input id="packingType" type="text" [(ngModel)]="packingType" name="packingType" [class.is-invalid]="packingTypeError()">
+          @if (packingTypeError()) { <div class="error-message">{{ packingTypeError() }}</div> }
+        </div>
+        <div class="form-group">
+          <label for="grade">Grade:</label>
+          <input id="grade" type="text" [(ngModel)]="grade" name="grade" [class.is-invalid]="gradeError()">
+          @if (gradeError()) { <div class="error-message">{{ gradeError() }}</div> }
+        </div>
+        <div class="form-group">
+          <label for="dispatchDate">Dispatch Date:</label>
+          <input id="dispatchDate" type="date" [(ngModel)]="dispatchDate" name="dispatchDate" [class.is-invalid]="dispatchDateError()">
+          @if (dispatchDateError()) { <div class="error-message">{{ dispatchDateError() }}</div> }
+        </div>
+        <div class="form-group">
+            <label for="bulkType">Bulk:</label>
+            <select id="bulkType" [(ngModel)]="bulkType" name="bulkType" [class.is-invalid]="bulkTypeError()">
+              <option value="" disabled>Select Type</option>
+              @for (type of bulkTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+            @if (bulkTypeError()) { <div class="error-message">{{ bulkTypeError() }}</div> }
+        </div>
+      </div>
+
+      <!-- Updated Action Buttons -->
+      <div class="button-group">
+        <button type="button" class="btn btn-exit" (click)="onExit()">Exit</button>
+        <button type="button" (click)="clearForm()" class="btn btn-clear">Clear Form</button>
+        <button type="submit" class="btn btn-add" [disabled]="!isFormValid()">Add Invoice</button>
+      </div>
+    </form>
+
+    <!-- Table section remains the same -->
+    @if (records().length > 0) {
+      <div class="records-section">
+        <div class="table-container">
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>Invoice No.</th>
+                <th>Season</th>
+                <th>Broker Name</th>
+                <th>Grade</th>
+                <th>Packing Type</th>
+                <th>Dispatch Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (record of records(); track record.id) {
+                <tr>
+                  <td>{{ record.invoiceNo }}</td>
+                  <td>{{ record.season }}</td>
+                  <td>{{ record.brokerName }}</td>
+                  <td>{{ record.grade }}</td>
+                  <td>{{ record.packingType }}</td>
+                  <td>{{ record.dispatchDate }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</div>

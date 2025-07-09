@@ -1,5 +1,5 @@
 .page-wrapper {
-  max-width: 1100px;
+  max-width: 1600px; /* Consistent with your common styles */
   margin: 2rem auto;
   padding: 0 1rem;
 }
@@ -8,12 +8,12 @@
   text-align: center;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid 56#1976d2;
+  border-bottom: 2px solid black; /* Blue from your summary boxes */
 
   h1 {
     font-weight: 700;
     font-size: 2rem;
-    color: #1976d2;
+    color: black; /* Blue from your summary boxes */
     margin: 0;
   }
 }
@@ -21,14 +21,14 @@
 .page-container {
   display: flex;
   gap: 2rem;
-  background-color: #f9fafb;
+  background-color: #f0f0f0; /* Background from your ledger container */
   min-height: 80vh;
 
   .map-preview {
     flex: 0 0 35%;
-    background: #e1e5ea;
+    background: #e3f2fd; /* Light blue from total kilos summary box */
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Common shadow style */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,7 +44,7 @@
     max-width: 100%;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Common shadow style */
     padding: 2rem;
 
     .form-container {
@@ -60,19 +60,19 @@
       label {
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: #333;
+        color: #333; /* Consistent text color */
       }
 
       input {
         padding: 0.5rem 0.75rem;
-        border: 1px solid #ccc;
+        border: 1px solid #ddd;
         border-radius: 6px;
         font-size: 1rem;
 
         &:focus {
-          border-color: #1976d2;
+          border-color: #2196f3; /* Focus color from summary boxes */
           outline: none;
-          box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+          box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2); /* Focus shadow */
         }
       }
     }
@@ -96,7 +96,7 @@
 
       button {
         padding: 0.5rem 1rem;
-        background-color: #1976d2;
+        background-color: #4caf50; /* Green from total sales summary box */
         color: white;
         border: none;
         border-radius: 6px;
@@ -105,7 +105,7 @@
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: #1565c0;
+          background-color: #45a049;
         }
       }
     }
@@ -128,7 +128,7 @@
         border-bottom: 1px solid #ddd;
 
         button {
-          background: #e53935;
+          background: #f44336; /* Red from total card summary box */
           color: white;
           border: none;
           padding: 0.25rem 0.75rem;
@@ -138,7 +138,7 @@
           transition: background-color 0.3s ease;
 
           &:hover {
-            background: #c62828;
+            background: #d32f2f;
           }
         }
       }
@@ -165,7 +165,7 @@
       }
 
       .btn-secondary {
-        background-color: #b0bec5;
+        background-color: #ff9800; /* Orange from total cash summary box */
         color: #263238;
         padding: 0.6rem 1.2rem;
         border: none;
@@ -175,7 +175,7 @@
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: #90a4ae;
+          background-color: #f57c00;
         }
       }
     }

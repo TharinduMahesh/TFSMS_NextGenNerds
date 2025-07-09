@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-ryform',
-  standalone : true,
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './ry-create.component.html',
   styleUrls: ['./ry-create.component.scss']
@@ -25,8 +25,11 @@ export class RyCreateComponent {
   submitForm() {
     if (this.routeForm.valid) {
       console.log('Form Data:', this.routeForm.value);
+      alert('Form submitted successfully!');
+      this.routeForm.reset();
     } else {
-      console.log('Invalid Form');
+      this.routeForm.markAllAsTouched();
+      alert('Please fix the errors in the form.');
     }
   }
 }

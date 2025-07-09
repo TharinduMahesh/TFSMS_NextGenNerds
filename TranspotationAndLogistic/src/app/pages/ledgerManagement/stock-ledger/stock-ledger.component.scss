@@ -1,0 +1,104 @@
+// This component is designed to fit within a larger dashboard layout.
+// It no longer controls the page background or has its own prominent border.
+
+.stock-ledger-content {
+  padding: 20px;
+  background-color: #ffffff; // Sits on a white background
+  font-family: Arial, sans-serif;
+  color: #333;
+  // This light blue line seems to be the separator at the bottom of the content
+  border-bottom: 4px solid #e3f2fd;
+}
+
+.title {
+  font-size: 1.5em; // Slightly larger title
+  font-weight: normal;
+  margin: 0 0 20px 0;
+  color: #333;
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  label {
+    margin-right: -5px;
+  }
+
+  input[type="text"],
+  select {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+    width: 100px; // Adjusted width to fit better
+  }
+
+  select {
+    width: auto;
+    min-width: 160px;
+  }
+}
+
+.btn {
+  padding: 7px 20px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-filter {
+  background-color: #17a2b8;
+}
+
+.table-container {
+  margin-bottom: 20px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  // Removed alternating row colors to match the screenshot
+  td {
+      background-color: #ffffff;
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-style: italic;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.btn-exit {
+  background-color: #28a745;
+}

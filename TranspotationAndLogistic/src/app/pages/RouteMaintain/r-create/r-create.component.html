@@ -1,95 +1,113 @@
 <div class="page-wrapper">
   <header class="page-header">
-    <h1>Route Fill Form</h1>
+    <h1>Create a Route</h1>
   </header>
 
   <div class="page-container">
-    <!-- Left: Map Preview (35%) -->
     <div class="map-preview">
       <!-- Your map content here -->
       <p>Map Preview Placeholder</p>
     </div>
 
-    <!-- Right: Form (55%) -->
-    <form (submit)="onSubmit($event)" class="route-form">
+    <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="route-form" novalidate>
       <div class="form-container">
+
         <!-- Route Name -->
         <div class="form-group">
           <label for="rName">Route Name</label>
-          <input
-            type="text"
-            id="rName"
-            name="rName"
-            [value]="formData().rName"
-            (input)="handleInput('rName', $event)"
-            required
-          />
+          <input id="rName" formControlName="rName"
+            [attr.aria-invalid]="routeForm.get('rName')?.invalid ? 'true' : null" />
+          @if (routeForm.get('rName')?.touched && routeForm.get('rName')?.invalid) {
+          <div class="error">
+            @if (routeForm.get('rName')?.hasError('required')) {
+            <span>Route name is required.</span>
+            }
+            @if (routeForm.get('rName')?.hasError('maxlength')) {
+            <span>Route name cannot exceed 50 characters.</span>
+            }
+          </div>
+          }
         </div>
 
-        <!-- Row: Start Location & End Location -->
+        <!-- Start & End Location -->
         <div class="form-row">
           <div class="form-group">
             <label for="startLocation">Start Location</label>
-            <input
-              type="text"
-              id="startLocation"
-              name="startLocation"
-              [value]="formData().startLocation"
-              (input)="handleInput('startLocation', $event)"
-              required
-            />
+            <input id="startLocation" formControlName="startLocation"
+              [attr.aria-invalid]="routeForm.get('startLocation')?.invalid ? 'true' : null" />
+
+            @if (routeForm.get('startLocation')?.touched && routeForm.get('startLocation')?.invalid) {
+            <div class="error">
+              <span>Start location is required.</span>
+            </div>
+            }
           </div>
 
           <div class="form-group">
             <label for="endLocation">End Location</label>
-            <input
-              type="text"
-              id="endLocation"
-              name="endLocation"
-              [value]="formData().endLocation"
-              (input)="handleInput('endLocation', $event)"
-              required
-            />
+            <input id="endLocation" formControlName="endLocation"
+              [attr.aria-invalid]="routeForm.get('endLocation')?.invalid ? 'true' : null" />
+
+            @if (routeForm.get('endLocation')?.touched && routeForm.get('endLocation')?.invalid) {
+            <div class="error">
+              <span>End location is required.</span>
+            </div>
+            }
           </div>
         </div>
 
         <!-- Distance -->
         <div class="form-group">
           <label for="distance">Distance (km)</label>
-          <input
-            type="text"
-            id="distance"
-            name="distance"
-            [value]="formData().distance"
-            (input)="handleInput('distance', $event)"
-            required
-          />
+          <input id="distance" formControlName="distance"
+            [attr.aria-invalid]="routeForm.get('distance')?.invalid ? 'true' : null" />
+
+          @if (routeForm.get('distance')?.touched && routeForm.get('distance')?.invalid) {
+          <div class="error">
+            @if (routeForm.get('distance')?.hasError('required')) {
+            <span>Distance is required.</span>
+            }
+            @if (routeForm.get('distance')?.hasError('pattern')) {
+            <span>Distance must be a valid number (up to 2 decimals).</span>
+            }
+          </div>
+          }
         </div>
 
-        <!-- Row: Collector ID & Vehicle ID -->
+        <!-- Collector ID & Vehicle ID -->
         <div class="form-row">
           <div class="form-group">
             <label for="collectorId">Collector ID</label>
-            <input
-              type="number"
-              id="collectorId"
-              name="collectorId"
-              [value]="formData().collectorId"
-              (input)="handleInput('collectorId', $event)"
-              required
-            />
+            <input id="collectorId" type="number" formControlName="collectorId"
+              [attr.aria-invalid]="routeForm.get('collectorId')?.invalid ? 'true' : null" />
+
+            @if (routeForm.get('collectorId')?.touched && routeForm.get('collectorId')?.invalid) {
+            <div class="error">
+              @if (routeForm.get('collectorId')?.hasError('required')) {
+              <span>Collector ID is required.</span>
+              }
+              @if (routeForm.get('collectorId')?.hasError('min')) {
+              <span>Collector ID must be greater than 0.</span>
+              }
+            </div>
+            }
           </div>
 
           <div class="form-group">
             <label for="vehicleId">Vehicle ID</label>
-            <input
-              type="number"
-              id="vehicleId"
-              name="vehicleId"
-              [value]="formData().vehicleId"
-              (input)="handleInput('vehicleId', $event)"
-              required
-            />
+            <input id="vehicleId" type="number" formControlName="vehicleId"
+              [attr.aria-invalid]="routeForm.get('vehicleId')?.invalid ? 'true' : null" />
+
+            @if (routeForm.get('vehicleId')?.touched && routeForm.get('vehicleId')?.invalid) {
+            <div class="error">
+              @if (routeForm.get('vehicleId')?.hasError('required')) {
+              <span>Vehicle ID is required.</span>
+              }
+              @if (routeForm.get('vehicleId')?.hasError('min')) {
+              <span>Vehicle ID must be greater than 0.</span>
+              }
+            </div>
+            }
           </div>
         </div>
 
@@ -98,26 +116,39 @@
           <label for="growerInput">Grower Location (Waypoint)</label>
           <div class="grower-input-group">
             <input type="text" id="growerInput" #growerRef />
-            <button type="button" (click)="addWaypoint(growerRef.value); growerRef.value=''">
+            <button type="button" (click)="addWaypoint(growerRef.value); growerRef.value = '';">
               Add Waypoint
             </button>
           </div>
         </div>
 
         <!-- Waypoints Preview -->
-        <div class="waypoints-preview" *ngIf="waypoints.length > 0">
+        @if (growerLocations.length > 0) {
+        <div class="waypoints-preview">
           <h4>Waypoints:</h4>
-          <div *ngFor="let wp of waypoints; let i = index" class="waypoint-item">
-            <span>{{ wp.location }}</span>
-            <button type="button" (click)="removeWaypoint(i)">Remove</button>
+          @for (waypoint of growerLocations.controls; track waypoint.value.description) {
+          <div class="waypoint-item">
+            <span>{{ waypoint.value.description }}</span>
+            <button type="button" (click)="removeWaypoint(growerLocations.controls.indexOf(waypoint))">
+              Remove
+            </button>
           </div>
+          }
         </div>
+        }
 
-        <!-- Action Buttons -->
+        <!-- Success Message -->
+        @if (currentSuccessMessage) {
+        <div class="alert alert-success">{{ currentSuccessMessage }}</div>
+        }
+
+
+        <!-- Form Actions -->
         <div class="form-actions">
-          <button type="submit" class="btn-primary">Create Route</button>
+          <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Create Route</button>
           <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
         </div>
+
       </div>
     </form>
   </div>

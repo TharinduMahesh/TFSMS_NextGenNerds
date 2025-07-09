@@ -1,6 +1,6 @@
 <div class="route-container">
   <div class="top-bar">
-    <input type="text" placeholder="Search routes..." [value]="searchTerm()"
+    <input type="text" placeholder="Search routes...Id ,Name" [value]="searchTerm()"
       (input)="searchTerm.set($any($event.target).value)" />
 
     <select [value]="selectedFilter()" (change)="selectedFilter.set($any($event.target).value)">

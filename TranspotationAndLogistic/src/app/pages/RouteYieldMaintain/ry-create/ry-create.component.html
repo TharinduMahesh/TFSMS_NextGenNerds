@@ -1,49 +1,100 @@
-<form [formGroup]="routeForm" (ngSubmit)="submitForm()" class="route-form-container">
-    <div class="form-group">
-      <label for="id">Route ID</label>
-      <input id="id" formControlName="id" type="text" />
-      @if (routeForm.get('id')?.invalid && routeForm.get('id')?.touched) {
-        <div class="error">Route ID is required and must be numeric.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label for="routeName">Route Name</label>
-      <input id="routeName" formControlName="routeName" type="text" />
-      @if (routeForm.get('routeName')?.invalid && routeForm.get('routeName')?.touched) {
-        <div class="error">Route Name is required and must be at least 3 characters long.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label for="collectorId">Collector ID</label>
-      <input id="collectorId" formControlName="collectorId" type="text" />
-      @if (routeForm.get('collectorId')?.invalid && routeForm.get('collectorId')?.touched) {
-        <div class="error">Collector ID is required and must be numeric.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label for="vehicleId">Vehicle ID</label>
-      <input id="vehicleId" formControlName="vehicleId" type="text" />
-      @if (routeForm.get('vehicleId')?.invalid && routeForm.get('vehicleId')?.touched) {
-        <div class="error">Vehicle ID is required and must be alphanumeric.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label for="collectedyield">Collected Yield (Kg)</label>
-      <input id="collectedyield" formControlName="collectedyield" type="number" />
-      @if (routeForm.get('collectedyield')?.invalid && routeForm.get('collectedyield')?.touched) {
-        <div class="error">Collected Yield is required and must be a positive number.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label for="gtpresent">Golden Tips Present</label>
-      <select id="gtpresent" formControlName="gtpresent">
-        <option value="">Select</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-      </select>
-      @if (routeForm.get('gtpresent')?.invalid && routeForm.get('gtpresent')?.touched) {
-        <div class="error">Please select an option.</div>
-      }
-    </div>
-    <button type="submit" class="submit-btn" [disabled]="routeForm.invalid">Submit</button>
-  </form>
+<div class="page-wrapper">
+  <header class="page-header">
+    <h1>Route Fill Form</h1>
+  </header>
+
+  <div class="page-container">
+    <form [formGroup]="routeForm" (ngSubmit)="submitForm()" class="route-form">
+      <div class="form-container">
+
+        <div class="form-group">
+          <label for="id">Route ID</label>
+          <input
+            id="id"
+            formControlName="id"
+            type="text"
+            [attr.aria-invalid]="routeForm.get('id')?.invalid && routeForm.get('id')?.touched ? 'true' : null"
+          />
+          @if (routeForm.get('id')?.invalid && routeForm.get('id')?.touched) {
+            <div class="error">Route ID is required and must be numeric.</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="routeName">Route Name</label>
+          <input
+            id="routeName"
+            formControlName="routeName"
+            type="text"
+            [attr.aria-invalid]="routeForm.get('routeName')?.invalid && routeForm.get('routeName')?.touched ? 'true' : null"
+          />
+          @if (routeForm.get('routeName')?.invalid && routeForm.get('routeName')?.touched) {
+            <div class="error">Route Name is required and must be at least 3 characters long.</div>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="collectorId">Collector ID</label>
+            <input
+              id="collectorId"
+              formControlName="collectorId"
+              type="text"
+              [attr.aria-invalid]="routeForm.get('collectorId')?.invalid && routeForm.get('collectorId')?.touched ? 'true' : null"
+            />
+            @if (routeForm.get('collectorId')?.invalid && routeForm.get('collectorId')?.touched) {
+              <div class="error">Collector ID is required and must be numeric.</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="vehicleId">Vehicle ID</label>
+            <input
+              id="vehicleId"
+              formControlName="vehicleId"
+              type="text"
+              [attr.aria-invalid]="routeForm.get('vehicleId')?.invalid && routeForm.get('vehicleId')?.touched ? 'true' : null"
+            />
+            @if (routeForm.get('vehicleId')?.invalid && routeForm.get('vehicleId')?.touched) {
+              <div class="error">Vehicle ID is required and must be alphanumeric.</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="collectedyield">Collected Yield (Kg)</label>
+          <input
+            id="collectedyield"
+            formControlName="collectedyield"
+            type="number"
+            [attr.aria-invalid]="routeForm.get('collectedyield')?.invalid && routeForm.get('collectedyield')?.touched ? 'true' : null"
+          />
+          @if (routeForm.get('collectedyield')?.invalid && routeForm.get('collectedyield')?.touched) {
+            <div class="error">Collected Yield is required and must be a positive number.</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="gtpresent">Golden Tips Present</label>
+          <select
+            id="gtpresent"
+            formControlName="gtpresent"
+            [attr.aria-invalid]="routeForm.get('gtpresent')?.invalid && routeForm.get('gtpresent')?.touched ? 'true' : null"
+          >
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+          @if (routeForm.get('gtpresent')?.invalid && routeForm.get('gtpresent')?.touched) {
+            <div class="error">Please select an option.</div>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Submit</button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>

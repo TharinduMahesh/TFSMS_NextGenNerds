@@ -30,6 +30,7 @@ export class SidebarComponent {
     '/report/tea-packing-and-ledger': 'Tea Packing and Ledger',
     '/report/claims-and-returns': 'Claims and Returns',
     '/report/sales': 'Sales Reports',
+    '/report/sales/Fiancial-Reports/farmer-loan-report': 'Loan Details',
     '/report/monthly-nsa': 'Monthly NSA'
   };
 
@@ -71,7 +72,7 @@ export class SidebarComponent {
     }
 
     if (!foundTitle) {
-      this.currentPageTitle = 'Tea Packing and Ledger';
+      this.currentPageTitle = 'Title error';
     }
 
     this.titleService.setTitle(this.currentPageTitle);
@@ -101,6 +102,6 @@ export class SidebarComponent {
 
   logout() {
     console.log('Logout clicked');
-    // Implement your logout logic here
+    //logout logic here
   }
 }

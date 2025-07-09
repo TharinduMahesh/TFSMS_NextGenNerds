@@ -27,10 +27,9 @@ export class ClaimsService {
     });
   }
 
-  // getClaims(): Observable<Claim[]> {
-  //   return this.http.get<Claim[]>(this.apiUrl);
-  // }
+  
 
+  
   getClaim(id: number): Observable<Claim> {
     return this.http.get<Claim>(`${this.apiUrl}/${id}`);
   }

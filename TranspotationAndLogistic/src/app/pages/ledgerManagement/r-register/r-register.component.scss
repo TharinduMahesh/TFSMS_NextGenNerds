@@ -1,13 +1,12 @@
 :host {
   display: block;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #e9ecef; // The light grey background of the whole page
+  background-color: #e9ecef;
   padding: 2rem;
   min-height: 100vh;
   box-sizing: border-box;
 }
 
-// --- Variable Definitions from Image ---
 $text-color: #343a40;
 $input-bg: #ffffff;
 $input-border: #ced4da;

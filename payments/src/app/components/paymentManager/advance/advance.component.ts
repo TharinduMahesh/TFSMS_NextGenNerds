@@ -1,6 +1,6 @@
 import { Component, type OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, Validators } from "@angular/forms"
 import  { Advance } from "../../../models/advance.model"
 import  { Supplier } from "../../../models/supplier.model"
 import  { AdvanceService } from "../../../shared/services/advance.service"
@@ -39,19 +39,17 @@ export class AdvanceComponent implements OnInit {
     this.advanceForm = this.fb.group({
       SupplierId: ["", Validators.required],
       AdvanceType: ["", Validators.required],
-      Purpose: ["", Validators.required], // Changed from description
-      AdvanceAmount: ["", [Validators.required, Validators.min(0.01)]], // Changed from amount
+      Purpose: ["", Validators.required],
+      AdvanceAmount: ["", [Validators.required, Validators.min(0.01)]],
       IssueDate: [new Date().toISOString().split("T")[0], Validators.required],
       RecoveredAmount: [0],
       BalanceAmount: [{ value: "", disabled: true }, [Validators.required, Validators.min(0)]],
-      RecoveryPercentage: [30, [Validators.required, Validators.min(1), Validators.max(100)]],
     })
 
     // Update balance amount when amount or recovered amount changes
     this.advanceForm.get("AdvanceAmount")?.valueChanges.subscribe((value) => {
       this.updateBalanceAmount()
     })
-
     this.advanceForm.get("RecoveredAmount")?.valueChanges.subscribe((value) => {
       this.updateBalanceAmount()
     })
@@ -76,16 +74,16 @@ export class AdvanceComponent implements OnInit {
     return advances.map((advance) => {
       // Handle both camelCase and PascalCase property names
       return {
-        AdvanceId: advance.AdvanceId || advance.advanceId,
-        SupplierId: advance.SupplierId || advance.supplierId,
-        SupplierName: advance.SupplierName || advance.supplierName,
-        AdvanceAmount: advance.AdvanceAmount || advance.advanceAmount || advance.amount,
-        BalanceAmount: advance.BalanceAmount || advance.balanceAmount,
-        Purpose: advance.Purpose || advance.purpose || advance.description,
-        AdvanceType: advance.AdvanceType || advance.advanceType,
+        AdvanceId: advance.AdvanceId || advance.advanceId || 0,
+        SupplierId: advance.SupplierId || advance.supplierId || 0,
+        SupplierName: advance.SupplierName || advance.supplierName || "",
+        AdvanceAmount: advance.AdvanceAmount || advance.advanceAmount || advance.amount || 0,
+        BalanceAmount: advance.BalanceAmount || advance.balanceAmount || 0,
+        Purpose: advance.Purpose || advance.purpose || advance.description || "",
+        AdvanceType: advance.AdvanceType || advance.advanceType || "",
         RecoveredAmount: advance.RecoveredAmount || advance.recoveredAmount || 0,
-        RecoveryPercentage: advance.RecoveryPercentage || advance.recoveryPercentage || 0,
-        CreatedDate: advance.CreatedDate || advance.createdDate,
+        IssueDate: advance.IssueDate || advance.issueDate,
+        createdDate: new Date(advance.createdDate || advance.CreatedDate || new Date()),
         Supplier: advance.Supplier || advance.supplier,
       }
     })
@@ -94,17 +92,15 @@ export class AdvanceComponent implements OnInit {
   loadAdvances(): void {
     this.loading = true
     this.error = null
-
     this.advanceService.getAllAdvances().subscribe({
       next: (data) => {
+        console.log("Raw advances data:", data)
 
         // Ensure data is an array
         const advancesArray = Array.isArray(data) ? data : []
-
         // Normalize the data to ensure consistent property names
         this.advances = this.normalizeAdvanceData(advancesArray)
-
-
+        console.log("Normalized advances:", this.advances)
         this.filteredAdvances = [...this.advances]
         this.loading = false
       },
@@ -198,6 +194,7 @@ export class AdvanceComponent implements OnInit {
       AdvanceAmount: formValues.AdvanceAmount,
       RecoveredAmount: formValues.RecoveredAmount,
       BalanceAmount: balanceAmount,
+      createdDate: new Date(),
     }
 
     this.advanceService.createAdvance(advance).subscribe({
@@ -217,7 +214,6 @@ export class AdvanceComponent implements OnInit {
 
   exportAdvancesData(format: string): void {
     this.loading = true
-
     this.exportService.exportAdvances(format).subscribe({
       next: (blob) => {
         const filename = `advances-export.${format.toLowerCase()}`
@@ -237,7 +233,6 @@ export class AdvanceComponent implements OnInit {
       AdvanceType: "",
       IssueDate: new Date().toISOString().split("T")[0],
       RecoveredAmount: 0,
-      RecoveryPercentage: 30,
     })
   }
 

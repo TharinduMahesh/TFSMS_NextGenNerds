@@ -1,4 +1,5 @@
 export interface Incentive {
+Month: string|number|Date
   IncentiveId: number
   SupplierId: number // Changed from SupplierId to match backend casing convention
   QualityBonus: number

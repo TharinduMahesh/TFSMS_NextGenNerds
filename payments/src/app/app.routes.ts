@@ -11,7 +11,6 @@ import { authGuard } from './shared/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 // Uncomment if you plan to use TransactionComponent
 import { TransactionComponent } from './components/viewtransaction/viewtransaction.component';
-import { PaymentCalculatorComponent } from './components/paymentManager/payment-calculater/payment-calculater.component';
 import { PaymentManagmentComponent } from './components/paymentManager/payment-managment/payment-managment.component';
 import { TeaReturnEntryComponent } from './components/ledgerMangement/tea-return-entry/tea-return-entry.component';
 import { DenaturedTeaEntryComponent } from './components/ledgerMangement/denatured-tea-entry/denatured-tea-entry.component';
@@ -27,7 +26,6 @@ export const routes: Routes = [
   { path: 'contact-us', component: ContactComponent },
   {path: 'viewtrs', component: TransactionComponent}, // Assuming you have a SuccessComponent
   { path: 'payment', component: PaymentComponent },
-  { path: 'payment-calculator', component: PaymentCalculatorComponent },
   {path : 'payment-management', component: PaymentManagmentComponent},
   {path : 'return' , component:TeaReturnEntryComponent},
   {path : 'denatured', component:DenaturedTeaEntryComponent }, // Assuming you have a DenaturedTeaEntryComponent

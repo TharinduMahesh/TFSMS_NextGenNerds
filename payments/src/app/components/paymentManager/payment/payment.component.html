@@ -45,7 +45,7 @@
         </button>
       </div>
       
-      <div *ngIf="showCalculator" class="calculator-container">
+      <!-- <div *ngIf="showCalculator" class="calculator-container">
         <app-payment-calculator 
           [suppliers]="suppliers"
           [initialSupplierId]="paymentForm.get('SupplierId')?.value"
@@ -53,7 +53,7 @@
           [initialRate]="paymentForm.get('rate')?.value"
           (calculationComplete)="onCalculationComplete($event)">
         </app-payment-calculator>
-      </div>
+      </div> -->
       
       <form [formGroup]="paymentForm" (ngSubmit)="createPayment()">
         <div class="form-grid">

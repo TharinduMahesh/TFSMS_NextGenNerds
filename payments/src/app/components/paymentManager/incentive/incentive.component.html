@@ -118,7 +118,7 @@
             <td>LKR {{ incentive.QualityBonus | number }}</td>
             <td>LKR {{ incentive.LoyaltyBonus | number }}</td>
             <td>LKR {{ incentive.TotalAmount | number }}</td>
-            <td>{{ incentive.createdDate | date:'short' }}</td>
+            <td>{{ incentive.CreatedDate | date:'short' }}</td>
           </tr>
           <tr *ngIf="filteredIncentives.length === 0">
             <td colspan="7" class="no-data">No incentives found</td>

@@ -1,11 +1,9 @@
 export interface Incentive {
-Month: string|number|Date
   IncentiveId: number
-  SupplierId: number // Changed from SupplierId to match backend casing convention
+  SupplierId: number
   QualityBonus: number
   LoyaltyBonus: number
   TotalAmount: number
-  createdDate : Date; // Added to match backend model
-
-  // Optional navigation properties
+  Month: string
+  CreatedDate: Date
 }

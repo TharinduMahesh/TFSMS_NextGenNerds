@@ -144,6 +144,7 @@
             <td>{{ advance.AdvanceType }}</td>
             <td>{{ advance.Purpose }}</td>
             <td>LKR {{ advance.AdvanceAmount | number }}</td>
+            <td>{{ advance.issueDate | date:'shortDate' }}</td>
             <td>LKR {{ advance.RecoveredAmount | number }}</td>
             <td>LKR {{ advance.BalanceAmount | number }}</td>
           </tr>

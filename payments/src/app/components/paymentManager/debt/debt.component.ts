@@ -84,10 +84,7 @@ export class DebtComponent implements OnInit {
         balanceAmount: debt.balanceAmount || debt.BalanceAmount || 0,
         deductionsMade: debt.deductionsMade || debt.DeductionsMade || 0,
         deductionPercentage: debt.deductionPercentage || debt.DeductionPercentage || 0,
-        status: debt.status || debt.Status || "Active",
         issueDate: debt.issueDate || debt.IssueDate,
-        createdBy: debt.createdBy || debt.CreatedBy || "",
-        createdDate: debt.createdDate || debt.CreatedDate || new Date(),
         Supplier: debt.Supplier || debt.supplier,
       }
     })

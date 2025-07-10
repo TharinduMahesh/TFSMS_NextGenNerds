@@ -6,13 +6,12 @@ import  { Supplier } from "../../../models/supplier.model"
 import  { PaymentService } from "../../../shared/services/payment.service"
 import  { SupplierService } from "../../../shared/services/supplier.service"
 import  { GreenLeafService } from "../../../shared/services/green-leaf.service"
-import { PaymentCalculatorComponent } from "../payment-calculater/payment-calculater.component"
 import  { PaymentCalculationResult } from "../../../models/payment-calculation.model"
 
 @Component({
   selector: "app-payment",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PaymentCalculatorComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,],
   templateUrl: "./payment.component.html",
   styleUrls: ["./payment.component.css"],
 })

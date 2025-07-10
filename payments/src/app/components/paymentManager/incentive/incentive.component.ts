@@ -21,11 +21,9 @@ export class IncentiveComponent implements OnInit {
   selectedSupplier = ""
   selectedMonth = ""
   incentiveForm: FormGroup
-
   totalIncentives = 0
   totalQualityBonus = 0
   totalLoyaltyBonus = 0
-
   loading = false
   error: string | null = null
 
@@ -63,10 +61,9 @@ export class IncentiveComponent implements OnInit {
     // No need to set a form control, just calculate when needed
   }
 
-  // Add this method to normalize the data - similar to the advances component
+  // Normalize the data to match the simplified structure
   private normalizeIncentiveData(incentives: any[]): Incentive[] {
     return incentives.map((incentive) => {
-      // Handle both camelCase and PascalCase property names
       return {
         IncentiveId: incentive.IncentiveId || incentive.incentiveId || 0,
         SupplierId: incentive.SupplierId || incentive.supplierId || 0,
@@ -75,10 +72,7 @@ export class IncentiveComponent implements OnInit {
         LoyaltyBonus: incentive.LoyaltyBonus || incentive.loyaltyBonus || 0,
         TotalAmount: incentive.TotalAmount || incentive.totalAmount || 0,
         Month: incentive.Month || incentive.month || "",
-        Notes: incentive.Notes || incentive.notes || "",
         CreatedDate: new Date(incentive.CreatedDate || incentive.createdDate || new Date()),
-        Supplier: incentive.Supplier || incentive.supplier,
-        createdDate: new Date(incentive.createdDate || incentive.createdDate || new Date()),
       }
     })
   }
@@ -89,10 +83,7 @@ export class IncentiveComponent implements OnInit {
     this.incentiveService.getAllIncentives().subscribe({
       next: (data) => {
         console.log("Raw incentives data:", data)
-
-        // Ensure data is an array
         const incentivesArray = Array.isArray(data) ? data : []
-        // Normalize the data to ensure consistent property names
         this.incentives = this.normalizeIncentiveData(incentivesArray)
         console.log("Normalized incentives:", this.incentives)
         this.filteredIncentives = [...this.incentives]
@@ -111,7 +102,6 @@ export class IncentiveComponent implements OnInit {
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({
       next: (data) => {
-        // Ensure data is an array
         if (Array.isArray(data)) {
           this.suppliers = data
         } else {
@@ -185,11 +175,14 @@ export class IncentiveComponent implements OnInit {
       LoyaltyBonus: formValues.loyaltyBonus,
       TotalAmount: formValues.qualityBonus + formValues.loyaltyBonus,
       Month: formValues.month,
-      createdDate: new Date(), // Set to current date
+      CreatedDate: new Date(),
     }
+
+    console.log("Sending incentive data:", incentive)
 
     this.incentiveService.createIncentive(incentive).subscribe({
       next: (result) => {
+        console.log("Incentive created successfully:", result)
         this.loadIncentives()
         this.loadSummaryMetrics()
         this.resetForm()

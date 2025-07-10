@@ -82,8 +82,7 @@ export class AdvanceComponent implements OnInit {
         Purpose: advance.Purpose || advance.purpose || advance.description || "",
         AdvanceType: advance.AdvanceType || advance.advanceType || "",
         RecoveredAmount: advance.RecoveredAmount || advance.recoveredAmount || 0,
-        IssueDate: advance.IssueDate || advance.issueDate,
-        createdDate: new Date(advance.createdDate || advance.CreatedDate || new Date()),
+       issueDate: advance.issueDate ? new Date(advance.issueDate) : new Date(),  // Add this line to match the Advance model
         Supplier: advance.Supplier || advance.supplier,
       }
     })
@@ -194,7 +193,7 @@ export class AdvanceComponent implements OnInit {
       AdvanceAmount: formValues.AdvanceAmount,
       RecoveredAmount: formValues.RecoveredAmount,
       BalanceAmount: balanceAmount,
-      createdDate: new Date(),
+      issueDate: formValues.IssueDate ? new Date(formValues.IssueDate) : new Date(),
     }
 
     this.advanceService.createAdvance(advance).subscribe({

@@ -1,108 +1,125 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
-import { Rview, GrowerLocation } from '../../../models/rview.model';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+
+import { RouteService } from '../../../services/RouteMaintainService/RouteMaintain.service';
+import { CreateUpdateRouteDto, GrowerLocationDto } from '../../../models/RouteMaintain.model';
+import { RtList } from '../../../models/RouteMaintain.model'; // Import RtList as well
 
 @Component({
   selector: 'app-r-edit',
   standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './r-edit.component.html',
   styleUrls: ['./r-edit.component.scss']
 })
-export class RtEditComponent {
-  private isOpen = signal(false);
+export class RtEditComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private routeService = inject(RouteService);
 
-  @Input() set route(value: Rview | null) {
-    if (value) {
-      this.formModel.set({ ...value });
-      this.open();
-    }
+  routeForm: FormGroup;
+  currentRouteId: number | null = null;
+  isLoading = true;
+  error: string | null = null;
+
+  constructor() {
+    this.routeForm = this.fb.group({
+      rName: ['', Validators.required],
+      startLocation: ['', Validators.required],
+      endLocation: ['', Validators.required],
+      distance: [0, [Validators.required, Validators.min(0)]],
+      collectorId: [null],
+      vehicleId: [null],
+      growerLocations: this.fb.array([]) // This will hold a list of FormGroups
+    });
   }
 
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<Rview>();
-
-  formModel = signal<Rview>({
-    rId: 0,
-    rName: '',
-    startLocation: '',
-    endLocation: '',
-    distance:0,
-    collectorId: 0,
-    vehicleId: 0,
-    growerLocations: []
-  });
-
-  formData = this.formModel.asReadonly();
-
-  get modalVisible() {
-    return this.isOpen();
+  ngOnInit(): void {
+    this.route.paramMap.pipe(
+      switchMap(params => {
+        const id = params.get('id');
+        if (!id) throw new Error('Route ID is required');
+        this.currentRouteId = +id;
+        return this.routeService.getById(this.currentRouteId);
+      })
+    ).subscribe({
+      next: (routeData) => {
+        this.populateForm(routeData);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = err.message || 'Failed to load route data.';
+        this.isLoading = false;
+      }
+    });
   }
 
-  open() {
-    this.isOpen.set(true);
+  // Getter for easy access to the growerLocations FormArray in the template
+  get growerLocations(): FormArray {
+    return this.routeForm.get('growerLocations') as FormArray;
   }
 
-  closeModal() {
-    this.isOpen.set(false);
-    this.close.emit();
+  private populateForm(route: RtList): void {
+    this.routeForm.patchValue({
+      rName: route.rName,
+      startLocation: route.startLocation,
+      endLocation: route.endLocation,
+      distance: route.distance,
+      collectorId: route.collectorId,
+      vehicleId: route.vehicleId,
+    });
+
+    // Populate the FormArray with a FormGroup for each location
+    this.growerLocations.clear();
+    route.growerLocations.forEach(loc => {
+      this.growerLocations.push(this.fb.group({
+        latitude: [loc.latitude, Validators.required],
+        longitude: [loc.longitude, Validators.required],
+        description: [loc.description]
+      }));
+    });
+  }
+  
+  // Method to add a new, empty grower location form group to the array
+  addGrowerLocation(): void {
+    const locationFormGroup = this.fb.group({
+        latitude: [null, Validators.required],
+        longitude: [null, Validators.required],
+        description: ['']
+    });
+    this.growerLocations.push(locationFormGroup);
   }
 
-  handleInput(field: keyof Rview, event: Event): void {
-  const input = event.target as HTMLInputElement;
-  let value: string | number = input.value;
-
-  if (field === 'collectorId' || field === 'vehicleId') {
-    value = Number(value);
+  // Method to remove a grower location from the array at a specific index
+  removeGrowerLocation(index: number): void {
+    this.growerLocations.removeAt(index);
   }
 
-  this.formModel.update(model => ({
-    ...model,
-    [field]: value
-  }));
-}
-
-
-  updateGrowerDescription(gId: number | undefined, event: Event): void {
-    const newDescription = (event.target as HTMLInputElement).value;
-    if (gId === undefined) return;
-
-    this.formModel.update(model => ({
-      ...model,
-      growerLocations: model.growerLocations?.map(loc =>
-        loc.gId === gId ? { ...loc, description: newDescription } : loc
-      ) ?? []
-    }));
-  }
-
-  onSubmit(event: Event): void {
-    event.preventDefault();
-    const formData = this.formModel();
-    if (!formData.rId) {
-      console.error('Cannot update route without ID');
+  onSubmit(): void {
+    if (this.routeForm.invalid || this.currentRouteId === null) {
+      this.routeForm.markAllAsTouched();
+      alert('Please fill out all required fields.');
       return;
     }
 
-    const payload: Rview = {
-      ...formData,
-      growerLocations: formData.growerLocations.map(loc => ({
-        ...loc,
-        RtListId: formData.rId
-      }))
-    };
+    const payload: CreateUpdateRouteDto = this.routeForm.value;
 
-    this.save.emit(payload);
-    this.closeModal();
-
-    
-    
+    this.routeService.updateRoute(this.currentRouteId, payload).subscribe({
+      next: () => {
+        alert('Route updated successfully!');
+        this.router.navigate(['/r-review']);
+      },
+      error: (err) => {
+        alert(`Error updating route: ${err.message}`);
+      }
+    });
   }
 
   onCancel(): void {
-    this.closeModal();
-  }
-
-  // Helper to get grower location by index safely
-  getGrowerLocation(index: number): GrowerLocation | null {
-    const locations = this.formModel().growerLocations;
-    return locations && index < locations.length ? locations[index] : null;
+    this.router.navigate(['/r-review']);
   }
 }

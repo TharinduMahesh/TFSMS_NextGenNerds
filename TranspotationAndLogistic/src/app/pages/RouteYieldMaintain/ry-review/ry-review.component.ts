@@ -1,7 +1,8 @@
-// src/app/components/rytrack/rytrack.component.ts
 import { Component, OnInit, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { RyService } from '../../../services/RouteYieldMaintainService/RouteYieldMaintain.service';
-import { YieldList } from '../../../models/rview.model';
+import { YieldResponse } from '../../../models/RouteYeildMaintain.model'; // Corrected model path
 import { RyEditComponent } from '../ry-edit/ry-edit.component';
 import { RyViewComponent } from '../ry-view/ry-view.component';
 
@@ -10,42 +11,31 @@ import { RyViewComponent } from '../ry-view/ry-view.component';
   standalone: true,
   templateUrl: './ry-review.component.html',
   styleUrls: ['./ry-review.component.scss'],
-  imports:[RyViewComponent]
+  imports: [CommonModule, RyViewComponent, RyEditComponent]
 })
 export class RyReviewComponent implements OnInit {
   searchTerm = signal('');
-  selectedFilter = signal('all');
-  yieldLists = signal<YieldList[]>([]);
+  yieldLists = signal<YieldResponse[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
-  isModalOpen = signal(false);   //signals for view
-  routeToView = signal<YieldList | null>(null);
+  isViewModalOpen = signal(false);
+  routeToView = signal<YieldResponse | null>(null);
 
-  routeToEdit = signal<YieldList | null>(null);  //signals for edit 
   isEditModalOpen = signal(false);
-  formModel = signal<YieldList | null>(null);
+  routeToEdit = signal<YieldResponse | null>(null);
 
-
-
+  constructor(private ryService: RyService, private router: Router) { }
 
   filteredYieldLists = computed(() => {
-    return this.yieldLists().filter(yieldList => {
-      const searchTerm = this.searchTerm().toLowerCase();
-      const matchesSearch =
-        yieldList.rId?.toString().includes(searchTerm) ||
-        yieldList.rName?.toLowerCase().includes(searchTerm) ||
-       yieldList.collected_Yield?.toString().includes(searchTerm) ||
-        searchTerm === '';
-
-      let matchesFilter = true;
-
-      return matchesSearch && matchesFilter;
-    });
+    const term = this.searchTerm().toLowerCase();
+    if (!term) return this.yieldLists();
+    return this.yieldLists().filter(yieldList =>
+      yieldList.rName?.toLowerCase().includes(term) ||
+      yieldList.collected_Yield.toString().includes(term) ||
+      yieldList.yId.toString().includes(term)
+    );
   });
-  yieldListService: any;
-
-  constructor(private ryService: RyService) { }
 
   ngOnInit(): void {
     this.fetchYieldLists();
@@ -54,77 +44,48 @@ export class RyReviewComponent implements OnInit {
   fetchYieldLists(): void {
     this.isLoading.set(true);
     this.error.set(null);
-
     this.ryService.getAllYieldLists().subscribe({
-      next: (data) => {
-        this.yieldLists.set(data);
-        this.isLoading.set(false);
-      },
-      error: (err: Error) => {
-        this.error.set(err.message || 'Failed to load yield lists');
-        this.isLoading.set(false);
-      }
+      next: (data) => this.yieldLists.set(data),
+      error: (err: Error) => this.error.set(err.message || 'Failed to load'),
+      complete: () => this.isLoading.set(false)
     });
   }
 
-  trackById(index: number, item: YieldList): number {
-    return item.rId ?? index;
+  trackById(index: number, item: YieldResponse): number {
+    return item.yId;
   }
 
   addNewRoute(): void {
-
+    this.router.navigate(['/ry-create']);
   }
 
-  selectedRoute = signal<YieldList | null>(null);
-
-  onSelectRoute(route: YieldList): void {
-    this.selectedRoute.set(route);
+  onView(route: YieldResponse): void {
+    this.routeToView.set(route);
+    this.isViewModalOpen.set(true);
   }
 
-  //view logic begin
-  onView(): void {
-    const route = this.selectedRoute();
-    if (route?.rId) {
-        this.routeToView.set(route);
-        this.isModalOpen.set(true);
-        console.log('Viewing route:', route.rId);
-    }
-
+  onEdit(route: YieldResponse): void {
+    this.routeToEdit.set(route);
+    this.isEditModalOpen.set(true);
   }
 
-  closeModal(): void {
-    this.isModalOpen.set(false);
-    this.routeToView.set(null);
+  closeViewModal(): void {
+    this.isViewModalOpen.set(false);
   }
-  //view logic end
 
-  //edit logic begin
-  onEdit(): void {
-    const route = this.selectedRoute();
-    if (route) {
-      this.formModel.set(route); // <- make sure to set this
-      this.isEditModalOpen.set(true);
+  closeEditModal(refresh: boolean): void {
+    this.isEditModalOpen.set(false);
+    if (refresh) {
+      this.fetchYieldLists();
     }
   }
-  
-  
-  //edit end
-  
 
-  deleteYield(id: number): void {
+  onDelete(yieldId: number): void {
     if (confirm('Are you sure you want to delete this entry?')) {
-      this.ryService.deleteYieldList(id).subscribe({
-        next: () => {
-          this.yieldLists.set(this.yieldLists().filter(y => y.rId !== id));
-        },
-        error: (err: Error) => {
-          this.error.set(err.message || 'Failed to delete the yield list');
-        }
+      this.ryService.deleteYieldList(yieldId).subscribe({
+        next: () => this.yieldLists.update(lists => lists.filter(y => y.yId !== yieldId)),
+        error: (err: Error) => this.error.set(err.message || 'Failed to delete')
       });
     }
-
   }
-
-
-
 }

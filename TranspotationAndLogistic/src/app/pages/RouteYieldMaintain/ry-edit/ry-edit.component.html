@@ -1,35 +1,25 @@
-<div class="edit-modal">
+<div class="modal-overlay" (click)="onCancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
     <h2>Edit Route Yield</h2>
+    <!-- This form only edits yield-specific data -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <label>
-        Route Name:
-        <input formControlName="routeName" type="text" />
-      </label>
-      <label>
-        Collected Yield (kg):
-        <input formControlName="collected_Yield" type="number" />
-      </label>
-      <label>
-        Golden Tips Present:
-        <select formControlName="golden_Tips_Present">
+      <div class="form-group">
+        <label for="edit_collected_Yield">Collected Yield (kg):</label>
+        <input id="edit_collected_Yield" formControlName="collected_Yield" type="number" />
+      </div>
+
+      <div class="form-group">
+        <label for="edit_golden_Tips_Present">Golden Tips Present:</label>
+        <select id="edit_golden_Tips_Present" formControlName="golden_Tips_Present">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
-      </label>
-      
-      <label>
-        Collector ID:
-        <input formControlName="collectorID" type="number" />
-      </label>
-      <label>
-        Vehicle ID:
-        <input formControlName="vehicalID" type="number" />
-      </label>
-  
+      </div>
+
       <div class="form-buttons">
-        <button type="submit">Save Changes</button>
+        <button type="submit" [disabled]="form.invalid || !form.dirty">Save Changes</button>
         <button type="button" (click)="onCancel()">Cancel</button>
       </div>
     </form>
   </div>
-  
+</div>

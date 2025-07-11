@@ -19,7 +19,7 @@ namespace TfactoryMng.Migrations
                     rName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     startLocation = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     endLocation = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    distance = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    distance = table.Column<int>(type: "int", nullable: true),
                     collectorId = table.Column<int>(type: "int", nullable: true),
                     vehicleId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -50,6 +50,27 @@ namespace TfactoryMng.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "YieldLists",
+                columns: table => new
+                {
+                    yId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    rId = table.Column<int>(type: "int", nullable: false),
+                    collected_Yield = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    golden_Tips_Present = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_YieldLists", x => x.yId);
+                    table.ForeignKey(
+                        name: "FK_YieldLists_RtLists_rId",
+                        column: x => x.rId,
+                        principalTable: "RtLists",
+                        principalColumn: "rId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_GrowerLocations_RtListId",
                 table: "GrowerLocations",
@@ -60,6 +81,11 @@ namespace TfactoryMng.Migrations
                 table: "RtLists",
                 column: "rName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_YieldLists_rId",
+                table: "YieldLists",
+                column: "rId");
         }
 
         /// <inheritdoc />
@@ -67,6 +93,9 @@ namespace TfactoryMng.Migrations
         {
             migrationBuilder.DropTable(
                 name: "GrowerLocations");
+
+            migrationBuilder.DropTable(
+                name: "YieldLists");
 
             migrationBuilder.DropTable(
                 name: "RtLists");

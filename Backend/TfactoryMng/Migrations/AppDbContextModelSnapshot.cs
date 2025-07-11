@@ -32,10 +32,8 @@ namespace TfactoryMng.Migrations
                     b.Property<int?>("collectorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("distance")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("distance")
+                        .HasColumnType("int");
 
                     b.Property<string>("endLocation")
                         .IsRequired()

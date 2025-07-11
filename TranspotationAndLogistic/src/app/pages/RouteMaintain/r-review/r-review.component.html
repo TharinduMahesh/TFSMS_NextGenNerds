@@ -79,10 +79,4 @@
   </app-r-view>
   }
 
-  <!-- Edit Route Component -->
-  @if (isEditModalOpen() && routeBeingEdited()) {
-  <app-r-edit [route]="routeBeingEdited()!" (close)="closeEditModal()" (save)="onSaveEdit($event)">
-  </app-r-edit>
-  }
-
 </div>

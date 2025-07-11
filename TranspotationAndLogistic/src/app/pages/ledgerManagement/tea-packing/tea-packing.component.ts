@@ -7,21 +7,22 @@ import { TeaPacking, PACKING_TYPES, PackingType } from '../../../models/tea-pack
 @Component({
   selector: 'app-tea-packing',
   standalone: true,
-  imports: [CommonModule, FormsModule], // FormsModule is needed for [(ngModel)]
+  imports: [CommonModule, FormsModule], 
   templateUrl: './tea-packing.component.html',
   styleUrls: ['./tea-packing.component.scss']
 })
 export class TeaPackingComponent {
   private teaService = inject(TeaPackingService);
-  
-  // Form data signals - ngModel can write to these directly
+
   grade = signal('');
   gardenMark = signal('');
   financialYear = signal('');
+  date = signal('');
   packingType = signal('');
   quantity = signal<number | null>(null);
+  remark = signal('');
   
-  // Form validation signals (no changes needed here)
+  // Form validation signals
   gradeError = computed(() => {
     const value = this.grade();
     if (!value) return 'Grade is required';
@@ -42,6 +43,10 @@ export class TeaPackingComponent {
     if (!/^\d{4}-\d{2}$/.test(value)) return 'Format should be YYYY-YY (e.g., 2024-25)';
     return '';
   });
+
+  dateError = computed(() => { // New validation for Date
+    return !this.date() ? 'Date is required' : '';
+  });
   
   packingTypeError = computed(() => {
     return !this.packingType() ? 'Packing Type is required' : '';
@@ -53,13 +58,21 @@ export class TeaPackingComponent {
     if (value <= 0) return 'Quantity must be greater than 0';
     return '';
   });
+
+  remarkError = computed(() => { // New validation for Remark (optional, length check)
+    const value = this.remark();
+    if (value.length > 200) return 'Remark cannot exceed 200 characters.';
+    return '';
+  });
   
   isFormValid = computed(() => {
     return !this.gradeError() && 
            !this.gardenMarkError() && 
            !this.financialYearError() && 
+           !this.dateError() && // Added to validation check
            !this.packingTypeError() && 
-           !this.quantityError();
+           !this.quantityError() &&
+           !this.remarkError(); // Added to validation check
   });
   
   // Data
@@ -68,12 +81,15 @@ export class TeaPackingComponent {
   
   onSubmit(): void {
     if (this.isFormValid()) {
+      // Assumes TeaPacking model now includes date and remark
       const record: TeaPacking = {
         grade: this.grade(),
         gardenMark: this.gardenMark(),
         financialYear: this.financialYear(),
+        date: this.date(), // Add date to record
         packingType: this.packingType(),
-        quantity: this.quantity()!
+        quantity: this.quantity()!,
+        remark: this.remark() // Add remark to record
       };
       
       this.teaService.addRecord(record);
@@ -85,13 +101,13 @@ export class TeaPackingComponent {
     this.grade.set('');
     this.gardenMark.set('');
     this.financialYear.set('');
+    this.date.set(''); // Clear date
     this.packingType.set('');
     this.quantity.set(null);
+    this.remark.set(''); // Clear remark
   }
   
   removeRecord(id: string): void {
     this.teaService.removeRecord(id);
   }
-
-  // The on...Change methods are no longer needed!
 }

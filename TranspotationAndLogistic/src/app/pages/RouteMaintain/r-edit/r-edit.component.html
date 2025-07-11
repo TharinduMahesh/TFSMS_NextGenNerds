@@ -1,163 +1,75 @@
-<div class="modal-overlay" [class.visible]="modalVisible">
-  <div class="modal-content" [class.visible]="modalVisible">
-    <button class="close-btn" (click)="onCancel()">X</button>
-    <h2>Edit Route</h2>
+<div class="page-container">
+  <header class="page-header">
+    @if (!isLoading && currentRouteId) {
+      <h2>Edit Route #{{ currentRouteId }}</h2>
+    } @else {
+      <h2>Edit Route</h2>
+    }
+  </header>
 
-    <div class="edit-modal-container">
-      <!-- Map Preview -->
-      <div class="map-preview">
-        <p>Map Preview Placeholder</p>
-      </div>
-
-      <!-- Form -->
-      <form (submit)="onSubmit($event)" class="route-form">
-        <div class="form-container">
+  @if (isLoading) {
+    <div class="loading">Loading route data...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+    <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="route-form">
+      <div class="form-container">
+        
+        <div class="form-group">
+          <label for="edit-rName">Route Name</label>
+          <input id="edit-rName" type="text" formControlName="rName" />
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="edit-startLocation">Start Location</label>
+                <input id="edit-startLocation" type="text" formControlName="startLocation" />
+            </div>
+            <div class="form-group">
+                <label for="edit-endLocation">End Location</label>
+                <input id="edit-endLocation" type="text" formControlName="endLocation" />
+            </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="edit-distance">Distance (km)</label>
+          <input id="edit-distance" type="number" formControlName="distance" />
+        </div>
+        
+        <div class="form-row">
           <div class="form-group">
-            <label for="rName">Route Name</label>
-            <input
-              id="rName"
-              type="text"
-              [value]="formData().rName"
-              (input)="handleInput('rName', $event)"
-              required
-            />
+            <label for="edit-collectorId">Collector ID (Optional)</label>
+            <input id="edit-collectorId" type="number" formControlName="collectorId" />
           </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="startLocation">Start Location</label>
-              <input
-                id="startLocation"
-                type="text"
-                [value]="formData().startLocation"
-                (input)="handleInput('startLocation', $event)"
-                required
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="endLocation">End Location</label>
-              <input
-                id="endLocation"
-                type="text"
-                [value]="formData().endLocation"
-                (input)="handleInput('endLocation', $event)"
-                required
-              />
-            </div>
-          </div>
-
           <div class="form-group">
-            <label for="distance">Distance (km)</label>
-            <input
-              id="distance"
-              type="number"
-              [value]="formData().distance"
-              (input)="handleInput('distance', $event)"
-              required
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="collectorId">Collector ID</label>
-              <input
-                id="collectorId"
-                type="number"
-                [value]="formData().collectorId"
-                (input)="handleInput('collectorId', $event)"
-                required
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="vehicleId">Vehicle ID</label>
-              <input
-                id="vehicleId"
-                type="number"
-                [value]="formData().vehicleId"
-                (input)="handleInput('vehicleId', $event)"
-                required
-              />
-            </div>
-          </div>
-
-          <h3>Grower Locations</h3>
-
-          <!-- Manually render grower locations up to 5 -->
-          <div class="grower-list">
-            <div class="grower-item" [hidden]="!getGrowerLocation(0)">
-              <div class="location-info">
-                <strong>Lat:</strong> {{ getGrowerLocation(0)?.latitude }},
-                <strong>Lng:</strong> {{ getGrowerLocation(0)?.longitude }}
-              </div>
-              <input
-                type="text"
-                [value]="getGrowerLocation(0)?.description"
-                (input)="updateGrowerDescription(getGrowerLocation(0)?.gId, $event)"
-                placeholder="Location description"
-              />
-            </div>
-
-            <div class="grower-item" [hidden]="!getGrowerLocation(1)">
-              <div class="location-info">
-                <strong>Lat:</strong> {{ getGrowerLocation(1)?.latitude }},
-                <strong>Lng:</strong> {{ getGrowerLocation(1)?.longitude }}
-              </div>
-              <input
-                type="text"
-                [value]="getGrowerLocation(1)?.description"
-                (input)="updateGrowerDescription(getGrowerLocation(1)?.gId, $event)"
-                placeholder="Location description"
-              />
-            </div>
-
-            <div class="grower-item" [hidden]="!getGrowerLocation(2)">
-              <div class="location-info">
-                <strong>Lat:</strong> {{ getGrowerLocation(2)?.latitude }},
-                <strong>Lng:</strong> {{ getGrowerLocation(2)?.longitude }}
-              </div>
-              <input
-                type="text"
-                [value]="getGrowerLocation(2)?.description"
-                (input)="updateGrowerDescription(getGrowerLocation(2)?.gId, $event)"
-                placeholder="Location description"
-              />
-            </div>
-
-            <div class="grower-item" [hidden]="!getGrowerLocation(3)">
-              <div class="location-info">
-                <strong>Lat:</strong> {{ getGrowerLocation(3)?.latitude }},
-                <strong>Lng:</strong> {{ getGrowerLocation(3)?.longitude }}
-              </div>
-              <input
-                type="text"
-                [value]="getGrowerLocation(3)?.description"
-                (input)="updateGrowerDescription(getGrowerLocation(3)?.gId, $event)"
-                placeholder="Location description"
-              />
-            </div>
-
-            <div class="grower-item" [hidden]="!getGrowerLocation(4)">
-              <div class="location-info">
-                <strong>Lat:</strong> {{ getGrowerLocation(4)?.latitude }},
-                <strong>Lng:</strong> {{ getGrowerLocation(4)?.longitude }}
-              </div>
-              <input
-                type="text"
-                [value]="getGrowerLocation(4)?.description"
-                (input)="updateGrowerDescription(getGrowerLocation(4)?.gId, $event)"
-                placeholder="Location description"
-              />
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Save Changes</button>
-            <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+            <label for="edit-vehicleId">Vehicle ID (Optional)</label>
+            <input id="edit-vehicleId" type="number" formControlName="vehicleId" />
           </div>
         </div>
-      </form>
-    </div>
-  </div>
+
+        <hr />
+        
+        <h3>Grower Locations</h3>
+        <div formArrayName="growerLocations" class="grower-list-editable">
+            @for (locationGroup of growerLocations.controls; track $index) {
+              <div [formGroupName]="$index" class="grower-item-editable">
+                <input formControlName="latitude" placeholder="Latitude" type="number" step="any" />
+                <input formControlName="longitude" placeholder="Longitude" type="number" step="any" />
+                <input formControlName="description" placeholder="Location description" />
+                <button type="button" (click)="removeGrowerLocation($index)" class="btn-remove" title="Remove Location">X</button>
+              </div>
+            }
+        </div>
+        <button type="button" (click)="addGrowerLocation()" class="btn-add-location">+ Add Grower Location</button>
+
+        <hr />
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Save Changes</button>
+          <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+        </div>
+
+      </div>
+    </form>
+  }
 </div>

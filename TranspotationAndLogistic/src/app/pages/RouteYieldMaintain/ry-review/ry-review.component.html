@@ -1,100 +1,63 @@
 <div class="route-container">
   <div class="top-bar">
-    <input
-      type="text"
-      placeholder="Search routes..."
-      [value]="searchTerm()"
-      (input)="searchTerm.set($any($event.target).value)"
-    />
-
-    <select
-      [value]="selectedFilter()"
-      (change)="selectedFilter.set($any($event.target).value)"
-    >
-      <option value="all">All Routes</option>
-      <option value="short">(0 - 50 kg)</option>
-      <option value="medium">(50 - 100 Kg )</option>
-      <option value="long">(100 - 200 Kg ) </option>
-      <option value="long">(200 - 400 Kg)</option>
-    </select>
+    <input type="text" placeholder="Search..." [value]="searchTerm()"
+      (input)="searchTerm.set($any($event.target).value)" />
 
     <button class="add-route" (click)="addNewRoute()">
-      + Add New Route
+      + Add New Yield
     </button>
   </div>
 
   @if (isLoading()) {
-    <div class="loading">Loading routes...</div>
-  }
-
-  @if (error()) {
+    <div class="loading">Loading...</div>
+  } @else if (error()) {
     <div class="error">{{ error() }}</div>
-  }
-
-  <div class="route-list">
-    <div class="route-caption">
-      <h2>Route Yield</h2>
-
-      <div class="caption-actions">
-        <!-- View Button with Tooltip Wrapper -->
-        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to View Route'">
-          <button (click)="onView()" [disabled]="!selectedRoute()">View</button>
-        </div>
-      
-        <!-- Edit Button -->
-        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to Edit Route'">
-        <button (click)="onEdit()" [disabled]="!selectedRoute()">Edit</button>
-        </div>
-
-        <!-- Delete Button -->
-        <div [attr.title]="!selectedRoute() ? 'Select a Route first' : 'Click to Delete Route'">
-          <button
-            (click)="selectedRoute() ? deleteYield(selectedRoute()!.rId) : null"
-            [disabled]="!selectedRoute()"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-      
-    </div>    
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>collected Yield(kg)</th>
-          <th>golden Tips Present</th>
-          <th>Collector Id</th>
-          <th>Vehicle Id</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (route of filteredYieldLists(); track trackById($index, route)) {
-          <tr 
-            (click)="onSelectRoute(route)" 
-            [class.selected]="selectedRoute()?.rId === route.rId"
-          >
-            <td>{{ route.rId }}</td>
+  } @else {
+    <div class="route-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Yield ID</th>
+            <th>Route Name</th>
+            <th>Collected Yield (kg)</th>
+            <th>Golden Tips</th>
+            <th>Collector ID</th>
+            <th>Vehicle ID</th>
+            <th>Actions</th> <!-- Add an actions column -->
+          </tr>
+        </thead>
+        <tbody>
+          @for (route of filteredYieldLists(); track trackById($index, route)) {
+          <tr>
+            <td>{{ route.yId }}</td> <!-- Use the correct yield ID -->
             <td>{{ route.rName }}</td>
             <td>{{ route.collected_Yield }}</td>
-            <td>{{ route.golden_Tips_Present}}</td>
+            <td>{{ route.golden_Tips_Present }}</td>
             <td>{{ route.collectorID }}</td>
-            <td>{{ route.vehicalID }}</td>
+            <td>{{ route.vehicleID }}</td> <!-- Typo fixed: vehicalID -> vehicleID -->
+            <td class="actions-cell">
+              <button (click)="onView(route)" class="btn-action btn-view">View</button>
+              <button (click)="onEdit(route)" class="btn-action btn-edit">Edit</button>
+              <button (click)="onDelete(route.yId)" class="btn-action btn-delete">Delete</button>
+            </td>
           </tr>
-        } @empty {
+          } @empty {
           <tr>
-            <td colspan="6">No routes found</td>
+            <td colspan="7">No yield records found.</td>
           </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  @if (isModalOpen()) {
-    <app-ryview
-      [route]="routeToView()!"
-      (close)="closeModal()"
-    ></app-ryview>
+          }
+        </tbody>
+      </table>
+    </div>
   }
-  
+
+  <!-- View Modal -->
+  @if (isViewModalOpen() && routeToView()) {
+    <app-ryview [route]="routeToView()!" (close)="closeViewModal()"></app-ryview>
+  }
+
+  <!-- Edit Modal -->
+  @if (isEditModalOpen() && routeToEdit()) {
+    <app-ryedit [route]="routeToEdit()!" (close)="closeEditModal($event)"></app-ryedit>
+  }
 </div>

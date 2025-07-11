@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { YieldList } from '../../../models/rview.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { YieldResponse, YieldPayload } from '../../../models/RouteYeildMaintain.model';
 import { RyService } from '../../../services/RouteYieldMaintainService/RouteYieldMaintain.service';
-import { NonNullableFormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-ryedit',
@@ -14,45 +13,48 @@ import { NonNullableFormBuilder } from '@angular/forms';
 })
 export class RyEditComponent implements OnInit {
   private ryService = inject(RyService);
+  private fb = inject(FormBuilder);
 
-  private fb = inject(NonNullableFormBuilder);
+  @Input({ required: true }) route!: YieldResponse; // Use correct model
+  @Output() close = new EventEmitter<boolean>(); // true on success, false on cancel
 
-  @Input() route!: YieldList;
-  @Output() close = new EventEmitter<void>();
-
-  form = this.fb.group({
-    rId: [0],
-    rName: ['', Validators.required],
-    collected_Yield: ['', Validators.required],
-    golden_Tips_Present: ['false'],
-    collectorID: [0, Validators.required],
-    vehicalID: [0, Validators.required]
-  });
-  
+  form!: FormGroup;
 
   ngOnInit(): void {
-    if (this.route) {
-      this.form.patchValue(this.route);
-    }
+    // Form matches the API payload, with your validations preserved
+    this.form = this.fb.group({
+      collected_Yield: [this.route.collected_Yield, [Validators.required, Validators.min(0)]],
+      golden_Tips_Present: [this.route.golden_Tips_Present, Validators.required]
+    });
   }
 
   onSubmit(): void {
-    if (this.form.valid) {
-      const updatedRoute: YieldList = {
-        ...this.form.getRawValue()
-      };
-  
-      this.ryService.updateYieldList(updatedRoute.rId, updatedRoute).subscribe({
-        next: () => this.close.emit(),
-        error: (err) => console.error('Update failed', err)
-      });
+    if (this.form.invalid) {
+      return;
     }
+  
+    const formValues = this.form.getRawValue();
+
+    // The API needs the rId, which is not editable on this form
+    const payload: YieldPayload = {
+      rId: this.route.rId,
+      collected_Yield: formValues.collected_Yield,
+      golden_Tips_Present: formValues.golden_Tips_Present
+    };
+
+    // Update using the unique yield ID (yId)
+    this.ryService.updateYieldList(this.route.yId, payload).subscribe({
+      next: () => {
+        this.close.emit(true); // Signal success
+      },
+      error: (err) => {
+        console.error('Update failed', err);
+        alert('Update failed. See console for details.');
+      }
+    });
   }
-  
-  
-  
 
   onCancel(): void {
-    this.close.emit();
+    this.close.emit(false); // Signal cancellation
   }
 }

@@ -2,8 +2,9 @@ import { Component, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { Rview } from '../../../models/rview.model';
-import { RService } from '../../../services/RouteMaintainService/RouteMaintain.service';
+// ** FIX: Import the DTO as well **
+import { CreateUpdateRouteDto } from '../../../models/RouteMaintain.model';
+import { RouteService } from '../../../services/RouteMaintainService/RouteMaintain.service';
 
 @Component({
   selector: 'app-rform',
@@ -13,14 +14,13 @@ import { RService } from '../../../services/RouteMaintainService/RouteMaintain.s
   styleUrls: ['./r-create.component.scss']
 })
 export class RtCreateComponent implements OnInit {
-  routeForm!: FormGroup; // definite assignment assertion
-
+  routeForm!: FormGroup;
   successMessage = signal<string | null>(null);
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private rService: RService
+    private routeService: RouteService
   ) { }
 
   ngOnInit() {
@@ -28,9 +28,10 @@ export class RtCreateComponent implements OnInit {
       rName: ['', [Validators.required, Validators.maxLength(50)]],
       startLocation: ['', Validators.required],
       endLocation: ['', Validators.required],
+      // The form will handle a string, which is what the backend wants for now
       distance: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      collectorId: ['', [Validators.required, Validators.min(1)]],
-      vehicleId: ['', [Validators.required, Validators.min(1)]],
+      collectorId: [null, [Validators.min(1)]], // Make optional fields nullable
+      vehicleId: [null, [Validators.min(1)]],
       growerLocations: this.fb.array([])
     });
   }
@@ -42,11 +43,12 @@ export class RtCreateComponent implements OnInit {
   addWaypoint(location: string) {
     if (!location.trim()) return;
 
+    // ** FIX: Create a form group that matches GrowerLocationDto **
+    // It should NOT have RtListId.
     this.growerLocations.push(this.fb.group({
       description: [location, Validators.required],
-      latitude: [0],
-      longitude: [0],
-      RtListId: [0]
+      latitude: [0], // Default value, DTO requires it
+      longitude: [0]  // Default value, DTO requires it
     }));
   }
 
@@ -63,33 +65,35 @@ export class RtCreateComponent implements OnInit {
     return this.successMessage();
   }
 
-
   onSubmit() {
     if (this.routeForm.invalid) {
       this.routeForm.markAllAsTouched();
       return;
     }
 
-    const formValue: Rview = {
-      ...this.routeForm.value,
-      collectorId: Number(this.routeForm.value.collectorId),
-      vehicleId: Number(this.routeForm.value.vehicleId),
-      distance: Number(this.routeForm.value.distance),
-      rId: 0 // Adjust if needed
+    // ** FIX: Build a payload that matches CreateUpdateRouteDto exactly **
+    const payload: CreateUpdateRouteDto = {
+      rName: this.routeForm.value.rName,
+      startLocation: this.routeForm.value.startLocation,
+      endLocation: this.routeForm.value.endLocation,
+      // ** FIX: Do NOT convert distance to a number. The backend expects a string. **
+      distance: this.routeForm.value.distance,
+      collectorId: this.routeForm.value.collectorId ? Number(this.routeForm.value.collectorId) : null,
+      vehicleId: this.routeForm.value.vehicleId ? Number(this.routeForm.value.vehicleId) : null,
+      growerLocations: this.routeForm.value.growerLocations
     };
 
-    this.rService.create(formValue).subscribe({
+    this.routeService.createRoute(payload).subscribe({
       next: () => {
-        this.showSuccessMessage('Form submitted successfully!');
-        this.router.navigate(['/r-review']);
+        this.showSuccessMessage('Route created successfully!');
+        // Adding a small delay to let the user see the message
+        setTimeout(() => this.router.navigate(['/r-review']), 1500);
       },
       error: (err) => {
         alert('Error creating route: ' + err.message);
       }
     });
   }
-
-
 
   onCancel() {
     this.router.navigate(['/r-review']);

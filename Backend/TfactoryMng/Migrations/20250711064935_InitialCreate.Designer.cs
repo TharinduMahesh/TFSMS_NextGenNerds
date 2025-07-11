@@ -11,7 +11,7 @@ using TfactoryMng.Data;
 namespace TfactoryMng.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250507060959_InitialCreate")]
+    [Migration("20250711064935_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,10 +35,8 @@ namespace TfactoryMng.Migrations
                     b.Property<int?>("collectorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("distance")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("distance")
+                        .HasColumnType("int");
 
                     b.Property<string>("endLocation")
                         .IsRequired()
@@ -94,12 +92,51 @@ namespace TfactoryMng.Migrations
                     b.ToTable("GrowerLocations");
                 });
 
+            modelBuilder.Entity("TfactoryMng.Model.YieldList", b =>
+                {
+                    b.Property<int>("yId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("yId"));
+
+                    b.Property<string>("collected_Yield")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("golden_Tips_Present")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("rId")
+                        .HasColumnType("int");
+
+                    b.HasKey("yId");
+
+                    b.HasIndex("rId");
+
+                    b.ToTable("YieldLists");
+                });
+
             modelBuilder.Entity("TfactoryMng.Model.GrowerLocation", b =>
                 {
                     b.HasOne("RtList", "RtList")
                         .WithMany("GrowerLocations")
                         .HasForeignKey("RtListId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RtList");
+                });
+
+            modelBuilder.Entity("TfactoryMng.Model.YieldList", b =>
+                {
+                    b.HasOne("RtList", "RtList")
+                        .WithMany()
+                        .HasForeignKey("rId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("RtList");

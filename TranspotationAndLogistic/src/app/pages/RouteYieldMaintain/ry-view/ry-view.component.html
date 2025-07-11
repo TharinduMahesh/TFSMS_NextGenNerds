@@ -1,17 +1,17 @@
 @if (route) {
-    <div class="modal-overlay">
-      <div class="modal-content">
-        <button class="close-btn" (click)="closeModal()">X</button>
-        <h3>Route Details</h3>
-        <table>
-          <tr><td><strong>ID:</strong></td><td>{{ route.routeId }}</td></tr>
-          <tr><td><strong>Name:</strong></td><td>{{ route.routeName }}</td></tr>
-          <tr><td><strong>Collected Yield (kg):</strong></td><td>{{ route.collected_Yield }}</td></tr>
-          <tr><td><strong>Golden Tips Present:</strong></td><td>{{ route.golden_Tips_Present }}</td></tr>
-          <tr><td><strong>Collector Id:</strong></td><td>{{ route.collectorID }}</td></tr>
-          <tr><td><strong>Vehicle Id:</strong></td><td>{{ route.vehicalID }}</td></tr>
-        </table>
-      </div>
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()">X</button>
+      <h3>Route Yield Details</h3>
+      <table>
+        <tr><td><strong>Yield ID:</strong></td><td>{{ route.yId }}</td></tr>
+        <tr><td><strong>Route ID:</strong></td><td>{{ route.rId }}</td></tr>
+        <tr><td><strong>Route Name:</strong></td><td>{{ route.rName }}</td></tr>
+        <tr><td><strong>Collected Yield (kg):</strong></td><td>{{ route.collected_Yield }}</td></tr>
+        <tr><td><strong>Golden Tips Present:</strong></td><td>{{ route.golden_Tips_Present }}</td></tr>
+        <tr><td><strong>Collector ID:</strong></td><td>{{ route.collectorID }}</td></tr>
+        <tr><td><strong>Vehicle ID:</strong></td><td>{{ route.vehicleID }}</td></tr>
+      </table>
     </div>
-  }
-  
+  </div>
+}

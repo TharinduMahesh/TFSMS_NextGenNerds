@@ -3,8 +3,10 @@ export interface TeaPacking {
   grade: string;
   gardenMark: string;
   financialYear: string;
+  date: string;
   packingType: string;
   quantity: number;
+  remark?: string;
 }
 
 export interface PackingType {

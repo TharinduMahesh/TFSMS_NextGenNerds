@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Rview } from '../../../models/rview.model'; // adjust import path
+import { RtList } from '../../../models/RouteMaintain.model'; // adjust import path
 
 @Component({
   selector: 'app-r-view',
@@ -8,6 +8,6 @@ import { Rview } from '../../../models/rview.model'; // adjust import path
   styleUrls: ['./r-view.component.scss']
 })
 export class RtViewComponent {
-  @Input() route: Rview | null = null;
+  @Input() route: RtList | null = null;
   @Output() close = new EventEmitter<void>();
 }

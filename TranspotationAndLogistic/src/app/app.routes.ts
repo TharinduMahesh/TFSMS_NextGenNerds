@@ -95,5 +95,11 @@ export const routes: Routes = [
   {
     path : 'r-register',
     component : ReturnRegisterComponent
-  }
+  },
+  
+  { path: 'r-edit/:id', component: RtEditComponent },
+
+  // Redirect to the review page by default
+  { path: '', redirectTo: '/r-review', pathMatch: 'full' },
+
   ];

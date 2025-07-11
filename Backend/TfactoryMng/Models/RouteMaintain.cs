@@ -15,8 +15,8 @@ public class RtList
     [Required, StringLength(100)]
     public string endLocation { get; set; } = string.Empty;
 
-    [Required, StringLength(50)]
-    public string distance { get; set; } = string.Empty;
+    // Corrected to match your requirement of being an integer
+    public int? distance { get; set; }
 
     public int? collectorId { get; set; }
     public int? vehicleId { get; set; }

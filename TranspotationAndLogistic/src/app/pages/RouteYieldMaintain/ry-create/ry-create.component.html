@@ -1,97 +1,55 @@
 <div class="page-wrapper">
   <header class="page-header">
-    <h1>Route Fill Form</h1>
+    <h1>Create New Route Yield</h1>
   </header>
 
   <div class="page-container">
-    <form [formGroup]="routeForm" (ngSubmit)="submitForm()" class="route-form">
+    <!-- Use the correct form group name: yieldForm -->
+    <form [formGroup]="yieldForm" (ngSubmit)="submitForm()" class="route-form">
       <div class="form-container">
 
+        <!-- This is now a dropdown to select an existing route -->
         <div class="form-group">
-          <label for="id">Route ID</label>
-          <input
-            id="id"
-            formControlName="id"
-            type="text"
-            [attr.aria-invalid]="routeForm.get('id')?.invalid && routeForm.get('id')?.touched ? 'true' : null"
-          />
-          @if (routeForm.get('id')?.invalid && routeForm.get('id')?.touched) {
-            <div class="error">Route ID is required and must be numeric.</div>
+          <label for="rId">Route</label>
+          <select id="rId" formControlName="rId"
+            [attr.aria-invalid]="yieldForm.get('rId')?.invalid && yieldForm.get('rId')?.touched ? 'true' : null">
+            <option [ngValue]="null" disabled>Select a Route</option>
+            @for(route of routes; track route.rId) {
+              <option [ngValue]="route.rId">{{ route.rName }}</option>
+            }
+          </select>
+          @if (yieldForm.get('rId')?.invalid && yieldForm.get('rId')?.touched) {
+            <div class="error">A route is required.</div>
           }
         </div>
 
+        <!-- This form control name matches the new form -->
         <div class="form-group">
-          <label for="routeName">Route Name</label>
-          <input
-            id="routeName"
-            formControlName="routeName"
-            type="text"
-            [attr.aria-invalid]="routeForm.get('routeName')?.invalid && routeForm.get('routeName')?.touched ? 'true' : null"
-          />
-          @if (routeForm.get('routeName')?.invalid && routeForm.get('routeName')?.touched) {
-            <div class="error">Route Name is required and must be at least 3 characters long.</div>
-          }
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="collectorId">Collector ID</label>
-            <input
-              id="collectorId"
-              formControlName="collectorId"
-              type="text"
-              [attr.aria-invalid]="routeForm.get('collectorId')?.invalid && routeForm.get('collectorId')?.touched ? 'true' : null"
-            />
-            @if (routeForm.get('collectorId')?.invalid && routeForm.get('collectorId')?.touched) {
-              <div class="error">Collector ID is required and must be numeric.</div>
-            }
-          </div>
-
-          <div class="form-group">
-            <label for="vehicleId">Vehicle ID</label>
-            <input
-              id="vehicleId"
-              formControlName="vehicleId"
-              type="text"
-              [attr.aria-invalid]="routeForm.get('vehicleId')?.invalid && routeForm.get('vehicleId')?.touched ? 'true' : null"
-            />
-            @if (routeForm.get('vehicleId')?.invalid && routeForm.get('vehicleId')?.touched) {
-              <div class="error">Vehicle ID is required and must be alphanumeric.</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="collectedyield">Collected Yield (Kg)</label>
-          <input
-            id="collectedyield"
-            formControlName="collectedyield"
-            type="number"
-            [attr.aria-invalid]="routeForm.get('collectedyield')?.invalid && routeForm.get('collectedyield')?.touched ? 'true' : null"
-          />
-          @if (routeForm.get('collectedyield')?.invalid && routeForm.get('collectedyield')?.touched) {
+          <label for="collected_Yield">Collected Yield (Kg)</label>
+          <input id="collected_Yield" formControlName="collected_Yield" type="number"
+            [attr.aria-invalid]="yieldForm.get('collected_Yield')?.invalid && yieldForm.get('collected_Yield')?.touched ? 'true' : null" />
+          @if (yieldForm.get('collected_Yield')?.invalid && yieldForm.get('collected_Yield')?.touched) {
             <div class="error">Collected Yield is required and must be a positive number.</div>
           }
         </div>
 
+        <!-- This form control name matches the new form -->
         <div class="form-group">
-          <label for="gtpresent">Golden Tips Present</label>
-          <select
-            id="gtpresent"
-            formControlName="gtpresent"
-            [attr.aria-invalid]="routeForm.get('gtpresent')?.invalid && routeForm.get('gtpresent')?.touched ? 'true' : null"
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+          <label for="golden_Tips_Present">Golden Tips Present</label>
+          <select id="golden_Tips_Present" formControlName="golden_Tips_Present"
+            [attr.aria-invalid]="yieldForm.get('golden_Tips_Present')?.invalid && yieldForm.get('golden_Tips_Present')?.touched ? 'true' : null">
+            <option value="" disabled>Select</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
           </select>
-          @if (routeForm.get('gtpresent')?.invalid && routeForm.get('gtpresent')?.touched) {
+          @if (yieldForm.get('golden_Tips_Present')?.invalid && yieldForm.get('golden_Tips_Present')?.touched) {
             <div class="error">Please select an option.</div>
           }
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Submit</button>
+          <!-- Disable button based on the correct form name -->
+          <button type="submit" class="btn-primary" [disabled]="yieldForm.invalid">Submit</button>
         </div>
 
       </div>

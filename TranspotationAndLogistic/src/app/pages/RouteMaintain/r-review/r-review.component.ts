@@ -1,42 +1,42 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { Rview } from '../../../models/rview.model';
+import { RtList } from '../../../models/RouteMaintain.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { RService } from '../../../services/RouteMaintainService/RouteMaintain.service';
+import { RouteService } from '../../../services/RouteMaintainService/RouteMaintain.service';
 import { RtViewComponent } from '../r-view/r-view.component';
 import { RtEditComponent } from '../r-edit/r-edit.component';
 
 @Component({
-  selector: 'app-rview',
+  selector: 'app-RtList',
   standalone: true,
   templateUrl: './r-review.component.html',
   styleUrls: ['./r-review.component.scss'],
-  imports: [CommonModule, FormsModule, HttpClientModule, RtViewComponent, RtEditComponent]
+  imports: [CommonModule, FormsModule, HttpClientModule, RtViewComponent]
 })
 export class RtReviewComponent implements OnInit {
   searchTerm = signal('');
   selectedFilter = signal('all');
-  routes = signal<Rview[]>([]);
+  routes = signal<RtList[]>([]);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
-  selectedRoute = signal<Rview | null>(null);
+  selectedRoute = signal<RtList | null>(null);
 
   //signals for view
   isModalOpen = signal(false);   
-  routeToView = signal<Rview | null>(null);
+  routeToView = signal<RtList | null>(null);
 
   //signal for edit
-  routeBeingEdited = signal<Rview | null>(null);
+  routeBeingEdited = signal<RtList | null>(null);
   isEditModalOpen = signal(false);
-  formModel = signal<Rview | null>(null);
+  formModel = signal<RtList | null>(null);
 
 
   constructor(
     private router: Router,
-    private rService: RService
+    private RouteService: RouteService
   ) { }
 
 
@@ -74,7 +74,7 @@ export class RtReviewComponent implements OnInit {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.rService.getAll().subscribe({
+    this.RouteService.getAllRoutes().subscribe({
       next: (data) => {
         this.routes.set(data);
         this.isLoading.set(false);
@@ -89,11 +89,11 @@ export class RtReviewComponent implements OnInit {
 
 
 
-  onSelectRoute(route: Rview): void {
+  onSelectRoute(route: RtList): void {
     this.selectedRoute.set(route);
   }
 
-  trackById(index: number, item: Rview): number {
+  trackById(index: number, item: RtList): number {
     return item.rId ?? index;
   }
 
@@ -102,7 +102,7 @@ export class RtReviewComponent implements OnInit {
   }
 
   //view logic begin
-  onView(route: Rview): void {
+  onView(route: RtList): void {
     this.routeToView.set(route);        
     this.isModalOpen.set(true);        
     console.log('Viewing route:', route.rId);
@@ -115,28 +115,23 @@ export class RtReviewComponent implements OnInit {
   //view logic end
 
 
-  
-  //edit logic begin
-  onEdit(route: Rview): void {
-    this.routeBeingEdited.set(route);
-    this.isEditModalOpen.set(true);
-  }
-
   closeEditModal(): void {
     this.isEditModalOpen.set(false);
     this.routeBeingEdited.set(null);
   }
 
+  onEdit(route: RtList): void {
+    this.router.navigate(['/r-edit', route.rId]);
+  }
 
-
-  onSaveEdit(updatedRoute: Rview): void {
+  onSaveEdit(updatedRoute: RtList): void {
     if (!updatedRoute.rId) {
       console.error('Cannot update route without ID');
       return;
     }
 
     this.isLoading.set(true);
-    this.rService.update(updatedRoute.rId, updatedRoute).subscribe({
+    this.RouteService.updateRoute(updatedRoute.rId, updatedRoute).subscribe({
       next: () => {
         this.loadRoutes(); 
         this.closeEditModal();
@@ -155,7 +150,7 @@ export class RtReviewComponent implements OnInit {
   onDelete(id?: number): void {
     if (id && confirm('Are you sure you want to delete this route?')) {
       this.isLoading.set(true);
-      this.rService.delete(id).subscribe({
+      this.RouteService.delete(id).subscribe({
         next: () => {
           this.loadRoutes(); 
           this.selectedRoute.set(null); 

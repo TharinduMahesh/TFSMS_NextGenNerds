@@ -2,11 +2,11 @@
   <div *ngIf="error" class="alert alert-danger">
     {{ error }}
   </div>
-  
+
   <div *ngIf="loading" class="loading-spinner">
     Loading...
   </div>
-  
+
   <div class="summary-cards">
     <div class="card light-blue">
       <h2>{{ totalPayments }}</h2>
@@ -17,7 +17,7 @@
       <p>Total Amount Paid</p>
     </div>
   </div>
-  
+
   <div class="payment-methods">
     <div class="method-card">
       <h3>Cash</h3>
@@ -32,29 +32,83 @@
       <p>LKR {{ paymentsByCheque | number }}</p>
     </div>
   </div>
-  
+
   <div class="payment-container">
     <h3>Supplier Payments</h3>
-    
+
+    <!-- Search and Filter Section -->
+    <div class="search-filter-section">
+      <div class="search-bar">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (input)="onSearchChange()"
+          placeholder="Search by Payment ID, Supplier ID, Method, or Amount..."
+          class="search-input">
+        <button class="search-btn" (click)="onSearchChange()">🔍</button>
+      </div>
+
+      <div class="filters">
+        <div class="filter-group">
+          <label>Supplier:</label>
+          <select [(ngModel)]="selectedSupplier" (change)="onFilterChange()">
+            <option value="">All Suppliers</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+              {{ supplier.SupplierId }} - {{ supplier.Name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Payment Method:</label>
+          <select [(ngModel)]="selectedPaymentMethod" (change)="onFilterChange()">
+            <option value="">All Methods</option>
+            <option value="Cash">Cash</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cheque">Cheque</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Date Range:</label>
+          <select [(ngModel)]="selectedDateRange" (change)="onFilterChange()">
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">Last Week</option>
+            <option value="month">Last Month</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+
+        <div *ngIf="selectedDateRange === 'custom'" class="filter-group custom-date-range">
+          <label>From:</label>
+          <input type="date" [(ngModel)]="customStartDate" (change)="onFilterChange()">
+          <label>To:</label>
+          <input type="date" [(ngModel)]="customEndDate" (change)="onFilterChange()">
+        </div>
+
+        <div class="filter-group">
+          <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+        </div>
+
+        <div class="filter-group">
+          <div class="export-buttons">
+            <button class="export-btn" (click)="exportPaymentsData('CSV')">Export CSV</button>
+            <button class="export-btn" (click)="exportPaymentsData('EXCEL')">Export Excel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="manual-entry">
       <h4>Create New Payment</h4>
-      
+
       <div class="calculator-toggle">
         <button (click)="toggleCalculator()" class="calculator-btn">
           {{ showCalculator ? 'Hide Calculator' : 'Use Payment Calculator' }}
         </button>
       </div>
-      
-      <!-- <div *ngIf="showCalculator" class="calculator-container">
-        <app-payment-calculator 
-          [suppliers]="suppliers"
-          [initialSupplierId]="paymentForm.get('SupplierId')?.value"
-          [initialLeafWeight]="paymentForm.get('leafWeight')?.value"
-          [initialRate]="paymentForm.get('rate')?.value"
-          (calculationComplete)="onCalculationComplete($event)">
-        </app-payment-calculator>
-      </div> -->
-      
+
       <form [formGroup]="paymentForm" (ngSubmit)="createPayment()">
         <div class="form-grid">
           <div class="form-group">
@@ -69,7 +123,7 @@
               Supplier is required
             </div>
           </div>
-          
+
           <div class="form-group">
             <label>Green Leaf Weight (kg):</label>
             <input type="number" formControlName="leafWeight" placeholder="Auto-loaded from supplier">
@@ -77,7 +131,7 @@
               Valid weight is required
             </div>
           </div>
-          
+
           <div class="form-group">
             <label>Rate per kg (LKR):</label>
             <input type="number" formControlName="rate" placeholder="Enter rate">
@@ -85,32 +139,32 @@
               Valid rate is required
             </div>
           </div>
-          
+
           <div class="form-group">
             <label>Gross Amount (LKR):</label>
             <input type="number" formControlName="grossAmount" readonly>
           </div>
-          
+
           <div class="form-group">
             <label>Advance Deduction (LKR):</label>
             <input type="number" formControlName="advanceDeduction">
           </div>
-          
+
           <div class="form-group">
             <label>Debt Deduction (LKR):</label>
             <input type="number" formControlName="debtDeduction">
           </div>
-          
+
           <div class="form-group">
             <label>Incentive Addition (LKR):</label>
             <input type="number" formControlName="incentiveAddition">
           </div>
-          
+
           <div class="form-group">
             <label>Net Amount (LKR):</label>
             <input type="number" formControlName="netAmount" readonly>
           </div>
-          
+
           <div class="form-group">
             <label>Payment Method:</label>
             <select formControlName="paymentMethod">
@@ -122,7 +176,7 @@
               Payment method is required
             </div>
           </div>
-          
+
           <div class="form-group">
             <label>Payment Date:</label>
             <input type="date" formControlName="paymentDate">
@@ -130,7 +184,7 @@
               Valid date is required
             </div>
           </div>
-          
+
           <div class="form-group">
             <button type="submit" class="create-btn" [disabled]="loading">
               {{ loading ? 'Creating...' : 'Create Payment' }}
@@ -139,7 +193,11 @@
         </div>
       </form>
     </div>
-    
+
+    <div class="results-summary">
+      <p>Showing {{ filteredPayments.length }} of {{ payments.length }} payments</p>
+    </div>
+
     <div class="table-responsive">
       <table>
         <thead>
@@ -154,6 +212,7 @@
             <th>Net Amount</th>
             <th>Method</th>
             <th>Payment Date</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -169,12 +228,21 @@
               <td>LKR {{ payment.NetAmount | number }}</td>
               <td>{{ payment.PaymentMethod }}</td>
               <td>{{ payment.PaymentDate | date:'short' }}</td>
+              <td>
+                <button 
+                  class="delete-btn" 
+                  (click)="deletePayment(payment.PaymentId)"
+                  [disabled]="loading"
+                  title="Delete Payment">
+                  🗑️ Delete
+                </button>
+              </td>
             </tr>
           </ng-container>
           <ng-template #noPayments>
             <tr>
-              <td colspan="10" class="no-data">
-                No payments found. 
+              <td colspan="11" class="no-data">
+                No payments found.
                 <span *ngIf="error" class="error-text">Error: {{ error }}</span>
               </td>
             </tr>

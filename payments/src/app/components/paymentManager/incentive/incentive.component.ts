@@ -228,4 +228,34 @@ export class IncentiveComponent implements OnInit {
       }
     })
   }
+
+  // Add this method to your existing IncentiveComponent class
+
+deleteIncentive(incentiveId: number): void
+{
+  if (confirm("Are you sure you want to delete this incentive? This action cannot be undone.")) {
+    this.loading = true
+    this.error = null
+
+    this.incentiveService.deleteIncentive(incentiveId).subscribe({
+      next: (success) => {
+        if (success) {
+          // Reload data after successful deletion
+          this.loadIncentives()
+          this.loadSummaryMetrics()
+          console.log("Incentive deleted successfully")
+        } else {
+          this.error = "Failed to delete incentive. Please try again."
+        }
+        this.loading = false
+      },
+      error: (err) => {
+        console.error("Error deleting incentive:", err)
+        this.error = "Failed to delete incentive. Please try again."
+        this.loading = false
+      },
+    })
+  }
+}
+
 }

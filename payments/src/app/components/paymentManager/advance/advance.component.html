@@ -123,36 +123,49 @@
       </form>
     </div>
   
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>Advance ID</th>
-            <th>Supplier ID</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Issue Date</th>
-            <th>Recovered Amount</th>
-            <th>Balance Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let advance of filteredAdvances">
-            <td>{{ advance.AdvanceId }}</td>
-            <td>{{ advance.SupplierId }}</td>
-            <td>{{ advance.AdvanceType }}</td>
-            <td>{{ advance.Purpose }}</td>
-            <td>LKR {{ advance.AdvanceAmount | number }}</td>
-            <td>{{ advance.issueDate | date:'shortDate' }}</td>
-            <td>LKR {{ advance.RecoveredAmount | number }}</td>
-            <td>LKR {{ advance.BalanceAmount | number }}</td>
-          </tr>
-          <tr *ngIf="filteredAdvances.length === 0">
-            <td colspan="8" class="no-data">No advances found</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- Update your advance table to include delete button -->
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr>
+        <th>Advance ID</th>
+        <th>Supplier ID</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>Issue Date</th>
+        <th>Recovered Amount</th>
+        <th>Balance Amount</th>
+        <th>Actions</th> <!-- Add this column -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let advance of filteredAdvances">
+        <td>{{ advance.AdvanceId }}</td>
+        <td>{{ advance.SupplierId }}</td>
+        <td>{{ advance.AdvanceType }}</td>
+        <td>{{ advance.Purpose }}</td>
+        <td>LKR {{ advance.AdvanceAmount | number }}</td>
+        <td>{{ advance.issueDate | date:'short' }}</td>
+        <td>LKR {{ advance.RecoveredAmount | number }}</td>
+        <td>LKR {{ advance.BalanceAmount | number }}</td>
+        <td>
+          <!-- Add delete button -->
+          <button 
+            class="delete-btn" 
+            (click)="deleteAdvance(advance.AdvanceId)"
+            [disabled]="loading"
+            title="Delete Advance">
+            🗑️ Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredAdvances.length === 0">
+        <td colspan="9" class="no-data">No advances found</td> <!-- Update colspan -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
   </div>
 </div>

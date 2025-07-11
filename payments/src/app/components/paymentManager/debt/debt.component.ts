@@ -247,4 +247,34 @@ export class DebtComponent implements OnInit {
       }
     })
   }
+
+  // Add this method to your existing DebtComponent class
+
+deleteDebt(debtId: number): void
+{
+  if (confirm("Are you sure you want to delete this debt? This action cannot be undone.")) {
+    this.loading = true
+    this.error = null
+
+    this.debtService.deleteDebt(debtId).subscribe({
+      next: (success) => {
+        if (success) {
+          // Reload data after successful deletion
+          this.loadDebts()
+          this.loadSummaryMetrics()
+          console.log("Debt deleted successfully")
+        } else {
+          this.error = "Failed to delete debt. Please try again."
+        }
+        this.loading = false
+      },
+      error: (err) => {
+        console.error("Error deleting debt:", err)
+        this.error = "Failed to delete debt. Please try again."
+        this.loading = false
+      },
+    })
+  }
+}
+
 }

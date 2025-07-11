@@ -6,12 +6,13 @@ import  { Supplier } from "../../../models/supplier.model"
 import  { PaymentService } from "../../../shared/services/payment.service"
 import  { SupplierService } from "../../../shared/services/supplier.service"
 import  { GreenLeafService } from "../../../shared/services/green-leaf.service"
+import  { ExportService } from "../../../shared/services/export.service"
 import  { PaymentCalculationResult } from "../../../models/payment-calculation.model"
 
 @Component({
   selector: "app-payment",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: "./payment.component.html",
   styleUrls: ["./payment.component.css"],
 })
@@ -21,20 +22,24 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   suppliers: Supplier[] = []
   paymentForm: FormGroup
 
+  // Summary metrics
   totalPayments = 0
   totalAmount = 0
   paymentsByCash = 0
   paymentsByBank = 0
   paymentsByCheque = 0
 
+  // Filter and search properties
   selectedSupplier = ""
+  selectedPaymentMethod = ""
   selectedDateRange = "all"
   customStartDate = ""
   customEndDate = ""
+  searchTerm = ""
 
+  // UI state
   showCalculator = false
   calculationResult: PaymentCalculationResult | null = null
-
   loading = false
   error: string | null = null
 
@@ -42,6 +47,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     private paymentService: PaymentService,
     private supplierService: SupplierService,
     private greenLeafService: GreenLeafService,
+    private exportService: ExportService,
     private fb: FormBuilder,
   ) {
     this.paymentForm = this.fb.group({
@@ -55,7 +61,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       netAmount: [{ value: 0, disabled: true }],
       paymentMethod: ["Cash", Validators.required],
       paymentDate: [new Date().toISOString().split("T")[0], Validators.required],
-         })
+    })
 
     // Subscribe to supplier changes to load green leaf weight
     this.paymentForm.get("SupplierId")?.valueChanges.subscribe((supplierId) => {
@@ -92,10 +98,120 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     }, 1000)
   }
 
+  // Search and filter functionality
+  applyFilters(): void {
+    if (!Array.isArray(this.payments)) {
+      this.filteredPayments = []
+      return
+    }
+
+    this.filteredPayments = this.payments.filter((payment) => {
+      // Search term filter
+      const searchMatch =
+        !this.searchTerm ||
+        payment.PaymentId.toString().includes(this.searchTerm) ||
+        payment.SupplierId.toString().includes(this.searchTerm) ||
+        payment.PaymentMethod.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        payment.NetAmount.toString().includes(this.searchTerm)
+
+      // Supplier filter
+      const supplierMatch = !this.selectedSupplier || payment.SupplierId.toString() === this.selectedSupplier
+
+      // Payment method filter
+      const methodMatch = !this.selectedPaymentMethod || payment.PaymentMethod === this.selectedPaymentMethod
+
+      // Date range filter
+      let dateMatch = true
+      if (this.selectedDateRange === "custom" && this.customStartDate && this.customEndDate) {
+        const paymentDate = new Date(payment.PaymentDate)
+        const startDate = new Date(this.customStartDate)
+        const endDate = new Date(this.customEndDate)
+        dateMatch = paymentDate >= startDate && paymentDate <= endDate
+      } else if (this.selectedDateRange === "today") {
+        const today = new Date()
+        const paymentDate = new Date(payment.PaymentDate)
+        dateMatch = paymentDate.toDateString() === today.toDateString()
+      } else if (this.selectedDateRange === "week") {
+        const weekAgo = new Date()
+        weekAgo.setDate(weekAgo.getDate() - 7)
+        const paymentDate = new Date(payment.PaymentDate)
+        dateMatch = paymentDate >= weekAgo
+      } else if (this.selectedDateRange === "month") {
+        const monthAgo = new Date()
+        monthAgo.setMonth(monthAgo.getMonth() - 1)
+        const paymentDate = new Date(payment.PaymentDate)
+        dateMatch = paymentDate >= monthAgo
+      }
+
+      return searchMatch && supplierMatch && methodMatch && dateMatch
+    })
+  }
+
+  onSearchChange(): void {
+    this.applyFilters()
+  }
+
+  onFilterChange(): void {
+    this.applyFilters()
+  }
+
+  clearFilters(): void {
+    this.searchTerm = ""
+    this.selectedSupplier = ""
+    this.selectedPaymentMethod = ""
+    this.selectedDateRange = "all"
+    this.customStartDate = ""
+    this.customEndDate = ""
+    this.applyFilters()
+  }
+
+  // Delete functionality
+  deletePayment(paymentId: number): void {
+    if (confirm("Are you sure you want to delete this payment? This action cannot be undone.")) {
+      this.loading = true
+      this.error = null
+
+      this.paymentService.deletePayment(paymentId).subscribe({
+        next: (success) => {
+          if (success) {
+            // Reload data after successful deletion
+            this.loadPayments()
+            this.loadSummaryMetrics()
+            console.log("Payment deleted successfully")
+          } else {
+            this.error = "Failed to delete payment. Please try again."
+          }
+          this.loading = false
+        },
+        error: (err) => {
+          console.error("Error deleting payment:", err)
+          this.error = "Failed to delete payment. Please try again."
+          this.loading = false
+        },
+      })
+    }
+  }
+
+  // Export functionality
+  exportPaymentsData(format: string): void {
+    this.loading = true
+    this.exportService.exportPayments(format).subscribe({
+      next: (blob) => {
+        const filename = `payments-export.${format.toLowerCase()}`
+        this.exportService.downloadFile(blob, filename)
+        this.loading = false
+      },
+      error: (err) => {
+        console.error("Error exporting payments:", err)
+        this.error = "Failed to export payments. Please try again."
+        this.loading = false
+      },
+    })
+  }
+
   // Load green leaf weight for selected supplier
   loadGreenLeafWeight(supplierId: number): void {
     if (!supplierId) return
-
     this.greenLeafService.getLatestGreenLeafWeight(supplierId).subscribe({
       next: (weight) => {
         console.log(`Latest green leaf weight for supplier ${supplierId}:`, weight)
@@ -121,14 +237,12 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     const advanceDeduction = this.paymentForm.get("advanceDeduction")?.value || 0
     const debtDeduction = this.paymentForm.get("debtDeduction")?.value || 0
     const incentiveAddition = this.paymentForm.get("incentiveAddition")?.value || 0
-
     const netAmount = grossAmount - advanceDeduction - debtDeduction + incentiveAddition
     this.paymentForm.get("netAmount")?.setValue(netAmount > 0 ? netAmount : 0)
   }
 
   private normalizePaymentData(payments: any[]): Payment[] {
     return payments.map((payment) => {
-      // Handle both camelCase and PascalCase property names
       return {
         PaymentId: payment.PaymentId || payment.paymentId || 0,
         SupplierId: payment.SupplierId || payment.supplierId || 0,
@@ -158,7 +272,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
         const paymentsArray = Array.isArray(data) ? data : []
         this.payments = this.normalizePaymentData(paymentsArray)
         console.log("Normalized payments:", this.payments)
-        this.filteredPayments = [...this.payments]
+        this.applyFilters() // Apply filters instead of direct assignment
         this.loading = false
       },
       error: (err) => {
@@ -262,8 +376,8 @@ export class PaymentComponent implements OnInit, AfterViewInit {
 
     this.loading = true
     this.error = null
-
     const formValues = this.paymentForm.getRawValue()
+
     const payment: Payment = {
       PaymentId: 0,
       SupplierId: formValues.SupplierId,
@@ -294,32 +408,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     })
   }
 
-  exportPayments(format: string): void {
-    let startDate = ""
-    let endDate = ""
-    if (this.selectedDateRange === "custom") {
-      startDate = this.customStartDate
-      endDate = this.customEndDate
-    }
-
-    this.paymentService.exportPayments(format, startDate, endDate).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = `payments-export.${format.toLowerCase()}`
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-        a.remove()
-      },
-      error: (err) => {
-        console.error("Error exporting payments:", err)
-        this.error = "Failed to export payments. Please try again."
-      },
-    })
-  }
-
   private resetForm(): void {
     this.paymentForm.reset({
       SupplierId: "",
@@ -332,7 +420,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       netAmount: 0,
       paymentMethod: "Cash",
       paymentDate: new Date().toISOString().split("T")[0],
-      notes: "",
     })
   }
 

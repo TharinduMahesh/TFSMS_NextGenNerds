@@ -131,38 +131,51 @@
       </form>
     </div>
   
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>Debt ID</th>
-            <th>Supplier ID</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Total Amount</th>
-            <th>Issue Date</th>
-            <th>Deductions Made</th>
-            <th>Balance Amount</th>
-            <th>Deduction %</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let debt of filteredDebts">
-            <td>{{ debt.debtId }}</td>
-            <td>{{ debt.SupplierId }}</td>
-            <td>{{ debt.debtType }}</td>
-            <td>{{ debt.description }}</td>
-            <td>LKR {{ debt.totalAmount | number }}</td>
-            <td>{{ debt.issueDate | date:'short' }}</td>
-            <td>LKR {{ debt.deductionsMade | number }}</td>
-            <td>LKR {{ debt.balanceAmount | number }}</td>
-            <td>{{ debt.deductionPercentage }}%</td>
-          </tr>
-          <tr *ngIf="filteredDebts.length === 0">
-            <td colspan="9" class="no-data">No debts found</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+   <!-- Update your debt table to include delete button -->
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr>
+        <th>Debt ID</th>
+        <th>Supplier ID</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Total Amount</th>
+        <th>Issue Date</th>
+        <th>Deductions Made</th>
+        <th>Balance Amount</th>
+        <th>Deduction %</th>
+        <th>Actions</th> <!-- Add this column -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let debt of filteredDebts">
+        <td>{{ debt.debtId }}</td>
+        <td>{{ debt.SupplierId }}</td>
+        <td>{{ debt.debtType }}</td>
+        <td>{{ debt.description }}</td>
+        <td>LKR {{ debt.totalAmount | number }}</td>
+        <td>{{ debt.issueDate | date:'short' }}</td>
+        <td>LKR {{ debt.deductionsMade | number }}</td>
+        <td>LKR {{ debt.balanceAmount | number }}</td>
+        <td>{{ debt.deductionPercentage }}%</td>
+        <td>
+          <!-- Add delete button -->
+          <button 
+            class="delete-btn" 
+            (click)="deleteDebt(debt.debtId)"
+            [disabled]="loading"
+            title="Delete Debt">
+            🗑️ Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredDebts.length === 0">
+        <td colspan="10" class="no-data">No debts found</td> <!-- Update colspan -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
   </div>
 </div>

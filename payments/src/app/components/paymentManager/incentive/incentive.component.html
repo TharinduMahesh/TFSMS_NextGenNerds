@@ -97,34 +97,46 @@
       </form>
     </div>
   
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>Incentive ID</th>
-            <th>Supplier ID</th>
-            <th>Month</th>
-            <th>Quality Bonus</th>
-            <th>Loyalty Bonus</th>
-            <th>Total Amount</th>
-            <th>Created Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let incentive of filteredIncentives">
-            <td>{{ incentive.IncentiveId }}</td>
-            <td>{{ incentive.SupplierId }}</td>
-            <td>{{ incentive.Month }}</td>
-            <td>LKR {{ incentive.QualityBonus | number }}</td>
-            <td>LKR {{ incentive.LoyaltyBonus | number }}</td>
-            <td>LKR {{ incentive.TotalAmount | number }}</td>
-            <td>{{ incentive.CreatedDate | date:'short' }}</td>
-          </tr>
-          <tr *ngIf="filteredIncentives.length === 0">
-            <td colspan="7" class="no-data">No incentives found</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr>
+        <th>Incentive ID</th>
+        <th>Supplier ID</th>
+        <th>Month</th>
+        <th>Quality Bonus</th>
+        <th>Loyalty Bonus</th>
+        <th>Total Amount</th>
+        <th>Created Date</th>
+        <th>Actions</th> <!-- Add this column -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let incentive of filteredIncentives">
+        <td>{{ incentive.IncentiveId }}</td>
+        <td>{{ incentive.SupplierId }}</td>
+        <td>{{ incentive.Month }}</td>
+        <td>LKR {{ incentive.QualityBonus | number }}</td>
+        <td>LKR {{ incentive.LoyaltyBonus | number }}</td>
+        <td>LKR {{ incentive.TotalAmount | number }}</td>
+        <td>{{ incentive.CreatedDate | date:'short' }}</td>
+        <td>
+          <!-- Add delete button -->
+          <button 
+            class="delete-btn" 
+            (click)="deleteIncentive(incentive.IncentiveId)"
+            [disabled]="loading"
+            title="Delete Incentive">
+            🗑️ Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredIncentives.length === 0">
+        <td colspan="8" class="no-data">No incentives found</td> <!-- Update colspan -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
   </div>
 </div>

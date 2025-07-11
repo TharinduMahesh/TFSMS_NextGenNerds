@@ -243,4 +243,34 @@ export class AdvanceComponent implements OnInit {
       }
     })
   }
+
+  // Add this method to your existing AdvanceComponent class
+
+deleteAdvance(advanceId: number): void
+{
+  if (confirm("Are you sure you want to delete this advance? This action cannot be undone.")) {
+    this.loading = true
+    this.error = null
+
+    this.advanceService.deleteAdvance(advanceId).subscribe({
+      next: (success) => {
+        if (success) {
+          // Reload data after successful deletion
+          this.loadAdvances()
+          this.loadSummaryMetrics()
+          console.log("Advance deleted successfully")
+        } else {
+          this.error = "Failed to delete advance. Please try again."
+        }
+        this.loading = false
+      },
+      error: (err) => {
+        console.error("Error deleting advance:", err)
+        this.error = "Failed to delete advance. Please try again."
+        this.loading = false
+      },
+    })
+  }
+}
+
 }

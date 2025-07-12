@@ -1,30 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/sreens/grower_location_page.dart';
 
-// Placeholder for the actual order form page
-// import '../grower/grower_order_page.dart';
+// Placeholder for a potential success page
+// import 'order_confirmed_success_page.dart';
 
-class GrowerOrderRequestPage extends StatefulWidget {
-  const GrowerOrderRequestPage({super.key});
+class CollectorConfirmPage extends StatefulWidget {
+  const CollectorConfirmPage({super.key});
 
   @override
-  State<GrowerOrderRequestPage> createState() => _GrowerOrderRequestPageState();
+  State<CollectorConfirmPage> createState() => _CollectorConfirmPageState();
 }
 
-class _GrowerOrderRequestPageState extends State<GrowerOrderRequestPage> {
-  int _bottomNavIndex = 0; // Home selected
+class _CollectorConfirmPageState extends State<CollectorConfirmPage> {
+  int _bottomNavIndex = 0; // Home is selected
 
   // --- Define Colors (estimated) ---
-  static const Color pageBackgroundColor = Color(0xFFF0FBEF); // Light green
-  static const Color iconColor = Color(0xFF333333); // Dark grey/black icon
-  static const Color textColor = Colors.black54; // Muted text color
-  static const Color buttonColor = Color(0xFF0a4e41); // Dark green button
+  static const Color pageBackgroundColor = Color(0xFFF0FBEF);
+  static const Color iconColor = Color(0xFF333333);
+  static const Color textColor = Colors.black54;
+  static const Color buttonColor = Color(0xFF0a4e41);
   static const Color buttonTextColor = Colors.white;
-  static const Color appBarIconsColor = Color(0xFF333333); // Match icon color?
   static const Color bottomNavBarBackground = Colors.white;
-  static const Color bottomNavBarSelectedColor = buttonColor; // Match button color
+  static const Color bottomNavBarSelectedColor = buttonColor;
   static const Color bottomNavBarUnselectedColor = Colors.grey;
   // --- End Colors ---
+
+  // --- Button Action ---
+  void _confirmOrder() {
+    print('Confirm Order button tapped');
+
+    // *** TODO: Implement API call to finalize the order request ***
+    // Example:
+    /*
+    try {
+        // final orderId = ...; // Get order ID if needed
+        // await ApiService().confirmOrder(orderId);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+           const SnackBar(content: Text('Order confirmed successfully!'), backgroundColor: Colors.green),
+        );
+        // Navigate to a success screen or back to the home/dashboard
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const OrderSuccessPage()),
+            (route) => route.isFirst // Go to success page, clear stack up to first route
+        );
+
+    } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+           SnackBar(content: Text('Failed to confirm order: $e'), backgroundColor: Colors.redAccent),
+        );
+    }
+    */
+
+    // Placeholder feedback
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Order Confirmed (Simulated)!'), backgroundColor: Colors.green),
+    );
+    // TODO: Implement actual navigation
+    // Example: Pop back to the home page (assuming it's the root)
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
 
   // --- Bottom Nav Logic ---
   void _onBottomNavTapped(int index) {
@@ -39,55 +74,26 @@ class _GrowerOrderRequestPageState extends State<GrowerOrderRequestPage> {
     }
   }
 
-   void _openSettings() {
-     print('Settings icon tapped');
-     ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Settings not implemented yet'), backgroundColor: Colors.grey),
-      );
-  }
-
-  void _navigateToOrderForm() {
-     print('Request Order button tapped');
-     // TODO: Navigate to the GrowerOrderPage or similar form
-     Navigator.push(context, MaterialPageRoute(builder: (context) => const GrowerLocationPage()));
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Navigate to Order Form'), backgroundColor: Colors.blueAccent),
-      );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: pageBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: pageBackgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: appBarIconsColor),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        // No title needed as per screenshot
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined, color: appBarIconsColor),
-            onPressed: _openSettings,
-          ),
-          const SizedBox(width: 10),
-        ],
-      ),
+      // No AppBar in this design
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0), // Add padding
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Large Icon
+              // Large Checkmark Icon
               const Icon(
-                Icons.search, // Standard search icon
+                Icons.check_rounded, // A bold, rounded checkmark
                 color: iconColor,
-                size: 150.0, // Make it large
+                size: 120.0,
               ),
-              const SizedBox(height: 40), // Space below icon
+              const SizedBox(height: 40),
 
               // Descriptive Text
               const Text(
@@ -99,11 +105,11 @@ class _GrowerOrderRequestPageState extends State<GrowerOrderRequestPage> {
                   height: 1.4, // Line spacing
                 ),
               ),
-              const SizedBox(height: 30), // Space below text
+              const SizedBox(height: 30),
 
-              // Request Button
+              // Confirm Button
               ElevatedButton(
-                onPressed: _navigateToOrderForm,
+                onPressed: _confirmOrder,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: buttonColor,
                   foregroundColor: buttonTextColor,
@@ -114,7 +120,7 @@ class _GrowerOrderRequestPageState extends State<GrowerOrderRequestPage> {
                   elevation: 2,
                 ),
                 child: const Text(
-                  'Request Order',
+                  'Confirm Order',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),

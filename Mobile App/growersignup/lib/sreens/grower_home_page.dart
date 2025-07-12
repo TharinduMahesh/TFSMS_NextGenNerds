@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-
-// Placeholders for pages to navigate to
-// import '../harvest/harvest_page.dart';
-// import '../payments/payments_page.dart';
-// import '../order/grower_order_page.dart'; // For FAB
-// import '../settings/settings_page.dart';
-
+import 'package:growersignup/sreens/grower_harvest_percentage.dart';
+import 'package:growersignup/sreens/grower_order_page.dart';
+import 'package:growersignup/sreens/pay.dart';
 
 class GrowerHomePage extends StatefulWidget {
   const GrowerHomePage({super.key});
@@ -15,55 +11,48 @@ class GrowerHomePage extends StatefulWidget {
 }
 
 class _GrowerHomePageState extends State<GrowerHomePage> {
-  int _bottomNavIndex = 0; // Home is selected
+  int _bottomNavIndex = 0; 
 
   // --- Define Colors (estimated) ---
-  static const Color pageBackgroundColor = Color(0xFFF0FBEF); // Fallback if image fails
+  static const Color pageBackgroundColor = Color(0xFFF0FBEF); 
   static const Color titleTextColor = Colors.white;
   static const Color settingsIconColor = Colors.white;
-  static const Color buttonBackgroundColor = Color(0xFFDDF4DD); // Light green
-  static const Color buttonTextColor = Color(0xFF0a4e41); // Dark green text
+  static const Color buttonBackgroundColor = Color(0xFFDDF4DD);
+  static const Color buttonTextColor = Color(0xFF0a4e41);
   static const Color buttonIconColor = buttonTextColor;
   static const Color fabBackgroundColor = Colors.white;
   static const Color fabIconColor = Colors.black;
   static const Color bottomNavBarBackground = Colors.white;
-  static const Color bottomNavBarSelectedColor = buttonTextColor; // Match button text color
+  static const Color bottomNavBarSelectedColor = buttonTextColor; 
   static const Color bottomNavBarUnselectedColor = Colors.grey;
-  // --- End Colors ---
+  //
 
-  // --- Navigation Handlers ---
+  // Navigation 
   void _navigateToHarvest() {
     print('Navigate to Harvest Page');
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => const HarvestPage()));
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Navigate to Harvest'), backgroundColor: Colors.blueAccent));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const HarvestPage()));
   }
 
   void _navigateToPayments() {
     print('Navigate to Payments Page');
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentsPage()));
-     ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Navigate to Payments'), backgroundColor: Colors.blueAccent));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const pay()));
   }
 
   void _navigateToAddOrder() {
     print('FAB Tapped - Navigate to Add Order Page');
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => const GrowerOrderPage()));
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Navigate to Add Order Form'), backgroundColor: Colors.blueAccent));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const GrowerOrderPage()));
+
   }
 
   void _navigateToSettings() {
     print('Navigate to Settings Page');
     // Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
-     ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Navigate to Settings'), backgroundColor: Colors.blueAccent));
+
   }
 
   void _onBottomNavTapped(int index) {
     if (_bottomNavIndex == index) return;
     setState(() => _bottomNavIndex = index);
-    // TODO: Implement actual navigation for bottom bar items
     switch (index) {
       case 0: print("Navigate Home (already here)"); break;
       case 1: print("Navigate Notifications"); break;
@@ -78,13 +67,12 @@ class _GrowerHomePageState extends State<GrowerHomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: pageBackgroundColor, // Fallback background
-      extendBodyBehindAppBar: true, // Make body content go behind AppBar
+      backgroundColor: pageBackgroundColor, 
+      extendBodyBehindAppBar: true, 
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Fully transparent AppBar
-        elevation: 0, // No shadow
-        automaticallyImplyLeading: false, // No back button by default
-        // title: Text("Hidden Title", style: TextStyle(color: Colors.transparent)), // Can add if needed
+        backgroundColor: Colors.transparent, 
+        elevation: 0, 
+        automaticallyImplyLeading: false, 
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined, color: settingsIconColor, size: 28),
@@ -94,41 +82,36 @@ class _GrowerHomePageState extends State<GrowerHomePage> {
         ],
       ),
       body: Stack(
-        fit: StackFit.expand, // Make Stack children fill the screen
+        fit: StackFit.expand,
         children: [
-          // 1. Background Image
+          //Background Image
           Image.asset(
-            'lib/assets/images/tea.png', // *** YOUR IMAGE PATH ***
+            'lib/assets/images/tea.png',
             fit: BoxFit.cover,
-            // Optional: Add a dark overlay for better text contrast
             color: Colors.black.withOpacity(0.35),
             colorBlendMode: BlendMode.darken,
-            errorBuilder: (context, error, stackTrace) {
-               // Fallback if image fails to load
-               return Container(color: Colors.grey.shade300, child: const Center(child: Text("Image not found")));
-            },
           ),
 
-          // 2. Overlay Content (Title and Buttons)
-          SafeArea( // Ensure content is within safe areas (avoids notches, status bar)
+          // Title and Buttons
+          SafeArea( 
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08, vertical: 20),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Distribute space
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, 
                 children: [
-                  // Top section: Title
+                  // Title
                   Column(
                     children: [
-                      SizedBox(height: kToolbarHeight -10), // Space for AppBar elements if extendBodyBehindAppBar is true
+                      SizedBox(height: kToolbarHeight -10), // Space for AppBar 
                       const Text(
                         'Home Page\nSupplier',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: titleTextColor,
-                          fontSize: 28, // Adjust size as needed
+                          fontSize: 28, 
                           fontWeight: FontWeight.bold,
                           height: 1.3,
-                          shadows: [ // Add shadow for better readability on image
+                          shadows: [
                              Shadow(blurRadius: 6.0, color: Colors.black54, offset: Offset(1.0, 1.0)),
                            ]
                         ),
@@ -189,7 +172,7 @@ class _GrowerHomePageState extends State<GrowerHomePage> {
     );
   }
 
-  // Helper Widget for the navigation buttons
+  //  navigation buttons
   Widget _buildNavigationButton({
     required String text,
     required IconData icon,

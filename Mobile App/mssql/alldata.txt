@@ -101,4 +101,18 @@ CREATE TABLE CollectorBankDetails (
     CollectorEmail NVARCHAR(100) NOT NULL
 );
 
+CREATE TABLE FertilizerIssues (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    GrowerId INT NOT NULL,
+    RefNumber NVARCHAR(50) NOT NULL,
+    IssueDate DATE NOT NULL,
+    FertilizerAmount DECIMAL(10, 2) NOT NULL
+);
+
+
+INSERT INTO FertilizerIssues (GrowerId, RefNumber, IssueDate, FertilizerAmount) VALUES
+(1, 'REF001', '2024-07-01', 50.00),
+(1, 'REF002', '2024-07-10', 30.50),
+(1, 'REF003', '2024-07-15', 45.25);
+
 

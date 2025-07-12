@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // For input formatters
+import 'package:flutter/services.dart'; 
 import 'package:growersignup/models/grower_Account.dart';
 import 'package:growersignup/services/grower_create_api.dart';
 import 'package:growersignup/sreens/grower_account_success_pade.dart';
-import 'package:intl/intl.dart'; // For date formatting
+import 'package:intl/intl.dart'; 
 
-// Placeholder for success page or login page
-// import 'account_created_page.dart';
-// import 'grower_signin_page.dart';
 
 class GrowerCreateAccountPage extends StatefulWidget {
   final String email;
@@ -29,12 +26,10 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
   final _address2Controller = TextEditingController();
   final _cityController = TextEditingController();
   final _postalCodeController = TextEditingController();
-  final _dobController = TextEditingController(); // For display only
+  final _dobController = TextEditingController();
   final _phoneController = TextEditingController();
 
-  final _growerCreateApi = GrowerCreateApi(); // Assuming you have an API class
-
-  // == State Variables for Dropdowns / Date Picker ==
+  final _growerCreateApi = GrowerCreateApi(); 
   DateTime? _selectedDate;
   String? _selectedGender;
   String? _selectedPaymentMethod;
@@ -48,7 +43,7 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
   ];
   final List<String> _paymentOptions = ['Bank', 'Cash'];
 
-  // --- Define Colors (Consolidated & estimated) ---
+  //Colors
   static const Color pageBackgroundColor = Color(0xFFF0FBEF);
   static const Color cardBackgroundColor = Colors.white;
   static const Color titleColor = Color(0xFF0a4e41);
@@ -57,15 +52,14 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
   static const Color focusedInputBorderColor = titleColor;
   static const Color dropdownBackgroundColor = Color(
     0xFFE8F5E9,
-  ); // Slightly adjusted dropdown green
+  ); 
   static const Color dropdownTextColor = Colors.black87;
   static const Color buttonColor = Color(0xFF0a4e41);
   static const Color buttonTextColor = Colors.white;
-  // --- End Colors ---
 
   @override
   void dispose() {
-    // Dispose ALL controllers
+    // controllers
     _firstNameController.dispose();
     _lastNameController.dispose();
     _nicController.dispose();
@@ -89,7 +83,7 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
       GrowerCity: _cityController.text,
       GrowerPostalCode: _postalCodeController.text,
       GrowerGender: _selectedGender ?? '',
-      GrowerDOB: _selectedDate ?? DateTime.now(), // Use _selectedDate directly or a default value
+      GrowerDOB: _selectedDate ?? DateTime.now(), 
       GrowerPhoneNum: _phoneController.text,
       MoneyMethod: _selectedPaymentMethod ?? '',
       GrowerEmail: widget.email,
@@ -98,11 +92,10 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
       
         // Call the sign-in API
         GrowerAccountModel newGAccountModel = await _growerCreateApi.groweraccount(newGrower);
-        // If successful, show success message or navigate to another page
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign in successful!')));
-        print('Sign in successful: ${newGAccountModel.toJson()}'); // Debugging output
+        print('Sign in successful: ${newGAccountModel.toJson()}'); 
 
-        // Navigate to another page if needed
+        // Navigate to success page
         Navigator.push(context, MaterialPageRoute(builder: (context) => GrowerSignInSuccessPage()));
         
       } catch (e) {
@@ -116,7 +109,7 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
 
 
 
-  // --- Date Picker Logic ---
+  // Date Pick
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -156,18 +149,16 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
     return Scaffold(
       backgroundColor: pageBackgroundColor,
       appBar: AppBar(
-        // Keep AppBar for navigation context
         backgroundColor: pageBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          // Allow user to go back if needed
           icon: const Icon(Icons.arrow_back_ios, color: titleColor),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
           'Create An Account',
           style: TextStyle(
-            fontSize: 22, // Adjusted size
+            fontSize: 22,
             fontWeight: FontWeight.bold,
             color: titleColor,
           ),
@@ -182,7 +173,6 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
               vertical: 20.0,
             ),
             child: Container(
-              // White Card Container
               padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
                 vertical: 30.0,
@@ -224,16 +214,17 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
                       textCapitalization: TextCapitalization.words,
                     ),
                     const SizedBox(height: 20),
-
+                    
+                    // NIC 
                     _buildLabel('NIC Number:'),
                     _buildTextField(
                       controller: _nicController,
                       hintText: 'Enter NIC number',
                       validator:
                           (v) => v == null || v.isEmpty ? 'Required' : null,
-                      // Add specific format validation if needed
                     ),
                     const SizedBox(height: 20),
+                    // Address 
 
                     _buildLabel('Address:'),
                     _buildTextField(
@@ -248,7 +239,6 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
                       controller: _address2Controller,
                       hintText: 'Address line 2 (Optional)',
                       textCapitalization: TextCapitalization.words,
-                      // No validator for optional field
                     ),
                     const SizedBox(height: 10),
                     _buildTextField(
@@ -268,7 +258,7 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
                     ),
                     const SizedBox(height: 20),
 
-                    // == Gender Dropdown ==
+                    // Gender
                     _buildLabel('Gender:'),
                     _buildDropdown(
                       hint: 'Select Gender',
@@ -282,12 +272,12 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
                     ),
                     const SizedBox(height: 20),
 
-                    // == Date of Birth ==
+                    // Date of Birth 
                     _buildLabel('Date Of Birth:'),
                     _buildDateField(context),
                     const SizedBox(height: 20),
 
-                    // == Contact & Payment ==
+                    // Contact & Payment
                     _buildLabel('Phone Number:'),
                     _buildTextField(
                       controller: _phoneController,
@@ -322,7 +312,7 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
                                   : null,
                     ),
                     const SizedBox(height: 40), // Space before button
-                    // == Submit Button ==
+                    // Submit Button
                     Center(
                       child: ElevatedButton(
                       onPressed: _createAccount,
@@ -336,7 +326,7 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage> {
                           elevation: 3,
                         ),
                         child: const Text(
-                          'Create Account',//here
+                          'Create Account',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

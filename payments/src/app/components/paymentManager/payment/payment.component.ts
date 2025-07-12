@@ -8,6 +8,7 @@ import  { SupplierService } from "../../../shared/services/supplier.service"
 import  { GreenLeafService } from "../../../shared/services/green-leaf.service"
 import  { ExportService } from "../../../shared/services/export.service"
 import  { PaymentCalculationResult } from "../../../models/payment-calculation.model"
+import  { IncentiveService } from "../../../shared/services/incentive.service"
 
 @Component({
   selector: "app-payment",
@@ -48,6 +49,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     private supplierService: SupplierService,
     private greenLeafService: GreenLeafService,
     private exportService: ExportService,
+    private incentiveService: IncentiveService,
     private fb: FormBuilder,
   ) {
     this.paymentForm = this.fb.group({
@@ -63,12 +65,15 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       paymentDate: [new Date().toISOString().split("T")[0], Validators.required],
     })
 
-    // Subscribe to supplier changes to load green leaf weight
+    // Subscribe to supplier changes to load BOTH green leaf weight AND incentive data
     this.paymentForm.get("SupplierId")?.valueChanges.subscribe((supplierId) => {
       if (supplierId) {
+        console.log("Supplier selected:", supplierId)
         this.loadGreenLeafWeight(supplierId)
+        this.loadCurrentIncentiveAmount(supplierId)
       } else {
         this.paymentForm.get("leafWeight")?.setValue("")
+        this.paymentForm.get("incentiveAddition")?.setValue(0)
       }
     })
 
@@ -212,6 +217,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   // Load green leaf weight for selected supplier
   loadGreenLeafWeight(supplierId: number): void {
     if (!supplierId) return
+    console.log("Loading green leaf weight for supplier:", supplierId)
     this.greenLeafService.getLatestGreenLeafWeight(supplierId).subscribe({
       next: (weight) => {
         console.log(`Latest green leaf weight for supplier ${supplierId}:`, weight)
@@ -220,6 +226,25 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       error: (err) => {
         console.error(`Error loading green leaf weight for supplier ${supplierId}:`, err)
         this.error = "Failed to load green leaf weight for selected supplier"
+      },
+    })
+  }
+
+  // Load current incentive amount for selected supplier
+  loadCurrentIncentiveAmount(supplierId: number): void {
+    if (!supplierId) return
+    console.log("Loading current incentive amount for supplier:", supplierId)
+
+    this.incentiveService.getCurrentIncentiveAmount(supplierId).subscribe({
+      next: (amount) => {
+        console.log(`Current incentive amount for supplier ${supplierId}:`, amount)
+        this.paymentForm.get("incentiveAddition")?.setValue(amount)
+        this.updateNetAmount()
+      },
+      error: (err) => {
+        console.error(`Error loading incentive amount for supplier ${supplierId}:`, err)
+        // Don't show error for incentives as it's optional
+        this.paymentForm.get("incentiveAddition")?.setValue(0)
       },
     })
   }
@@ -272,7 +297,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
         const paymentsArray = Array.isArray(data) ? data : []
         this.payments = this.normalizePaymentData(paymentsArray)
         console.log("Normalized payments:", this.payments)
-        this.applyFilters() // Apply filters instead of direct assignment
+        this.applyFilters()
         this.loading = false
       },
       error: (err) => {
@@ -392,8 +417,25 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       PaymentDate: new Date(formValues.paymentDate),
     }
 
+    console.log("Creating payment with data:", payment)
+
     this.paymentService.createPayment(payment).subscribe({
       next: (result) => {
+        console.log("Payment created successfully:", result)
+
+        // Update incentive usage if incentive was used
+        if (formValues.incentiveAddition > 0) {
+          console.log("Updating incentive usage...")
+          this.incentiveService.updateIncentiveUsage(formValues.SupplierId, formValues.incentiveAddition).subscribe({
+            next: (success) => {
+              console.log("Incentive usage updated:", success)
+            },
+            error: (err) => {
+              console.error("Error updating incentive usage:", err)
+            },
+          })
+        }
+
         this.loadPayments()
         this.loadSummaryMetrics()
         this.resetForm()

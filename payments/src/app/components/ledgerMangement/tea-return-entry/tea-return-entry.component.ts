@@ -1,9 +1,9 @@
 import { Component,  OnInit } from "@angular/core"
-import {  FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
+import {  FormBuilder,  FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
 import { CommonModule } from "@angular/common"
 import  { TeaReturnService } from "../../../shared/services/tea-return.service"
-import  { TeaReturn  } from "../../../models/tea-return.model"
-import { Invoice } from "../../../models/invoice.model"
+import  { TeaReturn } from "../../../models/tea-return.model"
+import  { Invoice } from "../../../models/invoice.model"
 
 @Component({
   selector: "app-tea-return-entry",
@@ -42,7 +42,15 @@ export class TeaReturnEntryComponent implements OnInit {
     this.isLoading = true
     this.teaReturnService.getTeaReturns().subscribe({
       next: (data) => {
-        this.teaReturns = data
+        if (Array.isArray(data)) {
+          this.teaReturns = data
+        } else if (data === null || data === undefined) {
+          this.teaReturns = [] // Treat null/undefined as empty array
+        } else {
+          // If it's a single object, wrap it in an array. This handles cases where API might return a single object instead of an array.
+          this.teaReturns = [data]
+          console.warn("API returned a single object for tea returns, expected an array. Wrapping in array.")
+        }
         this.isLoading = false
       },
       error: (error) => {
@@ -67,7 +75,6 @@ export class TeaReturnEntryComponent implements OnInit {
     if (this.teaReturnForm.valid) {
       this.isLoading = true
       const formValue = this.teaReturnForm.value
-
       this.teaReturnService.createTeaReturn(formValue).subscribe({
         next: (newReturn) => {
           this.teaReturns.push(newReturn)
@@ -81,6 +88,19 @@ export class TeaReturnEntryComponent implements OnInit {
       })
     } else {
       this.markFormGroupTouched()
+    }
+  }
+
+  deleteReturn(id: number): void {
+    if (confirm("Are you sure you want to delete this tea return entry?")) {
+      this.teaReturnService.deleteTeaReturn(id).subscribe({
+        next: () => {
+          this.teaReturns = this.teaReturns.filter((teaReturn) => teaReturn.id !== id)
+        },
+        error: (error) => {
+          this.errorMessage = error
+        },
+      })
     }
   }
 

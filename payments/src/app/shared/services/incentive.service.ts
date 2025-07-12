@@ -216,4 +216,56 @@ export class IncentiveService {
       }),
     )
   }
+
+  getCurrentIncentiveAmount(supplierId: number): Observable<number> {
+    return this.http.get<any>(`${this.apiUrl}/supplier/${supplierId}/current-amount`).pipe(
+      map((response) => {
+        if (typeof response === "number") {
+          return response
+        } else if (response && typeof response.data === "number") {
+          return response.data
+        } else if (response && typeof response.amount === "number") {
+          return response.amount
+        }
+        return 0
+      }),
+      catchError((error) => {
+        console.error(`Error fetching current incentive amount for supplier ${supplierId}:`, error)
+        return of(0)
+      }),
+    )
+  }
+
+  /**
+   * Gets the latest incentive record for a supplier
+   */
+  getLatestIncentive(supplierId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/supplier/${supplierId}/latest`).pipe(
+      map((response) => {
+        if (response && typeof response === "object") {
+          return response
+        }
+        return { TotalAmount: 0, Month: "", QualityBonus: 0, LoyaltyBonus: 0 }
+      }),
+      catchError((error) => {
+        console.error(`Error fetching latest incentive for supplier ${supplierId}:`, error)
+        return of({ TotalAmount: 0, Month: "", QualityBonus: 0, LoyaltyBonus: 0 })
+      }),
+    )
+  }
+
+  /**
+   * Updates incentive usage when a payment is made
+   */
+  updateIncentiveUsage(supplierId: number, usedAmount: number): Observable<boolean> {
+    return this.http.post<any>(`${this.apiUrl}/supplier/${supplierId}/update-usage`, { UsedAmount: usedAmount }).pipe(
+      map((response) => {
+        return response === true || (response && response.success === true)
+      }),
+      catchError((error) => {
+        console.error(`Error updating incentive usage for supplier ${supplierId}:`, error)
+        return of(false)
+      }),
+    )
+  }
 }

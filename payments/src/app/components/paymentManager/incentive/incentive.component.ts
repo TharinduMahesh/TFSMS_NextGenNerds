@@ -53,6 +53,18 @@ export class IncentiveComponent implements OnInit {
     this.loadIncentives()
     this.loadSuppliers()
     this.loadSummaryMetrics()
+
+    // Set up auto-refresh to catch updates from payment creation
+    this.setupAutoRefresh()
+  }
+
+  // Add auto-refresh functionality to catch updates from payment creation
+  private setupAutoRefresh(): void {
+    // Refresh data every 30 seconds to catch updates from other components
+    setInterval(() => {
+      this.loadIncentives()
+      this.loadSummaryMetrics()
+    }, 30000)
   }
 
   updateTotalAmount(): void {
@@ -229,33 +241,29 @@ export class IncentiveComponent implements OnInit {
     })
   }
 
-  // Add this method to your existing IncentiveComponent class
+  deleteIncentive(incentiveId: number): void {
+    if (confirm("Are you sure you want to delete this incentive? This action cannot be undone.")) {
+      this.loading = true
+      this.error = null
 
-deleteIncentive(incentiveId: number): void
-{
-  if (confirm("Are you sure you want to delete this incentive? This action cannot be undone.")) {
-    this.loading = true
-    this.error = null
-
-    this.incentiveService.deleteIncentive(incentiveId).subscribe({
-      next: (success) => {
-        if (success) {
-          // Reload data after successful deletion
-          this.loadIncentives()
-          this.loadSummaryMetrics()
-          console.log("Incentive deleted successfully")
-        } else {
+      this.incentiveService.deleteIncentive(incentiveId).subscribe({
+        next: (success) => {
+          if (success) {
+            // Reload data after successful deletion
+            this.loadIncentives()
+            this.loadSummaryMetrics()
+            console.log("Incentive deleted successfully")
+          } else {
+            this.error = "Failed to delete incentive. Please try again."
+          }
+          this.loading = false
+        },
+        error: (err) => {
+          console.error("Error deleting incentive:", err)
           this.error = "Failed to delete incentive. Please try again."
-        }
-        this.loading = false
-      },
-      error: (err) => {
-        console.error("Error deleting incentive:", err)
-        this.error = "Failed to delete incentive. Please try again."
-        this.loading = false
-      },
-    })
+          this.loading = false
+        },
+      })
+    }
   }
-}
-
 }

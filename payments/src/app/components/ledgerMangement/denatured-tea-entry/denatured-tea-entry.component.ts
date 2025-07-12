@@ -3,7 +3,7 @@ import {  FormBuilder,  FormGroup, Validators, ReactiveFormsModule } from "@angu
 import { CommonModule } from "@angular/common"
 import  { DenaturedTeaService } from "../../../shared/services/denatured-tea.service"
 import  { DenaturedTea } from "../../../models/denatured-tea.model"
-import { Invoice } from "../../../models/invoice.model"
+import  { Invoice } from "../../../models/invoice.model"
 
 @Component({
   selector: "app-denatured-tea-entry",
@@ -14,11 +14,10 @@ import { Invoice } from "../../../models/invoice.model"
 })
 export class DenaturedTeaEntryComponent implements OnInit {
   denaturedTeas: DenaturedTea[] = []
-    invoices: Invoice[] = []
+  invoices: Invoice[] = []
   denaturedTeaForm: FormGroup
   isLoading = false
   errorMessage = ""
-
   teaGrades = ["PEKOE", "OP", "BOP", "FBOP", "DUST", "FANNINGS", "BROKEN"]
 
   constructor(
@@ -47,7 +46,15 @@ export class DenaturedTeaEntryComponent implements OnInit {
     this.isLoading = true
     this.denaturedTeaService.getDenaturedTeas().subscribe({
       next: (data) => {
-        this.denaturedTeas = data
+        if (Array.isArray(data)) {
+          this.denaturedTeas = data
+        } else if (data === null || data === undefined) {
+          this.denaturedTeas = [] // Treat null/undefined as empty array
+        } else {
+          // If it's a single object, wrap it in an array. This handles cases where API might return a single object instead of an array.
+          this.denaturedTeas = [data]
+          console.warn("API returned a single object for denatured teas, expected an array. Wrapping in array.")
+        }
         this.isLoading = false
       },
       error: (error) => {
@@ -57,7 +64,7 @@ export class DenaturedTeaEntryComponent implements OnInit {
     })
   }
 
-    loadInvoices(): void {
+  loadInvoices(): void {
     this.denaturedTeaService.getInvoices().subscribe({
       next: (data) => {
         this.invoices = data
@@ -67,11 +74,11 @@ export class DenaturedTeaEntryComponent implements OnInit {
       },
     })
   }
+
   onSubmit(): void {
     if (this.denaturedTeaForm.valid) {
       this.isLoading = true
       const formValue = this.denaturedTeaForm.value
-
       this.denaturedTeaService.createDenaturedTea(formValue).subscribe({
         next: (newEntry) => {
           this.denaturedTeas.push(newEntry)
@@ -88,6 +95,19 @@ export class DenaturedTeaEntryComponent implements OnInit {
       })
     } else {
       this.markFormGroupTouched()
+    }
+  }
+
+  deleteEntry(id: number): void {
+    if (confirm("Are you sure you want to delete this denatured tea entry?")) {
+      this.denaturedTeaService.deleteDenaturedTea(id).subscribe({
+        next: () => {
+          this.denaturedTeas = this.denaturedTeas.filter((tea) => tea.id !== id)
+        },
+        error: (error) => {
+          this.errorMessage = error
+        },
+      })
     }
   }
 

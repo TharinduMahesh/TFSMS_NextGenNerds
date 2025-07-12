@@ -44,18 +44,27 @@ export class TeaReturnEntryComponent implements OnInit {
       next: (data) => {
         if (Array.isArray(data)) {
           this.teaReturns = data
-        } else if (data === null || data === undefined) {
-          this.teaReturns = [] // Treat null/undefined as empty array
+        } else if (
+          data &&
+          typeof data === "object" &&
+          "$values" in data &&
+          Array.isArray((data as { $values: TeaReturn[] }).$values)
+        ) {
+          // Handle the {$id: '1', $values: [...]} format
+          this.teaReturns = (data as { $values: TeaReturn[] }).$values
+          console.warn("API returned data with $values property for tea returns. Extracting $values.")
         } else {
-          // If it's a single object, wrap it in an array. This handles cases where API might return a single object instead of an array.
-          this.teaReturns = [data]
-          console.warn("API returned a single object for tea returns, expected an array. Wrapping in array.")
+          this.teaReturns = [] // Default to empty array for other non-array formats
+          if (data !== null && data !== undefined) {
+            console.warn("API returned unexpected non-array data for tea returns, defaulting to empty array:", data)
+          }
         }
         this.isLoading = false
       },
       error: (error) => {
         this.errorMessage = error
         this.isLoading = false
+        this.teaReturns = [] // Ensure it's an empty array on error too
       },
     })
   }
@@ -63,10 +72,27 @@ export class TeaReturnEntryComponent implements OnInit {
   loadInvoices(): void {
     this.teaReturnService.getInvoices().subscribe({
       next: (data) => {
-        this.invoices = data
+        if (Array.isArray(data)) {
+          this.invoices = data
+        } else if (
+          data &&
+          typeof data === "object" &&
+          "$values" in data &&
+          Array.isArray((data as { $values: Invoice[] }).$values)
+        ) {
+          // Handle the {$id: '1', $values: [...]} format
+          this.invoices = (data as { $values: Invoice[] }).$values
+          console.warn("API returned data with $values property for invoices. Extracting $values.")
+        } else {
+          this.invoices = [] // Default to empty array for other non-array formats
+          if (data !== null && data !== undefined) {
+            console.warn("API returned unexpected non-array data for invoices, defaulting to empty array:", data)
+          }
+        }
       },
       error: (error) => {
         console.error("Error loading invoices:", error)
+        this.invoices = [] // Ensure it's an empty array on error too
       },
     })
   }

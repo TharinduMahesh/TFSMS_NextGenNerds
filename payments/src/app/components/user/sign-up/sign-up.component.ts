@@ -1,6 +1,6 @@
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
-import { FormsModule, ReactiveFormsModule, FormGroup, AbstractControl,  FormBuilder } from "@angular/forms"
+import { FormsModule, ReactiveFormsModule, FormGroup, AbstractControl,  FormBuilder, FormControl } from "@angular/forms"
 import { RouterModule } from "@angular/router"
 import { HeaderComponent } from "../../header/header.component"
 import { FooterComponent } from "../../footer/footer.component"
@@ -116,8 +116,8 @@ export class SignUpComponent implements OnInit {
             }
             // Redirect to sign-in page after a short delay
             setTimeout(() => {
-              this.router.navigateByUrl("/sign-in")
-            }, 2000)
+              this.router.navigateByUrl("/sign-up")
+            }, 10000)
           } else {
             // Handle different error cases from the API
             if (response.error === "existing_user") {
@@ -176,14 +176,16 @@ export class SignUpComponent implements OnInit {
   }
 
   private validateAllFormFields(formGroup: FormGroup) {
-    Object.keys(formGroup.controls).forEach((field) => {
-      const control = formGroup.get(field)
-      if (control instanceof AbstractControl) {
-        control.markAsTouched({ onlySelf: true })
+  Object.keys(formGroup.controls).forEach((field) => {
+    const control = formGroup.get(field);
+    if (control) {
+      if (control instanceof FormControl) {
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFields(control);
       }
-      if (control && typeof control === "object" && control instanceof FormGroup) {
-        this.validateAllFormFields(control)
-      }
-    })
-  }
+    }
+  });
+}
+
 }

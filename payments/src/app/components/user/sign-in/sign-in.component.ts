@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms"
 import { RouterModule } from "@angular/router"
 import { HeaderComponent } from "../../header/header.component"
 import { FooterComponent } from "../../footer/footer.component"
-import {  FormBuilder, Validators } from "@angular/forms"
-import  { AuthService } from "../../../shared/services/auth.service"
-import  { Router } from "@angular/router"
+import { FormBuilder, Validators } from "@angular/forms"
+import { AuthService } from "../../../shared/services/auth.service"
+import { Router } from "@angular/router"
 
 @Component({
   selector: "app-sign-in",
@@ -18,7 +18,7 @@ import  { Router } from "@angular/router"
     HeaderComponent,
     FooterComponent,
     ReactiveFormsModule
-  
+
   ],
   templateUrl: "./sign-in.component.html",
   styleUrls: ["./sign-in.component.css"],
@@ -65,24 +65,31 @@ export class SignInComponent implements OnInit {
     this.successMessage = null
 
     if (this.form.valid) {
-      this.service.signin(this.form.value).subscribe({
-        next: (res: any) => {
-          this.service.savetoken(res.token)
-          this.successMessage = "Sign in successful! Redirecting to your dashboard..."
+      localStorage.setItem("Username", this.form.value.Email);
+      if (this.form.value.password === "tfsms@123") {
+        alert("Please change your password after signing in for the first time.");
+        this.router.navigateByUrl("/set-password");
+      } else {
+        this.service.signin(this.form.value).subscribe({
+          next: (res: any) => {
+            this.service.savetoken(res.token)
+            this.successMessage = "Sign in successful! Redirecting to your dashboard..."
 
-          // Delay redirect to show success message
-          setTimeout(() => {
-            this.router.navigateByUrl("/dashboard")
-          }, 1500)
-        },
-        error: (err) => {
-          if (err.status == 400) {
-            alert("Invalid username or password")
-          } else {
-            alert("Something went wrong. Please try again.")
-          }
-        },
-      })
+            // Delay redirect to show success message
+            setTimeout(() => {
+              this.router.navigateByUrl("/dashboard")
+            }, 1500)
+          },
+          error: (err) => {
+            if (err.status == 400) {
+              alert("Invalid username or password")
+            } else {
+              alert("Something went wrong. Please try again.")
+            }
+          },
+        })
+      }
+
     }
   }
 

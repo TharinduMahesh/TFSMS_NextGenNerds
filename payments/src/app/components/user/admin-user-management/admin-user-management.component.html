@@ -1,0 +1,78 @@
+<div class="admin-user-management-container">
+  <h2>User Management</h2>
+
+  <!-- Alert Message -->
+  <div *ngIf="showAlert" class="alert" [ngClass]="{'alert-success': alertType === 'success', 'alert-error': alertType === 'error'}">
+    {{ alertMessage }}
+  </div>
+
+  <div class="form-section">
+    <h3>{{ selectedUserId ? 'Edit User' : 'Add New User' }}</h3>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" type="email" formControlName="Email" placeholder="user@example.com">
+        <div *ngIf="userForm.get('Email')?.invalid && (userForm.get('Email')?.dirty || userForm.get('Email')?.touched)" class="error-message">
+          <span *ngIf="userForm.get('Email')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="userForm.get('Email')?.errors?.['email']">Please enter a valid email.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input id="firstName" type="text" formControlName="FirstName" placeholder="John">
+        <div *ngIf="userForm.get('FirstName')?.invalid && (userForm.get('FirstName')?.dirty || userForm.get('FirstName')?.touched)" class="error-message">
+          <span *ngIf="userForm.get('FirstName')?.errors?.['required']">First Name is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input id="lastName" type="text" formControlName="LastName" placeholder="Doe">
+        <div *ngIf="userForm.get('LastName')?.invalid && (userForm.get('LastName')?.dirty || userForm.get('LastName')?.touched)" class="error-message">
+          <span *ngIf="userForm.get('LastName')?.errors?.['required']">Last Name is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mobileNo">Mobile No.:</label>
+        <input id="mobileNo" type="text" formControlName="MobileNo" placeholder="+94...">
+        <div *ngIf="userForm.get('MobileNo')?.invalid && (userForm.get('MobileNo')?.dirty || userForm.get('MobileNo')?.touched)" class="error-message">
+          <span *ngIf="userForm.get('MobileNo')?.errors?.['required']">Mobile Number is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <select id="role" formControlName="Role">
+          <option value="" disabled>Select a role</option>
+          <option *ngFor="let role of roles" [value]="role">{{ role | titlecase }}</option>
+        </select>
+        <div *ngIf="userForm.get('Role')?.invalid && (userForm.get('Role')?.dirty || userForm.get('Role')?.touched)" class="error-message">
+          <span *ngIf="userForm.get('Role')?.errors?.['required']">Role is required.</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="userForm.invalid">{{ selectedUserId ? 'Update User' : 'Add User' }}</button>
+        <button type="button" (click)="resetForm()">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="user-list-section">
+    <h3>Existing Users</h3>
+    <div *ngIf="users.length === 0" class="no-users">No users found.</div>
+    <ul class="user-list">
+      <li *ngFor="let user of users" class="user-item">
+        <div class="user-details">
+          <span><strong>{{ user.firstName }} {{ user.lastName }}</strong> ({{ user.email }}) - {{ user.role | titlecase }}</span>
+        </div>
+        <div class="user-actions">
+          <button (click)="editUser(user)">Edit</button>
+          <button (click)="deleteUser(user.id)">Delete</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

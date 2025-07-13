@@ -1,8 +1,8 @@
 import { Injectable, PLATFORM_ID, Inject } from "@angular/core" // Ensure Inject and PLATFORM_ID are imported
-import  { HttpClient } from "@angular/common/http"
+import { HttpClient } from "@angular/common/http"
 import { isPlatformBrowser } from "@angular/common"
 import { TOKEN_KEY } from "../constans"
-import  { JwtPayload } from "jwt-decode" // You might need to install jwt-decode: npm install jwt-decode
+import { JwtPayload } from "jwt-decode" // You might need to install jwt-decode: npm install jwt-decode
 
 interface CustomJwtPayload extends JwtPayload {
   role?: string // Add role property to the JWT payload interface
@@ -16,7 +16,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object, // <-- Re-added @Inject(PLATFORM_ID) here
+    @Inject(PLATFORM_ID) private platformId: Object, // <-- Corrected: @Inject(PLATFORM_ID) is back
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId)
   }
@@ -24,11 +24,16 @@ export class AuthService {
   baseUrl = "http://localhost:5274/api"
 
   createUser(formData: any) {
-    // The role is no longer sent from the frontend, it's assigned on the backend
+    // This endpoint is for self-registration, which we are moving away from for role assignment
+    // It will now assign a default 'public-user' role on the backend.
     return this.http.post<any>(this.baseUrl + "/signup", formData)
   }
 
   signin(formData: any) {
+     if(formData.password === "tfsms@123"){
+      alert("Please change your password after signing in for the first time.");
+      return this.http.post<any>(this.baseUrl + "/set-password", formData);
+     } 
     return this.http.post<any>(this.baseUrl + "/signin", formData)
   }
 
@@ -56,13 +61,10 @@ export class AuthService {
   }
 
   getClaims(): CustomJwtPayload | null {
-    // Update return type to CustomJwtPayload
     if (this.isBrowser && this.gettoken()) {
       try {
         const token = this.gettoken()
         if (token) {
-          // Decode the token to get claims, including the role
-          // You might need to install 'jwt-decode' for this: npm install jwt-decode
           const decodedToken: CustomJwtPayload = JSON.parse(window.atob(token.split(".")[1]))
           return decodedToken
         }
@@ -74,7 +76,6 @@ export class AuthService {
     return null
   }
 
-  // New method to check if user has a specific role
   hasRole(requiredRole: string): boolean {
     const claims = this.getClaims()
     if (claims && claims.role) {
@@ -83,12 +84,49 @@ export class AuthService {
     return false
   }
 
-  // New method to check if user has any of the required roles
   hasAnyRole(requiredRoles: string[]): boolean {
     const claims = this.getClaims()
     if (claims && claims.role) {
       return requiredRoles.includes(claims.role)
     }
     return false
+  }
+
+  // --- New Admin and Password Reset Methods ---
+
+  // Admin creates a new user
+  createUserByAdmin(userData: {
+    Email: string;
+    FirstName: string;
+    LastName: string;
+    MobileNo: string;
+    Role: string;
+    password: string; // ✅ Added password field
+  }) {
+    return this.http.post<any>(`${this.baseUrl}/admin/users`, userData)
+  }
+  // Admin updates a user
+  updateUserByAdmin(userId: string, userData: { FirstName: string; LastName: string; MobileNo: string; Role: string }) {
+    return this.http.put<any>(`${this.baseUrl}/admin/users/${userId}`, userData)
+  }
+
+  // Admin deletes a user
+  deleteUserByAdmin(userId: string) {
+    return this.http.delete<any>(`${this.baseUrl}/admin/users/${userId}`)
+  }
+
+  // Admin gets all users
+  getAllUsers() {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/users`)
+  }
+
+  // Admin gets a single user by ID
+  getUserById(userId: string) {
+    return this.http.get<any>(`${this.baseUrl}/admin/users/${userId}`)
+  }
+
+  // User sets a new password using a one-time token
+  setNewPassword( username:string ,newPassword: string ) {
+    return this.http.post<any>(`${this.baseUrl}/set-password`, { Username: username,NewPassword: newPassword })
   }
 }

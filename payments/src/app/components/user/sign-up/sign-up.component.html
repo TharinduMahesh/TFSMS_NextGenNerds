@@ -5,6 +5,10 @@
 <div class="auth-container full-width">
   <div class="auth-content">
     <div class="left-content">
+      <div class="welcome-message">
+  <h1>Welcome to Aruna Tea 🍃</h1>
+  <h2>Create Account Here!</h2>
+</div>
       <img src="https://img.freepik.com/premium-photo/green-herbal-tea-wave-splash-with-leaves-flow_974206-2034.jpg" alt="Tea Leaf" class="tea-leaf" />
     </div>
     <div class="right-content">
@@ -16,7 +20,6 @@
           </div>
           <button class="alert-close" (click)="closeAlert()">×</button>
         </div>
-
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="form-row">
             <div class="form-group">
@@ -34,7 +37,6 @@
               </div>
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
               <label>Email Id :</label>
@@ -56,13 +58,12 @@
               </div>
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
               <label>Password :</label>
               <input type="password" formControlName="password" placeholder="••••••••" />
               <div class="error" *ngIf="hasDisplayError('password')">
-                <ng-container [ngSwitch]="form.controls.password.errors | firstKey">
+                <ng-container [ngSwitch]="form.controls['password'].errors | firstKey">
                   <div *ngSwitchCase="'required'">
                     Please enter your password
                   </div>
@@ -83,25 +84,12 @@
               </div>
             </div>
           </div>
-
-          <div class="form-group">
-            <label>Role :</label>
-            <select formControlName="role">
-              <option value="" disabled>Enter company role...</option>
-              <option value="admin">Admin</option>
-              <option value="manager">Manager</option>
-            </select>
-            <div class="error" *ngIf="hasDisplayError('role') && form.get('role')?.hasError('required')">
-              Role is required
-            </div>
-          </div>
-
+          <!-- Removed the role selection dropdown -->
           <button type="submit" class="sign-up-btn" [disabled]="isLoading">
             <span *ngIf="!isLoading">SIGN UP</span>
             <span *ngIf="isLoading">SIGNING UP...</span>
           </button>
         </form>
-
         <div class="divider">
           <span>Or connect with</span>
         </div>

@@ -121,7 +121,7 @@ export class TeaReturnEntryComponent implements OnInit {
     if (confirm("Are you sure you want to delete this tea return entry?")) {
       this.teaReturnService.deleteTeaReturn(id).subscribe({
         next: () => {
-          this.teaReturns = this.teaReturns.filter((teaReturn) => teaReturn.id !== id)
+          this.teaReturns = this.teaReturns.filter((teaReturn) => teaReturn.Id !== id)
         },
         error: (error) => {
           this.errorMessage = error

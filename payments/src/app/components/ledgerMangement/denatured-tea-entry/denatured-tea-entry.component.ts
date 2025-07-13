@@ -128,7 +128,7 @@ export class DenaturedTeaEntryComponent implements OnInit {
     if (confirm("Are you sure you want to delete this denatured tea entry?")) {
       this.denaturedTeaService.deleteDenaturedTea(id).subscribe({
         next: () => {
-          this.denaturedTeas = this.denaturedTeas.filter((tea) => tea.id !== id)
+          this.denaturedTeas = this.denaturedTeas.filter((tea) => tea.Id !== id)
         },
         error: (error) => {
           this.errorMessage = error
@@ -158,6 +158,6 @@ export class DenaturedTeaEntryComponent implements OnInit {
   }
 
   trackByFn(index: number, item: DenaturedTea): number {
-    return item.id
+    return item.Id
   }
 }

@@ -1,7 +1,8 @@
 export interface Invoice {
-  id: number;
-  season: string;
-  gardenMark: string;
-  invoiceNumber: string;
-  date: Date;
+  Id: number;
+  InvoiceNumber: string;
+  Season: string;
+  GardenMark: string;
+  InvoiceDate: Date;
+  TotalAmount : number
 }

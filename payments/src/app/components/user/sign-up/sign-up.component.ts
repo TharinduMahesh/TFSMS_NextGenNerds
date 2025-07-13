@@ -1,10 +1,10 @@
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
-import { FormsModule, ReactiveFormsModule } from "@angular/forms"
+import { FormsModule, ReactiveFormsModule, FormGroup, AbstractControl,  FormBuilder } from "@angular/forms"
 import { RouterModule } from "@angular/router"
 import { HeaderComponent } from "../../header/header.component"
 import { FooterComponent } from "../../footer/footer.component"
-import {  AbstractControl,  FormBuilder,  ValidatorFn, Validators } from "@angular/forms"
+import {  ValidatorFn, Validators } from "@angular/forms"
 import  { AuthService } from "../../../shared/services/auth.service"
 import  { Router } from "@angular/router"
 import { FirstKeyPipe } from "../../../shared/pipes/first-key-pipe.pipe"
@@ -27,11 +27,13 @@ import { HttpClientModule } from "@angular/common/http"
   styleUrls: ["./sign-up.component.css"],
 })
 export class SignUpComponent implements OnInit {
-  form: any
+  type = "password"
+  isText = false
+  eyeIcon = "fa-eye-slash"
+  form: FormGroup
   isSubmitted = false
   menuOpen = false
   isLoading = false
-
   // Add alert message properties
   alertMessage = ""
   showAlert = false
@@ -40,7 +42,6 @@ export class SignUpComponent implements OnInit {
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): null => {
     const password = control.get("password")
     const confirmPassword = control.get("confirmPassword")
-
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       confirmPassword?.setErrors({ mismatch: true })
     } else {
@@ -50,7 +51,7 @@ export class SignUpComponent implements OnInit {
   }
 
   constructor(
-    public formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
   ) {
@@ -65,7 +66,7 @@ export class SignUpComponent implements OnInit {
           [Validators.required, Validators.minLength(6), Validators.pattern(/(?=.*[0-9])(?=.*[!@#$%^&*])/)],
         ],
         confirmPassword: [""],
-        role: ["", Validators.required],
+        // Removed: role: ["", Validators.required],
       },
       { validators: this.passwordMatchValidator },
     )
@@ -76,7 +77,6 @@ export class SignUpComponent implements OnInit {
     if (typeof window !== "undefined" && this.authService.isLoggedIn()) {
       this.router.navigateByUrl("/dashboard")
     }
-
     // Check if there's a success message in localStorage from a previous registration
     if (typeof window !== "undefined") {
       const successMsg = localStorage.getItem("signupSuccess")
@@ -92,7 +92,6 @@ export class SignUpComponent implements OnInit {
     this.alertMessage = message
     this.alertType = type
     this.showAlert = true
-
     // Auto-hide the alert after 5 seconds
     setTimeout(() => {
       this.showAlert = false
@@ -102,24 +101,19 @@ export class SignUpComponent implements OnInit {
   onSubmit() {
     this.isSubmitted = true
     this.isLoading = true
-
     if (this.form.valid) {
       this.authService.createUser(this.form.value).subscribe({
         next: (response: any) => {
           this.isLoading = false
-
           if (response.succeeded) {
             console.log("User registered successfully", response)
             this.form.reset()
             this.isSubmitted = false
-
             // Show success message
             this.showAlertMessage("Your account has been created successfully. Please sign in.", "success")
-
             if (typeof window !== "undefined") {
               localStorage.setItem("signupSuccess", "Your account has been created successfully. Please sign in.")
             }
-
             // Redirect to sign-in page after a short delay
             setTimeout(() => {
               this.router.navigateByUrl("/sign-in")
@@ -139,7 +133,6 @@ export class SignUpComponent implements OnInit {
         error: (error) => {
           this.isLoading = false
           console.error("Error registering user", error)
-
           // Show error message
           if (error.status === 400) {
             // HTTP 409 Conflict - typically used for duplicate resource
@@ -174,5 +167,23 @@ export class SignUpComponent implements OnInit {
   // Method to close the alert
   closeAlert() {
     this.showAlert = false
+  }
+
+  hideShowPass() {
+    this.isText = !this.isText
+    this.isText ? (this.eyeIcon = "fa-eye") : (this.eyeIcon = "fa-eye-slash")
+    this.isText ? (this.type = "text") : (this.type = "password")
+  }
+
+  private validateAllFormFields(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach((field) => {
+      const control = formGroup.get(field)
+      if (control instanceof AbstractControl) {
+        control.markAsTouched({ onlySelf: true })
+      }
+      if (control && typeof control === "object" && control instanceof FormGroup) {
+        this.validateAllFormFields(control)
+      }
+    })
   }
 }

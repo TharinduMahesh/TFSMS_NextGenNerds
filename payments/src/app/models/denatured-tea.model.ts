@@ -1,8 +1,8 @@
 export interface DenaturedTea {
-  id: number
-  teaGrade: string
-  quantityKg: number
-  reason: string
-  date: Date
-  invoiceNumber: string
+  Id: number
+  TeaGrade: string
+  QuantityKg: number
+  Reason: string
+  Date: Date
+  InvoiceNumber: string
 }

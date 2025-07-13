@@ -30,8 +30,8 @@
           class="form-control"
           [class.is-invalid]="isFieldInvalid('invoiceNumber')">
           <option value="">Select Invoice</option>
-          <option *ngFor="let invoice of invoices" [value]="invoice.invoiceNumber">
-            {{ invoice.invoiceNumber }} - {{ invoice.season }} - {{ invoice.gardenMark }}
+          <option *ngFor="let invoice of invoices" [value]="invoice.InvoiceNumber">
+            {{ invoice.InvoiceNumber }} - {{ invoice.Season }} - {{ invoice.GardenMark }}
           </option>
         </select>
         <div *ngIf="isFieldInvalid('invoiceNumber')" class="invalid-feedback">
@@ -113,17 +113,17 @@
       </thead>
       <tbody>
         <tr *ngFor="let tea of denaturedTeas; trackBy: trackByFn">
-          <td>{{ tea.id }}</td>
-          <td>{{ tea.date | date:'dd/MM/yyyy' }}</td>
-          <td>{{ tea.teaGrade }}</td>
-          <td>{{ tea.invoiceNumber }}</td>
-          <td>{{ tea.quantityKg | number:'1.2-2' }} kg</td>
-          <td>{{ tea.reason }}</td>
+          <td>{{ tea.Id }}</td>
+          <td>{{ tea.Date | date:'dd/MM/yyyy' }}</td>
+          <td>{{ tea.TeaGrade }}</td>
+          <td>{{ tea.InvoiceNumber }}</td>
+          <td>{{ tea.QuantityKg | number:'1.2-2' }} kg</td>
+          <td>{{ tea.Reason }}</td>
           <td>
             <button 
               type="button" 
               class="btn btn-danger btn-sm" 
-              (click)="deleteEntry(tea.id)"
+              (click)="deleteEntry(tea.Id)"
               title="Delete Entry">
               Delete
             </button>

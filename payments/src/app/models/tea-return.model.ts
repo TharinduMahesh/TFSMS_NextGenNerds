@@ -1,9 +1,9 @@
 export interface TeaReturn {
-  id: number;
-  season: string;
-  gardenMark: string;
-  invoiceNumber: string;
-  returnDate: Date;
-  kilosReturned: number;
-  reason: string;
+  Id: number;
+  Season: string;
+  GardenMark: string;
+  InvoiceNumber: string;
+  ReturnDate: Date;
+  KilosReturned: number;
+  Reason: string;
 }

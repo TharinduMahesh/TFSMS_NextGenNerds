@@ -43,8 +43,8 @@
           class="form-control"
           [class.is-invalid]="isFieldInvalid('invoiceNumber')">
           <option value="">Select Invoice</option>
-          <option *ngFor="let invoice of invoices" [value]="invoice.invoiceNumber">
-            {{ invoice.invoiceNumber }} - {{ invoice.season }} - {{ invoice.gardenMark }}
+          <option *ngFor="let invoice of invoices" [value]="invoice.InvoiceNumber">
+            {{ invoice.InvoiceNumber }} - {{ invoice.Season }} - {{ invoice.GardenMark }}
           </option>
         </select>
         <div *ngIf="isFieldInvalid('invoiceNumber')" class="invalid-feedback">
@@ -127,18 +127,18 @@
       </thead>
       <tbody>
         <tr *ngFor="let teaReturn of teaReturns;">
-          <td>{{ teaReturn.id }}</td>
-          <td>{{ teaReturn.season }}</td>
-          <td>{{ teaReturn.gardenMark }}</td>
-          <td>{{ teaReturn.invoiceNumber }}</td>
-          <td>{{ teaReturn.returnDate | date:'dd/MM/yyyy' }}</td>
-          <td>{{ teaReturn.kilosReturned | number:'1.2-2' }} kg</td>
-          <td>{{ teaReturn.reason }}</td>
+          <td>{{ teaReturn.Id }}</td>
+          <td>{{ teaReturn.Season }}</td>
+          <td>{{ teaReturn.GardenMark }}</td>
+          <td>{{ teaReturn.InvoiceNumber }}</td>
+          <td>{{ teaReturn.ReturnDate | date:'dd/MM/yyyy' }}</td>
+          <td>{{ teaReturn.KilosReturned | number:'1.2-2' }} kg</td>
+          <td>{{ teaReturn.Reason }}</td>
           <td>
             <button 
               type="button" 
               class="btn btn-danger btn-sm" 
-              (click)="deleteReturn(teaReturn.id)"
+              (click)="deleteReturn(teaReturn.Id)"
               title="Delete Return">
               Delete
             </button>

@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tfsms_app_frontend/models/Harvest.dart';
+
 class HarvestService {
-  // Replace with your actual API endpoint URL
-  static const String baseUrl = 'https://localhost:7211/api/Harvest';  
+  static const String baseUrl = 'https://localhost:7211/api/Harvest';
 
   static Future<String?> submitHarvest(Harvest harvest) async {
     try {
@@ -15,7 +15,7 @@ class HarvestService {
 
       if (response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        return data['id']; 
+        return data['id'];
       } else {
         print('❌ Failed with status: ${response.statusCode}');
         print('Body: ${response.body}');

@@ -125,7 +125,7 @@
 
 import type { Routes } from "@angular/router"
 import { SignInComponent } from "./components/user/sign-in/sign-in.component"
-import { SignUpComponent } from "./components/user/sign-up/sign-up.component"
+// import { SignUpComponent } from "./components/user/sign-up/sign-up.component"
 import { PaymentComponent } from "./components/paymentManager/payment/payment.component"
 import { SuccessComponent } from "./components/success/success.component"
 import { HeaderComponent } from "./components/header/header.component"
@@ -146,10 +146,10 @@ export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
   { path: "home", component: HomeComponent },
   { path: "sign-in", component: SignInComponent },
-  {
-    path: "sign-up",
-    component: SignUpComponent // Only full-admin can access this page
-  },
+  // {
+  //   path: "sign-up",
+  //   // component: SignUpComponent // Only full-admin can access this page
+  // },
   { path: "header", component: HeaderComponent },
   { path: "footer", component: FooterComponent },
   { path: "about-us", component: AboutusComponent },

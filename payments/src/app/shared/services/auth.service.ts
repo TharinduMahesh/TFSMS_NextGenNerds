@@ -23,11 +23,11 @@ export class AuthService {
 
   baseUrl = "http://localhost:5274/api"
 
-  createUser(formData: any) {
-    // This endpoint is for self-registration, which we are moving away from for role assignment
-    // It will now assign a default 'public-user' role on the backend.
-    return this.http.post<any>(this.baseUrl + "/signup", formData)
-  }
+  // createUser(formData: any) {
+  //   // This endpoint is for self-registration, which we are moving away from for role assignment
+  //   // It will now assign a default 'public-user' role on the backend.
+  //   return this.http.post<any>(this.baseUrl + "/signup", formData)
+  // }
 
   signin(formData: any) {
      if(formData.password === "tfsms@123"){

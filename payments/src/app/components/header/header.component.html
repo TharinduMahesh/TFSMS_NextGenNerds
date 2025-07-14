@@ -15,7 +15,7 @@
     
     <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
       <a routerLink="/sign-in" class="sign-in">Sign in</a>
-      <a routerLink="/sign-up" class="register">Register</a>
+      <!-- <a routerLink="/sign-up" class="register">Register</a> -->
     </ng-container>
     
     <ng-template #loggedIn>

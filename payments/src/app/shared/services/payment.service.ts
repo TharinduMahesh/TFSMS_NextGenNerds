@@ -375,12 +375,5 @@ export class PaymentService {
     )
   }
 
-  generatePaymentReceipt(paymentId: number): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/${paymentId}/receipt`, { responseType: "blob" }).pipe(
-      catchError((error) => {
-        console.error(`Error generating receipt for payment ${paymentId}:`, error)
-        return throwError(() => new Error("Failed to generate payment receipt"))
-      }),
-    )
-  }
+  
 }

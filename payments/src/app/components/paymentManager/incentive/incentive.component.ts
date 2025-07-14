@@ -85,6 +85,8 @@ export class IncentiveComponent implements OnInit {
         TotalAmount: incentive.TotalAmount || incentive.totalAmount || 0,
         Month: incentive.Month || incentive.month || "",
         CreatedDate: new Date(incentive.CreatedDate || incentive.createdDate || new Date()),
+        UsedAmount: incentive.UsedAmount || incentive.usedAmount || 0, // Include UsedAmount
+        BalanceAmount: incentive.BalanceAmount || incentive.balanceAmount || 0, // Include BalanceAmount
       }
     })
   }
@@ -185,9 +187,11 @@ export class IncentiveComponent implements OnInit {
       SupplierId: formValues.SupplierId,
       QualityBonus: formValues.qualityBonus,
       LoyaltyBonus: formValues.loyaltyBonus,
-      TotalAmount: formValues.qualityBonus + formValues.loyaltyBonus,
+      TotalAmount: formValues.qualityBonus + formValues.loyaltyBonus, // This will be recalculated in backend
       Month: formValues.month,
       CreatedDate: new Date(),
+      UsedAmount: 0, // Set to 0, backend will handle
+      BalanceAmount: 0, // Set to 0, backend will handle
     }
 
     console.log("Sending incentive data:", incentive)

@@ -27,10 +27,10 @@
       <h3>Bank Transfer</h3>
       <p>LKR {{ paymentsByBank | number }}</p>
     </div>
-    <div class="method-card">
+    <!-- <div class="method-card">
       <h3>Cheque</h3>
       <p>LKR {{ paymentsByCheque | number }}</p>
-    </div>
+    </div> -->
   </div>
 
   <div class="payment-container">
@@ -65,7 +65,7 @@
             <option value="">All Methods</option>
             <option value="Cash">Cash</option>
             <option value="Bank Transfer">Bank Transfer</option>
-            <option value="Cheque">Cheque</option>
+            <!-- <option value="Cheque">Cheque</option> -->
           </select>
         </div>
 
@@ -103,11 +103,11 @@
     <div class="manual-entry">
       <h4>Create New Payment</h4>
 
-      <div class="calculator-toggle">
+      <!-- <div class="calculator-toggle">
         <button (click)="toggleCalculator()" class="calculator-btn">
           {{ showCalculator ? 'Hide Calculator' : 'Use Payment Calculator' }}
         </button>
-      </div>
+      </div> -->
 
       <form [formGroup]="paymentForm" (ngSubmit)="createPayment()">
         <div class="form-grid">
@@ -170,7 +170,7 @@
             <select formControlName="paymentMethod">
               <option value="Cash">Cash</option>
               <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Cheque">Cheque</option>
+              <!-- <option value="Cheque">Cheque</option> -->
             </select>
             <div *ngIf="paymentForm.get('paymentMethod')?.touched && paymentForm.get('paymentMethod')?.invalid" class="error-message">
               Payment method is required

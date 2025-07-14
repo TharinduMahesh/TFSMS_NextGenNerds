@@ -28,7 +28,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   totalAmount = 0
   paymentsByCash = 0
   paymentsByBank = 0
-  paymentsByCheque = 0
+  // paymentsByCheque = 0
 
   // Filter and search properties
   selectedSupplier = ""
@@ -39,7 +39,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   searchTerm = ""
 
   // UI state
-  showCalculator = false
+  // showCalculator = false
   calculationResult: PaymentCalculationResult | null = null
   loading = false
   error: string | null = null
@@ -363,35 +363,35 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       },
     })
 
-    this.paymentService.getTotalPaymentsByMethod("Cheque").subscribe({
-      next: (total) => {
-        this.paymentsByCheque = total
-      },
-      error: (err) => {
-        console.error("Error loading cheque payments:", err)
-        this.paymentsByCheque = 0
-      },
-    })
+    // this.paymentService.getTotalPaymentsByMethod("Cheque").subscribe({
+    //   next: (total) => {
+    //     this.paymentsByCheque = total
+    //   },
+    //   error: (err) => {
+    //     console.error("Error loading cheque payments:", err)
+    //     this.paymentsByCheque = 0
+    //   },
+    // })
   }
 
-  toggleCalculator(): void {
-    this.showCalculator = !this.showCalculator
-  }
+  // toggleCalculator(): void {
+  //   this.showCalculator = !this.showCalculator
+  // }
 
-  onCalculationComplete(result: PaymentCalculationResult): void {
-    this.calculationResult = result
-    this.paymentForm.patchValue({
-      SupplierId: result.supplierId,
-      leafWeight: result.leafWeight,
-      rate: result.rate,
-      grossAmount: result.grossAmount,
-      advanceDeduction: result.advanceDeduction,
-      debtDeduction: result.debtDeduction,
-      incentiveAddition: result.incentiveAddition,
-      netAmount: result.netAmount,
-    })
-    this.showCalculator = false
-  }
+  // onCalculationComplete(result: PaymentCalculationResult): void {
+  //   this.calculationResult = result
+  //   this.paymentForm.patchValue({
+  //     SupplierId: result.supplierId,
+  //     leafWeight: result.leafWeight,
+  //     rate: result.rate,
+  //     grossAmount: result.grossAmount,
+  //     advanceDeduction: result.advanceDeduction,
+  //     debtDeduction: result.debtDeduction,
+  //     incentiveAddition: result.incentiveAddition,
+  //     netAmount: result.netAmount,
+  //   })
+  //   this.showCalculator = false
+  // }
 
   createPayment(): void {
     if (this.paymentForm.invalid) {

@@ -141,6 +141,7 @@ import { DenaturedTeaEntryComponent } from "./components/ledgerMangement/denatur
 import { ForbiddenComponent } from "./components/forbidden.component"
 import { AdminUserManagementComponent } from "./components/user/admin-user-management/admin-user-management.component" // New
 import { SetNewPasswordComponent } from "./components/user/set-new-password/set-new-password.component" // New
+import { UserProfileComponent } from "./components/user-profile/user-profile/user-profile.component"
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -181,20 +182,20 @@ export const routes: Routes = [
   {
     path: "payment-management",
     component: PaymentManagmentComponent,
-    canActivate: [authGuard],
-    data: { requiredRoles: ["transport-administrator", "full-admin"] },
+    // canActivate: [authGuard],
+    // data: { requiredRoles: ["transport-administrator", "full-admin"] },
   },
   {
     path: "return",
     component: TeaReturnEntryComponent,
-    canActivate: [authGuard],
-    data: { requiredRoles: ["floor-manager", "full-admin"] },
+    // canActivate: [authGuard],
+    // data: { requiredRoles: ["floor-manager", "full-admin"] },
   },
   {
     path: "denatured",
     component: DenaturedTeaEntryComponent,
-    canActivate: [authGuard],
-    data: { requiredRoles: ["floor-manager", "full-admin"] },
+    // canActivate: [authGuard],
+    // data: { requiredRoles: ["floor-manager", "full-admin"] },
   },
   {
     path: "admin/users", // New route for admin user management
@@ -202,4 +203,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { requiredRoles: ["full-admin"] },
   },
+
+  {
+    path: "profile",
+    component: UserProfileComponent,
+    canActivate: [authGuard],
+    data: { requiredRoles: ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] }, // Any authenticated user can view their profile
+  },
+
 ]

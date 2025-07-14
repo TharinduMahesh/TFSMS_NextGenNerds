@@ -6,4 +6,6 @@ export interface Incentive {
   TotalAmount: number
   Month: string
   CreatedDate: Date
+  UsedAmount : number 
+  BalanceAmount : number// Amount used from the incentive
 }

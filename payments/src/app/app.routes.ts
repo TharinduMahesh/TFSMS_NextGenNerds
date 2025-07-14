@@ -207,8 +207,8 @@ export const routes: Routes = [
   {
     path: "profile",
     component: UserProfileComponent,
-    canActivate: [authGuard],
-    data: { requiredRoles: ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] }, // Any authenticated user can view their profile
+    // canActivate: [authGuard],
+    // data: { requiredRoles: ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] }, // Any authenticated user can view their profile
   },
 
 ]

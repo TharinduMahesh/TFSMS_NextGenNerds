@@ -10,7 +10,8 @@ CREATE TABLE GrowerOrders (
     GreenTeaQuantity DECIMAL(10, 2) NOT NULL,
     PlaceDate DATETIME NOT NULL,
     TransportMethod NVARCHAR(100) NOT NULL,
-    PaymentMethod NVARCHAR(100) NOT NULL
+    PaymentMethod NVARCHAR(100) NOT NULL,
+    GrowerEmail NVARCHAR(100) NOT NULL
 );
 
 
@@ -101,18 +102,37 @@ CREATE TABLE CollectorBankDetails (
     CollectorEmail NVARCHAR(100) NOT NULL
 );
 
-CREATE TABLE FertilizerIssues (
+CREATE TABLE Fertilizers (
     Id INT PRIMARY KEY IDENTITY(1,1),
     GrowerId INT NOT NULL,
     RefNumber NVARCHAR(50) NOT NULL,
-    IssueDate DATE NOT NULL,
+    Date DATE NOT NULL,
     FertilizerAmount DECIMAL(10, 2) NOT NULL
 );
 
 
-INSERT INTO FertilizerIssues (GrowerId, RefNumber, IssueDate, FertilizerAmount) VALUES
+INSERT INTO Fertilizers (GrowerId, RefNumber, Date, FertilizerAmount) VALUES
 (1, 'REF001', '2024-07-01', 50.00),
 (1, 'REF002', '2024-07-10', 30.50),
 (1, 'REF003', '2024-07-15', 45.25);
+
+CREATE TABLE Payments (
+    PaymentId INT IDENTITY(1,1) PRIMARY KEY,
+    Amount DECIMAL(10,2) NOT NULL,
+    RefNumber NVARCHAR(50) NOT NULL,
+    PaymentTime DATETIME NOT NULL,
+    PaymentMethod NVARCHAR(20) NOT NULL,
+    GrowerEmail NVARCHAR(100) NOT NULL
+);
+
+INSERT INTO Payments (Amount, RefNumber, PaymentTime, PaymentMethod, GrowerEmail)
+VALUES 
+  (1500.50, 'REF001', '2025-07-12 10:30:00', 'Cash', 'kasun@gmail.com'),
+  (2750.00, 'REF002', '2025-07-13 14:15:00', 'Bank', 'kasun@gmail.com'),
+  (990.75, 'REF003', '2025-07-14 09:00:00', 'Cash', 'kasun@gmail.com'),
+  (1860.25, 'REF004', '2025-07-15 16:45:00', 'Bank', 'malith@gmail.com'),
+  (700.25, 'REF005', '2025-07-17 16:45:00', 'Bank', 'malith@gmail.com');
+
+
 
 

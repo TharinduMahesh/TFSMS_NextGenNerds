@@ -47,41 +47,109 @@ throw new Error('Method not implemented.')
     )
   }
 
-  ngOnInit(): void {
-    // this.token = this.route.snapshot.queryParamMap.get("token")
-    // if (!this.token) {
-    //   this.showAlertMessage("No token provided. Please use the link from your email.", "error")
-    //   // Optionally redirect after a delay
-    //   setTimeout(() => this.router.navigate(["/sign-in"]), 3000)
-    // }
+ token: string | null = null;
+
+// ngOnInit(): void {
+//   this.token = this.route.snapshot.queryParamMap.get("token");
+
+//   if (!this.token) {
+//     this.showAlertMessage("No token provided. Please use the link from your email.", "error");
+//     setTimeout(() => this.router.navigate(["/sign-in"]), 3000);
+//   }
+// }
+
+ngOnInit(): void {
+  this.token = this.route.snapshot.queryParamMap.get("token") || localStorage.getItem("resetToken");
+  if (!this.token) {
+    this.showAlertMessage("No token provided. Please use the link from your email.", "error");
+    setTimeout(() => this.router.navigate(["/sign-in"]), 3000);
   }
 
+}
+
+
   onSubmit(): void {
-    this.isLoading = true
-    if (this.setPasswordForm.valid) {
-      const newPassword = this.setPasswordForm.get("newPassword")?.value
-      const username = localStorage.getItem("Username") || ""; // Retrieve username from localStorage
-      this.authService.setNewPassword(username,newPassword).subscribe({
-        next: (res) => {
-          this.showAlertMessage("Password set successfully! You can now log in.", "success")
-          this.isLoading = false
-          this.setPasswordForm.reset()
-          setTimeout(() => this.router.navigate(["/sign-in"]), 2000)
-        },
-        error: (err) => {
-          console.error("Error setting password:", err)
-          this.showAlertMessage(
-            "Failed to set password: " + (err.error?.message || "Invalid or expired token."),
-            "error",
-          )
-          this.isLoading = false
-        },
-      })
-    } else {
-      this.showAlertMessage("Please ensure passwords match and meet requirements.", "error")
-      this.isLoading = false
-    }
+  this.isLoading = true;
+
+  if (this.setPasswordForm.valid && this.token) {
+    const newPassword = this.setPasswordForm.get("newPassword")?.value;
+
+    this.authService.setNewPassword({ token: this.token, newPassword }).subscribe({
+      next: (res) => {
+        this.showAlertMessage("Password set successfully! You can now log in.", "success");
+        this.isLoading = false;
+        this.setPasswordForm.reset();
+        setTimeout(() => this.router.navigate(["/sign-in"]), 2000);
+      },
+      error: (err) => {
+        console.error("Error setting password:", err);
+        this.showAlertMessage(
+          "Failed to set password: " + (err.error?.message || "Invalid or expired token."),
+          "error"
+        );
+        this.isLoading = false;
+      },
+    });
+  } else {
+    this.showAlertMessage("Please ensure passwords match and meet requirements.", "error");
+    this.isLoading = false;
   }
+}
+
+
+// onSubmit(): void {
+
+//     this.isLoading = true
+
+//     if (this.setPasswordForm.valid) {
+
+//       const newPassword = this.setPasswordForm.get("newPassword")?.value
+
+//       const username = localStorage.getItem("Username") || ""; // Retrieve username from localStorage
+
+//       this.authService.setNewPassword(username,newPassword).subscribe({
+
+//         next: (res) => {
+
+//           this.showAlertMessage("Password set successfully! You can now log in.", "success")
+
+//           this.isLoading = false
+
+//           this.setPasswordForm.reset()
+
+//           setTimeout(() => this.router.navigate(["/sign-in"]), 2000)
+
+//         },
+
+//         error: (err) => {
+
+//           console.error("Error setting password:", err)
+
+//           this.showAlertMessage(
+
+//             "Failed to set password: " + (err.error?.message || "Invalid or expired token."),
+
+//             "error",
+
+//           )
+
+//           this.isLoading = false
+
+//         },
+
+//       })
+
+//     } else {
+
+//       this.showAlertMessage("Please ensure passwords match and meet requirements.", "error")
+
+//       this.isLoading = false
+
+//     }
+
+//   }
+
+
 
   showAlertMessage(message: string, type: string): void {
     this.alertMessage = message

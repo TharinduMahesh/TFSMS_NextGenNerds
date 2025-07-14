@@ -126,7 +126,12 @@ export class AuthService {
   }
 
   // User sets a new password using a one-time token
-  setNewPassword( username:string ,newPassword: string ) {
-    return this.http.post<any>(`${this.baseUrl}/set-password`, { Username: username,NewPassword: newPassword })
-  }
+  // setNewPassword( username:string ,newPassword: string ) {
+  //   return this.http.post<any>(`${this.baseUrl}/set-password`, { Username: username,NewPassword: newPassword })
+  // }
+
+  setNewPassword(data: { token: string; newPassword: string }) {
+  return this.http.post<any>(`${this.baseUrl}/set-password`, data);
+}
+
 }

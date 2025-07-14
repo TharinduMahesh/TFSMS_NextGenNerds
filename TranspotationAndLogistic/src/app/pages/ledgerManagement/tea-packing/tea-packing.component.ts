@@ -2,7 +2,7 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TeaPackingService } from '../../../services/LedgerManagement/tea-packing.service';
-import { TeaPacking, PACKING_TYPES, PackingType } from '../../../models/LedgerManagement/tea-packing.model';
+import { TeaPacking, PACKING_TYPES, PackingType } from '../../../models/Ledger Management/tea-packing.model';
 
 @Component({
   selector: 'app-tea-packing',

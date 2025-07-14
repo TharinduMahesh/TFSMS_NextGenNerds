@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { TeaPacking } from '../../models/LedgerManagement/tea-packing.model';
+import { TeaPacking } from '../../models/Ledger Management/tea-packing.model';
 
 @Injectable({
   providedIn: 'root'

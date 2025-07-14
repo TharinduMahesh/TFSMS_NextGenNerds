@@ -1,4 +1,4 @@
-// For VIEWING yield data (matches YieldResponseDto)
+// For VIEWING a yield record with all its related context
 export interface YieldResponse {
   yId: number;
   rId: number;
@@ -9,7 +9,7 @@ export interface YieldResponse {
   vehicleID?: number;
 }
 
-// For CREATING or UPDATING a yield (matches CreateUpdateYieldDto)
+// For CREATING or UPDATING a yield record (the minimal payload)
 export interface YieldPayload {
   rId: number;
   collected_Yield: string;

@@ -33,7 +33,7 @@ namespace TfactoryMng.Services
             {
                 throw new InvalidOperationException($"Collector with ID {dto.CollectorId} already has a vehicle assigned.");
             }
-
+            
             // 4. Create the new vehicle entity.
             var vehicle = new Vehicle
             {
@@ -57,7 +57,7 @@ namespace TfactoryMng.Services
             {
                 return null; // Not found
             }
-
+            
             // Validate that the new collector ID exists, if it's being changed.
             if (vehicle.CollectorId != dto.CollectorId && !await _context.Collectors.AnyAsync(c => c.CollectorId == dto.CollectorId))
             {
@@ -69,13 +69,13 @@ namespace TfactoryMng.Services
             {
                 throw new InvalidOperationException($"Another vehicle with license plate '{dto.LicensePlate}' already exists.");
             }
-
+            
             // Validate that the new collector doesn't already have a different vehicle assigned.
             if (vehicle.CollectorId != dto.CollectorId && await _context.Vehicles.AnyAsync(v => v.CollectorId == dto.CollectorId && v.VehicleId != id))
             {
                 throw new InvalidOperationException($"Collector {dto.CollectorId} already has another vehicle assigned.");
             }
-
+            
             // Update all properties
             vehicle.CollectorId = dto.CollectorId;
             vehicle.LicensePlate = dto.LicensePlate;
@@ -86,7 +86,7 @@ namespace TfactoryMng.Services
             await _context.SaveChangesAsync();
             return MapToDto(vehicle);
         }
-
+        
         public async Task<bool> DeleteAsync(int id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
@@ -107,13 +107,13 @@ namespace TfactoryMng.Services
                 .AsNoTracking()
                 .ToListAsync();
         }
-
+        
         public async Task<VehicleResponseDto?> GetByIdAsync(int id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
             return vehicle == null ? null : MapToDto(vehicle);
         }
-
+        
         private static VehicleResponseDto MapToDto(Vehicle vehicle)
         {
             return new VehicleResponseDto

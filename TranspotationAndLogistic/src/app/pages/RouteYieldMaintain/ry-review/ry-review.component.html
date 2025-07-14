@@ -1,7 +1,16 @@
 <div class="page-container">
   <div class="top-bar">
-    <input type="text" placeholder="Search by Route Name or Yield ID..." [value]="searchTerm()"
-      (input)="searchTerm.set($any($event.target).value)" />
+    <input type="text" placeholder="Search by Route Name or Yield ID..."
+           [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
+    
+    <!-- New dropdown menu for filtering by weight -->
+    <select [value]="selectedWeightFilter()" (change)="selectedWeightFilter.set($any($event.target).value)">
+      <option value="all">All Weights</option>
+      <option value="low">Low Yield (< 100kg)</option>
+      <option value="medium">Medium Yield (100-300kg)</option>
+      <option value="high">High Yield (> 300kg)</option>
+    </select>
+    
     <button class="add-btn" (click)="addNewYield()">+ Add New Yield</button>
   </div>
 
@@ -15,7 +24,7 @@
         <tr>
           <th>Yield ID</th>
           <th>Route Name</th>
-          <th>Collected Yield (kg)</th>
+          <th>Collected Yield</th>
           <th>Golden Tips</th>
           <th>Actions</th>
         </tr>
@@ -24,7 +33,7 @@
         @for (yieldItem of filteredYieldLists(); track trackById($index, yieldItem)) {
           <tr (dblclick)="onView(yieldItem)" title="Double-click to view details">
             <td>{{ yieldItem.yId }}</td>
-            <td>{{ yieldItem.rName }}</td>
+            <td>{{ yieldItem.rName || 'N/A' }}</td>
             <td>{{ yieldItem.collected_Yield }}</td>
             <td>{{ yieldItem.golden_Tips_Present }}</td>
             <td class="actions-cell">
@@ -40,8 +49,8 @@
     </table>
   }
 
-  <!-- The View Modal is only rendered when the conditions are met -->
-  @if (isViewModalOpen() && dataToView()) {
-    <app-ry-view [data]="dataToView()!" (close)="closeViewModal()"></app-ry-view>
+  <!-- The View Modal -->
+  @if (isViewModalOpen()) {
+    <app-ry-view [yieldData]="dataToView()!" (close)="closeViewModal()"></app-ry-view>
   }
 </div>

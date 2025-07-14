@@ -1,0 +1,18 @@
+@if (collector) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()" aria-label="Close">×</button>
+      <h2 class="modal-title">Collector Details</h2>
+
+      <div class="details-grid">
+        <span class="label">Collector ID:</span><span class="value">{{ collector.collectorId }}</span>
+        <span class="label">Name:</span><span class="value">{{ collector.name }}</span>
+        <span class="label">Contact:</span><span class="value">{{ collector.contactNumber || 'N/A' }}</span>
+        <span class="label">Rate per Km:</span><span class="value">{{ collector.ratePerKm | number:'1.2-2' }}</span>
+        <hr><hr>
+        <span class="label">Assigned Vehicle:</span><span class="value">{{ collector.vehicleLicensePlate || 'None Assigned' }}</span>
+        <span class="label">Vehicle Volume:</span><span class="value">{{ collector.vehicleVolume ? (collector.vehicleVolume + ' m³') : 'N/A' }}</span>
+      </div>
+    </div>
+  </div>
+}

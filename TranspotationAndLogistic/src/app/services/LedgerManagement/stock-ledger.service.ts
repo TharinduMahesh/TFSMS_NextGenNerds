@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { StockLedgerRecord, StockLedgerFilter } from '../../models/LedgerManagement/stock-ledger.model';
+import { StockLedgerRecord, StockLedgerFilter } from '../../models/Ledger Management/stock-ledger.model';
 
 @Injectable({
   providedIn: 'root'

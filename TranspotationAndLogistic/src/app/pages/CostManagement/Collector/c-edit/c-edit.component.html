@@ -1,0 +1,34 @@
+<div class="page-container">
+  <header class="page-header">
+    @if (!isLoading && currentCollectorId) {
+      <h1>Edit Collector #{{ currentCollectorId }}</h1>
+    } @else {
+      <h1>Edit Collector</h1>
+    }
+  </header>
+  
+  @if(isLoading) {
+    <div class="loading-indicator">Loading collector details...</div>
+  } @else if(error) {
+    <div class="error-message">{{ error }}</div>
+  } @else {
+    <form [formGroup]="collectorForm" (ngSubmit)="onSubmit()" class="form-wrapper">
+      <div class="form-group">
+        <label for="name">Collector Name</label>
+        <input id="name" formControlName="name" type="text" />
+      </div>
+      <div class="form-group">
+        <label for="contactNumber">Contact Number</label>
+        <input id="contactNumber" formControlName="contactNumber" type="text" />
+      </div>
+      <div class="form-group">
+        <label for="ratePerKm">Rate per Km</label>
+        <input id="ratePerKm" formControlName="ratePerKm" type="number" step="0.01" />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="collectorForm.invalid || !collectorForm.dirty">Save Changes</button>
+        <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
+  }
+</div>

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TfactoryMng.Migrations
 {
     /// <inheritdoc />
-    public partial class finalcheck : Migration
+    public partial class InitialCompletedSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

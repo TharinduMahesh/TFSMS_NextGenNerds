@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { ReturnRegisterRecord, ReturnRegisterFilter } from '../../models/LedgerManagement/r-register.model';
+import { ReturnRegisterRecord, ReturnRegisterFilter } from '../../models/Ledger Management/r-register.model';
 
 @Injectable({
   providedIn: 'root'

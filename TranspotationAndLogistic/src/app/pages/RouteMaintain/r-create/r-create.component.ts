@@ -1,101 +1,76 @@
-import { Component, signal, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-// ** FIX: Import the DTO as well **
-import { CreateUpdateRouteDto } from '../../../models/Logistic and Transport/RouteMaintain.model';
-import { RouteService } from '../../../services/RouteMaintainService/RouteMaintain.service';
+import { Router } from '@angular/router';
+
+import { CreateUpdateRoutePayload } from '../../../models/Logistic and Transport/RouteMaintain.model';
+import { RouteService } from '../../../services/LogisticAndTransport/RouteMaintain.service';
+import { CollectorService } from '../../../services/LogisticAndTransport/Collector.service';
+import { CollectorResponse } from '../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({
-  selector: 'app-rform',
+  selector: 'app-r-create',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './r-create.component.html',
   styleUrls: ['./r-create.component.scss']
 })
 export class RtCreateComponent implements OnInit {
-  routeForm!: FormGroup;
-  successMessage = signal<string | null>(null);
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private routeService = inject(RouteService);
+  private collectorService = inject(CollectorService);
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private routeService: RouteService
-  ) { }
+  routeForm: FormGroup;
+  availableCollectors = signal<CollectorResponse[]>([]);
 
-  ngOnInit() {
+  constructor() {
     this.routeForm = this.fb.group({
       rName: ['', [Validators.required, Validators.maxLength(50)]],
       startLocation: ['', Validators.required],
       endLocation: ['', Validators.required],
-      // The form will handle a string, which is what the backend wants for now
-      distance: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      collectorId: [null, [Validators.min(1)]], // Make optional fields nullable
-      vehicleId: [null, [Validators.min(1)]],
+      distance: [0, [Validators.required, Validators.min(0)]],
+      collectorId: [null, Validators.required], // Collector is required for new routes
       growerLocations: this.fb.array([])
     });
+  }
+
+  ngOnInit(): void {
+    // Fetch collectors to populate the dropdown menu
+    this.collectorService.getAllCollectors().subscribe(collectors => this.availableCollectors.set(collectors));
   }
 
   get growerLocations(): FormArray {
     return this.routeForm.get('growerLocations') as FormArray;
   }
-
-  addWaypoint(location: string) {
-    if (!location.trim()) return;
-
-    // ** FIX: Create a form group that matches GrowerLocationDto **
-    // It should NOT have RtListId.
+  
+  addGrowerLocation(): void {
     this.growerLocations.push(this.fb.group({
-      description: [location, Validators.required],
-      latitude: [0], // Default value, DTO requires it
-      longitude: [0]  // Default value, DTO requires it
+        latitude: [null, Validators.required],
+        longitude: [null, Validators.required],
+        description: ['']
     }));
   }
-
-  removeWaypoint(index: number) {
+  removeGrowerLocation(index: number): void {
     this.growerLocations.removeAt(index);
   }
 
-  showSuccessMessage(message: string) {
-    this.successMessage.set(message);
-    setTimeout(() => this.successMessage.set(null), 3000);
-  }
-
-  get currentSuccessMessage(): string | null {
-    return this.successMessage();
-  }
-
-  onSubmit() {
+  onSubmit(): void {
     if (this.routeForm.invalid) {
-      this.routeForm.markAllAsTouched();
+      alert('Please fill all required fields correctly.');
       return;
     }
-
-    // ** FIX: Build a payload that matches CreateUpdateRouteDto exactly **
-    const payload: CreateUpdateRouteDto = {
-      rName: this.routeForm.value.rName,
-      startLocation: this.routeForm.value.startLocation,
-      endLocation: this.routeForm.value.endLocation,
-      // ** FIX: Do NOT convert distance to a number. The backend expects a string. **
-      distance: this.routeForm.value.distance,
-      collectorId: this.routeForm.value.collectorId ? Number(this.routeForm.value.collectorId) : null,
-      vehicleId: this.routeForm.value.vehicleId ? Number(this.routeForm.value.vehicleId) : null,
-      growerLocations: this.routeForm.value.growerLocations
-    };
-
+    const payload: CreateUpdateRoutePayload = this.routeForm.value;
     this.routeService.createRoute(payload).subscribe({
       next: () => {
-        this.showSuccessMessage('Route created successfully!');
-        // Adding a small delay to let the user see the message
-        setTimeout(() => this.router.navigate(['/r-review']), 1500);
+        alert('Route created successfully!');
+        this.router.navigate(['/r-review']);
       },
-      error: (err) => {
-        alert('Error creating route: ' + err.message);
-      }
+      error: (err) => alert(`Error: ${err.message}`)
     });
   }
 
-  onCancel() {
+  onCancel(): void {
     this.router.navigate(['/r-review']);
   }
 }

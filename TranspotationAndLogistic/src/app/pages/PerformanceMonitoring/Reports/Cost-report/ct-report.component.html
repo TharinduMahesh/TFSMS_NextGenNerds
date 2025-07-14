@@ -1,0 +1,64 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Cost by Collector Report</h1>
+    <p>Analyze total transport costs for each collector over a specific period.</p>
+  </header>
+
+  <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="form-wrapper report-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input id="startDate" formControlName="startDate" type="date" />
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input id="endDate" formControlName="endDate" type="date" />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="isLoading()">
+        @if(isLoading()){
+          <span>Generating...</span>
+        } @else {
+          <span>Generate Report</span>
+        }
+      </button>
+    </div>
+  </form>
+
+  <div class="report-results">
+    @if (isLoading()) {
+      <div class="loading-indicator">Fetching report data...</div>
+    } @else if(error()) {
+      <div class="error-message">{{ error() }}</div>
+    } @else if(reportData() && reportData()!.length > 0) {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Collector Name</th>
+              <th>Total Trips</th>
+              <th>Total Distance (km)</th>
+              <th>Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(item of reportData(); track item.collectorId) {
+              <tr>
+                <td>{{ item.collectorName }} (ID: {{ item.collectorId }})</td>
+                <td>{{ item.totalTrips }}</td>
+                <td>{{ item.totalDistance | number:'1.0-0' }}</td>
+                <td>{{ item.totalCost | currency:'LKR ':'symbol':'1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else if (reportData()) {
+        <div class="empty-state">
+            <p>No trip data found for the selected date range.</p>
+        </div>
+    }
+  </div>
+
+</div>

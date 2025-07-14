@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Dispatch } from '../../models/LedgerManagement/dispatch-register.model'; // Adjust path
+import { Dispatch } from '../../models/Ledger Management/dispatch-register.model'; // Adjust path
 
 @Injectable({
   providedIn: 'root'

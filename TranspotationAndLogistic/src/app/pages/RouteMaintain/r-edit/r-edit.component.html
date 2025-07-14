@@ -36,15 +36,16 @@
           <input id="edit-distance" type="number" formControlName="distance" />
         </div>
         
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-collectorId">Collector ID (Optional)</label>
-            <input id="edit-collectorId" type="number" formControlName="collectorId" />
-          </div>
-          <div class="form-group">
-            <label for="edit-vehicleId">Vehicle ID (Optional)</label>
-            <input id="edit-vehicleId" type="number" formControlName="vehicleId" />
-          </div>
+        <div class="form-group">
+            <label for="edit-collectorId">Assigned Collector (and Vehicle)</label>
+            <select id="edit-collectorId" formControlName="collectorId">
+                <option [ngValue]="null">-- Not Assigned --</option>
+                @for(collector of availableCollectors(); track collector.collectorId) {
+                    <option [value]="collector.collectorId">
+                        {{ collector.name }} (Vehicle: {{ collector.vehicleLicensePlate || 'N/A' }}, Volume: {{collector.vehicleVolume || 'N/A'}})
+                    </option>
+                }
+            </select>
         </div>
 
         <hr />

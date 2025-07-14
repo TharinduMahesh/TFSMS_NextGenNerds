@@ -1,0 +1,58 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Schedule a New Trip</h1>
+    <p>Select a route and collector, then set a departure time to create a new trip record.</p>
+  </header>
+
+  @if (isLoading()) {
+    <div class="loading-indicator">Loading routes and collectors...</div>
+  } @else if (error()) {
+    <div class="error-message-full-page">{{ error() }}</div>
+  } @else {
+    <form [formGroup]="tripForm" (ngSubmit)="onSubmit()" class="form-wrapper">
+      
+      <div class="form-group">
+        <label for="routeId">Select Route</label>
+        <select id="routeId" formControlName="routeId">
+          <option [ngValue]="null" disabled>-- Choose an Existing Route --</option>
+          @for(route of routes(); track route.rId) {
+            <option [value]="route.rId">
+              {{ route.rName }} ({{ route.distance }}km, from {{route.startLocation}})
+            </option>
+          }
+        </select>
+        @if (tripForm.get('routeId')?.invalid && tripForm.get('routeId')?.touched) {
+            <div class="error-message">A route is required.</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="collectorId">Assign to Collector</label>
+        <select id="collectorId" formControlName="collectorId">
+          <option [ngValue]="null" disabled>-- Choose a Collector --</option>
+          @for(collector of collectors(); track collector.collectorId) {
+            <option [value]="collector.collectorId">
+              {{ collector.name }} (Vehicle: {{ collector.vehicleLicensePlate || 'N/A' }})
+            </option>
+          }
+        </select>
+         @if (tripForm.get('collectorId')?.invalid && tripForm.get('collectorId')?.touched) {
+            <div class="error-message">A collector is required.</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="scheduledDeparture">Scheduled Departure Time</label>
+        <input id="scheduledDeparture" formControlName="scheduledDeparture" type="datetime-local" />
+        @if (tripForm.get('scheduledDeparture')?.invalid && tripForm.get('scheduledDeparture')?.touched) {
+            <div class="error-message">Departure time is required.</div>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="tripForm.invalid">Schedule Trip</button>
+      </div>
+    </form>
+  }
+</div>

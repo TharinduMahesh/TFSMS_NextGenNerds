@@ -1,0 +1,25 @@
+@if (vehicle) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()" aria-label="Close">×</button>
+      <h2 class="modal-title">Vehicle Details</h2>
+
+      <div class="details-grid">
+        <span class="label">Vehicle ID:</span><span class="value">{{ vehicle.vehicleId }}</span>
+        <span class="label">License Plate:</span><span class="value plate">{{ vehicle.licensePlate }}</span>
+        <span class="label">Model:</span><span class="value">{{ vehicle.model || 'N/A' }}</span>
+        <span class="label">Volume / Capacity:</span><span class="value">{{ vehicle.volume }} m³</span>
+        
+        <hr><hr>
+
+        <span class="label">Assigned Collector:</span><span class="value">{{ assignedCollectorName() }} (ID: {{ vehicle.collectorId }})</span>
+        
+        <hr><hr>
+        
+        <span class="label full-width">Condition Notes:</span>
+        <p class="notes full-width">{{ vehicle.conditionNotes || 'No notes available.' }}</p>
+      </div>
+
+    </div>
+  </div>
+}

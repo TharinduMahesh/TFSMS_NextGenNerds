@@ -2,13 +2,14 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RyService } from '../../../services/RouteYieldMaintainService/RouteYieldMaintain.service';
-import { YieldPayload } from '../../../models/Logistic and Transport/RouteYeildMaintain.model'; // Corrected import path
-import { RouteService } from '../../../services/RouteMaintainService/RouteMaintain.service'; // Corrected import path
+import { RyService } from '../../../services/LogisticAndTransport/RouteYieldMaintain.service';
+import { YieldPayload } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
+import { RouteService } from '../../../services/LogisticAndTransport/RouteMaintain.service';
 import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
+import { signal } from '@angular/core'; // Import signal
 
 @Component({
-  selector: 'app-ry-create', // Corrected selector
+  selector: 'app-ry-create',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './ry-create.component.html',
@@ -21,56 +22,46 @@ export class RyCreateComponent implements OnInit {
   private routeService = inject(RouteService);
 
   yieldForm: FormGroup;
-  routes: RtList[] = [];
-  isLoadingRoutes = true; // Add a loading state for the dropdown
-  routeError: string | null = null; // To store any error messages
+  // Use a signal for routes for better reactivity
+  routes = signal<RtList[]>([]);
+  isLoadingRoutes = signal(true);
+  routeError = signal<string | null>(null);
 
   constructor() {
     this.yieldForm = this.fb.group({
       rId: [null, Validators.required],
-      collected_Yield: ['', [Validators.required, Validators.pattern('^[0-9.]+$')]],
+      // Correct validation: just 'required' since it's a string input
+      collected_Yield: ['', Validators.required],
       golden_Tips_Present: ['false', Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.isLoadingRoutes = true;
-    this.routeError = null;
-    
-    // ** THE FIX: Add error and complete handlers to the subscription **
+    this.isLoadingRoutes.set(true);
     this.routeService.getAllRoutes().subscribe({
       next: (data) => {
-        this.routes = data;
-        console.log('Successfully fetched routes:', data); // For debugging
+        this.routes.set(data);
+        this.isLoadingRoutes.set(false);
       },
       error: (err) => {
-        // This will now catch any errors and display them
-        this.routeError = `Failed to load routes. Please try again later. (Error: ${err.message})`;
-        console.error('Error fetching routes:', err);
-      },
-      complete: () => {
-        this.isLoadingRoutes = false;
+        this.routeError.set(`Failed to load routes: ${err.message}`);
+        this.isLoadingRoutes.set(false);
       }
     });
   }
 
-  submitForm() {
+  submitForm(): void {
     if (this.yieldForm.invalid) {
-      this.yieldForm.markAllAsTouched();
-      alert('Please fix the errors in the form.');
+      alert('Please fill all required fields.');
       return;
     }
-
     const payload: YieldPayload = this.yieldForm.value;
-
     this.ryService.createYieldList(payload).subscribe({
       next: () => {
         alert('Yield created successfully!');
-        this.router.navigate(['/ry-review']);
+        this.router.navigate(['/ry-review']); // Navigate back to the list
       },
-      error: (err) => {
-        alert(`Failed to create yield: ${err.message}`);
-      }
+      error: (err) => alert(`Error: ${err.message}`)
     });
   }
 }

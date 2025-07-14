@@ -4,7 +4,7 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SalesEntryService } from '../../../services/LedgerManagement/sales-entry.service';
-import { Sale } from '../../../models/LedgerManagement/sales-entry.model';
+import { Sale } from '../../../models/Ledger Management/sales-entry.model';
 
 @Component({
   selector: 'app-sales-entry',

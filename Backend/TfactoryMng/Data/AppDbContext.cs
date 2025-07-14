@@ -33,13 +33,12 @@ namespace TfactoryMng.Data
 
             });
 
-            // Configuration for the GrowerLocation entity
+           
             modelBuilder.Entity<GrowerLocation>(entity =>
             {
-                // Set the primary key
+                
                 entity.HasKey(g => g.gId);
 
-                // Configure the description property
                 entity.Property(g => g.description).HasMaxLength(200);
 
                 // Configure the one-to-many relationship with RtList
@@ -86,7 +85,7 @@ namespace TfactoryMng.Data
                 entity.HasOne(t => t.Collector)
                       .WithMany(c => c.TripRecords)
                       .HasForeignKey(t => t.CollectorId)
-                      .OnDelete(DeleteBehavior.Cascade); // If a collector is deleted, their trip history is also deleted
+                      .OnDelete(DeleteBehavior.Cascade); 
             });
 
             modelBuilder.Entity<Vehicle>(entity =>
@@ -97,4 +96,4 @@ namespace TfactoryMng.Data
             });
         }
     }
-}
+}   

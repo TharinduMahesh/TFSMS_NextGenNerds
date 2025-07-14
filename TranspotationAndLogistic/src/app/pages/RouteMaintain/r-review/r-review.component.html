@@ -1,32 +1,25 @@
 <div class="route-container">
   <div class="top-bar">
-    <input type="text" placeholder="Search routes...Id ,Name" [value]="searchTerm()"
+    <input type="text" placeholder="Search by ID or Name..." [value]="searchTerm()"
       (input)="searchTerm.set($any($event.target).value)" />
 
     <select [value]="selectedFilter()" (change)="selectedFilter.set($any($event.target).value)">
-      <option value="all">All Routes</option>
-      <option value="short">Short Distance</option>
-      <option value="medium">Medium Distance (20-50km)</option>
-      <option value="long">Long Distance (>50km)</option>
+      <option value="all">All Distances</option>
+      <option value="short">Short (< 20km)</option>
+      <option value="medium">Medium (20-50km)</option>
+      <option value="long">Long (> 50km)</option>
     </select>
 
     <button class="add-route" (click)="addNewRoute()">
       + Add New Route
     </button>
-
   </div>
 
   @if (isLoading()) {
-  <div class="loading">Loading routes...</div>
-  }
-  @if (error()) {
-  <div class="error">{{ error() }}</div>
-  }
-
-  <div class="route-list">
-    <div class="route-caption">
-      <h2>Routes</h2>
-    </div>
+    <div class="loading">Loading routes...</div>
+  } @else if (error()) {
+    <div class="error">{{ error() }}</div>
+  } @else {
     <table>
       <thead>
         <tr>
@@ -35,48 +28,36 @@
           <th>Start Location</th>
           <th>End Location</th>
           <th>Distance (km)</th>
-          <th>Collector</th>
-          <th>Vehicle</th>
-          <th>Action</th>
+          <th>Collector ID</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         @for (route of filteredRoutes(); track trackById($index, route)) {
-        <tr (click)="onSelectRoute(route)" (dblclick)="selectedRoute() && onView(selectedRoute()!)"
-          [class.selected]="selectedRoute()?.rId === route.rId">
-          <td>{{ route.rId }}</td>
-          <td>{{ route.rName }}</td>
-          <td>{{ route.startLocation }}</td>
-          <td>{{ route.endLocation }}</td>
-          <td>{{ route.distance }}</td>
-          <td>{{ route.collectorId }}</td>
-          <td>{{ route.vehicleId }}</td>
-          <td>
-
-            <button class="edit-btn" (click)="onEdit(route)" title="Edit Route">
-              Edit
-            </button>
-
-            <button class="delete-btn" (click)="onDelete(route.rId)" title="Delete Route">
-              Delete
-            </button>
-          </td>
-
-        </tr>
+          <tr (click)="onSelectRoute(route)" [class.selected]="selectedRoute()?.rId === route.rId">
+            <td>{{ route.rId }}</td>
+            <td>{{ route.rName }}</td>
+            <td>{{ route.startLocation }}</td>
+            <td>{{ route.endLocation }}</td>
+            <td>{{ route.distance }}</td>
+            <td>{{ route.collectorId || 'N/A' }}</td>
+            <td class="actions-cell">
+              <button class="view-btn" (click)="onView(route)">View</button>
+              <button class="edit-btn" (click)="onEdit(route)">Edit</button>
+              <button class="delete-btn" (click)="onDelete(route.rId)">Delete</button>
+            </td>
+          </tr>
         } @empty {
-        <tr>
-          <td colspan="8">No routes found</td>
-        </tr>
+          <tr>
+            <td colspan="7">No routes found matching your criteria.</td>
+          </tr>
         }
       </tbody>
-
     </table>
-  </div>
-
-  <!-- Route View Component -->
-  @if (isModalOpen()) {
-  <app-r-view [route]="routeToView()" (close)="isModalOpen.set(false)">
-  </app-r-view>
   }
 
+  <!-- View Modal (is controlled by the component's signals) -->
+  @if (isViewModalOpen()) {
+    <app-r-view [route]="routeToView()" (close)="closeViewModal()"></app-r-view>
+  }
 </div>

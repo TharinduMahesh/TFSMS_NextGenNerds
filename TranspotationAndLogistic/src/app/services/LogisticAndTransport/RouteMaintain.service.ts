@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { RtList, CreateUpdateRouteDto } from '../../models/Logistic and Transport/RouteMaintain.model';
+import { RtList, CreateUpdateRoutePayload } from '../../models/Logistic and Transport/RouteMaintain.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RouteService {
-  private apiUrl = 'https://localhost:7263/api/routemaintain';
+  private apiUrl = 'https://localhost:7263/api/routemaintain'; // Ensure port is correct
 
   constructor(private http: HttpClient) { }
 
@@ -19,12 +19,13 @@ export class RouteService {
     return this.http.get<RtList>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
   }
 
-  createRoute(payload: CreateUpdateRouteDto): Observable<RtList> {
+  createRoute(payload: CreateUpdateRoutePayload): Observable<RtList> {
     return this.http.post<RtList>(this.apiUrl, payload).pipe(catchError(this.handleError));
   }
 
-  updateRoute(id: number, payload: CreateUpdateRouteDto): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, payload).pipe(catchError(this.handleError));
+  // CORRECTION: The backend returns the updated route object, so the type here should be Observable<RtList>.
+  updateRoute(id: number, payload: CreateUpdateRoutePayload): Observable<RtList> {
+    return this.http.put<RtList>(`${this.apiUrl}/${id}`, payload).pipe(catchError(this.handleError));
   }
 
   delete(id: number): Observable<void> {
@@ -32,17 +33,9 @@ export class RouteService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Client-side error: ${error.error.message}`;
-    } else {
-      if (error.status === 400 && error.error?.title) {
-        errorMessage = `Error: ${error.error.title}`;
-      } else {
-        errorMessage = `Server error: Code ${error.status}, Message: ${error.message}`;
-      }
-    }
-    console.error(errorMessage, error.error);
+    // Standardized, more detailed error message
+    const errorMessage = error.error?.message || error.error?.title || error.message || 'An unknown server error occurred.';
+    console.error('API Error in RouteService:', errorMessage, error);
     return throwError(() => new Error(errorMessage));
   }
 }

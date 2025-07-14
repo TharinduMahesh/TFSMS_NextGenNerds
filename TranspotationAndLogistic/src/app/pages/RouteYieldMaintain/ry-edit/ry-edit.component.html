@@ -12,15 +12,17 @@
   } @else if (currentYield) {
     <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form-wrapper">
       <div class="form-group">
-        <label for="edit_collected_Yield">Collected Yield (kg):</label>
-        <input id="edit_collected_Yield" formControlName="collected_Yield" type="text" />
+        <label for="edit_collected_Yield">Collected Yield:</label>
+        <input id="edit_collected_Yield" formControlName="collected_Yield" type="text" placeholder="e.g., 150.5 kg" />
       </div>
 
       <div class="form-group">
         <label for="edit_golden_Tips_Present">Golden Tips Present:</label>
         <select id="edit_golden_Tips_Present" formControlName="golden_Tips_Present">
-          <option value="false">No</option>
-          <option value="true">Yes</option>
+          <option value="No">No</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
         </select>
       </div>
 
@@ -30,6 +32,6 @@
       </div>
     </form>
   } @else {
-    <div class="error-message">Could not load yield data.</div>
+    <div class="error-message">Could not load yield data for editing. Please go back and try again.</div>
   }
 </div>

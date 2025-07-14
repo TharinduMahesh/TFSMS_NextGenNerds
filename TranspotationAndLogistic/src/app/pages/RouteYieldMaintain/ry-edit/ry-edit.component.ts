@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { RyService } from '../../../services/RouteYieldMaintainService/RouteYieldMaintain.service';
+import { RyService } from '../../../services/LogisticAndTransport/RouteYieldMaintain.service';
 import { YieldPayload, YieldResponse } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
 
 @Component({

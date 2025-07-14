@@ -6,8 +6,8 @@ import { YieldResponse, YieldPayload } from '../../models/Logistic and Transport
 @Injectable({
   providedIn: 'root',
 })
-export class RyService {
-  private apiUrl = 'https://localhost:7263/api/routeyieldmaintain'; // Ensure port is correct
+export class RyService { // Or rename to YieldService for consistency
+  private apiUrl = 'https://localhost:7263/api/routeyieldmaintain';
 
   constructor(private http: HttpClient) {}
 
@@ -32,8 +32,9 @@ export class RyService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    const errorMessage = error.error?.Message || error.message || 'An unknown server error occurred.';
-    console.error('API Error:', errorMessage, error);
+    // Using the standardized error handler
+    const errorMessage = error.error?.message || error.error?.title || error.message || 'An unknown server error occurred.';
+    console.error('API Error in RyService:', errorMessage, error);
     return throwError(() => new Error(errorMessage));
   }
 }

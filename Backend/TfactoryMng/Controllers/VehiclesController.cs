@@ -37,9 +37,12 @@ namespace TfactoryMng.Controllers
                 var newVehicle = await _vehicleService.CreateAsync(dto);
                 return CreatedAtAction(nameof(GetById), new { id = newVehicle.VehicleId }, newVehicle);
             }
+            catch (KeyNotFoundException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
             catch (InvalidOperationException ex)
             {
-                // This will catch the "already exists" error from the service
                 return Conflict(new { message = ex.Message });
             }
         }
@@ -51,6 +54,12 @@ namespace TfactoryMng.Controllers
             {
                 var updatedVehicle = await _vehicleService.UpdateAsync(id, dto);
                 return updatedVehicle == null ? NotFound() : Ok(updatedVehicle);
+            }
+            // --- ADD THIS CATCH BLOCK ---
+            catch (KeyNotFoundException ex)
+            {
+                // This catches the "Collector not found" error
+                return BadRequest(new { message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {

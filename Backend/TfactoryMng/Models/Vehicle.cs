@@ -10,9 +10,8 @@ namespace TfactoryMng.Model
         [Required, StringLength(50)]
         public string LicensePlate { get; set; } = string.Empty;
 
-        // ** NEW **: Vehicle Volume/Capacity
         [Required]
-        public double Volume { get; set; } // e.g., in cubic meters or another unit
+        public double Volume { get; set; }
 
         [StringLength(100)]
         public string? Model { get; set; }
@@ -20,9 +19,8 @@ namespace TfactoryMng.Model
         [StringLength(500)]
         public string? ConditionNotes { get; set; }
 
-        // ** NEW **: This creates the one-to-one relationship
-        // Each vehicle is owned by one collector.
+        // The relationship to its owner
         public int CollectorId { get; set; }
-        public Collector? Collector { get; set; }
+        public Collector Collector { get; set; }
     }
 }

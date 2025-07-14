@@ -12,8 +12,8 @@ using TfactoryMng.Data;
 namespace TfactoryMng.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250713092147_finalcheck")]
-    partial class finalcheck
+    [Migration("20250714181937_InitialCompletedSchema")]
+    partial class InitialCompletedSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

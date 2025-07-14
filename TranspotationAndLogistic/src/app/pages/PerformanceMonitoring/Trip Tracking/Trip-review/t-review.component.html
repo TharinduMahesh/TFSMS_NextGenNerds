@@ -1,0 +1,68 @@
+<div class="page-container">
+  <div class="top-bar">
+    <div class="page-title">
+      <h2>Trip Tracking Dashboard</h2>
+      <p>View scheduled trips and update their real-time status.</p>
+    </div>
+    <button class="add-btn" (click)="goToSchedulePage()">+ Schedule New Trip</button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-indicator">Loading Trip Records...</div>
+  } @else if (error()) {
+    <div class="error-message">{{ error() }}</div>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Trip ID</th>
+            <th>Route</th>
+            <th>Collector</th>
+            <th>Scheduled Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (trip of allTrips(); track trip.tripId) {
+            <tr [class.is-late]="!trip.isOnTime && trip.actualDeparture"
+                [class.is-complete]="trip.actualArrival">
+              <td>#{{ trip.tripId }}</td>
+              <td>{{ trip.routeName }}</td>
+              <td>{{ trip.collectorName }}</td>
+              <td>{{ trip.scheduledDeparture | date:'MMM d, y, h:mm a' }}</td>
+              <td class="status-cell">
+                  @if(trip.actualArrival) {
+                      <span class="status status-completed">Completed</span>
+                  } @else if(trip.actualDeparture) {
+                      <span class="status status-departed">In Progress</span>
+                  } @else {
+                      <span class="status status-pending">Pending</span>
+                  }
+              </td>
+              <td class="actions-cell">
+                @if(!trip.actualDeparture) {
+                  <button (click)="markAsDeparted(trip)" class="btn-action btn-depart">Depart</button>
+                }
+                @if(trip.actualDeparture && !trip.actualArrival) {
+                  <button (click)="markAsArrived(trip)" class="btn-action btn-arrive">Arrive</button>
+                }
+                @if(trip.actualArrival) {
+                    <span>-</span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                <p>No trips scheduled yet.</p>
+                <button class="add-btn-small" (click)="goToSchedulePage()">Schedule First Trip</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

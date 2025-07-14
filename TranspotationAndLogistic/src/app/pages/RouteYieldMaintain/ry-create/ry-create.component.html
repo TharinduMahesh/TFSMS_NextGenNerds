@@ -2,23 +2,30 @@
   <header class="page-header">
     <h1>Create New Route Yield</h1>
   </header>
+
   <form [formGroup]="yieldForm" (ngSubmit)="submitForm()" class="form-wrapper">
     <div class="form-group">
       <label for="rId">Route</label>
-      <select id="rId" formControlName="rId">
-        <option [ngValue]="null" disabled>Select a Route...</option>
-        @for(route of routes; track route.rId) {
-          <option [ngValue]="route.rId">{{ route.rName }}</option>
+      @if(isLoadingRoutes()) {
+        <p>Loading routes...</p>
+      } @else if(routeError()) {
+        <div class="error-message">{{ routeError() }}</div>
+      } @else {
+        <select id="rId" formControlName="rId">
+          <option [ngValue]="null" disabled>Select a Route...</option>
+          @for(route of routes(); track route.rId) {
+            <option [value]="route.rId">{{ route.rName }} (ID: {{route.rId}})</option>
+          }
+        </select>
+        @if (yieldForm.get('rId')?.invalid && yieldForm.get('rId')?.touched) {
+          <div class="error-message">A route is required.</div>
         }
-      </select>
-      @if (yieldForm.get('rId')?.invalid && yieldForm.get('rId')?.touched) {
-        <div class="error-message">A route is required.</div>
       }
     </div>
 
     <div class="form-group">
-      <label for="collected_Yield">Collected Yield (Kg)</label>
-      <input id="collected_Yield" formControlName="collected_Yield" type="text"/>
+      <label for="collected_Yield">Collected Yield</label>
+      <input id="collected_Yield" formControlName="collected_Yield" type="text" placeholder="e.g., 150.5 kg"/>
       @if (yieldForm.get('collected_Yield')?.invalid && yieldForm.get('collected_Yield')?.touched) {
         <div class="error-message">Collected Yield is required.</div>
       }
@@ -27,8 +34,10 @@
     <div class="form-group">
       <label for="golden_Tips_Present">Golden Tips Present</label>
       <select id="golden_Tips_Present" formControlName="golden_Tips_Present">
-        <option value="false">No</option>
-        <option value="true">Yes</option>
+        <option value="No">No</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
       </select>
     </div>
 

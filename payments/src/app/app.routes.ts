@@ -142,6 +142,9 @@ import { ForbiddenComponent } from "./components/forbidden.component"
 import { AdminUserManagementComponent } from "./components/user/admin-user-management/admin-user-management.component" // New
 import { SetNewPasswordComponent } from "./components/user/set-new-password/set-new-password.component" // New
 import { UserProfileComponent } from "./components/user-profile/user-profile/user-profile.component"
+import { PaymentHistoryComponent } from "./components/paymentManager/payment-history/payment-history.component"
+import { SupplierTotalPaymentsComponent } from "./components/paymentManager/supplier-total-payments/supplier-total-payments.component"
+import path from "path"
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -210,5 +213,15 @@ export const routes: Routes = [
     // canActivate: [authGuard],
     // data: { requiredRoles: ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] }, // Any authenticated user can view their profile
   },
+
+  {
+    path: "payment-history",
+    component: PaymentHistoryComponent,
+  },
+
+  {
+    path: "supplier-total-payments",
+    component: SupplierTotalPaymentsComponent,
+  }
 
 ]

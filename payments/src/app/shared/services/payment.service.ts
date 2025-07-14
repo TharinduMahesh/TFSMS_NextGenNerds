@@ -5,6 +5,8 @@ import { map, catchError } from "rxjs/operators"
 import  { Payment } from "../../models/payment.model"
 import  { PaymentCalculationRequest, PaymentCalculationResult } from "../../models/payment-calculation.model"
 import { environment } from "../../shared/environments/environment"
+import { SupplierTotalPayment } from "../../models/supplier-total-payment.model"
+import { PaymentHistory } from "../../models/payment-history.model"
 
 @Injectable({
   providedIn: "root",
@@ -356,21 +358,40 @@ export class PaymentService {
     )
   }
 
-  getPaymentHistory(paymentId: number): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}/${paymentId}/history`).pipe(
-      map((response) => {
-        if (Array.isArray(response)) {
-          return response
-        } else if (response && Array.isArray(response.$values)) {
-          return response.$values
-        } else if (response && Array.isArray(response.data)) {
-          return response.data
-        }
-        return []
-      }),
+  // getPaymentHistory(paymentId: number): Observable<any[]> {
+  //   return this.http.get<any>(`${this.apiUrl}/${paymentId}/history`).pipe(
+  //     map((response) => {
+  //       if (Array.isArray(response)) {
+  //         return response
+  //       } else if (response && Array.isArray(response.$values)) {
+  //         return response.$values
+  //       } else if (response && Array.isArray(response.data)) {
+  //         return response.data
+  //       }
+  //       return []
+  //     }),
+  //     catchError((error) => {
+  //       console.error(`Error fetching payment history for ${paymentId}:`, error)
+  //       return of([])
+  //     }),
+  //   )
+  // }
+
+  getSupplierTotalPayments(): Observable<SupplierTotalPayment[]> {
+    return this.http.get<SupplierTotalPayment[]>(`${this.apiUrl}/supplier-totals`).pipe(
       catchError((error) => {
-        console.error(`Error fetching payment history for ${paymentId}:`, error)
-        return of([])
+        console.error("Error fetching supplier total payments:", error)
+        return of([]) // Return an empty array on error
+      }),
+    )
+  }
+
+  // Add this method to your PaymentService class
+  getPaymentHistory(): Observable<PaymentHistory[]> {
+    return this.http.get<PaymentHistory[]>(`${this.apiUrl}/history`).pipe(
+      catchError((error) => {
+        console.error("Error fetching payment history:", error)
+        return of([]) // Return an empty array on error
       }),
     )
   }

@@ -1,4 +1,4 @@
-import { Component,  OnInit,  AfterViewInit } from "@angular/core"
+import { Component, type OnInit, type AfterViewInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, Validators } from "@angular/forms"
 import  { Payment } from "../../../models/payment.model"
@@ -28,7 +28,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   totalAmount = 0
   paymentsByCash = 0
   paymentsByBank = 0
-  // paymentsByCheque = 0
+  paymentsByCheque = 0
 
   // Filter and search properties
   selectedSupplier = ""
@@ -39,8 +39,13 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   searchTerm = ""
 
   // UI state
-  // showCalculator = false
+  showCalculator = false
   calculationResult: PaymentCalculationResult | null = null
+  currentIncentiveQualityBonus = 0
+  currentIncentiveLoyaltyBonus = 0
+  currentIncentiveTotalAmount = 0
+  currentIncentiveUsedAmount = 0
+  currentIncentiveBalanceAmount = 0
   loading = false
   error: string | null = null
 
@@ -232,18 +237,36 @@ export class PaymentComponent implements OnInit, AfterViewInit {
 
   // Load current incentive amount for selected supplier
   loadCurrentIncentiveAmount(supplierId: number): void {
-    if (!supplierId) return
-    console.log("Loading current incentive amount for supplier:", supplierId)
+    if (!supplierId) {
+      this.currentIncentiveQualityBonus = 0
+      this.currentIncentiveLoyaltyBonus = 0
+      this.currentIncentiveTotalAmount = 0
+      this.currentIncentiveUsedAmount = 0
+      this.currentIncentiveBalanceAmount = 0
+      this.paymentForm.get("incentiveAddition")?.setValue(0)
+      return
+    }
+    console.log("Loading current incentive details for supplier:", supplierId)
 
-    this.incentiveService.getCurrentIncentiveAmount(supplierId).subscribe({
-      next: (amount) => {
-        console.log(`Current incentive amount for supplier ${supplierId}:`, amount)
-        this.paymentForm.get("incentiveAddition")?.setValue(amount)
+    this.incentiveService.getLatestIncentive(supplierId).subscribe({
+      next: (incentiveData) => {
+        console.log(`Latest incentive for supplier ${supplierId}:`, incentiveData)
+        this.currentIncentiveQualityBonus = incentiveData.QualityBonus || 0
+        this.currentIncentiveLoyaltyBonus = incentiveData.LoyaltyBonus || 0
+        this.currentIncentiveTotalAmount = incentiveData.TotalAmount || 0
+        this.currentIncentiveUsedAmount = incentiveData.UsedAmount || 0
+        this.currentIncentiveBalanceAmount = incentiveData.BalanceAmount || 0
+        this.paymentForm.get("incentiveAddition")?.setValue(this.currentIncentiveBalanceAmount)
         this.updateNetAmount()
       },
       error: (err) => {
-        console.error(`Error loading incentive amount for supplier ${supplierId}:`, err)
-        // Don't show error for incentives as it's optional
+        console.error(`Error loading incentive details for supplier ${supplierId}:`, err)
+        // Reset incentive display fields and form control if an error occurs
+        this.currentIncentiveQualityBonus = 0
+        this.currentIncentiveLoyaltyBonus = 0
+        this.currentIncentiveTotalAmount = 0
+        this.currentIncentiveUsedAmount = 0
+        this.currentIncentiveBalanceAmount = 0
         this.paymentForm.get("incentiveAddition")?.setValue(0)
       },
     })
@@ -363,35 +386,35 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       },
     })
 
-    // this.paymentService.getTotalPaymentsByMethod("Cheque").subscribe({
-    //   next: (total) => {
-    //     this.paymentsByCheque = total
-    //   },
-    //   error: (err) => {
-    //     console.error("Error loading cheque payments:", err)
-    //     this.paymentsByCheque = 0
-    //   },
-    // })
+    this.paymentService.getTotalPaymentsByMethod("Cheque").subscribe({
+      next: (total) => {
+        this.paymentsByCheque = total
+      },
+      error: (err) => {
+        console.error("Error loading cheque payments:", err)
+        this.paymentsByCheque = 0
+      },
+    })
   }
 
-  // toggleCalculator(): void {
-  //   this.showCalculator = !this.showCalculator
-  // }
+  toggleCalculator(): void {
+    this.showCalculator = !this.showCalculator
+  }
 
-  // onCalculationComplete(result: PaymentCalculationResult): void {
-  //   this.calculationResult = result
-  //   this.paymentForm.patchValue({
-  //     SupplierId: result.supplierId,
-  //     leafWeight: result.leafWeight,
-  //     rate: result.rate,
-  //     grossAmount: result.grossAmount,
-  //     advanceDeduction: result.advanceDeduction,
-  //     debtDeduction: result.debtDeduction,
-  //     incentiveAddition: result.incentiveAddition,
-  //     netAmount: result.netAmount,
-  //   })
-  //   this.showCalculator = false
-  // }
+  onCalculationComplete(result: PaymentCalculationResult): void {
+    this.calculationResult = result
+    this.paymentForm.patchValue({
+      SupplierId: result.supplierId,
+      leafWeight: result.leafWeight,
+      rate: result.rate,
+      grossAmount: result.grossAmount,
+      advanceDeduction: result.advanceDeduction,
+      debtDeduction: result.debtDeduction,
+      incentiveAddition: result.incentiveAddition,
+      netAmount: result.netAmount,
+    })
+    this.showCalculator = false
+  }
 
   createPayment(): void {
     if (this.paymentForm.invalid) {

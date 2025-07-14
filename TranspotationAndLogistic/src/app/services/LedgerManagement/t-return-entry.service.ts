@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { TeaReturnRecord } from '../../models/t-return-entry.model';
+import { TeaReturnRecord } from '../../models/LedgerManagement/t-return-entry.model';
 
 @Injectable({
   providedIn: 'root'

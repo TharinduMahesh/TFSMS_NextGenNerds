@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { RtList, CreateUpdateRouteDto } from '../../models/RouteMaintain.model';
+import { RtList, CreateUpdateRouteDto } from '../../models/Logistic and Transport/RouteMaintain.model';
 
 @Injectable({
   providedIn: 'root'

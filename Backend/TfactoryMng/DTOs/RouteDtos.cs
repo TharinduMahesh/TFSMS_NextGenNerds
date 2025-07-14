@@ -18,20 +18,16 @@ namespace TfactoryMng.DTOs
     {
         [Required, StringLength(100)]
         public string rName { get; set; } = string.Empty;
-
         [Required, StringLength(100)]
         public string startLocation { get; set; } = string.Empty;
-
         [Required, StringLength(100)]
         public string endLocation { get; set; } = string.Empty;
+        [Required]
+        public int distance { get; set; }
 
-        // Corrected to match the RtList model
-        public int? distance { get; set; }
+        // ONLY need the CollectorId
+        public int? CollectorId { get; set; }
 
-        public int? collectorId { get; set; }
-        public int? vehicleId { get; set; }
-
-        // This should be an empty list by default, not null.
         public ICollection<GrowerLocationDto> GrowerLocations { get; set; } = new List<GrowerLocationDto>();
     }
 }

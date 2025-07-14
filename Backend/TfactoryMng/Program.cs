@@ -20,7 +20,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IRouteService, RouteService>();
-builder.Services.AddScoped<IYieldService, YieldService>();
+builder.Services.AddScoped<IYieldService, YieldService>(); 
+builder.Services.AddScoped<ICollectorService, CollectorService>();
+builder.Services.AddScoped<ITripRecordService, TripRecordService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => {

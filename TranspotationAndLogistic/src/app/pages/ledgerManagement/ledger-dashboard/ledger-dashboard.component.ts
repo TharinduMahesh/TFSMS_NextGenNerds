@@ -25,16 +25,16 @@ export class LedgerDashboardComponent {
     {
       title: 'Tea Packing and Ledger Update',
       items: [
-        { label: 'TEA PACKING', route: '/tea-packing', keywords: ['TEA', 'PACKING'] },
-        { label: 'STOCK LEDGER', route: '/stock-ledger', keywords: ['STOCK', 'LEDGER'] }
+        { label: 'TEA PACKING', route: '/t-pack', keywords: ['TEA', 'PACKING'] },
+        { label: 'STOCK LEDGER', route: '/s-ledger', keywords: ['STOCK', 'LEDGER'] }
       ]
     },
     {
       title: 'Invoice Generation and Dispatch',
       items: [
-        { label: 'INVOICE CREATION', route: '/invoice-create', keywords: ['INVOICE', 'CREATION'] },
-        { label: 'DISPATCH DETAILS ENTRY', route: '/d-entry', keywords: ['DISPATCH', 'DETAILS','ENTRY'] },
-        { label: 'DISPATCH REGISTER', route: '/d-register', keywords: ['DISPATCH', 'REGISTER'] }
+        { label: 'INVOICE CREATION', route: '/in-manage', keywords: ['INVOICE', 'CREATION'] },
+        { label: 'DISPATCH DETAILS ENTRY', route: '/dis-view', keywords: ['DISPATCH', 'DETAILS','ENTRY'] },
+        { label: 'DISPATCH REGISTER', route: '/dis-reg', keywords: ['DISPATCH', 'REGISTER'] }
       ]
     },
     {
@@ -48,14 +48,14 @@ export class LedgerDashboardComponent {
     {
       title: 'Denatured Tea Handling',
       items: [
-        { label: 'DENATURED TEA ENTRY', route: '/tea-entry', keywords: ['DENATURED', 'TEA', 'ENTRY'] },
-        { label: 'DENATURED TEA REPORT', route: '/tea-report', keywords: ['DENATURED', 'TEA', 'REPORT'] }
+        { label: 'DENATURED TEA ENTRY', route: '/d-t-entry', keywords: ['DENATURED', 'TEA', 'ENTRY'] },
+        { label: 'DENATURED TEA REPORT', route: '/d-t-report', keywords: ['DENATURED', 'TEA', 'REPORT'] }
       ]
     },
     {
       title: 'Sales Management',
       items: [
-        { label: 'SLAES ENTRY', route: '/sales-entry', keywords: ['SLAES', 'issue'] },
+        { label: 'SLAES ENTRY', route: '/s-entry', keywords: ['SLAES', 'issue'] },
         { label: 'GRATIS ISSUE ENTRY', route: '/gratis-e-entry', keywords: ['sales', 'change', 'entry'] },
         { label: 'SALES CHARGE ENTRY', route: '/sales-c-entry', keywords: ['sales', 'change', 'entry'] }
       ]
@@ -70,8 +70,8 @@ export class LedgerDashboardComponent {
     {
       title: 'Tea Return and Claims Handling',
       items: [
-        { label: 'RETURN ENTRY', route: '/return-entry', keywords: ['return', 'requirer'] },
-        { label: 'RETURN REGISTER', route: '/return-register', keywords: ['claim', 'acquaintment'] },
+        { label: 'RETURN ENTRY', route: '/t-return-entry', keywords: ['return', 'requirer'] },
+        { label: 'RETURN REGISTER', route: '/r-register', keywords: ['claim', 'acquaintment'] },
         { label: 'CLAIM AJUSTMENT', route: '/claim-ajustment', keywords: ['claim', 'analysis'] },
         { label: 'CLAIM ANALYSIS', route: '/claim-analysis', keywords: ['claim', 'analysis'] }
       ]

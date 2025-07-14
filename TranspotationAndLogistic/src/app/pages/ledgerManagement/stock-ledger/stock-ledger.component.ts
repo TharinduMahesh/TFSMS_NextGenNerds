@@ -2,7 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StockLedgerService } from '../../../services/LedgerManagement/stock-ledger.service';
-import { StockLedgerRecord } from '../../../models/stock-ledger.model';
+import { StockLedgerRecord } from '../../../models/LedgerManagement/stock-ledger.model';
 
 @Component({
   selector: 'app-stock-ledger',

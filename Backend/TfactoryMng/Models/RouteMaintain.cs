@@ -15,11 +15,12 @@ public class RtList
     [Required, StringLength(100)]
     public string endLocation { get; set; } = string.Empty;
 
-    // Corrected to match your requirement of being an integer
     public int? distance { get; set; }
 
-    public int? collectorId { get; set; }
-    public int? vehicleId { get; set; }
+    // --- FIX: Use PascalCase for all properties ---
+    public int? CollectorId { get; set; }
+    public Collector? Collector { get; set; }
 
     public ICollection<GrowerLocation> GrowerLocations { get; set; } = new List<GrowerLocation>();
+    public ICollection<TripRecord> TripRecords { get; set; } = new List<TripRecord>();
 }

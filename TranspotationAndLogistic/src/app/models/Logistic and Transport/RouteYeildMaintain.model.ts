@@ -1,4 +1,4 @@
-// This model represents the data you GET from the API (matches YieldResponseDto)
+// For VIEWING yield data (matches YieldResponseDto)
 export interface YieldResponse {
   yId: number;
   rId: number;
@@ -9,7 +9,7 @@ export interface YieldResponse {
   vehicleID?: number;
 }
 
-// This model represents the data you POST or PUT to the API (matches CreateUpdateYieldDto)
+// For CREATING or UPDATING a yield (matches CreateUpdateYieldDto)
 export interface YieldPayload {
   rId: number;
   collected_Yield: string;

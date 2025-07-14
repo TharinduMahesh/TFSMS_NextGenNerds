@@ -2,7 +2,7 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DispatchRegisterService } from '../../../services/LedgerManagement/dispatch-register.service'; // Adjust paths
-import { Dispatch } from '../../../models/dispatch-register.model';
+import { Dispatch } from '../../../models/LedgerManagement/dispatch-register.model';
 
 @Component({
   selector: 'app-dispatch-register',

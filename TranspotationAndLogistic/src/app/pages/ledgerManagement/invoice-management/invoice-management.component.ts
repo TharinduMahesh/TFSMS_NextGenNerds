@@ -2,7 +2,7 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InvoiceManagementService } from '../../../services/LedgerManagement/invoice-management.service'; // Adjust paths
-import { Invoice } from '../../../models/invoice-manangement.model';
+import { Invoice } from '../../../models/LedgerManagement/invoice-manangement.model';
 
 @Component({
   selector: 'app-invoice-management',

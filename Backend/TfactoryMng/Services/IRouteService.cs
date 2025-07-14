@@ -8,7 +8,7 @@ namespace TfactoryMng.Services
         Task<IEnumerable<RtList>> GetAllRoutesAsync();
         Task<RtList?> GetRouteByIdAsync(int id);
         Task<RtList> CreateRouteAsync(CreateUpdateRouteDto routeDto);
-        Task<bool> UpdateRouteAsync(int id, CreateUpdateRouteDto routeDto);
+        Task<RtList?> UpdateRouteAsync(int id, CreateUpdateRouteDto routeDto);
         Task<bool> DeleteRouteAsync(int id);
     }
 }

@@ -46,8 +46,7 @@ namespace TfactoryMng.Services
                 startLocation = routeDto.startLocation,
                 endLocation = routeDto.endLocation,
                 distance = routeDto.distance,
-                collectorId = routeDto.collectorId,
-                vehicleId = routeDto.vehicleId,
+                CollectorId = routeDto.CollectorId,
                 GrowerLocations = routeDto.GrowerLocations.Select(gl => new GrowerLocation
                 {
                     latitude = gl.latitude,
@@ -63,35 +62,43 @@ namespace TfactoryMng.Services
 
         // In Services/RouteService.cs
 
-        public async Task<bool> UpdateRouteAsync(int id, CreateUpdateRouteDto routeDto)
+        // In Services/RouteService.cs
+
+        public async Task<RtList?> UpdateRouteAsync(int id, CreateUpdateRouteDto routeDto)
         {
+            // 1. Find the existing route, including its child locations to update them
             var existingRoute = await _context.RtLists
                 .Include(r => r.GrowerLocations)
                 .FirstOrDefaultAsync(r => r.rId == id);
 
+            // 2. If not found, return null
             if (existingRoute == null)
             {
-                return false;
+                return null;
             }
 
-            // THIS IS THE PROBLEM AREA
-            // It only updates rName and startLocation. All other properties are missed!
+            // 3. Update the properties of the existing entity from the DTO
             existingRoute.rName = routeDto.rName;
             existingRoute.startLocation = routeDto.startLocation;
-            // ... copy other properties ... // <-- This comment indicates the missing code.
+            existingRoute.endLocation = routeDto.endLocation;
+            existingRoute.distance = routeDto.distance;
+            existingRoute.CollectorId = routeDto.CollectorId;
 
-            // The rest of the logic for growerLocations is fine.
+            // 4. Handle the child collection (a common pattern is "delete and re-add")
             _context.GrowerLocations.RemoveRange(existingRoute.GrowerLocations);
             existingRoute.GrowerLocations = routeDto.GrowerLocations.Select(gl => new GrowerLocation
             {
                 latitude = gl.latitude,
                 longitude = gl.longitude,
-                description = gl.description,
-                RtListId = id
+                description = gl.description
+                // RtListId will be set automatically by EF Core
             }).ToList();
 
+            // 5. Save the changes to the database
             await _context.SaveChangesAsync();
-            return true;
+
+            // 6. Return the updated entity
+            return existingRoute;
         }
 
         public async Task<bool> DeleteRouteAsync(int id)

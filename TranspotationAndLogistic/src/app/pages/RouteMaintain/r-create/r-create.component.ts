@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 // ** FIX: Import the DTO as well **
-import { CreateUpdateRouteDto } from '../../../models/RouteMaintain.model';
+import { CreateUpdateRouteDto } from '../../../models/Logistic and Transport/RouteMaintain.model';
 import { RouteService } from '../../../services/RouteMaintainService/RouteMaintain.service';
 
 @Component({

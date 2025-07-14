@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Invoice } from '../../models/invoice-manangement.model'; // Adjust path if needed
+import { Invoice } from '../../models/LedgerManagement/invoice-manangement.model'; // Adjust path if needed
 
 @Injectable({
   providedIn: 'root'

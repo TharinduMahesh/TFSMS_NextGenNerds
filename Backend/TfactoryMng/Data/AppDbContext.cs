@@ -10,22 +10,27 @@ namespace TfactoryMng.Data
         public DbSet<GrowerLocation> GrowerLocations { get; set; }
         public DbSet<YieldList> YieldLists { get; set; }
 
+        public DbSet<Collector> Collectors { get; set; }
+        public DbSet<TripRecord> TripRecords { get; set; }
+
+        public DbSet<Vehicle> Vehicles { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<RtList>(entity =>
             {
-                // Set the primary key
                 entity.HasKey(e => e.rId);
-
-                // Configure the rName property
-                entity.Property(e => e.rName)
-                      .IsRequired()      // Maps to NOT NULL in SQL
-                      .HasMaxLength(100); // Maps to nvarchar(100)
-
-                // Create a unique index on the rName column to prevent duplicate route names
+                entity.Property(e => e.rName).IsRequired().HasMaxLength(100);
                 entity.HasIndex(e => e.rName).IsUnique();
+
+                // --- UPDATED RELATIONSHIP ---
+                entity.HasOne(r => r.Collector)
+                      .WithMany(c => c.Routes)
+                      .HasForeignKey(r => r.CollectorId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
             });
 
             // Configuration for the GrowerLocation entity
@@ -55,6 +60,40 @@ namespace TfactoryMng.Data
                       .WithMany()                     // An RtList can have many YieldLists (but we don't need a navigation property on RtList for this)
                       .HasForeignKey(y => y.rId)      // The foreign key is rId
                       .OnDelete(DeleteBehavior.Restrict); // PREVENTS an RtList from being deleted if it has associated YieldList records.
+            });
+
+            modelBuilder.Entity<Collector>(entity =>
+            {
+                entity.HasKey(c => c.CollectorId);
+                entity.Property(c => c.Name).IsRequired().HasMaxLength(150);
+                entity.HasOne(c => c.Vehicle)
+                      .WithOne(v => v.Collector)
+                      .HasForeignKey<Vehicle>(v => v.CollectorId);
+            });
+
+            // Configuration for TripRecord
+            modelBuilder.Entity<TripRecord>(entity =>
+            {
+                entity.HasKey(t => t.TripId);
+
+                // Relationship with RtList
+                entity.HasOne(t => t.Route)
+                      .WithMany(r => r.TripRecords)
+                      .HasForeignKey(t => t.RouteId)
+                      .OnDelete(DeleteBehavior.Cascade); // If a route is deleted, its trip history is also deleted
+
+                // Relationship with Collector
+                entity.HasOne(t => t.Collector)
+                      .WithMany(c => c.TripRecords)
+                      .HasForeignKey(t => t.CollectorId)
+                      .OnDelete(DeleteBehavior.Cascade); // If a collector is deleted, their trip history is also deleted
+            });
+
+            modelBuilder.Entity<Vehicle>(entity =>
+            {
+                entity.HasKey(v => v.VehicleId);
+                entity.HasIndex(v => v.LicensePlate).IsUnique();
+                entity.Property(v => v.CollectorId).IsRequired();
             });
         }
     }

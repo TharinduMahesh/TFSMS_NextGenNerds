@@ -1,7 +1,7 @@
 // src/app/features/denatured-tea-report/denatured-tea-report.service.ts
 
 import { Injectable, signal, computed } from '@angular/core';
-import { DenaturedTeaReportRecord } from '../../models/denatured-t-report.model';
+import { DenaturedTeaReportRecord } from '../../models/LedgerManagement/denatured-t-report.model';
 
 @Injectable({
   providedIn: 'root'

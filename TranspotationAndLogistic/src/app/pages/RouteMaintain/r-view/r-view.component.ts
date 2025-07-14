@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { RtList } from '../../../models/RouteMaintain.model'; // adjust import path
+import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model'; // adjust import path
 
 @Component({
   selector: 'app-r-view',

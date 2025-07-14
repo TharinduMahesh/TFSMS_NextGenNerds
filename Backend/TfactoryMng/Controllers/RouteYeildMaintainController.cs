@@ -14,6 +14,7 @@ namespace TfactoryMng.Controllers
         private readonly IYieldService _yieldService;
         private readonly ILogger<RouteYieldMaintainController> _logger;
 
+
         public RouteYieldMaintainController(IYieldService yieldService, ILogger<RouteYieldMaintainController> logger)
         {
             _yieldService = yieldService;

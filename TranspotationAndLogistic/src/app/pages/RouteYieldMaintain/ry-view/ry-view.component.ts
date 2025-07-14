@@ -1,15 +1,19 @@
-import { Component, Input } from '@angular/core';
-import { RyReviewComponent } from '../ry-review/ry-review.component';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { YieldResponse } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
 
 @Component({
-  selector: 'app-ryview',
+  selector: 'app-ry-view',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './ry-view.component.html',
   styleUrls: ['./ry-view.component.scss']
 })
 export class RyViewComponent {
-  @Input() route: any;
+  @Input({ required: true }) data!: YieldResponse;
+  @Output() close = new EventEmitter<void>();
 
   closeModal() {
-    this.route = null;
+    this.close.emit();
   }
 }

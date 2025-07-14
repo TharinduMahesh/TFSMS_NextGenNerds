@@ -1,60 +1,74 @@
-import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { YieldResponse, YieldPayload } from '../../../models/RouteYeildMaintain.model';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 import { RyService } from '../../../services/RouteYieldMaintainService/RouteYieldMaintain.service';
+import { YieldPayload, YieldResponse } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
 
 @Component({
-  selector: 'app-ryedit',
+  selector: 'app-ry-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './ry-edit.component.html',
   styleUrls: ['./ry-edit.component.scss']
 })
 export class RyEditComponent implements OnInit {
-  private ryService = inject(RyService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private ryService = inject(RyService);
 
-  @Input({ required: true }) route!: YieldResponse; // Use correct model
-  @Output() close = new EventEmitter<boolean>(); // true on success, false on cancel
+  editForm: FormGroup;
+  currentYield: YieldResponse | null = null;
+  isLoading = true;
 
-  form!: FormGroup;
+  constructor() {
+    this.editForm = this.fb.group({
+      collected_Yield: ['', Validators.required],
+      golden_Tips_Present: ['false', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
-    // Form matches the API payload, with your validations preserved
-    this.form = this.fb.group({
-      collected_Yield: [this.route.collected_Yield, [Validators.required, Validators.min(0)]],
-      golden_Tips_Present: [this.route.golden_Tips_Present, Validators.required]
+    this.route.paramMap.pipe(
+      switchMap(params => {
+        const id = params.get('id');
+        if (!id) throw new Error('Yield ID is required.');
+        return this.ryService.getYieldListById(+id);
+      })
+    ).subscribe({
+      next: (yieldData) => {
+        this.currentYield = yieldData;
+        this.editForm.patchValue({
+          collected_Yield: yieldData.collected_Yield,
+          golden_Tips_Present: yieldData.golden_Tips_Present.toString()
+        });
+        this.isLoading = false;
+      },
+      error: () => this.isLoading = false
     });
   }
 
   onSubmit(): void {
-    if (this.form.invalid) {
-      return;
-    }
-  
-    const formValues = this.form.getRawValue();
+    if (this.editForm.invalid || !this.currentYield) return;
 
-    // The API needs the rId, which is not editable on this form
     const payload: YieldPayload = {
-      rId: this.route.rId,
-      collected_Yield: formValues.collected_Yield,
-      golden_Tips_Present: formValues.golden_Tips_Present
+      rId: this.currentYield.rId,
+      collected_Yield: this.editForm.value.collected_Yield,
+      golden_Tips_Present: this.editForm.value.golden_Tips_Present,
     };
 
-    // Update using the unique yield ID (yId)
-    this.ryService.updateYieldList(this.route.yId, payload).subscribe({
+    this.ryService.updateYieldList(this.currentYield.yId, payload).subscribe({
       next: () => {
-        this.close.emit(true); // Signal success
+        alert('Yield updated successfully!');
+        this.router.navigate(['/ry-review']);
       },
-      error: (err) => {
-        console.error('Update failed', err);
-        alert('Update failed. See console for details.');
-      }
+      error: (err) => alert(`Error updating yield: ${err.message}`)
     });
   }
 
   onCancel(): void {
-    this.close.emit(false); // Signal cancellation
+    this.router.navigate(['/ry-review']);
   }
 }

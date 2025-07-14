@@ -3,14 +3,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RyService } from '../../../services/RouteYieldMaintainService/RouteYieldMaintain.service';
-import { YieldPayload } from '../../../models/RouteYeildMaintain.model';
-
-// --- ASSUMPTION: You must provide these to get a list of routes for the dropdown ---
-import { RouteService } from '../../../services/RouteMaintainService//RouteMaintain.service'; // Adjust path if needed
-import { RtList } from '../../../models/RouteMaintain.model'; // Adjust path if needed
+import { YieldPayload } from '../../../models/Logistic and Transport/RouteYeildMaintain.model'; // Corrected import path
+import { RouteService } from '../../../services/RouteMaintainService/RouteMaintain.service'; // Corrected import path
+import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
 
 @Component({
-  selector: 'app-ryform',
+  selector: 'app-ry-create', // Corrected selector
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './ry-create.component.html',
@@ -20,24 +18,39 @@ export class RyCreateComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private ryService = inject(RyService);
-  private routeService = inject(RouteService); // Service to get routes
+  private routeService = inject(RouteService);
 
   yieldForm: FormGroup;
-  routes: RtList[] = []; // For the dropdown
+  routes: RtList[] = [];
+  isLoadingRoutes = true; // Add a loading state for the dropdown
+  routeError: string | null = null; // To store any error messages
 
   constructor() {
-    // The form is updated to match the API payload, with your validations preserved.
     this.yieldForm = this.fb.group({
-      rId: ['', Validators.required], // This is the route dropdown
-      collected_Yield: ['', [Validators.required, Validators.min(0)]],
-      golden_Tips_Present: ['', Validators.required]
+      rId: [null, Validators.required],
+      collected_Yield: ['', [Validators.required, Validators.pattern('^[0-9.]+$')]],
+      golden_Tips_Present: ['false', Validators.required]
     });
   }
 
   ngOnInit(): void {
-    // Load existing routes to populate the dropdown
-    this.routeService.getAllRoutes().subscribe(data => {
-      this.routes = data;
+    this.isLoadingRoutes = true;
+    this.routeError = null;
+    
+    // ** THE FIX: Add error and complete handlers to the subscription **
+    this.routeService.getAllRoutes().subscribe({
+      next: (data) => {
+        this.routes = data;
+        console.log('Successfully fetched routes:', data); // For debugging
+      },
+      error: (err) => {
+        // This will now catch any errors and display them
+        this.routeError = `Failed to load routes. Please try again later. (Error: ${err.message})`;
+        console.error('Error fetching routes:', err);
+      },
+      complete: () => {
+        this.isLoadingRoutes = false;
+      }
     });
   }
 
@@ -52,12 +65,11 @@ export class RyCreateComponent implements OnInit {
 
     this.ryService.createYieldList(payload).subscribe({
       next: () => {
-        alert('Form submitted successfully!');
-        this.router.navigate(['/ry-review']); // Go back to the list
+        alert('Yield created successfully!');
+        this.router.navigate(['/ry-review']);
       },
       error: (err) => {
-        alert('Failed to submit form. See console for details.');
-        console.error(err);
+        alert(`Failed to create yield: ${err.message}`);
       }
     });
   }

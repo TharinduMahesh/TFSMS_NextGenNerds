@@ -1,17 +1,15 @@
-@if (route) {
-  <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="closeModal()">X</button>
-      <h3>Route Yield Details</h3>
-      <table>
-        <tr><td><strong>Yield ID:</strong></td><td>{{ route.yId }}</td></tr>
-        <tr><td><strong>Route ID:</strong></td><td>{{ route.rId }}</td></tr>
-        <tr><td><strong>Route Name:</strong></td><td>{{ route.rName }}</td></tr>
-        <tr><td><strong>Collected Yield (kg):</strong></td><td>{{ route.collected_Yield }}</td></tr>
-        <tr><td><strong>Golden Tips Present:</strong></td><td>{{ route.golden_Tips_Present }}</td></tr>
-        <tr><td><strong>Collector ID:</strong></td><td>{{ route.collectorID }}</td></tr>
-        <tr><td><strong>Vehicle ID:</strong></td><td>{{ route.vehicleID }}</td></tr>
-      </table>
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeModal()" aria-label="Close">×</button>
+    <h2 class="modal-title">Yield Details</h2>
+    <div class="details-grid">
+      <span class="label">Yield ID:</span><span class="value">{{ data.yId }}</span>
+      <span class="label">Route ID:</span><span class="value">{{ data.rId }}</span>
+      <span class="label">Route Name:</span><span class="value">{{ data.rName }}</span>
+      <span class="label">Collected Yield:</span><span class="value">{{ data.collected_Yield }} kg</span>
+      <span class="label">Golden Tips:</span><span class="value">{{ data.golden_Tips_Present }}</span>
+      <span class="label">Collector ID:</span><span class="value">{{ data.collectorID || 'N/A' }}</span>
+      <span class="label">Vehicle ID:</span><span class="value">{{ data.vehicleID || 'N/A' }}</span>
     </div>
   </div>
-}
+</div>

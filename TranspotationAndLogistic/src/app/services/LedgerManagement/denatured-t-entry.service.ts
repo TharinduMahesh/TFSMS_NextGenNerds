@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { DenaturedTeaRecord } from '../../models/denatured-t-entry.model';
+import { DenaturedTeaRecord } from '../../models/LedgerManagement/denatured-t-entry.model';
 
 @Injectable({
   providedIn: 'root'

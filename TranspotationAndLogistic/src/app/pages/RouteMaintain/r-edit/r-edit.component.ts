@@ -5,8 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 
 import { RouteService } from '../../../services/RouteMaintainService/RouteMaintain.service';
-import { CreateUpdateRouteDto, GrowerLocationDto } from '../../../models/RouteMaintain.model';
-import { RtList } from '../../../models/RouteMaintain.model'; // Import RtList as well
+import { CreateUpdateRouteDto, GrowerLocationDto } from '../../../models/Logistic and Transport/RouteMaintain.model';
+import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model'; // Import RtList as well
 
 @Component({
   selector: 'app-r-edit',

@@ -23,7 +23,8 @@ export class VehicleCreateComponent implements OnInit {
   private collectorService = inject(CollectorService);
 
   vehicleForm: FormGroup;
-  collectors = signal<CollectorResponse[]>([]); // To hold collectors for the dropdown
+  // This signal will hold only collectors who do NOT already have a vehicle
+  availableCollectors = signal<CollectorResponse[]>([]);
 
   constructor() {
     this.vehicleForm = this.fb.group({
@@ -36,9 +37,10 @@ export class VehicleCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Fetch all available collectors to populate the assignment dropdown
-    this.collectorService.getAllCollectors().subscribe(data => {
-      this.collectors.set(data);
+    // Fetch collectors and filter them to show only those without a vehicle
+    this.collectorService.getAllCollectors().subscribe(allCollectors => {
+      const unassignedCollectors = allCollectors.filter(c => !c.vehicleId);
+      this.availableCollectors.set(unassignedCollectors);
     });
   }
 

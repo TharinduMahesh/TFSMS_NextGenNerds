@@ -5,7 +5,7 @@ export interface CollectorResponse {
   name: string;
   contactNumber?: string;
   ratePerKm: number;
-  // Included vehicle details to help with route assignment
+  vehicleConditionNotes?: string;
   vehicleId?: number;
   vehicleLicensePlate?: string;
   vehicleVolume?: number;

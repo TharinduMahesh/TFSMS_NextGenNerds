@@ -1,0 +1,307 @@
+// Base layout for the page
+.page-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+// Header styling
+.page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  
+  h1 {
+    font-size: 2rem; // Larger title
+    font-weight: 700;
+    color: #212529; // Darker text
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #6c757d; // Subtitle text color
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+// Styling for the date selection form
+.report-form {
+  background: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap; // Allows stacking on smaller screens
+
+  .form-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #495057;
+      font-size: 14px;
+    }
+
+    input[type="date"] {
+      padding: 0.7rem 0.9rem;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      background-color: #f8f9fa;
+      transition: all 0.2s ease-in-out;
+
+      &:focus {
+        border-color: #007bff;
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        background-color: #fff;
+      }
+    }
+  }
+
+  .form-actions {
+    .btn-primary {
+      padding: 0.7rem 1.5rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+      }
+      
+      &:disabled {
+        background-color: #a0cffb;
+        cursor: wait;
+        opacity: 0.7;
+      }
+
+      span { // For the loading text
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+// Styling for the results area
+.report-results {
+  .loading-indicator,
+  .error-message,
+  .empty-state {
+    padding: 3rem;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #6c757d;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px dashed #dcdfe2;
+  }
+
+  .error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  
+  .empty-state p {
+    margin-bottom: 1rem;
+  }
+}
+
+// Table styling
+.table-wrapper {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 1.25rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      color: #495057;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.75px;
+    }
+
+    td {
+      color: #343a40;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    
+    // Align numeric columns to the right for better readability
+    td:not(:first-child) {
+      text-align: right;
+    }
+    th:not(:first-child) {
+      text-align: right;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background-color: #f1f3f5;
+    }
+  }
+}
+
+// Summary cards layout
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border-left: 5px solid #007bff;
+  
+  &:nth-child(2) { border-color: #28a745; }
+  &:nth-child(3) { border-color: #ffc107; }
+  
+  .card-title {
+    font-size: 1rem;
+    color: #6c757d;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #343a40;
+  }
+}
+
+// Two-column layout for the chart and insights
+.main-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+// Chart container styling
+.chart-container {
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  ngx-charts-bar-vertical {
+    // Fill the container
+    width: 100% !important;
+    display: block;
+  }
+}
+
+// Insights panel styling
+.insights-panel {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  
+  h3 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .insight-item {
+    margin-bottom: 1.5rem;
+    
+    .insight-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #fff;
+      text-transform: uppercase;
+      
+      &.highlight-cost { background-color: #dc3545; }
+      &.highlight-efficient { background-color: #28a745; }
+      &.recommendation { background-color: #17a2b8; }
+    }
+    
+    p {
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #495057;
+      strong { color: #000; }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Loader animation for the button
+.loader {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

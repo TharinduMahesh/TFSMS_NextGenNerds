@@ -1,0 +1,95 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Collector Performance Dashboard</h1>
+    <p>Visual analysis of collector punctuality and on-time performance.</p>
+  </header>
+
+  <!-- Form for date selection (same as before) -->
+  <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="form-wrapper report-form">
+    <!-- ... date picker form groups ... -->
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="isLoading()">
+        @if(isLoading()){
+          <span><i class="loader"></i> Analyzing...</span>
+        } @else {
+          <span>Analyze Performance</span>
+        }
+      </button>
+    </div>
+  </form>
+
+  <div class="report-results">
+    @if (isLoading()) {
+      <div class="loading-indicator">Generating analytics...</div>
+    } @else if(error()) {
+      <div class="error-message">{{ error() }}</div>
+    } @else if(reportData().length > 0) {
+
+      <!-- Summary Cards -->
+      <div class="summary-cards">
+        <div class="card">
+          <div class="card-title">Average On-Time %</div>
+          <div class="card-value">{{ averageOnTimePercentage() | number:'1.1-1' }}%</div>
+        </div>
+        @if(topPerformer(); as performer) {
+          <div class="card highlight-green">
+            <div class="card-title">Top Performer</div>
+            <div class="card-value small-text">{{ performer.collectorName }}</div>
+          </div>
+        }
+        @if(bottomPerformer(); as performer) {
+          <div class="card highlight-red">
+            <div class="card-title">Lowest Performer</div>
+            <div class="card-value small-text">{{ performer.collectorName }}</div>
+          </div>
+        }
+      </div>
+
+      <!-- Main Chart and Insights -->
+      <div class="main-content">
+        <div class="chart-container">
+          <ngx-charts-bar-horizontal
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="chartData()"
+            [gradient]="false"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="false"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel">
+          </ngx-charts-bar-horizontal>
+        </div>
+        
+        <div class="insights-panel">
+          <h3>Analysis & Insights</h3>
+          @if(topPerformer(); as performer) {
+            <div class="insight-item">
+              <span class="insight-label highlight-efficient">Top Performer</span>
+              <p><strong>{{ performer.collectorName }}</strong> leads with an impressive 
+                 <strong>{{ performer.onTimePercentage | number:'1.1-1' }}%</strong> on-time rate across 
+                 {{ performer.totalTripsCompleted }} trips.</p>
+            </div>
+          }
+          @if(bottomPerformer(); as performer) {
+            <div class="insight-item">
+              <span class="insight-label highlight-cost">Opportunity</span>
+              <p><strong>{{ performer.collectorName }}</strong> has the lowest on-time rate. 
+                 <strong>Vehicle Condition:</strong> *{{ performer.vehicleCondition || 'No notes' }}*.</p>
+              <!-- <p class="recommendation">
+                If performance is consistently low and vehicle condition notes exist, consider scheduling vehicle maintenance.
+              </p> -->
+            </div>
+          }
+        </div>
+      </div>
+      
+    } @else {
+      <div class="empty-state">
+        <p>No trip data found to analyze performance.</p>
+      </div>
+    }
+  </div>
+</div>

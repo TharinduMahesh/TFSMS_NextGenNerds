@@ -1,4 +1,5 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
+import { forkJoin, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,7 +25,8 @@ export class VehicleEditComponent implements OnInit {
 
   vehicleForm: FormGroup;
   currentVehicleId: number | null = null;
-  collectors = signal<CollectorResponse[]>([]);
+  // This will hold ALL collectors to allow re-assignment
+  collectors = signal<CollectorResponse[]>([]); 
   isLoading = true;
   error: string | null = null;
 
@@ -39,24 +41,24 @@ export class VehicleEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 1. Fetch the list of collectors for the dropdown
-    this.collectorService.getAllCollectors().subscribe(data => this.collectors.set(data));
-    
-    // 2. Fetch the specific vehicle's data based on the URL ID
+    // We need to fetch both the vehicle to edit and all possible collectors
     this.route.paramMap.pipe(
       switchMap(params => {
         const id = params.get('id');
         if (!id) {
-          this.error = "Vehicle ID not found in URL.";
-          this.isLoading = false;
           throw new Error('Vehicle ID is required');
         }
         this.currentVehicleId = +id;
-        return this.vehicleService.getVehicleById(this.currentVehicleId);
+        
+        return forkJoin({
+          vehicle: this.vehicleService.getVehicleById(this.currentVehicleId),
+          collectors: this.collectorService.getAllCollectors()
+        });
       })
     ).subscribe({
-      next: (vehicleData) => {
-        this.vehicleForm.patchValue(vehicleData);
+      next: ({ vehicle, collectors }) => {
+        this.collectors.set(collectors);
+        this.vehicleForm.patchValue(vehicle); // Populate form with existing data
         this.isLoading = false;
       },
       error: (err) => {

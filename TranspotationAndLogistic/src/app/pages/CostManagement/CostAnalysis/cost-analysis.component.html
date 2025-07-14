@@ -1,0 +1,99 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Cost Analysis Dashboard</h1>
+    <p>A breakdown of transport costs by collector to identify savings opportunities.</p>
+  </header>
+
+  <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="form-wrapper report-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input id="startDate" formControlName="startDate" type="date" />
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input id="endDate" formControlName="endDate" type="date" />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="isLoading()">
+        @if(isLoading()){
+          <span><i class="loader"></i> Generating...</span>
+        } @else {
+          <span>Generate Report</span>
+        }
+      </button>
+    </div>
+  </form>
+
+  <div class="report-results">
+    @if (isLoading()) {
+      <div class="loading-indicator">Generating analytics...</div>
+    } @else if(error()) {
+      <div class="error-message">{{ error() }}</div>
+    } @else if(reportData().length > 0) {
+
+      <!-- Summary Cards Section -->
+      <div class="summary-cards">
+        <div class="card">
+          <div class="card-title">Total Cost</div>
+          <div class="card-value">{{ totalCost() | currency:'LKR ':'symbol':'1.0-0' }}</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Total Trips</div>
+          <div class="card-value">{{ totalTrips() | number }}</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Average Cost / Trip</div>
+          <div class="card-value">{{ averageCostPerTrip() | currency:'LKR ':'symbol':'1.0-0' }}</div>
+        </div>
+      </div>
+
+      <!-- Main Chart and Insights Section -->
+      <div class="main-content">
+        <div class="chart-container">
+          <ngx-charts-bar-vertical
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="chartData()"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel">
+          </ngx-charts-bar-vertical>
+        </div>
+        
+        <div class="insights-panel">
+          <h3>Analysis & Insights</h3>
+          @if(highestCostCollector(); as topCollector) {
+            <div class="insight-item">
+              <span class="insight-label highlight-cost">Highest Cost</span>
+              <p><strong>{{ topCollector.collectorName }}</strong> incurred the highest cost at 
+                 <strong>{{ topCollector.totalCost | currency:'LKR' }}</strong> 
+                 over {{ topCollector.totalTrips }} trips.</p>
+            </div>
+          }
+          @if(lowestCostCollector(); as lowCollector) {
+            <div class="insight-item">
+              <span class="insight-label highlight-efficient">Most Efficient</span>
+              <p><strong>{{ lowCollector.collectorName }}</strong> was the most cost-efficient, with a total cost of 
+                 <strong>{{ lowCollector.totalCost | currency:'LKR' }}</strong>.</p>
+            </div>
+          }
+          <!-- <div class="insight-item">
+            <span class="insight-label">Recommendation</span>
+            <p>To reduce costs, consider analyzing the routes of the highest-cost collectors. There may be opportunities to optimize routes or re-negotiate rates with collectors who have a high cost-per-kilometer.</p>
+          </div> -->
+        </div>
+      </div>
+      
+    } @else {
+        <div class="empty-state">
+            <p>No trip data found for the selected date range. Cannot generate analysis.</p>
+        </div>
+    }
+  </div>
+</div>

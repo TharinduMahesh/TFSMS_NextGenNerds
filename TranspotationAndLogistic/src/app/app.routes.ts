@@ -32,7 +32,9 @@ import { TripReviewComponent } from './pages/PerformanceMonitoring/Trip Tracking
 import { TripScheduleComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-schedule/t-sched.component';
 import { CostReportComponent } from './pages/PerformanceMonitoring/Reports/Cost-report/ct-report.component';
 import { CollectorPerformanceReportComponent } from './pages/PerformanceMonitoring/Reports/Collector-performance-report/c-p-report.component';
-import { RoutePerformanceReportComponent } from './pages/PerformanceMonitoring/Reports/route-performance-report/r-p-report.component';
+import { RoutePerformanceReportComponent } from './pages/PerformanceMonitoring/Reports/route-performance-report/r-p-report.component';import { CostAnalysisComponent } from './pages/CostManagement/CostAnalysis/cost-analysis.component';
+import { CollectorPerformanceAnalysisComponent } from './pages/PerformanceMonitoring/CollectorPerformanceAnalysis/cp-analysis.component';
+;
 
 export const routes: Routes = [
     {
@@ -159,5 +161,13 @@ export const routes: Routes = [
   {
     path: 'r-p-report',
     component: RoutePerformanceReportComponent
+  },
+  {
+    path: 'cost-analysis', 
+    component: CostAnalysisComponent
+  },
+  {
+    path: 'perform-analysis',
+    component: CollectorPerformanceAnalysisComponent
   }
   ];

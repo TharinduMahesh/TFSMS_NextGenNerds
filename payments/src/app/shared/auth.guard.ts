@@ -8,7 +8,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   if (authService.isLoggedIn()) {
     const requiredRoles = route.data["requiredRoles"] as string[] // Get required roles from route data
-
+    console.log(requiredRoles);
     if (requiredRoles && requiredRoles.length > 0) {
       // Check if the user has any of the required roles
       if (authService.hasAnyRole(requiredRoles)) {

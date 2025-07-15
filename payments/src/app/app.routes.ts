@@ -144,7 +144,6 @@ import { SetNewPasswordComponent } from "./components/user/set-new-password/set-
 import { UserProfileComponent } from "./components/user/user-profile/user-profile.component"
 import { PaymentHistoryComponent } from "./components/paymentManager/payment-history/payment-history.component"
 import { SupplierTotalPaymentsComponent } from "./components/paymentManager/supplier-total-payments/supplier-total-payments.component"
-import path from "path"
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },

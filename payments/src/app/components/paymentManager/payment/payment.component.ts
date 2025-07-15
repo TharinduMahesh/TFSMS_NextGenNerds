@@ -1,4 +1,4 @@
-import { Component, type OnInit, type AfterViewInit } from "@angular/core"
+import { Component,  OnInit,  AfterViewInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, Validators } from "@angular/forms"
 import  { Payment } from "../../../models/payment.model"
@@ -79,6 +79,12 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       } else {
         this.paymentForm.get("leafWeight")?.setValue("")
         this.paymentForm.get("incentiveAddition")?.setValue(0)
+        // Clear incentive display fields when no supplier is selected
+        this.currentIncentiveQualityBonus = 0
+        this.currentIncentiveLoyaltyBonus = 0
+        this.currentIncentiveTotalAmount = 0
+        this.currentIncentiveUsedAmount = 0
+        this.currentIncentiveBalanceAmount = 0
       }
     })
 

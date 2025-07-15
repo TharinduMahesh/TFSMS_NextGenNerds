@@ -1,7 +1,7 @@
-import { Component, type OnInit } from "@angular/core"
+import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import  { PaymentService } from "../../../shared/services/payment.service"
-import { SupplierTotalPayment } from "../../../models/supplier-total-payment.model"
+import  { SupplierTotalPayment } from "../../../models/supplier-total-payment.model"
 
 @Component({
   selector: "app-supplier-total-payments",

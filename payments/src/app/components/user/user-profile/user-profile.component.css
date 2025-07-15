@@ -25,6 +25,9 @@ h2 {
   text-align: center;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .alert.show {
@@ -43,7 +46,42 @@ h2 {
   border: 1px solid #f5c6cb;
 }
 
-.profile-card {
+.alert-close {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: inherit;
+  padding: 0 5px;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.profile-form-section {
   background-color: #f9f9f9;
   padding: 25px;
   border-radius: 8px;
@@ -52,7 +90,6 @@ h2 {
 
 .form-group {
   margin-bottom: 20px;
-  text-align: left;
 }
 
 .form-group label {
@@ -69,7 +106,12 @@ h2 {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.form-group input[readonly] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
 }
 
 .form-group input[type="email"]:focus,
@@ -79,37 +121,40 @@ h2 {
   outline: none;
 }
 
-.form-group input[readonly] {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-}
-
 .error-message {
   color: #dc3545;
   font-size: 0.85em;
   margin-top: 5px;
 }
 
-button[type="submit"] {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1.1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 20px;
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 25px;
 }
 
-button[type="submit"]:hover {
-  background-color: #0056b3;
+.form-actions button {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-actions button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+  background-color: #218838;
   transform: translateY(-2px);
 }
 
-button[type="submit"]:disabled {
+.form-actions button[type="submit"]:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }

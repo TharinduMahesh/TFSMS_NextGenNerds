@@ -1,6 +1,6 @@
-import { Component, type OnInit } from "@angular/core"
+import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
-import { RouterModule } from "@angular/router"
+import { RouterModule,  Router } from "@angular/router" // Import Router
 import  { AuthService } from "../../shared/services/auth.service"
 import  { UserService } from "../../shared/services/user.service"
 
@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private userService: UserService,
+    private router: Router, // Inject Router
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +49,6 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.authService.deletetoken()
     this.firstName = ""
-    window.location.href = "/home"
+    this.router.navigateByUrl("/home") // Use router.navigateByUrl for navigation
   }
 }

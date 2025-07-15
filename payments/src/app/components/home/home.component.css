@@ -83,9 +83,9 @@ body {
 
 .btn {
   display: inline-block;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 7rem;
   border-radius: 30px;
-  font-weight: 600;
+  font-weight:700;
   text-decoration: none;
   transition: all 0.3s ease;
 }
@@ -94,6 +94,7 @@ body {
 .btn-primary {
   background: linear-gradient(to right, #4a9e0f, #56ae12); /* Gradient background */
   color: white;
+  
   box-shadow: 0 4px 10px rgba(74, 158, 15, 0.3); /* Subtle shadow */
 }
 

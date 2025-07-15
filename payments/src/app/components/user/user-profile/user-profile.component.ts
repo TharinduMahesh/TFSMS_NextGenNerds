@@ -1,8 +1,9 @@
-import { Component, type OnInit } from "@angular/core"
+import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
-import  { AuthService } from "../../../shared/services/auth.service"
 import { RouterModule } from "@angular/router"
+import  { UserService } from "../../../shared/services/user.service"
+import  { AuthService } from "../../../shared/services/auth.service" // Import AuthService for isLoggedIn check
 
 @Component({
   selector: "app-user-profile",
@@ -12,23 +13,24 @@ import { RouterModule } from "@angular/router"
   styleUrls: ["./user-profile.component.css"],
 })
 export class UserProfileComponent implements OnInit {
-  profileForm: FormGroup
+  userProfileForm: FormGroup
   alertMessage = ""
   showAlert = false
   alertType = "" // 'success', 'error'
   isLoading = false
-  userRole = "" // To display the user's role
+  currentUserId: string | null = null
 
   constructor(
     private fb: FormBuilder,
+    private userService: UserService,
     private authService: AuthService,
   ) {
-    this.profileForm = this.fb.group({
+    this.userProfileForm = this.fb.group({
       Email: [{ value: "", disabled: true }, [Validators.required, Validators.email]], // Email is read-only
       FirstName: ["", Validators.required],
       LastName: ["", Validators.required],
       MobileNo: ["", Validators.required],
-      Role: [{ value: "", disabled: true }], // Role is read-only
+      Role: [{ value: "", disabled: true }], // Role is read-only for user's own profile
     })
   }
 
@@ -38,40 +40,37 @@ export class UserProfileComponent implements OnInit {
 
   loadUserProfile(): void {
     this.isLoading = true
-    this.authService.getCurrentUserProfile().subscribe({
+    this.userService.getUserProfile().subscribe({
       next: (data) => {
-        this.profileForm.patchValue({
-          Email: data.email,
-          FirstName: data.firstName,
-          LastName: data.lastName,
-          MobileNo: data.mobileNo,
-          Role: data.role,
+        this.currentUserId = data.id // Use 'id' from backend DTO
+        this.userProfileForm.patchValue({
+          Email: data.email, // Use 'email' from backend DTO
+          FirstName: data.firstName, // Use 'firstName' from backend DTO
+          LastName: data.lastName, // Use 'lastName' from backend DTO
+          MobileNo: data.mobileNo, // Use 'mobileNo' from backend DTO
+          Role: data.role, // Use 'role' from backend DTO
         })
-        this.userRole = data.role // Store role for display
         this.isLoading = false
       },
       error: (err) => {
         console.error("Error loading user profile:", err)
-        this.showAlertMessage("Failed to load profile.", "error")
+        this.showAlertMessage("Failed to load user profile.", "error")
         this.isLoading = false
       },
     })
   }
 
   onSubmit(): void {
-    this.isLoading = true
-    // Ensure only editable fields are sent
-    const updateData = {
-      FirstName: this.profileForm.get("FirstName")?.value,
-      LastName: this.profileForm.get("LastName")?.value,
-      MobileNo: this.profileForm.get("MobileNo")?.value,
-    }
-
-    if (this.profileForm.valid) {
-      this.authService.updateCurrentUserProfile(updateData).subscribe({
-        next: () => {
+    if (this.userProfileForm.valid) {
+      this.isLoading = true
+      // Use getRawValue() to get values from disabled fields as well
+      const { FirstName, LastName, MobileNo } = this.userProfileForm.getRawValue()
+      this.userService.updateUserProfile({ FirstName, LastName, MobileNo }).subscribe({
+        next: (res) => {
           this.showAlertMessage("Profile updated successfully!", "success")
           this.isLoading = false
+          // Optionally reload profile to ensure data consistency
+          this.loadUserProfile()
         },
         error: (err) => {
           console.error("Error updating profile:", err)
@@ -81,7 +80,6 @@ export class UserProfileComponent implements OnInit {
       })
     } else {
       this.showAlertMessage("Please fill in all required fields correctly.", "error")
-      this.isLoading = false
     }
   }
 
@@ -94,9 +92,7 @@ export class UserProfileComponent implements OnInit {
     }, 5000)
   }
 
-  // Helper to check if a form control has a specific error
-  hasError(controlName: string, errorName: string): boolean {
-    const control = this.profileForm.get(controlName)
-    return !!control?.hasError(errorName) && (control?.dirty || control?.touched)
+  closeAlert() {
+    this.showAlert = false
   }
 }

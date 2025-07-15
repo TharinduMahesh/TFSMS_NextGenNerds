@@ -1,25 +1,17 @@
-import { Component, type OnInit } from "@angular/core"
+import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule } from "@angular/forms"
 import { RouterModule } from "@angular/router"
 import { HeaderComponent } from "../../header/header.component"
 import { FooterComponent } from "../../footer/footer.component"
-import { FormBuilder, Validators } from "@angular/forms"
-import { AuthService } from "../../../shared/services/auth.service"
-import { Router } from "@angular/router"
+import {  FormBuilder, Validators } from "@angular/forms"
+import  { AuthService } from "../../../shared/services/auth.service"
+import  { Router } from "@angular/router"
 
 @Component({
   selector: "app-sign-in",
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    HeaderComponent,
-    FooterComponent,
-    ReactiveFormsModule
-
-  ],
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, FooterComponent, ReactiveFormsModule],
   templateUrl: "./sign-in.component.html",
   styleUrls: ["./sign-in.component.css"],
 })
@@ -46,13 +38,12 @@ export class SignInComponent implements OnInit {
     // Only check login status in browser environment
     if (typeof window !== "undefined" && this.service.isLoggedIn()) {
       this.router.navigateByUrl("/dashboard")
-      const signupSuccess = localStorage.getItem("signupSuccess")
-      if (signupSuccess) {
-        this.successMessage = signupSuccess
-        localStorage.removeItem("signupSuccess")
-      }
     }
-
+    const signupSuccess = localStorage.getItem("signupSuccess")
+    if (signupSuccess) {
+      this.successMessage = signupSuccess
+      localStorage.removeItem("signupSuccess")
+    }
   }
 
   hasDisplayError(controlName: string): boolean {
@@ -63,33 +54,26 @@ export class SignInComponent implements OnInit {
   onSubmit() {
     this.isSubmitted = true
     this.successMessage = null
-
     if (this.form.valid) {
-      localStorage.setItem("Username", this.form.value.Email);
-      if (this.form.value.password === "tfsms@123") {
-        alert("Please change your password after signing in for the first time.");
-        this.router.navigateByUrl("/set-password");
-      } else {
-        this.service.signin(this.form.value).subscribe({
-          next: (res: any) => {
-            this.service.savetoken(res.token)
-            this.successMessage = "Sign in successful! Redirecting to your dashboard..."
-
-            // Delay redirect to show success message
-            setTimeout(() => {
-              this.router.navigateByUrl("/dashboard")
-            }, 1500)
-          },
-          error: (err) => {
-            if (err.status == 400) {
-              alert("Invalid username or password")
-            } else {
-              alert("Something went wrong. Please try again.")
-            }
-          },
-        })
-      }
-
+      // Removed the static password check and redirect.
+      // Users created by admin must use the email link to set their password.
+      this.service.signin(this.form.value).subscribe({
+        next: (res: any) => {
+          this.service.savetoken(res.token)
+          this.successMessage = "Sign in successful! Redirecting to your dashboard..."
+          // Delay redirect to show success message
+          setTimeout(() => {
+            this.router.navigateByUrl("/dashboard")
+          }, 1500)
+        },
+        error: (err) => {
+          if (err.status == 400) {
+            alert("Invalid username or password")
+          } else {
+            alert("Something went wrong. Please try again.")
+          }
+        },
+      })
     }
   }
 

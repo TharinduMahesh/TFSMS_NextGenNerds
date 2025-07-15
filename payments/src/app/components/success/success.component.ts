@@ -1,4 +1,4 @@
-import { Component, type OnInit } from "@angular/core"
+import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
 import { RouterModule } from "@angular/router"
@@ -6,7 +6,7 @@ import { HeaderComponent } from "../header/header.component"
 import { FooterComponent } from "../footer/footer.component"
 import  { Router } from "@angular/router"
 import  { AuthService } from "../../shared/services/auth.service"
-import { UserService } from "../../shared/services/user.service"
+import  { UserService } from "../../shared/services/user.service"
 
 @Component({
   selector: "app-success",
@@ -32,7 +32,6 @@ export class SuccessComponent implements OnInit {
       this.router.navigateByUrl("/sign-in")
       return
     }
-
     this.userService.getUserProfile().subscribe({
       next: (res: any) => {
         this.firstName = res.firstName || ""
@@ -57,7 +56,6 @@ export class SuccessComponent implements OnInit {
   }
 
   menuOpen = false
-
   toggleMenu(): void {
     console.log("Hamburger menu clicked!")
     this.menuOpen = !this.menuOpen

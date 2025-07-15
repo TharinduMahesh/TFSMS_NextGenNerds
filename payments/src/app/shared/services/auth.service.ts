@@ -229,7 +229,7 @@ export class AuthService {
 
   // --- New Admin and Password Reset Methods ---
 
-  // Admin creates a new user
+  // Admin creates a new user (no password sent from frontend)
   createUserByAdmin(userData: { Email: string; FirstName: string; LastName: string; MobileNo: string; Role: string }) {
     return this.http.post<any>(`${this.baseUrl}/admin/users`, userData)
   }
@@ -255,23 +255,7 @@ export class AuthService {
   }
 
   // User sets a new password using a one-time token
-  // setNewPassword(token: string, newPassword: string) {
-  //   return this.http.post<any>(`${this.baseUrl}/set-password`, { Token: token, NewPassword: newPassword })
-  // }
-
-  setNewPassword(data: { token: string; newPassword: string }) {
-  return this.http.post<any>(`${this.baseUrl}/set-password`, data);
-}
-
-  // --- New User Profile Methods ---
-
-  // Get current user's profile
-  getCurrentUserProfile() {
-    return this.http.get<any>(`${this.baseUrl}/UserProfile`)
-  }
-
-  // Update current user's profile
-  updateCurrentUserProfile(userData: { FirstName: string; LastName: string; MobileNo: string }) {
-    return this.http.put<any>(`${this.baseUrl}/UserProfile`, userData)
+  setNewPassword(data: { Token: string; NewPassword: string }) {
+    return this.http.post<any>(`${this.baseUrl}/set-password`, data)
   }
 }

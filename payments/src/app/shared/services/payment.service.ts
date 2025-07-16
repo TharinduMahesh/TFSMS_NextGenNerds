@@ -406,7 +406,7 @@ import { map, catchError } from "rxjs/operators"
 import  { Payment } from "../../models/payment.model"
 import  { PaymentCalculationRequest, PaymentCalculationResult } from "../../models/payment-calculation.model"
 import { environment } from "../../shared/environments/environment"
-import  { SupplierTotalPayment } from "../../models/supplier-total-payment.model"
+import  { SupplierTotalPaymentRecord } from "../../models/supplier-total-payment.model"
 import  { PaymentHistory } from "../../models/payment-history.model"
 
 @Injectable({
@@ -748,8 +748,8 @@ export class PaymentService {
   }
 
   // Method to get total payments by supplier
-  getSupplierTotalPayments(): Observable<SupplierTotalPayment[]> {
-    return this.http.get<SupplierTotalPayment[]>(`${this.apiUrl}/supplier-totals`).pipe(
+  getSupplierTotalPayments(): Observable<SupplierTotalPaymentRecord[]> {
+    return this.http.get<SupplierTotalPaymentRecord[]>(`${this.apiUrl}/supplier-totals`).pipe(
       catchError((error) => {
         console.error("Error fetching supplier total payments:", error)
         return of([]) // Return an empty array on error

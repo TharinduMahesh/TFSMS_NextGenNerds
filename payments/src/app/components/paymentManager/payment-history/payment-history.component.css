@@ -1,7 +1,12 @@
 /* Basic styling for the payment history table */
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1000px; /* Updated max-width */
+  margin: 20px auto; /* Updated margin */
+  padding: 20px; /* Added padding */
+  font-family: Arial, sans-serif; /* Added font-family */
+  background-color: #f9f9f9; /* Added background-color */
+  border-radius: 8px; /* Added border-radius */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added box-shadow */
 }
 
 .text-center {
@@ -99,10 +104,63 @@
   font-size: 0.875rem;
 }
 
-.font-medium {
-  font-weight: 500;
-}
-
 .text-gray-900 {
   color: #111827;
+}
+
+h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.loading-message,
+.error-message,
+.no-data-message {
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.loading-message {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+.error-message {
+  background-color: #ffe0b2;
+  color: #e65100;
+}
+
+.no-data-message {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.payment-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.payment-history-table th,
+.payment-history-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.payment-history-table th {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+
+.payment-history-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.payment-history-table tbody tr:hover {
+  background-color: #ddd;
 }

@@ -402,14 +402,14 @@
             <label>Gross Amount (LKR):</label>
             <input type="number" formControlName="grossAmount" readonly />
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label>Advance Deduction (LKR):</label>
             <input type="number" formControlName="advanceDeduction" />
           </div>
           <div class="form-group">
             <label>Debt Deduction (LKR):</label>
             <input type="number" formControlName="debtDeduction" />
-          </div>
+          </div> -->
           <div class="form-group">
             <label>Incentive Addition (LKR):</label>
             <input type="number" formControlName="incentiveAddition" />
@@ -456,7 +456,7 @@
             <th>Leaf Weight</th>
             <th>Rate</th>
             <th>Gross Amount</th>
-            <th>Deductions</th>
+            <!-- <th>Deductions</th> -->
             <th>Incentives</th>
             <th>Net Amount</th>
             <th>Method</th>
@@ -472,7 +472,7 @@
               <td>{{ payment.LeafWeight }} kg</td>
               <td>LKR {{ payment.Rate | number }}</td>
               <td>LKR {{ payment.GrossAmount | number }}</td>
-              <td>LKR {{ ((payment.AdvanceDeduction || 0) + (payment.DebtDeduction || 0)) | number }}</td>
+              <!-- <td>LKR {{ ((payment.AdvanceDeduction || 0) + (payment.DebtDeduction || 0)) | number }}</td> -->
               <td>LKR {{ (payment.IncentiveAddition || 0) | number }}</td>
               <td>LKR {{ payment.NetAmount | number }}</td>
               <td>{{ payment.PaymentMethod }}</td>

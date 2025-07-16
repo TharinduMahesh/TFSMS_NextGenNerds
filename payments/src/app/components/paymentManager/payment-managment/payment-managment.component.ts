@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaymentComponent } from '../payment/payment.component';
 import { IncentiveComponent } from '../incentive/incentive.component';
-import { DebtComponent } from '../debt/debt.component';
-import { AdvanceComponent } from '../advance/advance.component';
+// import { DebtComponent } from '../debt/debt.component';
+// import { AdvanceComponent } from '../advance/advance.component';
 
 @Component({
   selector: 'app-payment-managment',
@@ -15,8 +15,7 @@ import { AdvanceComponent } from '../advance/advance.component';
     ReactiveFormsModule,
     PaymentComponent,
     IncentiveComponent,
-    DebtComponent,
-    AdvanceComponent
+    
   ],
   templateUrl: './payment-managment.component.html',
   styleUrls: ['./payment-managment.component.css']

@@ -1,36 +1,164 @@
 <div class="container mx-auto p-6">
-  <h2 class="text-2xl font-bold mb-6 text-gray-800">Supplier Total Payments Summary</h2>
-  <div *ngIf="loading" class="text-center text-gray-500">Loading payments...</div>
-  <div *ngIf="error" class="text-center text-red-500">{{ error }}</div>
-  <div *ngIf="!loading && !error">
-    <div *ngIf="supplierTotals.length === 0" class="text-center text-gray-500 py-8">
-      No total payment data available.
+  <h2 class="text-2xl font-bold mb-6 text-gray-800">Supplier Total Payments Management</h2>
+
+  <!-- Section for creating new records -->
+  <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+    <h3 class="text-xl font-semibold mb-4 text-gray-700">Create New Total Payment Record</h3>
+    <form (ngSubmit)="createRecord()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="supplierSelect" class="block text-sm font-medium text-gray-700">Supplier</label>
+        <select
+          id="supplierSelect"
+          name="supplierSelect"
+          [(ngModel)]="newRecord.supplierId"
+          (change)="onSupplierSelect($event)"
+          required
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        >
+          <option [ngValue]="0" disabled>Select a supplier</option>
+          <option *ngFor="let supplier of suppliers" [ngValue]="supplier.SupplierId">
+            {{ supplier.Name }} (ID: {{ supplier.SupplierId }})
+          </option>
+        </select>
+        <div *ngIf="loadingSuppliers" class="text-sm text-gray-500 mt-1">Loading suppliers...</div>
+        <div *ngIf="errorSuppliers" class="text-sm text-red-500 mt-1">{{ errorSuppliers }}</div>
+      </div>
+
+      <div>
+        <label for="totalAmount" class="block text-sm font-medium text-gray-700">Total Amount</label>
+        <input
+          type="number"
+          id="totalAmount"
+          name="totalAmount"
+          [(ngModel)]="newRecord.totalAmount"
+          required
+          step="0.01"
+          class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div>
+        <label for="periodStartDate" class="block text-sm font-medium text-gray-700">Period Start Date</label>
+        <input
+          type="date"
+          id="periodStartDate"
+          name="periodStartDate"
+          [(ngModel)]="newRecord.periodStartDate"
+          required
+          class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div>
+        <label for="periodEndDate" class="block text-sm font-medium text-gray-700">Period End Date</label>
+        <input
+          type="date"
+          id="periodEndDate"
+          name="periodEndDate"
+          [(ngModel)]="newRecord.periodEndDate"
+          required
+          class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div class="md:col-span-2 flex justify-end">
+        <button
+          type="submit"
+          [disabled]="isCreatingRecord || newRecord.supplierId === 0 || newRecord.totalAmount <= 0"
+          class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+        >
+          {{ isCreatingRecord ? 'Creating...' : 'Create Record' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Section for Managed Supplier Total Payment Records -->
+  <h3 class="text-2xl font-bold mb-6 text-gray-800">Managed Supplier Total Payment Records</h3>
+  <div *ngIf="loadingRecords" class="text-center text-gray-500">Loading managed records...</div>
+  <div *ngIf="errorRecords" class="text-center text-red-500">{{ errorRecords }}</div>
+  <div *ngIf="!loadingRecords && !errorRecords">
+    <div *ngIf="supplierRecords.length === 0" class="text-center text-gray-500 py-8">
+      No managed total payment records available. Create one above!
     </div>
-    <div *ngIf="supplierTotals.length > 0" class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+    <div *ngIf="supplierRecords.length > 0" class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Supplier ID
+              Record ID
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Supplier Name
+              Supplier
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Total Amount Paid
+              Amount
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Period
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Record Date
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Actions
             </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let supplier of supplierTotals">
+          <tr *ngFor="let record of supplierRecords">
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              {{ supplier.supplierId }}
+              {{ record.id }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              {{ supplier.supplierName }}
+              {{ record.supplierName }} (ID: {{ record.supplierId }})
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              {{ supplier.totalAmountPaid | currency:'LKR':'symbol':'1.2-2' }}
+              {{ record.totalAmount | currency:'LKR':'symbol':'1.2-2' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ record.periodStartDate | date:'shortDate' }} - {{ record.periodEndDate | date:'shortDate' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ record.recordDate | date:'shortDate' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <span
+                [ngClass]="{
+                  'px-2 inline-flex text-xs leading-5 font-semibold rounded-full': true,
+                  'bg-green-100 text-green-800': record.status === 'Done',
+                  'bg-yellow-100 text-yellow-800': record.status === 'Pending',
+                  'bg-red-100 text-red-800': record.status === 'Undone'
+                }"
+              >
+                {{ record.status }}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <button
+                *ngIf="record.status !== 'Done'"
+                (click)="updateRecordStatus(record, 'Done')"
+                class="text-indigo-600 hover:text-indigo-900 mr-2"
+              >
+                Mark Done
+              </button>
+              <button
+                *ngIf="record.status !== 'Pending'"
+                (click)="updateRecordStatus(record, 'Pending')"
+                class="text-yellow-600 hover:text-yellow-900 mr-2"
+              >
+                Mark Pending
+              </button>
+              <button
+                *ngIf="record.status !== 'Undone'"
+                (click)="updateRecordStatus(record, 'Undone')"
+                class="text-red-600 hover:text-red-900"
+              >
+                Mark Undone
+              </button>
             </td>
           </tr>
         </tbody>

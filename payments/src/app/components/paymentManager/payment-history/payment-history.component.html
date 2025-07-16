@@ -17,6 +17,12 @@
               Payment ID
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Source Type
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Source ID
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Action
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -37,6 +43,12 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               {{ record.paymentId }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ record.sourceType || 'N/A' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ record.sourceId || 'N/A' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               {{ record.action }}

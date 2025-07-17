@@ -1,12 +1,12 @@
-import { Component, type OnInit } from "@angular/core"
-import { CommonModule } from "@angular/common"
+import { Component,  OnInit } from "@angular/core"
+import { CommonModule, DatePipe } from "@angular/common" // Import DatePipe
 import  { PaymentService } from "../../../shared/services/payment.service"
 import  { PaymentHistory } from "../../../models/payment-history.model"
 
 @Component({
   selector: "app-payment-history",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DatePipe], // Add DatePipe here
   templateUrl: "./payment-history.component.html",
   styleUrls: ["./payment-history.component.css"],
 })

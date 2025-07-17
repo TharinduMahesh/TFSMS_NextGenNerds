@@ -1,3 +1,5 @@
+
+
 // import { Injectable } from "@angular/core"
 // import  { HttpClient } from "@angular/common/http"
 // import {  Observable, throwError, of } from "rxjs"
@@ -5,8 +7,8 @@
 // import  { Payment } from "../../models/payment.model"
 // import  { PaymentCalculationRequest, PaymentCalculationResult } from "../../models/payment-calculation.model"
 // import { environment } from "../../shared/environments/environment"
-// import { SupplierTotalPayment } from "../../models/supplier-total-payment.model"
-// import { PaymentHistory } from "../../models/payment-history.model"
+// import  { SupplierTotalPaymentRecord } from "../../models/supplier-total-payment.model"
+// import  { PaymentHistory } from "../../models/payment-history.model"
 
 // @Injectable({
 //   providedIn: "root",
@@ -73,16 +75,11 @@
 //   getPayment(id: number): Observable<Payment | null> {
 //     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
 //       map((response) => {
-//         // Handle the response based on its structure
-//         if (response && typeof response === "object") {
-//           // Handle wrapped response
-//           if (response.data) {
-//             return response.data
-//           }
-//           // Direct response
-//           return response
+//         // Handle wrapped response
+//         if (response && response.data) {
+//           return response.data
 //         }
-//         return null
+//         return response
 //       }),
 //       catchError((error) => {
 //         console.error(`Error fetching payment ${id}:`, error)
@@ -92,7 +89,7 @@
 //   }
 
 //   getPaymentsBySupplier(SupplierId: number): Observable<Payment[]> {
-//     return this.http.get<any>(`${this.apiUrl}/Supplier/${SupplierId}`).pipe(
+//     return this.http.get<any>(`${this.apiUrl}/supplier/${SupplierId}`).pipe(
 //       map((response) => {
 //         if (Array.isArray(response)) {
 //           return response
@@ -120,7 +117,6 @@
 //   getPaymentsByDateRange(startDate: string, endDate: string): Observable<Payment[]> {
 //     const encodedStartDate = encodeURIComponent(startDate)
 //     const encodedEndDate = encodeURIComponent(endDate)
-
 //     return this.http.get<any>(`${this.apiUrl}/date-range?startDate=${encodedStartDate}&endDate=${encodedEndDate}`).pipe(
 //       map((response) => {
 //         if (Array.isArray(response)) {
@@ -300,18 +296,15 @@
 //   getPaymentSummary(startDate?: string, endDate?: string): Observable<any> {
 //     let url = `${this.apiUrl}/summary`
 //     const params: string[] = []
-
 //     if (startDate) {
 //       params.push(`startDate=${encodeURIComponent(startDate)}`)
 //     }
 //     if (endDate) {
 //       params.push(`endDate=${encodeURIComponent(endDate)}`)
 //     }
-
 //     if (params.length > 0) {
 //       url += `?${params.join("&")}`
 //     }
-
 //     return this.http.get<any>(url).pipe(
 //       map((response) => {
 //         // Handle wrapped response
@@ -329,11 +322,9 @@
 
 //   exportPayments(format: string, startDate?: string, endDate?: string): Observable<Blob> {
 //     let url = `${this.apiUrl}/export?format=${encodeURIComponent(format)}`
-
 //     if (startDate && endDate) {
 //       url += `&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`
 //     }
-
 //     return this.http.get(url, { responseType: "blob" }).pipe(
 //       catchError((error) => {
 //         console.error("Error exporting payments:", error)
@@ -342,7 +333,6 @@
 //     )
 //   }
 
-//   // Additional utility methods
 //   validatePayment(payment: Payment): Observable<{ isValid: boolean; errors: string[] }> {
 //     return this.http.post<any>(`${this.apiUrl}/validate`, payment).pipe(
 //       map((response) => {
@@ -358,27 +348,9 @@
 //     )
 //   }
 
-//   // getPaymentHistory(paymentId: number): Observable<any[]> {
-//   //   return this.http.get<any>(`${this.apiUrl}/${paymentId}/history`).pipe(
-//   //     map((response) => {
-//   //       if (Array.isArray(response)) {
-//   //         return response
-//   //       } else if (response && Array.isArray(response.$values)) {
-//   //         return response.$values
-//   //       } else if (response && Array.isArray(response.data)) {
-//   //         return response.data
-//   //       }
-//   //       return []
-//   //     }),
-//   //     catchError((error) => {
-//   //       console.error(`Error fetching payment history for ${paymentId}:`, error)
-//   //       return of([])
-//   //     }),
-//   //   )
-//   // }
-
-//   getSupplierTotalPayments(): Observable<SupplierTotalPayment[]> {
-//     return this.http.get<SupplierTotalPayment[]>(`${this.apiUrl}/supplier-totals`).pipe(
+//   // Method to get total payments by supplier
+//   getSupplierTotalPayments(): Observable<SupplierTotalPaymentRecord[]> {
+//     return this.http.get<SupplierTotalPaymentRecord[]>(`${this.apiUrl}/supplier-totals`).pipe(
 //       catchError((error) => {
 //         console.error("Error fetching supplier total payments:", error)
 //         return of([]) // Return an empty array on error
@@ -386,7 +358,7 @@
 //     )
 //   }
 
-//   // Add this method to your PaymentService class
+//   // Method to get all payment history records
 //   getPaymentHistory(): Observable<PaymentHistory[]> {
 //     return this.http.get<PaymentHistory[]>(`${this.apiUrl}/history`).pipe(
 //       catchError((error) => {
@@ -396,8 +368,27 @@
 //     )
 //   }
 
-  
+//   // Method to get history for a specific payment (if needed, currently commented out in your provided code)
+//   getPaymentHistoryById(paymentId: number): Observable<any[]> {
+//     return this.http.get<any>(`${this.apiUrl}/${paymentId}/history`).pipe(
+//       map((response) => {
+//         if (Array.isArray(response)) {
+//           return response
+//         } else if (response && Array.isArray(response.$values)) {
+//           return response.$values
+//         } else if (response && Array.isArray(response.data)) {
+//           return response.data
+//         }
+//         return []
+//       }),
+//       catchError((error) => {
+//         console.error(`Error fetching payment history for ${paymentId}:`, error)
+//         return of([])
+//       }),
+//     )
+//   }
 // }
+
 
 import { Injectable } from "@angular/core"
 import  { HttpClient } from "@angular/common/http"
@@ -407,7 +398,7 @@ import  { Payment } from "../../models/payment.model"
 import  { PaymentCalculationRequest, PaymentCalculationResult } from "../../models/payment-calculation.model"
 import { environment } from "../../shared/environments/environment"
 import  { SupplierTotalPaymentRecord } from "../../models/supplier-total-payment.model"
-import  { PaymentHistory } from "../../models/payment-history.model"
+import  { PaymentHistory } from "../../models/payment-history.model" // Ensure this is imported
 
 @Injectable({
   providedIn: "root",
@@ -758,6 +749,25 @@ export class PaymentService {
   }
 
   // Method to get all payment history records
+  // getPaymentHistory(): Observable<PaymentHistory[]> {
+  //   return this.http.get<PaymentHistory[]>(`${this.apiUrl}/history`).pipe(
+  //     map((response) => {
+  //       // Handle .NET Core JSON serialization format for arrays
+  //       if (Array.isArray(response)) {
+  //         return response
+  //       } else if (response && Array.isArray(response.$values)) {
+  //         return response.$values
+  //       }
+  //       return []
+  //     }),
+  //     catchError((error) => {
+  //       console.error("Error fetching payment history:", error)
+  //       return of([]) // Return an empty array on error
+  //     }),
+  //   )
+  // }
+
+  //  Method to get all payment history records
   getPaymentHistory(): Observable<PaymentHistory[]> {
     return this.http.get<PaymentHistory[]>(`${this.apiUrl}/history`).pipe(
       catchError((error) => {
@@ -768,7 +778,7 @@ export class PaymentService {
   }
 
   // Method to get history for a specific payment (if needed, currently commented out in your provided code)
-  getPaymentHistoryById(paymentId: number): Observable<any[]> {
+  getPaymentHistoryById(paymentId: number): Observable<PaymentHistory[]> {
     return this.http.get<any>(`${this.apiUrl}/${paymentId}/history`).pipe(
       map((response) => {
         if (Array.isArray(response)) {

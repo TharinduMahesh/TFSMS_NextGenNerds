@@ -1,7 +1,6 @@
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule, DatePipe } from "@angular/common"
 import { FormsModule } from "@angular/forms" // Import FormsModule for ngModel
-// Removed: import type { SupplierTotalPayment } from "../../../models/supplier-total-payment.model" // This is the summary DTO
 import  { SupplierTotalPaymentRecord } from "../../../models/supplier-total-payment.model" // New record model
 import  { SupplierTotalPaymentRecordService } from "../../../shared/services/supplier-total-payment-record.service"
 import  { Supplier } from "../../../models/supplier.model" // Assuming you have a Supplier model
@@ -17,44 +16,33 @@ import  { SupplierService } from "../../../shared/services/supplier.service" // 
 export class SupplierTotalPaymentsComponent implements OnInit {
   supplierRecords: SupplierTotalPaymentRecord[] = [] // Managed records from new service
   suppliers: Supplier[] = [] // List of all suppliers for dropdown
-
-  // Removed: loadingSummaries = false
   loadingRecords = false
   loadingSuppliers = false
-  // Removed: errorSummaries: string | null = null
   errorRecords: string | null = null
   errorSuppliers: string | null = null
 
   // For new record creation form
   newRecord: SupplierTotalPaymentRecord = {
-    id: 0,
-    supplierId: 0,
-    supplierName: "",
-    totalAmount: 0,
-    status: "Pending",
-    recordDate: new Date(),
-    periodStartDate: new Date(),
-    periodEndDate: new Date(),
-    createdBy: "User", // Placeholder, replace with actual user
-    createdDate: new Date(),
-    updatedBy: "User", // Placeholder, replace with actual user
-    updatedDate: new Date(),
+    Id: 0,
+    SupplierId: 0,
+    SupplierName: "",
+    TotalAmount: 0,
+    Status: "Pending",
+    PaymentMethod: "Bank Transfer", // Default payment method
+    BankAccount: "", // Default bank account
+    CreatedDate: new Date(),
   }
   isCreatingRecord = false
 
   constructor(
-    // Removed: private paymentService: PaymentService,
     private supplierTotalPaymentRecordService: SupplierTotalPaymentRecordService,
     private supplierService: SupplierService, // Inject SupplierService
   ) {}
 
   ngOnInit(): void {
-    // Removed: this.loadSupplierSummaries()
     this.loadSupplierRecords()
     this.loadSuppliers()
   }
-
-  // Removed: loadSupplierSummaries() method
 
   loadSupplierRecords(): void {
     this.loadingRecords = true
@@ -92,62 +80,95 @@ export class SupplierTotalPaymentsComponent implements OnInit {
     const selectedId = +(event.target as HTMLSelectElement).value
     const selectedSupplier = this.suppliers.find((s) => s.SupplierId === selectedId)
     if (selectedSupplier) {
-      this.newRecord.supplierId = selectedSupplier.SupplierId
-      this.newRecord.supplierName = selectedSupplier.Name
-      // Removed: Logic to pre-fill totalAmount from summary
+      this.newRecord.SupplierId = selectedSupplier.SupplierId
+      this.newRecord.SupplierName = selectedSupplier.Name
+      this.newRecord.BankAccount = selectedSupplier.BankAccount || "" // Set bank account
+    } else {
+      this.newRecord.SupplierId = 0
+      this.newRecord.SupplierName = ""
+      this.newRecord.BankAccount = ""
     }
   }
 
   createRecord(): void {
     this.isCreatingRecord = true
+    // Ensure SupplierName is set before sending
+    const selectedSupplier = this.suppliers.find((s) => s.SupplierId === this.newRecord.SupplierId)
+    if (selectedSupplier) {
+      this.newRecord.SupplierName = selectedSupplier.Name
+    } else {
+      this.errorRecords = "Please select a valid supplier."
+      this.isCreatingRecord = false
+      return
+    }
+
     this.supplierTotalPaymentRecordService.createSupplierTotalPaymentRecord(this.newRecord).subscribe({
       next: (record) => {
         if (record) {
           this.supplierRecords.push(record)
           this.resetNewRecordForm()
-          this.loadSupplierRecords() // Reload to ensure data consistency
+          this.loadSupplierRecords() // Reload to ensure data consistency and proper display
         }
         this.isCreatingRecord = false
       },
       error: (err) => {
         console.error("Error creating record:", err)
         this.isCreatingRecord = false
-        // Handle error display
+        this.errorRecords = "Failed to create record. Please ensure all fields are valid and supplier exists."
       },
     })
   }
 
   updateRecordStatus(record: SupplierTotalPaymentRecord, newStatus: string): void {
-    record.status = newStatus
-    record.updatedDate = new Date()
-    record.updatedBy = "User" // Placeholder
+    const originalStatus = record.Status // Store original status for rollback
+    record.Status = newStatus
     this.supplierTotalPaymentRecordService.updateSupplierTotalPaymentRecord(record).subscribe({
       next: () => {
-        console.log(`Record ${record.id} status updated to ${newStatus}`)
+        console.log(`Record ${record.Id} status updated to ${newStatus}`)
         this.loadSupplierRecords() // Reload to ensure history is updated and data is consistent
       },
       error: (err) => {
-        console.error(`Error updating record ${record.id} status:`, err)
-        // Revert status if update fails
-        record.status = this.supplierRecords.find((r) => r.id === record.id)?.status || "Pending"
+        console.error(`Error updating record ${record.Id} status:`, err)
+        this.errorRecords = `Failed to update status for record ${record.Id}.`
+        record.Status = originalStatus // Revert status if update fails
+      },
+    })
+  }
+
+  exportRecords(format: string): void {
+    this.loadingRecords = true
+    this.errorRecords = null
+    this.supplierTotalPaymentRecordService.exportSupplierTotalPaymentRecords(format).subscribe({
+      next: (blob) => {
+        const filename = `supplier-total-payments-export.${format.toLowerCase() === "excel" ? "csv" : format.toLowerCase()}`
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = filename
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+        this.loadingRecords = false
+      },
+      error: (err) => {
+        console.error("Error exporting records:", err)
+        this.errorRecords = "Failed to export records. Please try again."
+        this.loadingRecords = false
       },
     })
   }
 
   resetNewRecordForm(): void {
     this.newRecord = {
-      id: 0,
-      supplierId: 0,
-      supplierName: "",
-      totalAmount: 0,
-      status: "Pending",
-      recordDate: new Date(),
-      periodStartDate: new Date(),
-      periodEndDate: new Date(),
-      createdBy: "User",
-      createdDate: new Date(),
-      updatedBy: "User",
-      updatedDate: new Date(),
+      Id: 0,
+      SupplierId: 0,
+      SupplierName: "",
+      TotalAmount: 0,
+      Status: "Pending",
+      PaymentMethod: "Bank Transfer",
+      BankAccount: "",
+      CreatedDate: new Date(),
     }
   }
 }

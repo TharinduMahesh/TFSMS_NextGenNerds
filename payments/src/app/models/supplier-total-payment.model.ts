@@ -1,8 +1,10 @@
 export interface SupplierTotalPaymentRecord {
-  id: number
-  supplierId: number
-  supplierName: string
-  totalAmount: number
-  status: string // "Pending", "Done", "Undone"
-  createdDate: Date
+  Id: number
+  SupplierId: number
+  SupplierName: string
+  TotalAmount: number
+  Status: string // "Pending", "Done", "Undone"
+  CreatedDate: Date
+  PaymentMethod?: string
+  BankAccount?: string
 }

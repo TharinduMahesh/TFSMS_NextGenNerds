@@ -1,10 +1,9 @@
 export interface PaymentHistory {
-  historyId: number
-  paymentId: number // Still relevant for history originating from a Payment
-  sourceId?: number // New: ID of the source entity (e.g., SupplierTotalPaymentRecord.Id)
-  sourceType?: string // New: Type of the source entity (e.g., "Payment", "SupplierTotalPaymentRecord")
-  action: string
-  actionDate: Date
-  actionBy: string
-  details: string
+  HistoryId: number
+  PaymentId?: number // Made nullable
+  SupplierId: number // Already present in your model
+  Action: string // Renamed from 'action' to match C# casing
+  ActionDate: Date // Renamed from 'actionDate' to match C# casing
+  Details: string // Renamed from 'details' to match C# casing
+  ActionBy: string // New field
 }

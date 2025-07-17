@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core"
 import  { HttpClient } from "@angular/common/http"
-import {  Observable, of } from "rxjs"
+import {  Observable, of, throwError } from "rxjs"
 import { catchError } from "rxjs/operators"
 import { environment } from "../../shared/environments/environment"
 import  { SupplierTotalPaymentRecord } from "../../models/supplier-total-payment.model"
@@ -40,9 +40,9 @@ export class SupplierTotalPaymentRecordService {
   }
 
   updateSupplierTotalPaymentRecord(record: SupplierTotalPaymentRecord): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${record.id}`, record).pipe(
+    return this.http.put<void>(`${this.apiUrl}/${record.Id}`, record).pipe(
       catchError((error) => {
-        console.error(`Error updating supplier total payment record ${record.id}:`, error)
+        console.error(`Error updating supplier total payment record ${record.Id}:`, error)
         return of(undefined) // Return undefined on error for void observable
       }),
     )
@@ -53,6 +53,16 @@ export class SupplierTotalPaymentRecordService {
       catchError((error) => {
         console.error(`Error deleting supplier total payment record ${id}:`, error)
         return of(undefined)
+      }),
+    )
+  }
+
+  exportSupplierTotalPaymentRecords(format: string): Observable<Blob> {
+    const url = `${this.apiUrl}/export?format=${encodeURIComponent(format)}`
+    return this.http.get(url, { responseType: "blob" }).pipe(
+      catchError((error) => {
+        console.error("Error exporting supplier total payment records:", error)
+        return throwError(() => new Error("Failed to export supplier total payment records"))
       }),
     )
   }

@@ -57,7 +57,7 @@ class _WeighingPageState extends State<WeighingPage> {
                       context,
                       MaterialPageRoute(
                         builder: (_) => WeighingDetailPage(
-                          requestId: r.id!,
+                          requestId: r.date.millisecondsSinceEpoch.toString(),
                           initialSupper: r.supperLeafWeight,
                           initialNormal: r.normalLeafWeight,
                         ),

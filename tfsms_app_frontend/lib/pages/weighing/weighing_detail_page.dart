@@ -38,7 +38,7 @@ class _WeighingDetailPageState extends State<WeighingDetailPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => OrderAcceptedPage(requestId: widget.requestId),
+          builder: (_) => const OrderAcceptedPage(),
         ),
       );
     } else {

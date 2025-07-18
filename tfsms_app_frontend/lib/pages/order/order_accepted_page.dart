@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OrderAcceptedPage extends StatelessWidget {
-  final String requestId;
-  const OrderAcceptedPage({super.key, required this.requestId});
+  const OrderAcceptedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,11 +11,9 @@ class OrderAcceptedPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.check_circle_outline, color: Colors.green, size: 80),
-            const SizedBox(height: 20),
-            Text(
-              'Weighing confirmed!\nRequest ID: $requestId',
-              style: const TextStyle(fontSize: 20),
+            const Text(
+              'You Accepted this Order.',
+              style: TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),

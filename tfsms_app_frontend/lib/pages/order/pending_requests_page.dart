@@ -47,11 +47,11 @@ class _PendingRequestsPageState extends State<PendingRequestsPage> {
               return Card(
                 margin: const EdgeInsets.all(10),
                 child: ListTile(
-                  title: Text("Date: ${r.date} - ${r.time}"),
+                  title: Text("Date: ${r.date.toIso8601String().substring(0, 10)}"),
                   subtitle: Text("Supper: ${r.supperLeafWeight} kg, Normal: ${r.normalLeafWeight} kg"),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    Navigator.pushNamed(context, '/request', arguments: r.id);
+                    Navigator.pushNamed(context, '/request', arguments: r.date.millisecondsSinceEpoch.toString());
                   },
                 ),
               );

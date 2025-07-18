@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tfsms_app_frontend/models/Harvest.dart';
-import 'package:tfsms_app_frontend/pages/weighing/weighing_page.dart';
-import 'package:tfsms_app_frontend/services/order_service.dart';
-
+import 'order_accepted_page.dart';
+import 'order_rejected_page.dart';
 
 class RequestDetailsPage extends StatefulWidget {
   const RequestDetailsPage({super.key});
@@ -12,54 +10,24 @@ class RequestDetailsPage extends StatefulWidget {
 }
 
 class _RequestDetailsPageState extends State<RequestDetailsPage> {
-  final OrderService _orderService = OrderService();
-  late String requestId;
-  Harvest? request;
-  bool isLoading = true;
+  final dateController = TextEditingController();
+  final supperLeafController = TextEditingController();
+  final normalLeafController = TextEditingController();
+  final paymentMethodController = TextEditingController();
+  final timeController = TextEditingController();
+  final locationController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    requestId = ModalRoute.of(context)!.settings.arguments as String;
-    _loadRequestDetails();
-  }
-
-  Future<void> _loadRequestDetails() async {
-    final result = await _orderService.fetchRequest(requestId);
-    if (result != null) {
-      setState(() {
-        request = result;
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to load request details')),
-      );
-    }
-  }
-
-  Widget _buildDetail(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(value),
-          ),
-        ],
-      ),
-    );
+  void dispose() {
+    dateController.dispose();
+    supperLeafController.dispose();
+    normalLeafController.dispose();
+    paymentMethodController.dispose();
+    timeController.dispose();
+    locationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -70,87 +38,116 @@ class _RequestDetailsPageState extends State<RequestDetailsPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: const BackButton(color: Colors.black),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: Icon(Icons.settings, color: Colors.black),
+          ),
+        ],
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : request == null
-              ? const Center(child: Text('Request not found'))
-              : Center(
-                  child: Container(
-                    margin: const EdgeInsets.all(16),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        const Center(
-                          child: Text(
-                            'Harvest Request Details',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        _buildDetail('Supplier Name', request!.supplierName ?? 'N/A'),
-                        _buildDetail('Date', request!.date.toIso8601String().substring(0, 10)),
-                        _buildDetail('Time', request!.time.toIso8601String().substring(11, 16)),
-                        _buildDetail('Supper Leaf Weight (kg)', '${request!.supperLeafWeight}'),
-                        _buildDetail('Normal Leaf Weight (kg)', '${request!.normalLeafWeight}'),
-                        _buildDetail('Payment Method', request!.paymentMethod),
-                        _buildDetail('Address', request!.address),
-                        const SizedBox(height: 24),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  final accepted = await _orderService.updateRequestStatus(requestId, 'Accepted');
-                                  if (accepted && request != null) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => WeighingPage(
-                                          requestId: request!.id!,
-                                          initialSupper: request!.supperLeafWeight,
-                                          initialNormal: request!.normalLeafWeight,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF0B3C16),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                                  minimumSize: const Size.fromHeight(50),
-                                ),
-                                child: const Text('Accept'),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  final rejected = await _orderService.updateRequestStatus(requestId, 'Rejected');
-                                  if (rejected) {
-                                    Navigator.pushReplacementNamed(context, '/orderRejected', arguments: requestId);
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                                  minimumSize: const Size.fromHeight(50),
-                                ),
-                                child: const Text('Reject'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+      body: Center(
+        child: Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                const Center(
+                  child: Text(
+                    'Request Details',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                 ),
+                const SizedBox(height: 20),
+                _formField('Date you can give harvest:', controller: dateController, readOnly: true, onTap: _pickDate),
+                const SizedBox(height: 16),
+                _formField('Supper Leaf Weight(kg):', controller: supperLeafController),
+                const SizedBox(height: 16),
+                _formField('Normal Leaf Weight(kg):', controller: normalLeafController),
+                const SizedBox(height: 16),
+                _formField('Payment method:', controller: paymentMethodController),
+                const SizedBox(height: 16),
+                _formField('Preferred Time:', controller: timeController),
+                const SizedBox(height: 16),
+                _formField('Location:', controller: locationController),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const OrderAcceptedPage()),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0B3C16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        child: const Text('Accept'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const OrderRejectedPage()),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        child: const Text('Reject'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2024),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      dateController.text = '${picked.year}/${picked.month.toString().padLeft(2, '0')}/${picked.day.toString().padLeft(2, '0')}';
+    }
+  }
+
+  Widget _formField(String label, {required TextEditingController controller, bool readOnly = false, VoidCallback? onTap}) {
+    return TextFormField(
+      controller: controller,
+      readOnly: readOnly,
+      onTap: onTap,
+      validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      ),
     );
   }
 }

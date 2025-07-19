@@ -160,7 +160,7 @@ export class AuthService {
     this.isBrowser = isPlatformBrowser(this.platformId)
   }
 
-  baseUrl = "http://localhost:5274/api"
+  baseUrl = "https://localhost:7203/api"
 
   createUser(formData: any) {
     // This endpoint is for self-registration, which we are moving away from for role assignment

@@ -38,7 +38,7 @@ import  { AuthService } from "./auth.service"
   providedIn: "root",
 })
 export class UserService {
-  private baseUrl = "http://localhost:5274/api"
+  private baseUrl = "https://localhost:7203/api"
   constructor(
     private http: HttpClient,
     private authService: AuthService,

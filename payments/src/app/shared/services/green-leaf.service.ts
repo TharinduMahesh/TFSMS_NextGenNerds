@@ -1,5 +1,3 @@
-
-
 import { Injectable } from "@angular/core"
 import  { HttpClient } from "@angular/common/http"
 import {  Observable, catchError, map, of } from "rxjs"
@@ -53,24 +51,21 @@ export class GreenLeafService {
     )
   }
 
-  getLatestGreenLeafWeight(SupplierId: number): Observable<number> {
-    return this.http.get<any>(`${this.apiUrl}/supplier/${SupplierId}/latest-weight`).pipe(
+  getLatestGreenLeafWeights(SupplierId: number): Observable<{ normalWeight: number; goldenTipWeight: number }> {
+    return this.http.get<any>(`${this.apiUrl}/supplier/${SupplierId}/latest-weights`).pipe(
       map((response) => {
-        // Handle different response formats for numeric values
-        if (typeof response === "number") {
-          return response
-        } else if (response && typeof response.data === "number") {
-          return response.data
-        } else if (response && typeof response.weight === "number") {
-          return response.weight
-        } else if (response && typeof response.value === "number") {
-          return response.value
+        // Handle different response formats
+        if (response && typeof response === "object") {
+          return {
+            normalWeight: response.NormalTeaLeafWeight || response.normalWeight || 0,
+            goldenTipWeight: response.GoldenTipTeaLeafWeight || response.goldenTipWeight || 0,
+          }
         }
-        return 0
+        return { normalWeight: 0, goldenTipWeight: 0 }
       }),
       catchError((error) => {
-        console.error(`Error fetching latest green leaf weight for supplier ${SupplierId}:`, error)
-        return of(0)
+        console.error(`Error fetching latest green leaf weights for supplier ${SupplierId}:`, error)
+        return of({ normalWeight: 0, goldenTipWeight: 0 })
       }),
     )
   }

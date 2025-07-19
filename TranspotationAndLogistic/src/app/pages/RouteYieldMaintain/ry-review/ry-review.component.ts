@@ -3,16 +3,17 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 // Required models and service
-import { YieldResponse } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
+import { YieldPayload, YieldResponse } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
 import { RyService } from '../../../services/LogisticAndTransport/RouteYieldMaintain.service';
 
 // Child component used in the template
 import { RyViewComponent } from '../ry-view/ry-view.component';
+import { RyEditComponent } from '../ry-edit/ry-edit.component';
 
 @Component({
   selector: 'app-ry-review',
   standalone: true,
-  imports: [CommonModule, RyViewComponent], 
+  imports: [CommonModule, RyViewComponent,RyEditComponent], 
   templateUrl: './ry-review.component.html',
   styleUrls: ['./ry-review.component.scss']
 })
@@ -34,20 +35,20 @@ export class RyReviewComponent implements OnInit {
   isViewModalOpen = signal(false);
   dataToView = signal<YieldResponse | null>(null);
 
-  // --- Computed Signal for Filtering ---
+   isEditModalOpen = signal(false);
+  dataToEdit = signal<YieldResponse | null>(null);
+
   filteredYieldLists = computed(() => {
-    const yields = this.allYields(); // Assuming you renamed the signal to 'allYields'
+    const yields = this.allYields();
     const term = this.searchTerm().toLowerCase();
     const weightFilter = this.selectedWeightFilter();
 
     return yields.filter(yieldItem => {
-      // Search logic (remains the same)
       const matchesSearch = term === '' ||
         yieldItem.rName?.toLowerCase().includes(term) ||
         yieldItem.yId.toString().includes(term);
 
-      // --- NEW: Weight filter logic ---
-      // We parse the 'collected_Yield' string to get a number for comparison
+  
       const yieldWeight = parseFloat(yieldItem.collected_Yield);
       if (isNaN(yieldWeight)) return matchesSearch; // If parsing fails, just use search
 
@@ -94,9 +95,8 @@ export class RyReviewComponent implements OnInit {
   }
 
   onEdit(yieldItem: YieldResponse): void {
-    // Navigate to the dedicated edit page with the yield's ID
-    this.router.navigate(['/ry-edit', yieldItem.yId]);
-    console.log("Edit is clicked");
+    this.dataToEdit.set(yieldItem);
+    this.isEditModalOpen.set(true);
   }
 
   onDelete(yieldId: number): void {
@@ -114,5 +114,21 @@ export class RyReviewComponent implements OnInit {
   closeViewModal(): void {
     this.isViewModalOpen.set(false);
     this.dataToView.set(null);
+  }
+
+  closeEditModal(): void {
+    this.isEditModalOpen.set(false);
+    this.dataToEdit.set(null);
+  }
+
+  handleSave(event: { yId: number, payload: YieldPayload }): void {
+    this.ryService.updateYieldList(event.yId, event.payload).subscribe({
+      next: () => {
+        alert('Yield updated successfully!');
+        this.fetchYieldLists(); // Refresh data
+        this.closeEditModal();  // Close the modal
+      },
+      error: (err) => alert(`Error updating yield: ${err.message}`)
+    });
   }
 }

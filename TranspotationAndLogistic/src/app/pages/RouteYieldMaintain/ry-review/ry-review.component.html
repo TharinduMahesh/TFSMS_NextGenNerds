@@ -3,7 +3,6 @@
     <input type="text" placeholder="Search by Route Name or Yield ID..."
            [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
     
-    <!-- New dropdown menu for filtering by weight -->
     <select [value]="selectedWeightFilter()" (change)="selectedWeightFilter.set($any($event.target).value)">
       <option value="all">All Weights</option>
       <option value="low">Low Yield (< 100kg)</option>
@@ -52,5 +51,14 @@
   <!-- The View Modal -->
   @if (isViewModalOpen()) {
     <app-ry-view [yieldData]="dataToView()!" (close)="closeViewModal()"></app-ry-view>
+  }
+
+  <!-- The Edit Modal -->
+  @if (isEditModalOpen()) {
+    <app-ry-edit 
+      [yieldData]="dataToEdit()!" 
+      (close)="closeEditModal()" 
+      (save)="handleSave($event)">
+    </app-ry-edit>
   }
 </div>

@@ -1,29 +1,28 @@
-<!-- This outer @if ensures nothing renders if the route data is null -->
 @if (route) {
   <div class="modal-overlay" (click)="close.emit()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="close-btn" (click)="close.emit()" aria-label="Close">×</button>
       <h2 class="modal-title">Route Details: {{ route.rName }}</h2>
 
-      <div class="route-summary">
-        <div class="route-row"><span class="label">ID:</span><span class="value">{{ route.rId }}</span></div>
-        <div class="route-row"><span class="label">Start Location:</span><span class="value">{{ route.startLocation }}</span></div>
-        <div class="route-row"><span class="label">End Location:</span><span class="value">{{ route.endLocation }}</span></div>
-        <div class="route-row"><span class="label">Distance:</span><span class="value">{{ route.distance }} km</span></div>
-        <div class="route-row"><span class="label">Collector ID:</span><span class="value">{{ route.collectorId || 'Not Assigned' }}</span></div>
+      <!-- Generic Details Section -->
+      <div class="details-summary">
+        <div class="detail-row"><span class="label">ID:</span><span class="value">{{ route.rId }}</span></div>
+        <div class="detail-row"><span class="label">Start Location:</span><span class="value">{{ route.startLocation }}</span></div>
+        <div class="detail-row"><span class="label">End Location:</span><span class="value">{{ route.endLocation }}</span></div>
+        <div class="detail-row"><span class="label">Distance:</span><span class="value">{{ route.distance }} km</span></div>
+        <div class="detail-row"><span class="label">Collector ID:</span><span class="value">{{ route.collectorId || 'Not Assigned' }}</span></div>
       </div>
 
-      <h3 class="grower-title">Grower Locations</h3>
-      <ul class="grower-list">
+      <!-- Generic List Section -->
+      <h3 class="list-title">Grower Locations</h3>
+      <ul class="details-list">
         @for (location of route.growerLocations; track location.gId) {
-          <li class="grower-item">
-            <div class="grower-desc">
-              <span class="grower-label">Description:</span>
-              <span class="grower-value">{{ location.description || 'N/A' }}</span>
-            </div>
+          <li class="list-item">
+            <span class="label">Description:</span>
+            <span class="value">{{ location.description || 'N/A' }}</span>
           </li>
         } @empty {
-          <li class="grower-item"><p>No grower locations assigned to this route.</p></li>
+          <li class="list-item-empty">No grower locations assigned to this route.</li>
         }
       </ul>
     </div>

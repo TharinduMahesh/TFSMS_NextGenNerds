@@ -1,37 +1,40 @@
-<div class="page-container">
-  <header class="page-header">
-    @if (currentYield) {
-      <h2>Edit Yield for: {{ currentYield.rName }} (ID: {{ currentYield.yId }})</h2>
-    } @else {
-      <h2>Edit Yield</h2>
-    }
-  </header>
+<!-- This is the Modal Wrapper -->
+<div class="modal-overlay" (click)="onCancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button (click)="onCancel()" class="close-btn" title="Close">×</button>
 
-  @if (isLoading) {
-    <div class="loading-indicator">Loading yield data...</div>
-  } @else if (currentYield) {
-    <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-      <div class="form-group">
-        <label for="edit_collected_Yield">Collected Yield:</label>
-        <input id="edit_collected_Yield" formControlName="collected_Yield" type="text" placeholder="e.g., 150.5 kg" />
-      </div>
+    <!-- Your Existing Component Content -->
+    <div class="page-container">
+      <header class="page-header">
+        @if (yieldData) {
+          <h2>Edit Yield for: {{ yieldData.rName }}</h2>
+        } @else {
+          <h2>Edit Yield</h2>
+        }
+      </header>
 
-      <div class="form-group">
-        <label for="edit_golden_Tips_Present">Golden Tips Present:</label>
-        <select id="edit_golden_Tips_Present" formControlName="golden_Tips_Present">
-          <option value="No">No</option>
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
-        </select>
-      </div>
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form-wrapper">
+        <div class="form-group">
+          <label for="edit_collected_Yield">Collected Yield:</label>
+          <input id="edit_collected_Yield" formControlName="collected_Yield" type="text" placeholder="e.g., 150.5 kg" />
+        </div>
 
-      <div class="form-actions">
-        <button type="submit" class="btn-primary" [disabled]="editForm.invalid || !editForm.dirty">Save Changes</button>
-        <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-      </div>
-    </form>
-  } @else {
-    <div class="error-message">Could not load yield data for editing. Please go back and try again.</div>
-  }
+        <div class="form-group">
+          <label for="edit_golden_Tips_Present">Golden Tips Present:</label>
+          <select id="edit_golden_Tips_Present" formControlName="golden_Tips_Present">
+            <option value="No">No</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="editForm.invalid || !editForm.dirty">Save Changes</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
 </div>

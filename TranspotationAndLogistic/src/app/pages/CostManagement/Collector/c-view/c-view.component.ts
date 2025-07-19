@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common'; // Import DecimalPipe for formatting
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({

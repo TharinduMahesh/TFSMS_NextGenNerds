@@ -1,12 +1,10 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
-import { forkJoin, map } from 'rxjs';
+import { Component, Input, Output, EventEmitter, inject, OnChanges, SimpleChanges, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import { VehicleService } from '../../../../services/LogisticAndTransport/Vehicle.service';
+
+// Import necessary services and models
 import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
-import { CreateUpdateVehiclePayload } from '../../../../models/Logistic and Transport/VehicleManagement.model';
+import { CreateUpdateVehiclePayload, VehicleResponse } from '../../../../models/Logistic and Transport/VehicleManagement.model';
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({
@@ -16,19 +14,19 @@ import { CollectorResponse } from '../../../../models/Logistic and Transport/Col
   templateUrl: './v-edit.component.html',
   styleUrls: ['./v-edit.component.scss']
 })
-export class VehicleEditComponent implements OnInit {
+export class VehicleEditComponent implements OnInit, OnChanges {
+  // --- Injected Services ---
   private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private vehicleService = inject(VehicleService);
   private collectorService = inject(CollectorService);
 
+  // --- Inputs & Outputs for Modal Behavior ---
+  @Input({ required: true }) vehicle!: VehicleResponse;
+  @Output() close = new EventEmitter<void>();
+  @Output() save = new EventEmitter<{ vehicleId: number, payload: CreateUpdateVehiclePayload }>();
+
+  // --- Form & State Properties ---
   vehicleForm: FormGroup;
-  currentVehicleId: number | null = null;
-  // This will hold ALL collectors to allow re-assignment
-  collectors = signal<CollectorResponse[]>([]); 
-  isLoading = true;
-  error: string | null = null;
+  collectors = signal<CollectorResponse[]>([]); // To populate the dropdown
 
   constructor() {
     this.vehicleForm = this.fb.group({
@@ -41,47 +39,28 @@ export class VehicleEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // We need to fetch both the vehicle to edit and all possible collectors
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        const id = params.get('id');
-        if (!id) {
-          throw new Error('Vehicle ID is required');
-        }
-        this.currentVehicleId = +id;
-        
-        return forkJoin({
-          vehicle: this.vehicleService.getVehicleById(this.currentVehicleId),
-          collectors: this.collectorService.getAllCollectors()
-        });
-      })
-    ).subscribe({
-      next: ({ vehicle, collectors }) => {
-        this.collectors.set(collectors);
-        this.vehicleForm.patchValue(vehicle); // Populate form with existing data
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.error = err.message;
-        this.isLoading = false;
-      }
+    // Fetch all collectors for the dropdown when the component initializes
+    this.collectorService.getAllCollectors().subscribe(allCollectors => {
+      this.collectors.set(allCollectors);
     });
+  }
+
+  // Use ngOnChanges to populate the form when the vehicle data is passed in
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['vehicle'] && this.vehicle) {
+      this.vehicleForm.patchValue(this.vehicle);
+    }
   }
 
   onSubmit(): void {
-    if (this.vehicleForm.invalid || !this.currentVehicleId) return;
-    
+    if (this.vehicleForm.invalid || !this.vehicle) return;
+
     const payload: CreateUpdateVehiclePayload = this.vehicleForm.value;
-    this.vehicleService.updateVehicle(this.currentVehicleId, payload).subscribe({
-      next: () => {
-        alert('Vehicle updated successfully!');
-        this.router.navigate(['/v-review']);
-      },
-      error: (err) => alert(`Error updating vehicle: ${err.message}`)
-    });
+    // Emit the ID and payload for the parent component to handle
+    this.save.emit({ vehicleId: this.vehicle.vehicleId, payload });
   }
 
   onCancel(): void {
-    this.router.navigate(['/v-review']);
+    this.close.emit(); // Emit the close event
   }
 }

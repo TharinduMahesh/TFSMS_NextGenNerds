@@ -3,14 +3,16 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="close-btn" (click)="closeModal()" aria-label="Close">×</button>
       <h2 class="modal-title">Yield Details for {{ yieldData.rName }}</h2>
-      <div class="details-grid">
-        <span class="label">Yield ID:</span><span class="value">{{ yieldData.yId }}</span>
-        <span class="label">Route ID:</span><span class="value">{{ yieldData.rId }}</span>
-        <span class="label">Route Name:</span><span class="value">{{ yieldData.rName }}</span>
-        <span class="label">Collected Yield:</span><span class="value">{{ yieldData.collected_Yield }}</span>
-        <span class="label">Golden Tips Present:</span><span class="value">{{ yieldData.golden_Tips_Present }}</span>
-        <span class="label">Collector ID:</span><span class="value">{{ yieldData.collectorID || 'N/A' }}</span>
-        <span class="label">Vehicle ID:</span><span class="value">{{ yieldData.vehicleID || 'N/A' }}</span>
+      
+      <!-- Using the same structure as r-view for consistency -->
+      <div class="details-summary">
+        <div class="detail-row"><span class="label">Yield ID:</span><span class="value">{{ yieldData.yId }}</span></div>
+        <div class="detail-row"><span class="label">Route ID:</span><span class="value">{{ yieldData.rId }}</span></div>
+        <div class="detail-row"><span class="label">Route Name:</span><span class="value">{{ yieldData.rName }}</span></div>
+        <div class="detail-row"><span class="label">Collected Yield:</span><span class="value">{{ yieldData.collected_Yield }}</span></div>
+        <div class="detail-row"><span class="label">Golden Tips Present:</span><span class="value">{{ yieldData.golden_Tips_Present }}</span></div>
+        <div class="detail-row"><span class="label">Collector ID:</span><span class="value">{{ yieldData.collectorID || 'N/A' }}</span></div>
+        <div class="detail-row"><span class="label">Vehicle ID:</span><span class="value">{{ yieldData.vehicleID || 'N/A' }}</span></div>
       </div>
     </div>
   </div>

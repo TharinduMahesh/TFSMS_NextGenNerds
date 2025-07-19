@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 // Import the correct model and service
-import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
+import { CollectorResponse, CreateUpdateCollectorPayload } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
 import { CollectorViewComponent } from '../c-view/c-view.component';
+import { CollectorEditComponent } from '../c-edit/c-edit.component';
 
 @Component({
   selector: 'app-collector-review',
   standalone: true,
-  imports: [CommonModule,CollectorViewComponent],
+  imports: [CommonModule,CollectorViewComponent,CollectorEditComponent],
   templateUrl: './c-review.component.html',
   styleUrls: ['./c-review.component.scss']
 })
@@ -26,6 +27,8 @@ export class CollectorReviewComponent implements OnInit {
   isViewModalOpen = signal(false);
   dataToView = signal<CollectorResponse | null>(null);
 
+  isEditModalOpen = signal(false);
+  dataToEdit = signal<CollectorResponse | null>(null);
 
   filteredCollectors = computed(() => {
     const term = this.searchTerm().toLowerCase();
@@ -68,33 +71,47 @@ export class CollectorReviewComponent implements OnInit {
   }
 
   onEdit(collector: CollectorResponse): void {
-    this.router.navigate(['/c-edit', collector.collectorId]);
+    this.dataToEdit.set(collector);
+    this.isEditModalOpen.set(true);
+  }
+
+  closeEditModal(): void {
+    this.isEditModalOpen.set(false);
+    this.dataToEdit.set(null);
   }
 
   onDelete(collector: CollectorResponse): void {
-  // Use the collector's name in the confirmation for better user experience
   const confirmationMessage = `Are you sure you want to delete collector "${collector.name}"?
 This action cannot be undone and may fail if the collector is currently assigned to a route.`;
   
   if (!confirm(confirmationMessage)) {
-    return; // User clicked "Cancel"
+    return; 
   }
   
-  this.isLoading.set(true); // Show a loading indicator
+  this.isLoading.set(true); 
 
-  // Call the deleteCollector method from your service
+  
   this.collectorService.deleteCollector(collector.collectorId).subscribe({
     next: () => {
-      // On success, refresh the list to show the collector is gone
+      
       this.fetchCollectors(); 
       alert(`Collector "${collector.name}" was deleted successfully.`);
       this.isLoading.set(false);
     },
     error: (err) => {
-      // Handle potential errors, e.g., if the delete fails due to a foreign key constraint
       this.isLoading.set(false);
       alert(`Error deleting collector: ${err.message}. They may be assigned to an active route.`);
     }
   });
-}
+  }
+  handleSave(event: { collectorId: number, payload: CreateUpdateCollectorPayload }): void {
+    this.collectorService.updateCollector(event.collectorId, event.payload).subscribe({
+      next: () => {
+        alert('Collector updated successfully!');
+        this.fetchCollectors(); // Refresh data from the server
+        this.closeEditModal();  // Close the modal
+      },
+      error: (err) => alert(`Error updating collector: ${err.message}`)
+    });
+  }
 }

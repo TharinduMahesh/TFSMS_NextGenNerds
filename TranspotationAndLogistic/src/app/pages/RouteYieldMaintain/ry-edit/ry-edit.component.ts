@@ -1,8 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
 import { RyService } from '../../../services/LogisticAndTransport/RouteYieldMaintain.service';
 import { YieldPayload, YieldResponse } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
 
@@ -13,62 +11,49 @@ import { YieldPayload, YieldResponse } from '../../../models/Logistic and Transp
   templateUrl: './ry-edit.component.html',
   styleUrls: ['./ry-edit.component.scss']
 })
-export class RyEditComponent implements OnInit {
+export class RyEditComponent implements OnChanges {
+  // --- Injected Services ---
   private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private ryService = inject(RyService);
 
+  // --- Inputs & Outputs for Modal Behavior ---
+  @Input({ required: true }) yieldData!: YieldResponse;
+  @Output() close = new EventEmitter<void>();
+  @Output() save = new EventEmitter<{ yId: number, payload: YieldPayload }>();
+
+  // --- Form Properties ---
   editForm: FormGroup;
-  currentYield: YieldResponse | null = null;
-  isLoading = true;
 
   constructor() {
     this.editForm = this.fb.group({
       collected_Yield: ['', Validators.required],
-      golden_Tips_Present: ['false', Validators.required]
+      golden_Tips_Present: ['No', Validators.required]
     });
   }
 
-  ngOnInit(): void {
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        const id = params.get('id');
-        if (!id) throw new Error('Yield ID is required.');
-        return this.ryService.getYieldListById(+id);
-      })
-    ).subscribe({
-      next: (yieldData) => {
-        this.currentYield = yieldData;
-        this.editForm.patchValue({
-          collected_Yield: yieldData.collected_Yield,
-          golden_Tips_Present: yieldData.golden_Tips_Present.toString()
-        });
-        this.isLoading = false;
-      },
-      error: () => this.isLoading = false
-    });
+  // Use ngOnChanges to populate the form whenever the input data changes
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['yieldData'] && this.yieldData) {
+      this.editForm.patchValue({
+        collected_Yield: this.yieldData.collected_Yield,
+        golden_Tips_Present: this.yieldData.golden_Tips_Present.toString()
+      });
+    }
   }
 
   onSubmit(): void {
-    if (this.editForm.invalid || !this.currentYield) return;
+    if (this.editForm.invalid || !this.yieldData) return;
 
     const payload: YieldPayload = {
-      rId: this.currentYield.rId,
-      collected_Yield: this.editForm.value.collected_Yield,
-      golden_Tips_Present: this.editForm.value.golden_Tips_Present,
+      rId: this.yieldData.rId, // Get rId from the input data
+      ...this.editForm.value,
     };
-
-    this.ryService.updateYieldList(this.currentYield.yId, payload).subscribe({
-      next: () => {
-        alert('Yield updated successfully!');
-        this.router.navigate(['/ry-review']);
-      },
-      error: (err) => alert(`Error updating yield: ${err.message}`)
-    });
+    
+    // Emit the ID and the payload for the parent to handle the update
+    this.save.emit({ yId: this.yieldData.yId, payload });
   }
 
   onCancel(): void {
-    this.router.navigate(['/ry-review']);
+    this.close.emit(); // Simply emit the close event
   }
 }

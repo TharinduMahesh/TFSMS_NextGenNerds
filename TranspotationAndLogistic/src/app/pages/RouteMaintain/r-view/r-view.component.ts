@@ -1,9 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model'; // adjust import path
+import { CommonModule } from '@angular/common'; // Import CommonModule
+import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
 
 @Component({
   selector: 'app-r-view',
   standalone: true,
+  imports: [CommonModule], // Add CommonModule here
   templateUrl: './r-view.component.html',
   styleUrls: ['./r-view.component.scss']
 })

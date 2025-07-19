@@ -8,7 +8,7 @@
     <div class="form-group">
       <label for="collectorId">Assign to Collector</label>
       <select id="collectorId" formControlName="collectorId">
-        <option [ngValue]="null" disabled>-- Select an available collector --</option>
+        <option [ngValue]="null" disabled>Select an available collector</option>
         @for(collector of availableCollectors(); track collector.collectorId) {
           <option [value]="collector.collectorId">{{ collector.name }}</option>
         }

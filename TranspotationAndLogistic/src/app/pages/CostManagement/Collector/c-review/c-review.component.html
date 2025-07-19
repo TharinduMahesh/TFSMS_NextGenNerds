@@ -46,3 +46,11 @@
 @if (isViewModalOpen()) {
   <app-c-view [collector]="dataToView()!" (close)="closeViewModal()"></app-c-view>
 }
+
+@if (isEditModalOpen()) {
+  <app-c-edit 
+    [collector]="dataToEdit()!" 
+    (close)="closeEditModal()" 
+    (save)="handleSave($event)">
+  </app-c-edit>
+}

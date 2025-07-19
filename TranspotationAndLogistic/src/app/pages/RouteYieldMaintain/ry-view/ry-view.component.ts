@@ -10,7 +10,6 @@ import { YieldResponse } from '../../../models/Logistic and Transport/RouteYeild
   styleUrls: ['./ry-view.component.scss']
 })
 export class RyViewComponent {
-  // Use a clearer name 'yieldData' and make it required for type safety
   @Input({ required: true }) yieldData!: YieldResponse;
   @Output() close = new EventEmitter<void>();
 

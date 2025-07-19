@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:tfsms_app_frontend/models/Harvest.dart';
 
 class OrderService {
-  static const String baseUrl = 'https://localhost:7211/api/HarvestRequest';
+  static const String baseUrl = 'https://localhost:7203/api/HarvestRequest';
 
   Future<List<Harvest>> fetchPendingRequests() async {
     final res = await http.get(Uri.parse('$baseUrl/pending'));

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import '../../services/harvest_request_service.dart';
+import '../../models/harvest_request.dart';
 
 class HarvestFormPage extends StatefulWidget {
   const HarvestFormPage({super.key});
@@ -17,35 +17,68 @@ class _HarvestFormPageState extends State<HarvestFormPage> {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       final formData = _formKey.currentState!.value;
 
-      final Map<String, dynamic> harvestData = {
-        'date': formData['date'].toIso8601String(),
-        'supperLeafWeight': double.parse(formData['supperLeafWeight']),
-        'normalLeafWeight': double.parse(formData['normalLeafWeight']),
-        'transportMethod': formData['transportMethod'],
-        'paymentMethod': formData['paymentMethod'],
-      };
-
       try {
-        final response = await http.post(
-          Uri.parse('https://localhost:7211/api/harvests'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(harvestData),
+        // Show loading indicator
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
         );
 
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Harvest data saved successfully')),
-          );
-          Navigator.pushNamed(context, '/confirmation');
+        // Create harvest request object
+        final harvestRequest = HarvestRequest(
+          date: formData['date'] ?? DateTime.now(),
+          time: formData['time'] ?? DateTime.now(),
+          supperLeafWeight: double.tryParse(formData['supperLeafWeight']?.toString() ?? '0') ?? 0.0,
+          normalLeafWeight: double.tryParse(formData['normalLeafWeight']?.toString() ?? '0') ?? 0.0,
+          transportMethod: formData['transportMethod'] ?? 'By Collector',
+          paymentMethod: formData['paymentMethod'] ?? 'Cash',
+          address: formData['address'] ?? '',
+          growerAccountId: 1, // You can replace this with actual grower ID
+        );
+
+        // Submit to backend
+        final success = await HarvestRequestService.createRequest(harvestRequest);
+        
+        // Close loading dialog
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+
+        if (success) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('✅ Harvest request submitted successfully!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            Navigator.pushNamed(context, '/confirmation');
+          }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${response.body}')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('❌ Failed to submit harvest request. Please try again.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to connect to server: $e')),
-        );
+        // Close loading dialog if open
+        if (mounted) {
+          Navigator.of(context).pop();
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('❌ Error: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }
@@ -53,7 +86,13 @@ class _HarvestFormPageState extends State<HarvestFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF9E5),
+      backgroundColor: const Color(0xFFF8FFF0),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0B3C16),
+        foregroundColor: Colors.white,
+        title: const Text('Harvest Request Form'),
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -75,55 +114,126 @@ class _HarvestFormPageState extends State<HarvestFormPage> {
               key: _formKey,
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  
+                  // Date Field
                   FormBuilderDateTimePicker(
                     name: 'date',
                     inputType: InputType.date,
-                    decoration: _inputDecoration('Date you can give harvest', 'Year/Month/Date'),
+                    decoration: _inputDecoration('Date'),
+                    initialValue: DateTime.now(),
+                    validator: (value) {
+                      if (value == null) return 'Please select a date';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
+
+                  // Preferable Time Field
+                  FormBuilderDateTimePicker(
+                    name: 'time',
+                    inputType: InputType.time,
+                    decoration: _inputDecoration('Preferable time'),
+                    initialValue: DateTime.now(),
+                    validator: (value) {
+                      if (value == null) return 'Please select a time';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // Supper Leaf Weight Field
                   FormBuilderTextField(
                     name: 'supperLeafWeight',
                     keyboardType: TextInputType.number,
-                    decoration: _inputDecoration('Supper Leaf Weight (kg)', '20kg'),
+                    decoration: _inputDecoration('Supper Leaf Weight (kg)'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Please enter supper leaf weight';
+                      if (double.tryParse(value) == null) return 'Please enter a valid number';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
+                  
+                  // Normal Leaf Weight Field
                   FormBuilderTextField(
                     name: 'normalLeafWeight',
                     keyboardType: TextInputType.number,
-                    decoration: _inputDecoration('Normal Leaf Weight (kg)', '20kg'),
+                    decoration: _inputDecoration('Normal Leaf Weight (kg)'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Please enter normal leaf weight';
+                      if (double.tryParse(value) == null) return 'Please enter a valid number';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
-                  FormBuilderDropdown(
+                  
+                  // Transport Method Dropdown
+                  FormBuilderDropdown<String>(
                     name: 'transportMethod',
-                    decoration: _inputDecoration('How to transport', null),
+                    decoration: _inputDecoration('Transport Method'),
                     initialValue: 'By Collector',
                     items: const [
                       DropdownMenuItem(value: 'By Collector', child: Text('By Collector')),
-                      DropdownMenuItem(value: 'By own', child: Text('By own')),
+                      DropdownMenuItem(value: 'By Own', child: Text('By Own')),
                     ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Please select transport method';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
-                  FormBuilderDropdown(
+                  
+                  // Payment Method Dropdown
+                  FormBuilderDropdown<String>(
                     name: 'paymentMethod',
-                    decoration: _inputDecoration('Payment method', null),
+                    decoration: _inputDecoration('Payment Method'),
                     initialValue: 'Cash',
                     items: const [
                       DropdownMenuItem(value: 'Cash', child: Text('Cash')),
-                      DropdownMenuItem(value: 'Bank', child: Text('Bank')),
+                      DropdownMenuItem(value: 'Bank Transfer', child: Text('Bank Transfer')),
                     ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Please select payment method';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // Address Field
+                  FormBuilderTextField(
+                    name: 'address',
+                    decoration: _inputDecoration('Address'),
+                    maxLines: 3,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Please enter your address';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: _saveForm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0B3C16),
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  
+                  // Submit Button
+                  Container(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: _saveForm,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF5252),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        elevation: 3,
+                      ),
+                      child: const Text(
+                        'Submit',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    child: const Text('Save', style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                 ],
               ),
@@ -134,13 +244,25 @@ class _HarvestFormPageState extends State<HarvestFormPage> {
     );
   }
 
-  InputDecoration _inputDecoration(String label, String? hint) {
+  InputDecoration _inputDecoration(String label, [String? hint]) {
     return InputDecoration(
       labelText: label,
       hintText: hint,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Colors.grey),
       ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Colors.grey),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Color(0xFF0B3C16), width: 2),
+      ),
+      filled: true,
+      fillColor: const Color(0xFFFAFAFA),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     );
   }
 }

@@ -15,6 +15,17 @@ class Harvest {
     required this.paymentMethod,
   });
 
+  // Add fromJson factory constructor
+  factory Harvest.fromJson(Map<String, dynamic> json) {
+    return Harvest(
+      date: DateTime.parse(json['date']),
+      supperLeafWeight: (json['supperLeafWeight'] ?? 0.0).toDouble(),
+      normalLeafWeight: (json['normalLeafWeight'] ?? 0.0).toDouble(),
+      transportMethod: json['transportMethod'] ?? '',
+      paymentMethod: json['paymentMethod'] ?? '',
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'date': date.toIso8601String(),

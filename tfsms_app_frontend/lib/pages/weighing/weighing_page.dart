@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tfsms_app_frontend/models/Harvest.dart';
-import 'package:tfsms_app_frontend/pages/weighing/weighing_detail_page.dart';
 import 'package:tfsms_app_frontend/services/order_service.dart';
 
 
@@ -53,14 +52,10 @@ class _WeighingPageState extends State<WeighingPage> {
                   subtitle: Text('Supper: ${r.supperLeafWeight}kg, Normal: ${r.normalLeafWeight}kg'),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => WeighingDetailPage(
-                          requestId: r.date.millisecondsSinceEpoch.toString(),
-                          initialSupper: r.supperLeafWeight,
-                          initialNormal: r.normalLeafWeight,
-                        ),
+                    // Weighing details functionality removed
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Weighing details feature has been removed'),
                       ),
                     );
                   },

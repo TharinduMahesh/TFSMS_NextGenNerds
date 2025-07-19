@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../services/feedback_service.dart';
+import '../../models/feedback_model.dart';
+import 'thank_you_page.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
@@ -8,8 +11,6 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
-  int _currentStep = 0;
-
   double _rating = 0;
   final List<String> _selectedTags = [];
   final TextEditingController _commentController = TextEditingController();
@@ -23,6 +24,31 @@ class _FeedbackPageState extends State<FeedbackPage> {
     _Tag(icon: Icons.phone_disabled, label: 'Unresponsive'),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _commentController.addListener(_updateSubmitButtonState);
+  }
+
+  @override
+  void dispose() {
+    _commentController.removeListener(_updateSubmitButtonState);
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  void _updateSubmitButtonState() {
+    setState(() {
+      // This will trigger rebuild to update submit button state
+    });
+  }
+
+  bool get _canSubmit {
+    return _rating > 0 || 
+           _selectedTags.isNotEmpty || 
+           _commentController.text.trim().isNotEmpty;
+  }
+
   void _toggleTag(String tag) {
     setState(() {
       _selectedTags.contains(tag)
@@ -31,35 +57,86 @@ class _FeedbackPageState extends State<FeedbackPage> {
     });
   }
 
-  void _nextStep() {
-    if (_currentStep < 2) {
-      setState(() {
-        _currentStep++;
-      });
-    } else {
-      _submitFeedback();
+  void _submitFeedback() async {
+    // Validate at least one field is filled
+    if (!_canSubmit) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('❌ Please fill at least one field (rating, tags, or comments)'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
     }
-  }
 
-  void _prevStep() {
-    if (_currentStep > 0) {
-      setState(() {
-        _currentStep--;
-      });
+    try {
+      // Create feedback model that matches C# backend structure
+      final feedbackModel = FeedbackModel(
+        rating: _rating,
+        tags: _selectedTags.join(", "),
+        comment: _commentController.text.trim().isEmpty ? null : _commentController.text.trim(),
+      );
+
+      print('Submitting Feedback: ${feedbackModel.toString()}');
+
+      // Show loading
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      // Submit feedback to database
+      final success = await FeedbackService.submit(feedbackModel);
+      
+      // Close loading dialog
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
+      if (success) {
+        // Only show thank you page if database save was successful
+        if (mounted) {
+          // Navigate to thank you page immediately (no snackbar)
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ThankYouPage(),
+            ),
+          );
+        }
+      } else {
+        // Show error message if database save failed
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('❌ Failed to save feedback to database. Please try again.'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Close loading dialog if open
+      if (mounted && Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('❌ Database Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
-  }
-
-  void _submitFeedback() {
-    final feedback = {
-      'rating': _rating,
-      'tags': _selectedTags,
-      'comment': _commentController.text,
-    };
-
-    print('Submitted Feedback: $feedback');
-
-    // Navigate to home page (root of stack)
-    Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   @override
@@ -67,58 +144,75 @@ class _FeedbackPageState extends State<FeedbackPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FFF0),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: const BackButton(color: Colors.black),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.settings, color: Colors.black),
+        title: const Text(
+          'Feedback',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
+        backgroundColor: Colors.green.shade700,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
         child: Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                spreadRadius: 2,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildStepperHeader(),
-              const SizedBox(height: 20),
-              if (_currentStep == 0) _buildRatingStep(),
-              if (_currentStep == 1) _buildTagStep(),
-              if (_currentStep == 2) _buildCommentStep(),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  if (_currentStep > 0)
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _prevStep,
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(50),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                        ),
-                        child: const Text('Back'),
-                      ),
+              // Rating Section
+              _buildRatingSection(),
+              const SizedBox(height: 32),
+              
+              // Tags Section
+              _buildTagSection(),
+              const SizedBox(height: 32),
+              
+              // Comments Section
+              _buildCommentSection(),
+              const SizedBox(height: 32),
+              
+              // Submit Button
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  onPressed: _canSubmit ? _submitFeedback : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _canSubmit ? Colors.green.shade700 : Colors.grey.shade400,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                  if (_currentStep > 0) const SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _nextStep,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0B3C16),
-                        minimumSize: const Size.fromHeight(50),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    elevation: _canSubmit ? 3 : 0,
+                  ),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: Text(
+                      _canSubmit ? 'Submit Feedback' : 'Please fill at least one field',
+                      key: ValueKey(_canSubmit),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: _canSubmit ? Colors.white : Colors.grey.shade600,
                       ),
-                      child: Text(_currentStep < 2 ? 'Next' : 'Submit Feedback'),
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),
@@ -127,51 +221,73 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  Widget _buildRatingStep() {
-    return Column(
-      children: [
-        const Text(
-          'Rate Your Experience',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(5, (i) {
-            return IconButton(
-              icon: Icon(
-                i < _rating ? Icons.star : Icons.star_border,
-                color: Colors.amber,
-                size: 32,
-              ),
-              onPressed: () => setState(() => _rating = i + 1),
-            );
-          }),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTagStep() {
+  Widget _buildRatingSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Why this rating?',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          'Rate Your Experience',
+          style: TextStyle(
+            fontSize: 22, 
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF0B3C16),
+          ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 16),
+        Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (i) {
+              return IconButton(
+                icon: Icon(
+                  i < _rating ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                  size: 36,
+                ),
+                onPressed: () => setState(() => _rating = i + 1),
+              );
+            }),
+          ),
+        ),
+        if (_rating > 0)
+          Center(
+            child: Text(
+              '${_rating.toInt()}/5 Stars',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildTagSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'What describes your experience?',
+          style: TextStyle(
+            fontSize: 18, 
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF0B3C16),
+          ),
+        ),
+        const SizedBox(height: 16),
         Wrap(
-          spacing: 10,
-          runSpacing: 10,
+          spacing: 12,
+          runSpacing: 12,
           children: _tags.map((tag) {
             final selected = _selectedTags.contains(tag.label);
             return ChoiceChip(
               label: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(tag.icon, size: 16),
-                  const SizedBox(width: 4),
+                  Icon(tag.icon, size: 18),
+                  const SizedBox(width: 6),
                   Text(tag.label),
                 ],
               ),
@@ -180,52 +296,67 @@ class _FeedbackPageState extends State<FeedbackPage> {
               selectedColor: Colors.green.shade100,
               backgroundColor: Colors.grey.shade100,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: BorderSide(color: selected ? Colors.green : Colors.grey),
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: selected ? Colors.green.shade700 : Colors.grey.shade300,
+                  width: selected ? 2 : 1,
+                ),
               ),
             );
           }).toList(),
         ),
+        if (_selectedTags.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Text(
+              'Selected: ${_selectedTags.join(", ")}',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.green.shade700,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
       ],
     );
   }
 
-  Widget _buildCommentStep() {
+  Widget _buildCommentSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Add comments (optional)...'),
-        const SizedBox(height: 8),
+        const Text(
+          'Additional Comments (Optional)',
+          style: TextStyle(
+            fontSize: 18, 
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF0B3C16),
+          ),
+        ),
+        const SizedBox(height: 16),
         TextField(
           controller: _commentController,
           maxLines: 4,
           decoration: InputDecoration(
-            hintText: '...',
+            hintText: 'Tell us more about your experience...',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.green.shade700, width: 2),
             ),
             filled: true,
-            fillColor: const Color(0xFFF8F8F8),
+            fillColor: const Color(0xFFFAFAFA),
+            contentPadding: const EdgeInsets.all(16),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildStepperHeader() {
-    return Row(
-      children: List.generate(3, (index) {
-        return Expanded(
-          child: Container(
-            height: 4,
-            margin: EdgeInsets.only(right: index < 2 ? 4 : 0),
-            decoration: BoxDecoration(
-              color: index <= _currentStep ? const Color(0xFF0B3C16) : const Color(0xFFEDEDED),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }),
     );
   }
 }

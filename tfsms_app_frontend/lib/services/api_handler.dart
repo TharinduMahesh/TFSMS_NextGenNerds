@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../models/harvest_entity.dart';
 
 class ApiHandler {
-  static const String baseUrl = 'http://your_api_endpoint/api/harvest';
+  static const String baseUrl = 'http://localhost/api/harvest';
 
   static Future<bool> saveHarvest(HarvestEntity harvest) async {
     final response = await http.post(

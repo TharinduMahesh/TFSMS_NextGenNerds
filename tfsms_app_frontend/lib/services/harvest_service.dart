@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:tfsms_app_frontend/models/Harvest.dart';
 
 class HarvestService {
-  static const String baseUrl = 'https://localhost:7211/api/Harvest';
+  static const String baseUrl = 'https://localhost:7203/api/Harvest';
 
   static Future<String?> submitHarvest(Harvest harvest) async {
     try {

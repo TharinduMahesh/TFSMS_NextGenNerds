@@ -1,0 +1,64 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Record New Dispatch</h1>
+    <p>Enter logistics details for an approved invoice to mark it as dispatched.</p>
+  </header>
+  
+  <!-- Primary checks for loading and error states -->
+  @if (isLoading()) {
+    <div class="loading-indicator">Loading Invoice Details...</div>
+  } @else if (error()) {
+    <div class="error-message-full-page">{{ error() }}</div>
+  } @else {
+
+    @if (invoiceToDispatch(); as invoice) {
+
+      <div class="form-layout-grid">
+        <div class="summary-box">
+          <h3>Dispatching For Invoice</h3>
+          <div class="summary-item">
+            <span class="label">Invoice #</span>
+            <span class="value">{{ invoice.invoiceNumber }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Broker</span>
+            <span class="value">{{ invoice.brokerName || 'N/A' }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Tea Details</span>
+            <span class="value">{{ invoice.gardenMark }} - {{ invoice.teaGrade }}</span>
+          </div>
+          <div class="summary-item large-value">
+            <span class="label">Weight (kg)</span>
+            <span class="value">{{ invoice.weightKg | number:'1.2-2' }}</span>
+          </div>
+        </div>
+        
+        <!-- Right Side: Dispatch Form (also safely inside the block) -->
+        <form [formGroup]="dispatchForm" (ngSubmit)="onSubmit()" class="form-wrapper">
+          <!-- All your form groups and inputs go here -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="vehicleNumber">Vehicle Number</label>
+              <input id="vehicleNumber" formControlName="vehicleNumber" type="text" placeholder="e.g., CBA-1234"/>
+            </div>
+            <div class="form-group">
+              <label for="dispatchDate">Dispatch Date</label>
+              <input id="dispatchDate" formControlName="dispatchDate" type="date" />
+            </div>
+          </div>
+          <!-- ... other form groups ... -->
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="onCancel()">Back to Invoices</button>
+            <button type="submit" class="btn-primary" [disabled]="dispatchForm.invalid">Record Dispatch</button>
+          </div>
+        </form>
+      </div> <!-- Closes .form-layout-grid -->
+
+    } @else {
+      <!-- This block handles the case where there is no error but no invoice was found -->
+      <div class="error-message-full-page">Could not load invoice data. Please return to the invoice register and try again.</div>
+    }
+  } <!-- Closes the primary @if/@else if/@else -->
+</div>

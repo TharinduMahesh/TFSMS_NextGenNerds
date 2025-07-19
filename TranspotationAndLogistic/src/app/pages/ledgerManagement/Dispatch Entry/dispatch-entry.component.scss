@@ -1,0 +1,192 @@
+// Base layout for the page
+.page-container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+// Header styling
+.page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+// Grid layout for the two-column design
+.form-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2.5rem; // Slightly more gap
+  align-items: flex-start;
+}
+
+// Styling for the read-only summary box on the left
+.summary-box {
+  background-color: #e9f5ff; // A distinct light blue
+  border-left: 5px solid #007bff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  position: sticky; // Makes it "stick" on the side while scrolling the form
+  top: 2rem;
+  
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #004085;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #b8daff;
+    padding-bottom: 0.75rem;
+  }
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1rem;
+    font-size: 15px;
+    
+    .label {
+      color: #495057;
+      font-weight: 500;
+    }
+    .value {
+      font-weight: 600;
+      color: #212529;
+    }
+
+    &.large-value {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #b8daff;
+      .label {
+        font-size: 1.1rem;
+      }
+      .value {
+        font-size: 2rem;
+        color: #0056b3;
+      }
+    }
+  }
+}
+
+// Styling for the main form on the right
+.form-wrapper {
+  background: #ffffff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  
+  label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #495057;
+    font-size: 14px;
+  }
+
+  input[type="text"], input[type="number"], input[type="date"], select, textarea {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s;
+
+    &:focus {
+      border-color: #80bdff;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+
+  .error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background-color: #fd7e14; // Distinct orange for "Dispatch"
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: #e66a00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(253, 126, 20, 0.3);
+  }
+
+  &:disabled {
+    background-color: #fcc9a1;
+    cursor: not-allowed;
+  }
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  &:hover { background-color: #5a6268; }
+}
+
+// Global states for loading/error
+.loading-indicator, .error-message-full-page {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  color: #6c757d;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px dashed #ced4da;
+}
+
+.error-message-full-page {
+  color: #721c24;
+  border-color: #f5c6cb;
+}

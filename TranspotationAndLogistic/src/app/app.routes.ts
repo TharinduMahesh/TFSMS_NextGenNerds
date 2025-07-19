@@ -10,16 +10,6 @@ import { RtReviewComponent } from './pages/RouteMaintain/r-review/r-review.compo
 import { RyEditComponent } from './pages/RouteYieldMaintain/ry-edit/ry-edit.component';
 
 import { LedgerDashboardComponent } from './components/ledger-dashboard/ledger-dashboard.component';
-import { TeaPackingComponent } from './pages/ledgerManagement/tea-packing/tea-packing.component';
-import { StockLedgerComponent } from './pages/ledgerManagement/stock-ledger/stock-ledger.component';
-import { InvoiceManagementComponent } from './pages/ledgerManagement/invoice-management/invoice-management.component';
-import { DispatchRegisterComponent } from './pages/ledgerManagement/dispatch-regis/dispatch-regis.component';
-import { DispatchViewComponent } from './pages/ledgerManagement/dispatch-view/dispatch-view.component';
-import { SalesEntryComponent } from './pages/ledgerManagement/sales-entry/sales-entry.component';
-import { DenaturedTeaEntryComponent } from './pages/ledgerManagement/denatured-t-entry/denatured-t-entry.component';
-import { DenaturedTeaReportComponent } from './pages/ledgerManagement/denatured-t-report/denatured-t-report.component';
-import { TeaReturnEntryComponent } from './pages/ledgerManagement/t-return-entry/t-return-entry.component';
-import { ReturnRegisterComponent } from './pages/ledgerManagement/r-register/r-register.component';
 
 import { CollectorReviewComponent } from './pages/CostManagement/Collector/c-review/c-review.component'; 
 import { CollectorCreateComponent } from './pages/CostManagement/Collector/c-create/c-create.component'; 
@@ -34,7 +24,12 @@ import { CostReportComponent } from './pages/PerformanceMonitoring/Reports/Cost-
 import { CollectorPerformanceReportComponent } from './pages/PerformanceMonitoring/Reports/Collector-performance-report/c-p-report.component';
 import { RoutePerformanceReportComponent } from './pages/PerformanceMonitoring/Reports/route-performance-report/r-p-report.component';import { CostAnalysisComponent } from './pages/CostManagement/CostAnalysis/cost-analysis.component';
 import { CollectorPerformanceAnalysisComponent } from './pages/PerformanceMonitoring/CollectorPerformanceAnalysis/cp-analysis.component';
-;
+import { TeaPackingEntryComponent } from './pages/ledgerManagement/TeaPackingEntry/t-p-entry.component';
+import { StockLedgerViewComponent } from './pages/ledgerManagement/StockLedgerView/s-t-view.component';
+import { InvoiceCreateComponent } from './pages/ledgerManagement/InvoiceCreate/in-create.component';
+import { InvoiceReviewComponent } from './pages/ledgerManagement/InvoiceReview/in-review.component';
+import { DispatchEntryComponent } from './pages/ledgerManagement/Dispatch Entry/dispatch-entry.component';
+import { SalesEntryComponent } from './pages/ledgerManagement/SalesEntry/s-entry.component';
 
 export const routes: Routes = [
     {
@@ -72,46 +67,6 @@ export const routes: Routes = [
   {
     path : 'l-dash',
     component : LedgerDashboardComponent
-  },
-  {
-    path : 't-pack',
-    component : TeaPackingComponent
-  },
-  {
-    path : 's-ledger',
-    component : StockLedgerComponent
-  },
-  {
-    path : 'in-manage',
-    component : InvoiceManagementComponent
-  },
-  {
-    path : 'dis-reg',
-    component : DispatchRegisterComponent
-  },
-  {
-    path : 'dis-view',
-    component : DispatchViewComponent
-  },
-  {
-    path : 's-entry',
-    component : SalesEntryComponent
-  },
-  {
-    path : 'd-t-entry',
-    component : DenaturedTeaEntryComponent
-  },
-  {
-    path : 'd-t-report',
-    component : DenaturedTeaReportComponent
-  },
-  {
-    path : 't-return-entry',
-    component : TeaReturnEntryComponent
-  },
-  {
-    path : 'r-register',
-    component : ReturnRegisterComponent
   },
 
   { path: 'r-edit/:id', component: RtEditComponent },
@@ -169,5 +124,30 @@ export const routes: Routes = [
   {
     path: 'perform-analysis',
     component: CollectorPerformanceAnalysisComponent
+  },
+  {
+    path: 't-p-entry',
+    component: TeaPackingEntryComponent
+  },
+  {
+    path: 's-t-view',
+    component: StockLedgerViewComponent
+  },
+  {
+    path: 'in-create',
+    component: InvoiceCreateComponent
+  },
+  {
+    path: 'in-review',
+    component: InvoiceReviewComponent
+  },
+  {
+    path: 'dispatch-entry', 
+    component: DispatchEntryComponent
+  }
+  ,
+  {
+    path: 's-entry',
+    component: SalesEntryComponent
   }
   ];

@@ -1,0 +1,106 @@
+// Re-use common styles for page layout, buttons, and tables
+.page-container {
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.page-title h2 { margin: 0; font-size: 1.75rem; color: #343a40; }
+.page-title p { margin: 0.25rem 0 0; color: #6c757d; }
+
+.add-btn {
+  padding: 0.6rem 1.2rem; border: none; border-radius: 6px;
+  background-color: #28a745; color: white;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+  &:hover { background-color: #218838; }
+}
+
+.filter-bar {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+  input, select {
+    padding: 0.6rem 0.8rem; border: 1px solid #ced4da;
+    border-radius: 6px; font-size: 14px;
+    
+    &:focus {
+      border-color: #80bdff; outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+  }
+
+  input {
+    flex-grow: 1;
+    min-width: 300px;
+  }
+}
+
+// Re-use table styling from previous components
+.table-wrapper, table, th, td, .loading-indicator, .error-message, .empty-state {
+  // Copy styles from e.g., trip-review.component.scss
+  background-color: #fff; border-radius: 8px; overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  //... etc
+}
+table {
+  width: 100%; border-collapse: collapse;
+    th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e9ecef; }
+    th {
+      background-color: #f8f9fa; color: #495057; font-weight: 600;
+      font-size: 13px; text-transform: uppercase;
+    }
+}
+td:not(:first-child) {
+  text-align: right;
+}
+th:not(:first-child) {
+  text-align: right;
+}
+td:nth-child(2), th:nth-child(2), td:nth-child(3), th:nth-child(3) { // Grade & Mark columns
+  text-align: left;
+}
+
+
+// --- New Styles for Status Badges ---
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #212529; // Default text color
+  border: 1px solid;
+
+  &.status-unsold { background-color: #e9f5ff; border-color: #007bff; color: #004085;}
+  &.status-invoiced { background-color: #fff3cd; border-color: #ffc107; color: #856404;}
+  &.status-dispatched { background-color: #d1ecf1; border-color: #17a2b8; color: #0c5460;}
+  &.status-sold { background-color: #d4edda; border-color: #28a745; color: #155724;}
+  &.status-returned { background-color: #f8d7da; border-color: #dc3545; color: #721c24;}
+  &.status-denatured { background-color: #e2e3e5; border-color: #6c757d; color: #383d41;}
+}
+
+.actions-cell .btn-action.btn-invoice {
+  padding: 5px 10px; font-size: 12px; border: none; border-radius: 4px;
+  background-color: #007bff; color: white; cursor: pointer;
+  font-weight: 500; transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: #0056b3;
+  }
+}

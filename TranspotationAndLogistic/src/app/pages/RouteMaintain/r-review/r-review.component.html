@@ -56,7 +56,7 @@
     </table>
   }
 
-  <!-- View Modal (is controlled by the component's signals) -->
+  <!-- View Modal -->
   @if (isViewModalOpen()) {
     <app-r-view [route]="routeToView()" (close)="closeViewModal()"></app-r-view>
   }

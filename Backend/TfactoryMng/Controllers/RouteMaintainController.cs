@@ -56,16 +56,15 @@ namespace TfactoryMng.Controllers
         }
 
         [HttpPut("{id}")]
-        // CHANGE THIS ACTION:
+        
         public async Task<IActionResult> Update(int id, [FromBody] CreateUpdateRouteDto routeDto)
         {
-            // The [ApiController] attribute handles this for you, but it's good practice
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // The service now returns the updated object or null
             var updatedRoute = await _routeService.UpdateRouteAsync(id, routeDto);
 
             if (updatedRoute == null)
@@ -73,7 +72,6 @@ namespace TfactoryMng.Controllers
                 return NotFound($"Route with ID {id} not found.");
             }
 
-            // On success, return a 200 OK with the updated route data in the body
             return Ok(updatedRoute);
         }
 

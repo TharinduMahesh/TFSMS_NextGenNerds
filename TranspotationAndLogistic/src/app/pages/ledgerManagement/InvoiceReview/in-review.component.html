@@ -1,0 +1,73 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Invoice Register</h1>
+    <p>Review all generated invoices and manage their lifecycle from dispatch to final sale.</p>
+  </header>
+
+  <div class="filter-bar">
+    <input type="text" placeholder="Search by Invoice #, Broker, or Mark..."
+           [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
+    <select [value]="statusFilter()" (change)="statusFilter.set($any($event.target).value)">
+      <option value="All">All Statuses</option>
+      <option value="Pending">Pending</option>
+      <option value="Dispatched">Dispatched</option>
+      <option value="Sold">Sold / Paid</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    @if (isLoading()) {
+      <div class="loading-indicator">Loading Invoices...</div>
+    } @else if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice #</th>
+            <th>Date</th>
+            <th>Broker Name</th>
+            <th>Tea Details</th>
+            <th>Weight (kg)</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredInvoices(); track item.invoiceId) {
+            <tr>
+              <td>{{ item.invoiceNumber }}</td>
+              <td>{{ item.invoiceDate | date:'yyyy-MM-dd' }}</td>
+              <td>{{ item.brokerName || 'N/A' }}</td>
+              <td>{{ item.gardenMark }} - {{ item.teaGrade }}</td>
+              <td>{{ item.weightKg | number:'1.2-2' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="'status-' + item.status.toLowerCase()">
+                  {{ item.status }}
+                </span>
+              </td>
+              <td class="actions-cell">
+                @if(item.status === 'Pending') {
+                  <button class="btn-action btn-dispatch" (click)="recordDispatchFor(item)">
+                    Record Dispatch
+                  </button>
+                } @else if (item.status === 'Dispatched') {
+                   <button class="btn-action btn-finalize" (click)="finalizeSaleFor(item)">
+                    Finalize Sale
+                  </button>
+                } @else {
+                  <button class="btn-action btn-view-details">View</button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="7" class="empty-state">
+              <p>No invoices found.</p>
+            </td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

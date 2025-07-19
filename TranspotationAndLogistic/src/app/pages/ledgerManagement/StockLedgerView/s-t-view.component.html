@@ -1,0 +1,76 @@
+<div class="page-container">
+  <div class="top-bar">
+    <div class="page-title">
+      <h2>Stock Ledger</h2>
+      <p>Master view of all packed tea inventory and its current status.</p>
+    </div>
+    <button class="add-btn" (click)="goToPackingEntry()">+ New Packing Entry</button>
+  </div>
+  
+  <div class="filter-bar">
+    <input type="text" placeholder="Search by Grade, Garden Mark, or ID..."
+           [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
+    <select [value]="statusFilter()" (change)="statusFilter.set($any($event.target).value)">
+      <option value="All">All Statuses</option>
+      <option value="Unsold">Unsold</option>
+      <option value="Invoiced">Invoiced</option>
+      <option value="Dispatched">Dispatched</option>
+      <option value="Sold">Sold</option>
+      <option value="Returned">Returned</option>
+      <option value="Denatured">Denatured</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    @if (isLoading()) {
+      <div class="loading-indicator">Loading Stock Ledger...</div>
+    } @else if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Stock ID</th>
+            <th>Grade</th>
+            <th>Garden Mark</th>
+            <th>Packing Date</th>
+            <th>Status</th>
+            <th>Initial Weight (kg)</th>
+            <th>Current Weight (kg)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredStock(); track item.stockLedgerEntryId) {
+            <tr>
+              <td>#{{ item.stockLedgerEntryId }}</td>
+              <td>{{ item.grade }}</td>
+              <td>{{ item.gardenMark }}</td>
+              <td>{{ item.packingDate | date:'yyyy-MM-dd' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="'status-' + item.status.toLowerCase()">
+                  {{ item.status }}
+                </span>
+              </td>
+              <td>{{ item.initialWeightKg | number:'1.2-2' }}</td>
+              <td>{{ item.currentWeightKg | number:'1.2-2' }}</td>
+              <td class="actions-cell">
+                @if(item.status === 'Unsold') {
+                  <button class="btn-action btn-invoice" (click)="createInvoiceFor(item)">
+                    Create Invoice
+                  </button>
+                } @else {
+                  <span>-</span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="8" class="empty-state">
+              <p>No stock ledger entries found.</p>
+            </td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

@@ -1,10 +1,11 @@
+/* --- MODAL STYLES --- */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   opacity: 0;
   pointer-events: none;
   display: flex;
@@ -12,6 +13,7 @@
   align-items: center;
   z-index: 9999;
   transition: opacity 0.3s ease;
+  padding: 1rem;
 
   &.visible {
     opacity: 1;
@@ -21,161 +23,290 @@
 
 .modal-content {
   background: #fff;
-  padding: 2rem;
   border-radius: 10px;
-  width: 900px;
+  width: 1200px;
   max-width: 95vw;
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto;
   opacity: 0;
-  transform: translateY(-20px);
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
   transition: opacity 0.3s ease, transform 0.3s ease;
 
   &.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
 }
 
 .close-btn {
-  float: right;
-  background: transparent;
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  background: #f1f5f9;
+  color: #64748b;
   border: none;
-  font-size: 1.4rem;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.5rem;
+  line-height: 1;
   cursor: pointer;
-  margin-bottom: 1rem;
-}
-
-.edit-modal-container {
   display: flex;
-  gap: 2rem;
-}
-
-.map-preview {
-  flex: 0 0 35%;
-  background: #e1e5ea;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
-  display: flex;
-  justify-content: center;
   align-items: center;
-  color: #555;
-  font-size: 1.2rem;
-  font-style: italic;
-  user-select: none;
-  min-height: 400px;
-}
+  justify-content: center;
+  transition: all 0.2s ease;
 
-.route-form {
-  flex: 0 0 55%;
-  max-width: 100%;
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-
-  label {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #333;
+  &:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+    transform: rotate(90deg);
   }
+}
 
-  input {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
+/* --- MAIN PAGE & FORM STYLES (APPLIED TO MODAL CONTENT) --- */
+.page-container {
+  padding: 2rem 2.5rem;
 
-    &:focus {
-      border-color: #1976d2;
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+  .page-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #000;
+
+    h2 {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #212529;
+      margin: 0;
+      letter-spacing: 0.5px;
     }
   }
-}
-
-.form-row {
-  display: flex;
-  gap: 1.5rem;
-
-  .form-group {
-    flex: 1;
+  
+  .loading, .error {
+    text-align: center;
+    padding: 3rem 1rem;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #64748b;
   }
-}
+  .error {
+    color: #dc2626;
+    font-weight: 500;
+  }
 
-.grower-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  .grower-item {
+  .edit-modal-container {
     display: flex;
-    flex-direction: column;
+    gap: 2rem;
+  }
 
-    .location-info {
-      margin-bottom: 0.5rem;
-      color: #666;
+  .map-preview {
+    flex: 0 0 35%;
+    background: #e3f2fd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #555;
+    font-size: 1.2rem;
+    font-style: italic;
+    user-select: none;
+    min-height: 400px;
+  }
+
+  .route-form {
+    flex: 1; 
+    
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
-    input {
-      padding: 0.5rem 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
+    .form-group {
+      display: flex;
+      flex-direction: column;
 
-      &:focus {
-        border-color: #1976d2;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+      label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      input, select {
+        padding: 0.6rem 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+
+        &:focus {
+          border-color: #2196f3;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
       }
     }
-  }
-}
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-
-  .btn-primary {
-    background-color: #388e3c;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #2e7d32;
+    .form-row {
+      display: flex;
+      gap: 1.5rem;
+      .form-group { flex: 1; }
     }
-  }
 
-  .btn-secondary {
-    background-color: #b0bec5;
-    color: #263238;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    select#edit-collectorId {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 2.5rem;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23555555"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1.5em;
+      cursor: pointer;
+    }
+    
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #f1f1f1;
+      margin: 1.5rem 0;
+    }
 
-    &:hover {
-      background-color: #90a4ae;
+    /* --- STYLES FOR GROWER LOCATIONS SECTION (MATCHING THE IMAGE) --- */
+    h3 {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .grower-list-editable {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .grower-item-editable {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      input {
+        padding: 0.7rem 0.8rem;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: #fff;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      
+      input::placeholder { // Style for the placeholder text
+        color: #6c757d;
+      }
+
+      input[formControlName="latitude"],
+      input[formControlName="longitude"] {
+        flex: 0 1 120px;
+        max-width: 80px;
+      }
+
+      input[formControlName="description"] {
+        flex: 2 1 250px;
+        max-width: 120px;
+      }
+
+      .btn-remove {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background-color: #fef2f2;
+        color: #ef4444;
+        border: 1px solid #fecaca;
+        border-radius: 50%;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+          background-color: #ef4444;
+          color: white;
+          border-color: #ef4444;
+          transform: scale(1.1) rotate(90deg);
+          box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
+        }
+      }
+    }
+
+    .btn-add-location {
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.4rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #ffffff;
+      background-color: #28a745;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+      &:hover {
+        background-color: #218838;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+
+      .btn-primary {
+        background-color: #388e3c;
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        &:hover:not(:disabled) { background-color: #2e7d32; }
+        &:disabled { background-color: #a5d6a7; cursor: not-allowed; }
+      }
+
+      .btn-secondary {
+        background-color: #ff9800;
+        color: #263238;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        &:hover { background-color: #f57c00; }
+      }
     }
   }
 }

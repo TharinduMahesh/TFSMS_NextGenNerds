@@ -41,7 +41,9 @@
       </select>
     </div>
 
+    <!-- Corrected Form Actions -->
     <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
       <button type="submit" class="btn-primary" [disabled]="yieldForm.invalid">Submit Yield</button>
     </div>
   </form>

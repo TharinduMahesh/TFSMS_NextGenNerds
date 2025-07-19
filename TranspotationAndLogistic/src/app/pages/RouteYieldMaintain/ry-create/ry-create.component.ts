@@ -6,7 +6,7 @@ import { RyService } from '../../../services/LogisticAndTransport/RouteYieldMain
 import { YieldPayload } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
 import { RouteService } from '../../../services/LogisticAndTransport/RouteMaintain.service';
 import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
-import { signal } from '@angular/core'; // Import signal
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-ry-create',
@@ -22,7 +22,6 @@ export class RyCreateComponent implements OnInit {
   private routeService = inject(RouteService);
 
   yieldForm: FormGroup;
-  // Use a signal for routes for better reactivity
   routes = signal<RtList[]>([]);
   isLoadingRoutes = signal(true);
   routeError = signal<string | null>(null);
@@ -30,9 +29,8 @@ export class RyCreateComponent implements OnInit {
   constructor() {
     this.yieldForm = this.fb.group({
       rId: [null, Validators.required],
-      // Correct validation: just 'required' since it's a string input
       collected_Yield: ['', Validators.required],
-      golden_Tips_Present: ['false', Validators.required]
+      golden_Tips_Present: ['No', Validators.required] // Default to 'No'
     });
   }
 
@@ -59,9 +57,14 @@ export class RyCreateComponent implements OnInit {
     this.ryService.createYieldList(payload).subscribe({
       next: () => {
         alert('Yield created successfully!');
-        this.router.navigate(['/ry-review']); // Navigate back to the list
+        this.router.navigate(['/ry-review']);
       },
       error: (err) => alert(`Error: ${err.message}`)
     });
+  }
+  
+  // --- ADDED THIS METHOD ---
+  onCancel(): void {
+    this.router.navigate(['/ry-review']);
   }
 }

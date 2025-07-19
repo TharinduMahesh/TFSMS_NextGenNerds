@@ -1,181 +1,266 @@
 .page-wrapper {
-  max-width: 1600px; /* Consistent with your common styles */
+  max-width: 1600px;
   margin: 2rem auto;
   padding: 0 1rem;
-}
 
-.page-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid black; /* Blue from your summary boxes */
+  .page-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #000;
 
-  h1 {
-    font-weight: 700;
-    font-size: 2rem;
-    color: black; /* Blue from your summary boxes */
-    margin: 0;
+    h1 {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #212529;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
   }
-}
 
-.page-container {
-  display: flex;
-  gap: 2rem;
-  background-color: #ffffff; /* Background from your ledger container */
-  min-height: 80vh;
-
-  .map-preview {
-    flex: 0 0 35%;
-    background: #e3f2fd; /* Light blue from total kilos summary box */
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Common shadow style */
+  .page-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #555;
-    font-size: 1.2rem;
-    font-style: italic;
-    user-select: none;
-    min-height: 400px;
-  }
-
-  .route-form {
-    flex: 0 0 55%;
-    max-width: 100%;
+    gap: 2rem;
     background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Common shadow style */
-    padding: 2rem;
+    min-height: 80vh;
 
-    .form-container {
+    .map-preview {
+      flex: 0 0 35%;
+      background: #e3f2fd;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+      justify-content: center;
+      align-items: center;
+      color: #555;
+      font-size: 1.2rem;
+      font-style: italic;
+      user-select: none;
+      min-height: 400px;
     }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
+    .route-form {
+      flex: 0 0 55%;
+      max-width: 100%;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
 
-      label {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #333; /* Consistent text color */
+      .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
       }
-
-      input {
-        padding: 0.5rem 0.75rem;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 1rem;
-
-        &:focus {
-          border-color: #2196f3; /* Focus color from summary boxes */
-          outline: none;
-          box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2); /* Focus shadow */
-        }
-      }
-    }
-
-    .form-row {
-      display: flex;
-      gap: 1.5rem;
 
       .form-group {
-        flex: 1;
-      }
-    }
-
-    .grower-input-group {
-      display: flex;
-      gap: 0.5rem;
-
-      input {
-        flex: 1;
-      }
-
-      button {
-        padding: 0.5rem 1rem;
-        background-color: #4caf50; /* Green from total sales summary box */
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: background-color 0.3s ease;
-
-        &:hover {
-          background-color: #45a049;
-        }
-      }
-    }
-
-    .waypoints-preview {
-      background: #f9f9f9;
-      padding: 1rem;
-      border-radius: 6px;
-
-      h4 {
-        margin-bottom: 0.5rem;
-        color: #444;
-      }
-
-      .waypoint-item {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #ddd;
+        flex-direction: column;
 
-        button {
-          background: #f44336; /* Red from total card summary box */
-          color: white;
-          border: none;
-          padding: 0.25rem 0.75rem;
-          border-radius: 4px;
-          cursor: pointer;
+        label {
           font-weight: 600;
-          transition: background-color 0.3s ease;
+          margin-bottom: 0.5rem;
+          color: #333;
+        }
 
-          &:hover {
-            background: #d32f2f;
+        input {
+          padding: 0.6rem 0.75rem;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          font-size: 1rem;
+
+          &:focus {
+            border-color: #2196f3;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
           }
         }
       }
-    }
 
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
+      .form-row {
+        display: flex;
+        gap: 1.5rem;
 
-      .btn-primary {
-        background-color: #388e3c;
-        color: white;
-        padding: 0.6rem 1.2rem;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-
-        &:hover {
-          background-color: #2e7d32;
+        .form-group {
+          flex: 1;
         }
       }
 
-      .btn-secondary {
-        background-color: #ff9800; /* Orange from total cash summary box */
-        color: #263238;
-        padding: 0.6rem 1.2rem;
-        border: none;
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+
+        .btn-primary {
+          background-color: #388e3c;
+          color: white;
+          padding: 0.6rem 1.2rem;
+          border: none;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover:not(:disabled) {
+            background-color: #2e7d32;
+          }
+
+          &:disabled {
+            background-color: #a5d6a7;
+            cursor: not-allowed;
+          }
+        }
+
+        .btn-secondary {
+          background-color: #ff9800;
+          color: #263238;
+          padding: 0.6rem 1.2rem;
+          border: none;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: #f57c00;
+          }
+        }
+      }
+
+      select#create-collectorId {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
         border-radius: 6px;
-        font-weight: 600;
+        font-size: 1rem;
+        width: 100%;
+        padding: 0.6rem 2.5rem 0.6rem 0.75rem;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23555555"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1.5em;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:invalid {
+          color: #757575;
+        }
+
+        &:valid {
+          color: #333;
+        }
+
+        &:focus {
+          border-color: #2196f3;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+      }
+
+      hr {
+        border: none;
+        height: 1px;
+        background-color: #eaeaea;
+        margin: 2rem 0;
+      }
+
+      h3 {
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .grower-list-editable {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .grower-item-editable {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        input {
+          padding: 0.6rem 0.75rem;
+          border: 1px solid #ced4da;
+          border-radius: 8px;
+          font-size: 1rem;
+          background-color: #fff;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input[formControlName="latitude"],
+        input[formControlName="longitude"] {
+          flex: 0 1 120px;
+          max-width: 80px;
+        }
+
+        input[formControlName="description"] {
+          flex: 2 1 250px;
+          max-width: 160px;
+        }
+
+        .btn-remove {
+          flex-shrink: 0;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          background-color: #fef2f2;
+          color: #ef4444;
+          border: 1px solid #fecaca;
+          border-radius: 50%;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          font-weight: 600;
+          font-size: 1rem;
+          line-height: 1;
+          cursor: pointer;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+          &:hover {
+            background-color: #ef4444;
+            color: white;
+            border-color: #ef4444;
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+          }
+
+          &:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
+          }
+        }
+      }
+
+      .btn-add-location {
+        display: inline-block;
+        align-self: flex-start;
+        margin-top: 1.5rem;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #ffffff;
+        background-color: #28a745;
+        border: 2px solid #343a40;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
 
         &:hover {
-          background-color: #f57c00;
+          background-color: #f8f9fa;
+          color: #218838;
+          border-color: #218838;
         }
       }
     }

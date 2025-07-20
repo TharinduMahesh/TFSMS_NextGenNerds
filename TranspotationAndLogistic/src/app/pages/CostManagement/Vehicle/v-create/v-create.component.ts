@@ -10,7 +10,7 @@ import { CreateUpdateVehiclePayload } from '../../../../models/Logistic and Tran
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({
-  selector: 'app-vehicle-create',
+  selector: 'app-v-create',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './v-create.component.html',

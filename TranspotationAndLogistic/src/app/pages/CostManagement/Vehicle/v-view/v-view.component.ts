@@ -6,7 +6,7 @@ import { CollectorResponse } from '../../../../models/Logistic and Transport/Col
 import { OnInit, inject, signal } from '@angular/core';
 
 @Component({
-  selector: 'app-vehicle-view',
+  selector: 'app-v-view',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './v-view.component.html',

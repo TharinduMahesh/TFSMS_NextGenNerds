@@ -1,6 +1,6 @@
 <div class="page-container">
   <div class="top-bar">
-    <input type="text" placeholder="Search by License Plate, Model, or Collector..." 
+    <input type="text" placeholder="Search by License Plate or Model..." 
            [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
     <button class="add-btn" (click)="addNewVehicle()">+ Add New Vehicle</button>
   </div>
@@ -10,38 +10,51 @@
   } @else if (error()) {
     <div class="error-message">{{ error() }}</div>
   } @else {
-    <div class="table-wrapper">
-      <table>
-        <thead>
+    <table>
+      <thead>
+        <tr>
+          <th>Vehicle ID</th>
+          <th>License Plate</th>
+          <th>Model</th>
+          <th>Volume (m³)</th>
+          <!-- Corrected Header -->
+          <th>Assigned Collector ID</th> 
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vehicle of filteredVehicles(); track trackById($index, vehicle)) {
           <tr>
-            <th>Vehicle ID</th>
-            <th>License Plate</th>
-            <th>Model</th>
-            <th>Volume (m³)</th>
-            <th>Assigned Collector</th>
-            <th>Condition Notes</th>
-            <th>Actions</th>
+            <td>{{ vehicle.vehicleId }}</td>
+            <td>{{ vehicle.licensePlate }}</td>
+            <td>{{ vehicle.model || 'N/A' }}</td>
+            <td>{{ vehicle.volume | number:'1.1-1' }}</td>
+            <!-- THE FIX IS HERE: Changed vehicle.collectorName to vehicle.collectorId -->
+            <td>{{ vehicle.collectorId || 'Unassigned' }}</td>
+            <td class="actions-cell">
+              <button (click)="onView(vehicle)" class="btn-action btn-view">View</button>
+              <button (click)="onEdit(vehicle)" class="btn-action btn-edit">Edit</button>
+              <button (click)="onDelete(vehicle)" class="btn-action btn-delete">Delete</button>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          @for (vehicle of filteredVehicles(); track vehicle.vehicleId) {
-            <tr>
-              <td>{{ vehicle.vehicleId }}</td>
-              <td><span class="plate">{{ vehicle.licensePlate }}</span></td>
-              <td>{{ vehicle.model || 'N/A' }}</td>
-              <td>{{ vehicle.volume | number:'1.1-1' }}</td>
-              <td>{{ vehicle.collectorName }}</td>
-              <td>{{ vehicle.conditionNotes || 'None' }}</td>
-              <td class="actions-cell">
-                <button (click)="onEdit(vehicle)" class="btn-action btn-edit">Edit</button>
-                <button (click)="onDelete(vehicle)" class="btn-action btn-delete">Delete</button>
-              </td>
-            </tr>
-          } @empty {
-            <tr><td colspan="7">No vehicles found. Create one to get started.</td></tr>
-          }
-        </tbody>
-      </table>
-    </div>
+        } @empty {
+          <tr><td colspan="6">No vehicles found.</td></tr>
+        }
+      </tbody>
+    </table>
   }
 </div>
+
+<!-- View Modal -->
+@if (isViewModalOpen()) {
+  <app-v-view [vehicle]="dataToView()!" (close)="closeViewModal()"></app-v-view>
+}
+
+<!-- Edit Modal -->
+@if (isEditModalOpen()) {
+  <app-v-edit 
+    [vehicle]="dataToEdit()!" 
+    (close)="closeEditModal()" 
+    (save)="handleSave($event)">
+  </app-v-edit>
+}

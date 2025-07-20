@@ -71,8 +71,6 @@ export const routes: Routes = [
 
   { path: 'r-edit/:id', component: RtEditComponent },
 
-  { path: '', redirectTo: '/r-review', pathMatch: 'full' },
-
   {
     path: 'c-review',
     component: CollectorReviewComponent

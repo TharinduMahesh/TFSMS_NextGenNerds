@@ -8,7 +8,7 @@ import { CreateUpdateVehiclePayload, VehicleResponse } from '../../../../models/
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({
-  selector: 'app-vehicle-edit',
+  selector: 'app-v-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './v-edit.component.html',

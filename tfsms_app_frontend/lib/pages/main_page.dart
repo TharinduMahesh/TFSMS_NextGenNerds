@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'harvest/harvest_screen.dart';
 import 'feedback/feedback_page.dart';
+import 'chat/chat_main_page.dart';
+import '../l10n/app_localizations.dart';
+import '../widgets/language_switcher.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -16,6 +20,7 @@ class _MainPageState extends State<MainPage> {
   _CollectorAccessPage(),
   const FeedbackPage(),
   HarvestScreen(),
+  const ChatMainPage(),
 ];
 
 
@@ -27,6 +32,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -35,10 +42,11 @@ class _MainPageState extends State<MainPage> {
         onTap: _onItemTapped,
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.local_shipping), label: "Collector"),
-          BottomNavigationBarItem(icon: Icon(Icons.feedback), label: "Feedback"),
-          BottomNavigationBarItem(icon: Icon(Icons.grass), label: "Harvest"),
+        items: [
+          BottomNavigationBarItem(icon: const Icon(Icons.local_shipping), label: localizations.collector),
+          BottomNavigationBarItem(icon: const Icon(Icons.feedback), label: localizations.feedback),
+          BottomNavigationBarItem(icon: const Icon(Icons.grass), label: localizations.harvest),
+          BottomNavigationBarItem(icon: const Icon(Icons.chat), label: localizations.messages),
         ],
       ),
     );
@@ -49,11 +57,20 @@ class _MainPageState extends State<MainPage> {
 class _CollectorAccessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Collector Portal'),
+        title: Text(localizations.collectorPortal),
         backgroundColor: Colors.green.shade700,
         foregroundColor: Colors.white,
+        actions: [
+          const LanguageSwitcher(isAppBarAction: true),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.pushNamed(context, '/settings'),
+          ),
+        ],
       ),
       backgroundColor: const Color(0xFFF8FFF0),
       body: Center(
@@ -120,6 +137,26 @@ class _CollectorAccessPage extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.green.shade700,
                     side: BorderSide(color: Colors.green.shade700, width: 2),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/demo');
+                  },
+                  icon: const Icon(Icons.language, size: 24),
+                  label: const Text(
+                    'Language Demo',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.blue.shade700,
+                    side: BorderSide(color: Colors.blue.shade700, width: 2),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),

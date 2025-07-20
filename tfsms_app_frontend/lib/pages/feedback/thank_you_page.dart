@@ -87,7 +87,11 @@ class ThankYouPage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.pushNamedAndRemoveUntil(
+                      context, 
+                      '/', 
+                      (route) => false,
+                    );
                   },
                   icon: const Icon(Icons.home, size: 24),
                   label: const Text(

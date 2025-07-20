@@ -6,7 +6,7 @@ import  { PaymentHistory } from "../../../models/payment-history.model"
 @Component({
   selector: "app-payment-history",
   standalone: true,
-  imports: [CommonModule, DatePipe], // Add DatePipe here
+  imports: [CommonModule, DatePipe,], // Add DatePipe here
   templateUrl: "./payment-history.component.html",
   styleUrls: ["./payment-history.component.css"],
 })

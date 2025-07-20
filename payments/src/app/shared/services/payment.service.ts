@@ -349,14 +349,7 @@ export class PaymentService {
   }
 
   // Method to get total payments by supplier
-  getSupplierTotalPayments(): Observable<SupplierTotalPaymentRecord[]> {
-    return this.http.get<SupplierTotalPaymentRecord[]>(`${this.apiUrl}/supplier-totals`).pipe(
-      catchError((error) => {
-        console.error("Error fetching supplier total payments:", error)
-        return of([]) // Return an empty array on error
-      }),
-    )
-  }
+ 
 
   // Method to get all payment history records
   // getPaymentHistory(): Observable<PaymentHistory[]> {
@@ -407,3 +400,4 @@ export class PaymentService {
     )
   }
 }
+

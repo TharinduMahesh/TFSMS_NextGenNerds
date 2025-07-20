@@ -509,6 +509,7 @@ import  { IncentiveService } from "../../../shared/services/incentive.service"
   selector: "app-payment",
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  providers: [PaymentService, SupplierService, GreenLeafService, ExportService, IncentiveService],
   templateUrl: "./payment.component.html",
   styleUrls: ["./payment.component.css"],
 })

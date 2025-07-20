@@ -1,11 +1,5 @@
-
-
-export interface GreenLeaf {
-  id: number
+export interface Supplier {
   SupplierId: number
-  NormalTeaLeafWeight: number
-  GoldenTipTeaLeafWeight: number
-  CreatedDate?: Date
+  Name: string
+  BankAccount?: string
 }
-
-

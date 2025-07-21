@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../models/feedback.dart';
 import '../../services/feedback_service.dart';
-import '../../models/feedback_model.dart';
-import 'thank_you_page.dart';
+import '../../providers/language_provider.dart';
+import '../../widgets/language_selector.dart';
+import '../thank_you_page.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
@@ -14,15 +17,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
   double _rating = 0;
   final List<String> _selectedTags = [];
   final TextEditingController _commentController = TextEditingController();
-
-  final List<_Tag> _tags = const [
-    _Tag(icon: Icons.emoji_events, label: 'Good Quality'),
-    _Tag(icon: Icons.local_shipping, label: 'On-Time'),
-    _Tag(icon: Icons.chat_bubble_outline, label: 'Great Communication'),
-    _Tag(icon: Icons.clear, label: 'Delay'),
-    _Tag(icon: Icons.inventory_2_outlined, label: 'Poor Packaging'),
-    _Tag(icon: Icons.phone_disabled, label: 'Unresponsive'),
-  ];
 
   @override
   void initState() {
@@ -61,8 +55,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
     // Validate at least one field is filled
     if (!_canSubmit) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('❌ Please fill at least one field (rating, tags, or comments)'),
+        SnackBar(
+          content: Text(context.read<LanguageProvider>().getText('pleaseFillAtLeastOneField')),
           backgroundColor: Colors.red,
         ),
       );
@@ -73,8 +67,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
       // Create feedback model that matches C# backend structure
       final feedbackModel = FeedbackModel(
         rating: _rating,
-        tags: _selectedTags.join(", "),
-        comment: _commentController.text.trim().isEmpty ? null : _commentController.text.trim(),
+        tags: _selectedTags,
+        comment: _commentController.text.trim().isEmpty ? '' : _commentController.text.trim(),
       );
 
       print('Submitting Feedback: ${feedbackModel.toString()}');
@@ -113,10 +107,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
         // Show error message if database save failed
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('❌ Failed to save feedback to database. Please try again.'),
+            SnackBar(
+              content: Text(context.read<LanguageProvider>().getText('failedToSaveFeedback')),
               backgroundColor: Colors.red,
-              duration: Duration(seconds: 3),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
@@ -130,7 +124,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ Database Error: ${e.toString()}'),
+            content: Text('${context.read<LanguageProvider>().getText('databaseError')}: ${e.toString()}'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
           ),
@@ -141,93 +135,100 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FFF0),
-      appBar: AppBar(
-        title: const Text(
-          'Feedback',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.green.shade700,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                spreadRadius: 2,
-                offset: const Offset(0, 5),
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        return Scaffold(
+          backgroundColor: const Color(0xFFF8FFF0),
+          appBar: AppBar(
+            title: Text(
+              languageProvider.getText('feedback'),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            backgroundColor: Colors.green.shade700,
+            elevation: 0,
+            iconTheme: const IconThemeData(color: Colors.white),
+            actions: const [
+              LanguageSelector(),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Rating Section
-              _buildRatingSection(),
-              const SizedBox(height: 32),
-              
-              // Tags Section
-              _buildTagSection(),
-              const SizedBox(height: 32),
-              
-              // Comments Section
-              _buildCommentSection(),
-              const SizedBox(height: 32),
-              
-              // Submit Button
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: _canSubmit ? _submitFeedback : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _canSubmit ? Colors.green.shade700 : Colors.grey.shade400,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    elevation: _canSubmit ? 3 : 0,
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 5),
                   ),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: Text(
-                      _canSubmit ? 'Submit Feedback' : 'Please fill at least one field',
-                      key: ValueKey(_canSubmit),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: _canSubmit ? Colors.white : Colors.grey.shade600,
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Rating Section
+                  _buildRatingSection(languageProvider),
+                  const SizedBox(height: 32),
+                  
+                  // Tags Section
+                  _buildTagSection(languageProvider),
+                  const SizedBox(height: 32),
+                  
+                  // Comments Section
+                  _buildCommentSection(languageProvider),
+                  const SizedBox(height: 32),
+                  
+                  // Submit Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: _canSubmit ? _submitFeedback : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _canSubmit ? Colors.green.shade700 : Colors.grey.shade400,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: _canSubmit ? 3 : 0,
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: Text(
+                          _canSubmit ? languageProvider.getText('submitFeedback') : languageProvider.getText('pleaseFillAtLeastOneField'),
+                          key: ValueKey(_canSubmit),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: _canSubmit ? Colors.white : Colors.grey.shade600,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildRatingSection() {
+  Widget _buildRatingSection(LanguageProvider languageProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Rate Your Experience',
-          style: TextStyle(
+        Text(
+          languageProvider.getText('rateYourExperience'),
+          style: const TextStyle(
             fontSize: 22, 
             fontWeight: FontWeight.bold,
             color: Color(0xFF0B3C16),
@@ -252,7 +253,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         if (_rating > 0)
           Center(
             child: Text(
-              '${_rating.toInt()}/5 Stars',
+              '${_rating.toInt()}/5 ${languageProvider.getText('stars')}',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey.shade600,
@@ -264,13 +265,22 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  Widget _buildTagSection() {
+  Widget _buildTagSection(LanguageProvider languageProvider) {
+    final List<_Tag> localizedTags = [
+      _Tag(icon: Icons.emoji_events, label: languageProvider.getText('goodQuality')),
+      _Tag(icon: Icons.local_shipping, label: languageProvider.getText('onTime')),
+      _Tag(icon: Icons.chat_bubble_outline, label: languageProvider.getText('greatCommunication')),
+      _Tag(icon: Icons.clear, label: languageProvider.getText('delay')),
+      _Tag(icon: Icons.inventory_2_outlined, label: languageProvider.getText('poorPackaging')),
+      _Tag(icon: Icons.phone_disabled, label: languageProvider.getText('unresponsive')),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'What describes your experience?',
-          style: TextStyle(
+        Text(
+          languageProvider.getText('whatDescribesYourExperience'),
+          style: const TextStyle(
             fontSize: 18, 
             fontWeight: FontWeight.bold,
             color: Color(0xFF0B3C16),
@@ -280,7 +290,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         Wrap(
           spacing: 12,
           runSpacing: 12,
-          children: _tags.map((tag) {
+          children: localizedTags.map((tag) {
             final selected = _selectedTags.contains(tag.label);
             return ChoiceChip(
               label: Row(
@@ -309,7 +319,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Text(
-              'Selected: ${_selectedTags.join(", ")}',
+              '${languageProvider.getText('selected')}: ${_selectedTags.join(", ")}',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.green.shade700,
@@ -321,13 +331,13 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  Widget _buildCommentSection() {
+  Widget _buildCommentSection(LanguageProvider languageProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Additional Comments (Optional)',
-          style: TextStyle(
+        Text(
+          languageProvider.getText('additionalComments'),
+          style: const TextStyle(
             fontSize: 18, 
             fontWeight: FontWeight.bold,
             color: Color(0xFF0B3C16),
@@ -338,7 +348,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
           controller: _commentController,
           maxLines: 4,
           decoration: InputDecoration(
-            hintText: 'Tell us more about your experience...',
+            hintText: languageProvider.getText('tellUsMoreAboutYourExperience'),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey.shade300),

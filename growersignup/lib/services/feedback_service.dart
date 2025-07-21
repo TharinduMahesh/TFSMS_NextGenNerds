@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/feedback_model.dart';
+import '../models/feedback.dart';
 
 class FeedbackService {
-  static const String _baseUrl = 'https://localhost:7203/api/Feedbacks'; 
+  static const String _baseUrl = 'https://localhost:7061/api/Feedbacks'; 
 
   static Future<bool> submit(FeedbackModel feedback) async {
     try {

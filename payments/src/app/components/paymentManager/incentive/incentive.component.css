@@ -339,6 +339,30 @@
     padding: 24px;
     color: #666;
   }
+
+  /* In incentive.component.css */
+.status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+.status-available {
+  background-color: #e0f2f1; /* Light green */
+  color: #00796b; /* Dark green */
+}
+
+.status-used {
+  background-color: #ffebee; /* Light red */
+  color: #c62828; /* Dark red */
+}
+
+/* Optional: visually distinguish used rows */
+.used-incentive {
+  background-color: #f5f5f5; /* Light grey */
+  color: #757575;
+}
   
   /* Responsive Styles */
   @media (max-width: 768px) {

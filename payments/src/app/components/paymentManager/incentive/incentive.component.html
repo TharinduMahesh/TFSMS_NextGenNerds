@@ -92,6 +92,7 @@
       </form>
     </div>
   
+<!-- In incentive.component.html -->
 <div class="table-responsive">
   <table>
     <thead>
@@ -103,11 +104,13 @@
         <th>Loyalty Bonus</th>
         <th>Total Amount</th>
         <th>Created Date</th>
-        <th>Actions</th> <!-- Add this column -->
+        <th>Status</th> <!-- ADD NEW STATUS COLUMN -->
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let incentive of filteredIncentives">
+      <!-- Update the *ngFor loop -->
+      <tr *ngFor="let incentive of filteredIncentives" [class.used-incentive]="incentive.IsUsed">
         <td>{{ incentive.IncentiveId }}</td>
         <td>{{ incentive.SupplierId }}</td>
         <td>{{ incentive.Month }}</td>
@@ -115,19 +118,25 @@
         <td>LKR {{ incentive.LoyaltyBonus | number }}</td>
         <td>LKR {{ incentive.TotalAmount | number }}</td>
         <td>{{ incentive.CreatedDate | date:'short' }}</td>
+        <!-- RENDER THE STATUS -->
         <td>
-          <!-- Add delete button -->
+          <span class="status" [ngClass]="incentive.IsUsed ? 'status-used' : 'status-available'">
+            {{ incentive.IsUsed ? 'Used' : 'Available' }}
+          </span>
+        </td>
+        <td>
+          <!-- UPDATE THE DELETE BUTTON'S DISABLED LOGIC -->
           <button 
             class="delete-btn" 
             (click)="deleteIncentive(incentive.IncentiveId)"
-            [disabled]="loading"
-            title="Delete Incentive">
+            [disabled]="loading || incentive.IsUsed"
+            title="{{ incentive.IsUsed ? 'This incentive has been used and cannot be deleted.' : 'Delete Incentive' }}">
             🗑️ Delete
           </button>
         </td>
       </tr>
       <tr *ngIf="filteredIncentives.length === 0">
-        <td colspan="8" class="no-data">No incentives found</td> <!-- Update colspan -->
+        <td colspan="9" class="no-data">No incentives found</td> <!-- Update colspan to 9 -->
       </tr>
     </tbody>
   </table>

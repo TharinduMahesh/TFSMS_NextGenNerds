@@ -6,6 +6,8 @@ export interface Incentive {
   TotalAmount: number
   Month: string
   CreatedDate: Date
-  UsedAmount : number 
-  BalanceAmount : number// Amount used from the incentive
+  IsUsed: boolean; // Replaced UsedAmount and BalanceAmount
+  // You might want a SupplierName for display purposes
+  SupplierName?: string; 
 }
+

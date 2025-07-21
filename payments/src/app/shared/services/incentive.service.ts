@@ -150,14 +150,19 @@ export class IncentiveService {
     )
   }
 
-  deleteIncentive(id: number): Observable<boolean> {
-    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
-      map(() => true),
+  // In incentive.service.ts
+
+deleteIncentive(id: number): Observable<{ success: boolean; message?: string }> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      map(() => ({ success: true })), // If DELETE succeeds, return a success object.
       catchError((error) => {
-        console.error(`Error deleting incentive with id ${id}:`, error)
-        return of(false)
-      }),
-    )
+        // Capture the specific error message from the backend's response body.
+        const errorMessage = error.error?.message || `Failed to delete incentive. The server returned an error.`;
+        console.error(errorMessage, error);
+        // Return an observable of a failure object with the detailed message.
+        return of({ success: false, message: errorMessage });
+      })
+    );
   }
 
   getTotalIncentivesCount(): Observable<number> {

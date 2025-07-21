@@ -1,11 +1,13 @@
-import { Component,  OnInit } from "@angular/core"
+import { Component,  OnInit,  OnDestroy } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, Validators } from "@angular/forms"
+import  { Subscription } from "rxjs"
 import  { Incentive } from "../../../models/incentive.model"
 import  { Supplier } from "../../../models/supplier.model"
 import  { IncentiveService } from "../../../shared/services/incentive.service"
 import  { SupplierService } from "../../../shared/services/supplier.service"
 import  { ExportService } from "../../../shared/services/export.service"
+import  { DataRefreshService } from "../../../shared/services/data-refresh.service"
 
 @Component({
   selector: "app-incentive",
@@ -14,7 +16,7 @@ import  { ExportService } from "../../../shared/services/export.service"
   templateUrl: "./incentive.component.html",
   styleUrls: ["./incentive.component.css"],
 })
-export class IncentiveComponent implements OnInit {
+export class IncentiveComponent implements OnInit, OnDestroy {
   incentives: Incentive[] = []
   filteredIncentives: Incentive[] = []
   suppliers: Supplier[] = []
@@ -27,10 +29,14 @@ export class IncentiveComponent implements OnInit {
   loading = false
   error: string | null = null
 
+  private refreshSubscription?: Subscription
+  private autoRefreshInterval?: any
+
   constructor(
     private incentiveService: IncentiveService,
     private supplierService: SupplierService,
     private exportService: ExportService,
+    private dataRefreshService: DataRefreshService,
     private fb: FormBuilder,
   ) {
     this.incentiveForm = this.fb.group({
@@ -53,18 +59,35 @@ export class IncentiveComponent implements OnInit {
     this.loadIncentives()
     this.loadSuppliers()
     this.loadSummaryMetrics()
-
-    // Set up auto-refresh to catch updates from payment creation
     this.setupAutoRefresh()
+    this.setupRefreshSubscription()
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe()
+    }
+    if (this.autoRefreshInterval) {
+      clearInterval(this.autoRefreshInterval)
+    }
+  }
+
+  // Subscribe to refresh events from other components
+  private setupRefreshSubscription(): void {
+    this.refreshSubscription = this.dataRefreshService.incentiveRefresh$.subscribe(() => {
+      console.log("Received incentive refresh signal")
+      this.loadIncentives()
+      this.loadSummaryMetrics()
+    })
   }
 
   // Add auto-refresh functionality to catch updates from payment creation
   private setupAutoRefresh(): void {
-    // Refresh data every 30 seconds to catch updates from other components
-    setInterval(() => {
+    // Refresh data every 10 seconds for more responsive updates
+    this.autoRefreshInterval = setInterval(() => {
       this.loadIncentives()
       this.loadSummaryMetrics()
-    }, 30000)
+    }, 10000)
   }
 
   updateTotalAmount(): void {
@@ -85,8 +108,7 @@ export class IncentiveComponent implements OnInit {
         TotalAmount: incentive.TotalAmount || incentive.totalAmount || 0,
         Month: incentive.Month || incentive.month || "",
         CreatedDate: new Date(incentive.CreatedDate || incentive.createdDate || new Date()),
-        UsedAmount: incentive.UsedAmount || incentive.usedAmount || 0, // Include UsedAmount
-        BalanceAmount: incentive.BalanceAmount || incentive.balanceAmount || 0, // Include BalanceAmount
+        IsUsed: incentive.IsUsed !== undefined ? incentive.IsUsed : incentive.isUsed || false,
       }
     })
   }
@@ -187,11 +209,10 @@ export class IncentiveComponent implements OnInit {
       SupplierId: formValues.SupplierId,
       QualityBonus: formValues.qualityBonus,
       LoyaltyBonus: formValues.loyaltyBonus,
-      TotalAmount: formValues.qualityBonus + formValues.loyaltyBonus, // This will be recalculated in backend
+      TotalAmount: formValues.qualityBonus + formValues.loyaltyBonus,
       Month: formValues.month,
       CreatedDate: new Date(),
-      UsedAmount: 0, // Set to 0, backend will handle
-      BalanceAmount: 0, // Set to 0, backend will handle
+      IsUsed: false,
     }
 
     console.log("Sending incentive data:", incentive)
@@ -245,29 +266,47 @@ export class IncentiveComponent implements OnInit {
     })
   }
 
-  deleteIncentive(incentiveId: number): void {
+   deleteIncentive(incentiveId: number): void {
+    // Client-side check for immediate feedback (good UX)
+    const incentive = this.incentives.find((i) => i.IncentiveId === incentiveId);
+    if (incentive?.IsUsed) {
+      this.error = "This incentive cannot be deleted because it has already been applied to a payment.";
+      // You could also use a more prominent alert:
+      // alert("This incentive cannot be deleted because it has already been applied to a payment.");
+      return;
+    }
+
     if (confirm("Are you sure you want to delete this incentive? This action cannot be undone.")) {
-      this.loading = true
-      this.error = null
+      this.loading = true;
+      this.error = null;
 
       this.incentiveService.deleteIncentive(incentiveId).subscribe({
-        next: (success) => {
-          if (success) {
-            // Reload data after successful deletion
-            this.loadIncentives()
-            this.loadSummaryMetrics()
-            console.log("Incentive deleted successfully")
+        next: (response) => {
+          this.loading = false;
+          if (response.success) {
+            // Success: Reload the data to remove the item from the UI list.
+            console.log("Incentive deleted successfully.");
+            this.loadIncentives();
+            this.loadSummaryMetrics();
           } else {
-            this.error = "Failed to delete incentive. Please try again."
+            // Failure: Show the specific error message from the backend.
+            this.error = response.message ?? "An unknown error occurred.";
           }
-          this.loading = false
         },
-        error: (err) => {
-          console.error("Error deleting incentive:", err)
-          this.error = "Failed to delete incentive. Please try again."
-          this.loading = false
+        error: (err) => { // This is for unexpected network/server errors
+          this.loading = false;
+          this.error = "An unexpected network or server error occurred. Please try again.";
+          console.error("Critical error during incentive deletion:", err);
         },
-      })
+      });
     }
   }
+
+  // Method to manually refresh data
+  refreshData(): void {
+    this.loadIncentives()
+    this.loadSummaryMetrics()
+  }
 }
+
+

@@ -151,6 +151,7 @@ interface CustomJwtPayload extends JwtPayload {
   providedIn: "root",
 })
 export class AuthService {
+  
   private isBrowser: boolean;
 
   constructor(
@@ -231,27 +232,27 @@ export class AuthService {
 
   // Admin creates a new user (no password sent from frontend)
   createUserByAdmin(userData: { Email: string; FirstName: string; LastName: string; MobileNo: string; Role: string }) {
-    return this.http.post<any>(`${this.baseUrl}/admin/users`, userData)
+    return this.http.post<any>(`${this.baseUrl}/api/admin/users`, userData)
   }
 
   // Admin updates a user
   updateUserByAdmin(userId: string, userData: { FirstName: string; LastName: string; MobileNo: string; Role: string }) {
-    return this.http.put<any>(`${this.baseUrl}/admin/users/${userId}`, userData)
+    return this.http.put<any>(`${this.baseUrl}/api/admin/users/${userId}`, userData)
   }
 
   // Admin deletes a user
   deleteUserByAdmin(userId: string) {
-    return this.http.delete<any>(`${this.baseUrl}/admin/users/${userId}`)
+    return this.http.delete<any>(`${this.baseUrl}/api/admin/users/${userId}`)
   }
 
   // Admin gets all users
   getAllUsers() {
-    return this.http.get<any[]>(`${this.baseUrl}/admin/users`)
+    return this.http.get<any[]>(`${this.baseUrl}/api/admin/users`)
   }
 
   // Admin gets a single user by ID
   getUserById(userId: string) {
-    return this.http.get<any>(`${this.baseUrl}/admin/users/${userId}`)
+    return this.http.get<any>(`${this.baseUrl}/api/admin/users/${userId}`)
   }
 
   // User sets a new password using a one-time token

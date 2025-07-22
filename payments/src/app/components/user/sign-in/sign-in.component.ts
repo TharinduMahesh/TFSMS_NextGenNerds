@@ -52,29 +52,45 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit() {
-    this.isSubmitted = true
-    this.successMessage = null
-    if (this.form.valid) {
-      // Removed the static password check and redirect.
-      // Users created by admin must use the email link to set their password.
-      this.service.signin(this.form.value).subscribe({
-        next: (res: any) => {
-          this.service.savetoken(res.token)
-          this.successMessage = "Sign in successful! Redirecting to your dashboard..."
-          // Delay redirect to show success message
-          setTimeout(() => {
-            this.router.navigateByUrl("/dashboard")
-          }, 1500)
-        },
-        error: (err) => {
-          if (err.status == 400) {
-            alert("Invalid username or password")
-          } else {
-            alert("Something went wrong. Please try again.")
-          }
-        },
-      })
-    }
+        this.isSubmitted = true;
+        this.successMessage = null;
+
+        if (this.form.valid) {
+            this.service.signin(this.form.value).subscribe({
+                next: (res: any) => {
+                    // --- NEW LOGIC STARTS HERE ---
+                    // Check for the 'forcePasswordChange' flag from our backend.
+                    if (res.forcePasswordChange && res.token) {
+                        // This is a user with a temporary password.
+                        alert("You must change your temporary password before continuing.");
+                        
+                        // Navigate to the existing set-password page, passing the one-time token.
+                        this.router.navigate(['/set-password'], { queryParams: { token: res.token } });
+
+                    } else if (res.token) {
+                        // This is a normal, successful login.
+                        this.service.savetoken(res.token);
+                        this.successMessage = "Sign in successful! Redirecting...";
+                        setTimeout(() => {
+                            this.router.navigateByUrl("/dashboard");
+                        }, 1500);
+
+                    } else {
+                        // This handles any unexpected problems.
+                        alert("An unexpected login error occurred. Please try again.");
+                    }
+                    // --- NEW LOGIC ENDS HERE ---
+                },
+                error: (err) => {
+                    if (err.status == 400) {
+                        alert("Invalid username or password");
+                    } else {
+                        alert("Something went wrong. Please try again.");
+                    }
+                },
+            });
+        }
+    
   }
 
   toggleMenu(): void {

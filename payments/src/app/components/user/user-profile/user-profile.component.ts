@@ -1,9 +1,10 @@
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
-import { RouterModule } from "@angular/router"
+import { RouterModule,  Router } from "@angular/router" // Import Router
 import  { UserService } from "../../../shared/services/user.service"
 import  { AuthService } from "../../../shared/services/auth.service" // Import AuthService for isLoggedIn check
+
 
 @Component({
   selector: "app-user-profile",
@@ -24,6 +25,7 @@ export class UserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private authService: AuthService,
+    private router: Router, // Inject Router for navigation
   ) {
     this.userProfileForm = this.fb.group({
       Email: [{ value: "", disabled: true }, [Validators.required, Validators.email]], // Email is read-only
@@ -94,5 +96,9 @@ export class UserProfileComponent implements OnInit {
 
   closeAlert() {
     this.showAlert = false
+  }
+
+  navigateToChangePassword(): void {
+    this.router.navigate(['/change-password']);
   }
 }

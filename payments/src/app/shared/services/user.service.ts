@@ -65,4 +65,16 @@ export class UserService {
     })
     return this.http.put(`${this.baseUrl}/UserProfile`, userData, { headers })
   }
+
+   changePassword(passwordData: { currentPassword: string; newPassword: string }): Observable<any> {
+        const token = this.authService.gettoken()
+    if (!token) {
+      throw new Error("No authentication token found")
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    })
+    return this.http.post(`${this.baseUrl}/UserProfile/change-password`, passwordData, {
+      headers})
+  }
 }

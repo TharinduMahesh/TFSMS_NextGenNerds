@@ -1,4 +1,4 @@
-import type { AbstractControl, ValidatorFn } from "@angular/forms"
+import  { AbstractControl, ValidatorFn, ValidationErrors } from "@angular/forms"
 
 export class ConfirmPasswordValidator {
   /**
@@ -32,4 +32,41 @@ export class ConfirmPasswordValidator {
       }
     }
   }
+
+  static PasswordStrength(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value
+
+      if (!value) {
+        return null
+      }
+
+      const hasNumber = /[0-9]/.test(value)
+      const hasUpper = /[A-Z]/.test(value)
+      const hasLower = /[a-z]/.test(value)
+      const hasSpecial = /[#?!@$%^&*-]/.test(value)
+      const isValidLength = value.length >= 8
+
+      const passwordValid = hasNumber && hasUpper && hasLower && hasSpecial && isValidLength
+
+      if (!passwordValid) {
+        return {
+          passwordStrength: {
+            hasNumber,
+            hasUpper,
+            hasLower,
+            hasSpecial,
+            isValidLength,
+          },
+        }
+      }
+
+      return null
+    }
+  }
 }
+
+
+  
+
+

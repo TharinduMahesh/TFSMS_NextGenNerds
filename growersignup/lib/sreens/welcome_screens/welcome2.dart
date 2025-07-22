@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:growersignup/assets/constants/contant_colors.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/providers/theme_provider.dart';
+import 'package:growersignup/widgets/settings_button.dart';
 import 'package:growersignup/sreens/welcome_screens/welcome3.dart';
 
 class WelcomePage2 extends StatefulWidget {
@@ -19,14 +23,15 @@ class WelcomePage2 extends StatefulWidget {
 }
 
 class _WelcomePage2State extends State<WelcomePage2> {
-  //hold the selected language
-  String? _selectedLanguage; 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
+    return Consumer2<LanguageProvider, ThemeProvider>(
+      builder: (context, languageProvider, themeProvider, child) {
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -34,8 +39,15 @@ class _WelcomePage2State extends State<WelcomePage2> {
           Image.asset(
             'lib/assets/images/tea.png',
             fit: BoxFit.cover,
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withOpacity(themeProvider.isDarkMode ? 0.5 : 0.3),
             colorBlendMode: BlendMode.darken,
+          ),
+
+          // Settings button in top-right corner
+          Positioned(
+            top: 40,
+            right: 20,
+            child: SettingsButton(),
           ),
 
           // Content Column
@@ -50,10 +62,10 @@ class _WelcomePage2State extends State<WelcomePage2> {
               children: [
                 const Spacer(flex: 2), 
                 // Select Language Text
-                const Text(
-                  'Select Language',
+                Text(
+                  languageProvider.getText('selectLanguage'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: primaryTextColor,
                     fontSize: 28.0,
                     fontWeight: FontWeight.bold,
@@ -61,28 +73,20 @@ class _WelcomePage2State extends State<WelcomePage2> {
                 ),
                 const SizedBox(height: 30.0), 
                 // Language Buttons
-                _buildLanguageButton('Sinhala'),
+                _buildLanguageButton('si', 'සිංහල', languageProvider),
                 const SizedBox(height: 15.0),
-                _buildLanguageButton('English'),
+                _buildLanguageButton('en', 'English', languageProvider),
                 const SizedBox(height: 15.0),
-                _buildLanguageButton('Tamil'),
+                _buildLanguageButton('ta', 'தமிழ்', languageProvider),
 
                 const Spacer(flex: 3), 
 
                 // Next Button
                 ElevatedButton(
                   onPressed: () {
-                     //check language is selected
-                     if (_selectedLanguage != null) {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomePage3()));
-                         print('Language selected: $_selectedLanguage');
-                         widget.onNextPressed?.call(); 
-                     } else {
-                         //Show a message 
-                         ScaffoldMessenger.of(context).showSnackBar(
-                           const SnackBar(content: Text('Please select a language'), duration: Duration(seconds: 2), backgroundColor: Colors.redAccent,),
-                         );
-                     }
+                     // Navigate to next page - language is already saved in provider
+                     Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomePage3()));
+                     widget.onNextPressed?.call(); 
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: buttonBackgroundColor,
@@ -94,9 +98,9 @@ class _WelcomePage2State extends State<WelcomePage2> {
                     elevation: 3,
                   ),
                   
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(
+                  child: Text(
+                    languageProvider.getText('next'),
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -126,26 +130,26 @@ class _WelcomePage2State extends State<WelcomePage2> {
           ),
         ],
       ),
+        );
+      },
     );
   }
 
   // build Language Buttons 
-  Widget _buildLanguageButton(String language) {
-    final bool isSelected = _selectedLanguage == language;
+  Widget _buildLanguageButton(String languageCode, String languageName, LanguageProvider languageProvider) {
+    final bool isSelected = languageProvider.currentLanguage == languageCode;
     final screenWidth = MediaQuery.of(context).size.width;
 
     // Button style
     return ElevatedButton(
       
       onPressed: () {
-        // what language selected
-        setState(() {
-          _selectedLanguage = language;
-        });
+        // Change language using LanguageProvider
+        languageProvider.changeLanguage(languageCode);
         
         // Call the callback if provided
-        widget.onLanguageSelected?.call(language);
-        print('Selected language: $language');
+        widget.onLanguageSelected?.call(languageCode);
+        print('Selected language: $languageCode');
         
       },
       
@@ -160,7 +164,7 @@ class _WelcomePage2State extends State<WelcomePage2> {
          elevation: isSelected ? 4 : 2, 
       ),
       child: Text(
-        language,
+        languageName,
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,

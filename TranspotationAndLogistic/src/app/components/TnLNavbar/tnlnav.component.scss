@@ -1,9 +1,5 @@
-
-/* Reusable Navigation Bar Styles */
 :host {
-  display: block; // Ensures the component takes up layout space
-  
-  // Define necessary color variables locally or import from a global stylesheet
+  display: block;
   --color-primary-blue: #007bff;
   --color-primary-blue-dark: #0056b3;
   --color-text-light: #6c757d;

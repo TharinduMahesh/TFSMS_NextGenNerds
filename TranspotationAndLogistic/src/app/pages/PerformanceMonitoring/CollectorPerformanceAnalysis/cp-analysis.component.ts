@@ -10,6 +10,7 @@ import { CollectorPerformanceReport } from '../../../models/Logistic and Transpo
 import { CollectorResponse } from '../../../models/Logistic and Transport/CollectorManagement.model';
 import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
 import { CollectorService } from '../../../services/LogisticAndTransport/Collector.service';
+import { PNavbarComponent } from "../../../components/pnav bar/pnav.component ";
 
 // We'll create an enriched type for our component's state
 type EnrichedPerformanceReport = CollectorPerformanceReport & { vehicleCondition?: string };
@@ -17,7 +18,7 @@ type EnrichedPerformanceReport = CollectorPerformanceReport & { vehicleCondition
 @Component({
   selector: 'app-collector-performance-analysis',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxChartsModule, DecimalPipe],
+  imports: [CommonModule, ReactiveFormsModule, NgxChartsModule, DecimalPipe, PNavbarComponent],
   templateUrl: './cp-analysis.component.html',
   styleUrls: ['./cp-analysis.component.scss']
 })

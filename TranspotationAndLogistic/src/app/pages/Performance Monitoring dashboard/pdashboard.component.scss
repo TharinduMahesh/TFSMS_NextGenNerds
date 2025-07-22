@@ -1,40 +1,11 @@
 // Main page layout
 .page-container {
   max-width: 1600px;
-  margin: 1.5rem auto;
-  padding: 1.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 2rem auto;
+  padding: 0 1rem;
   background-color: #f4f7f9;
 }
 
-// Navigation Tabs
-.dashboard-nav {
-  display: flex;
-  gap: 0.5rem;
-  border-bottom: 2px solid #dee2e6;
-  margin-bottom: 2rem;
-  
-  .nav-link {
-    padding: 0.8rem 1.5rem;
-    font-weight: 600;
-    color: #6c757d;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s ease-in-out;
-    margin-bottom: -2px;
-
-    &:hover {
-      color: #0056b3;
-    }
-
-    &.active {
-      color: #007bff;
-      border-bottom-color: #007bff;
-    }
-  }
-}
-
-// Loading and Error states
 .loading-indicator, .error-message {
   padding: 3rem;
   text-align: center;
@@ -49,6 +20,7 @@
   grid-template-columns: repeat(4, 1fr); 
   gap: 1.5rem;
   margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .summary-card {
@@ -66,8 +38,8 @@
   }
 
   .card-value {
-    font-size: 2.25rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 600;
     color: #212529;
 
     &.small { font-size: 1.25rem; }

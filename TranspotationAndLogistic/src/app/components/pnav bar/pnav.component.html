@@ -1,0 +1,78 @@
+<nav class="dashboard-nav">
+  <div class="nav-main-links">
+    
+    <!-- Standard Navigation Links with Icons -->
+    <a routerLink="/performancedashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.21 15.89A10 10 0 1 1 8.11 2.99"></path>
+        <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+      </svg>
+      <span>Overview</span>
+    </a>
+    <a routerLink="/performancedashboard/collector-report" routerLinkActive="active">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      <span>Collector Performance</span>
+    </a>
+    <a routerLink="/performancedashboard/collector-performance-analysis" routerLinkActive="active">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+      <span>Collectors Analysis</span>
+    </a>
+    <a routerLink="/performancedashboard/route-report" routerLinkActive="active">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+      <span>Route Performance</span>
+    </a>
+
+    <!-- Dropdown Wrapper and Toggle Link with Icon -->
+    <div class="dropdown-wrapper">
+      <a (click)="toggleDropdown()" [class.active]="isDropdownActive()" [class.dropdown-open]="isDropdownOpen()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="19" cy="12" r="1"></circle>
+            <circle cx="5" cy="12" r="1"></circle>
+        </svg>
+        <span>{{ dropdownLabel() }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="dropdown-arrow" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      
+      @if (isDropdownOpen()) {
+        <div class="dropdown-menu">
+          <a class="dropdown-item" routerLink="" routerLinkActive="active" (click)="isDropdownOpen.set(false)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+            </svg>
+            <span>Routes Analysis</span>
+          </a>
+          <a class="dropdown-item" routerLink="/performancedashboard/costs-report" routerLinkActive="active" (click)="isDropdownOpen.set(false)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <span>Collector Cost</span>
+          </a>
+          <a class="dropdown-item" routerLink="/performancedashboard/cost-analysis" routerLinkActive="active" (click)="isDropdownOpen.set(false)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20V10" />
+                <path d="M18 20V4" />
+                <path d="M6 20V16" />
+            </svg>
+            <span>Cost Analysis</span>
+          </a>
+        </div>
+      }
+    </div>
+
+  </div>
+</nav>

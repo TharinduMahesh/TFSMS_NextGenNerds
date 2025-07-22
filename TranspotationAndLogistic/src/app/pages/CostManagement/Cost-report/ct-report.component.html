@@ -1,8 +1,5 @@
 <div class="page-container">
-  <header class="page-header">
-    <h1>Cost by Collector Report</h1>
-    <p>Analyze total transport costs for each collector over a specific period.</p>
-  </header>
+  <app-pnavbar></app-pnavbar>
 
   <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="form-wrapper report-form">
     <div class="form-row">

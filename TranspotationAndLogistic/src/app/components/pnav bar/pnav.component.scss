@@ -1,0 +1,158 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+// The main navigation container bar
+.dashboard-nav {
+  background-color: #ffffff;
+  padding: 0.5rem 0.3rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+  border: 1px solid #e9ecef;
+  
+}
+
+// Flex container for horizontal alignment
+.nav-main-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; // Allows items to stack on very narrow screens
+  font-weight: 600;
+  font-size: 15px;
+}
+
+// --- COMMON STYLES FOR ALL TOP-LEVEL NAV LINKS AND THE DROPDOWN TOGGLE ---
+.nav-main-links>a,
+.dropdown-wrapper>a {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+
+  padding: 1.1rem 1.5rem;
+  text-decoration: none;
+  color: #5a6e7e;
+  font-weight: 500;
+  font-size: 14px; // Changed from 16px
+  
+  position: relative;
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 8px;
+
+  // The blue underline effect on the parent container, not the link itself
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 3px;
+    background-color: #0d6efd;
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  // General hover state
+  &:hover {
+    color: #0d6efd;
+    background-color: #f8f9fa; // A light background on hover
+  }
+
+  // Active state for a link
+  &.active {
+    color: #0d6efd;
+    font-weight: 600;
+
+    // Animate the underline in
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+
+  // SVG Icon specific styling
+  svg:not(.dropdown-arrow) {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+  }
+}
+
+// Dropdown wrapper pushes the "More" link to the right
+.dropdown-wrapper {
+  position: relative;
+  margin-left: auto;
+}
+
+.dropdown-arrow {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5;
+  color: #6c757d;
+  transition: transform 0.2s ease-in-out, color 0.2s;
+  margin-left: 0.25rem; // Small space after the "More" text
+}
+
+// Arrow rotation logic (hover, open, or active state)
+.dropdown-wrapper>a:hover .dropdown-arrow,
+.dropdown-wrapper>a.dropdown-open .dropdown-arrow,
+.dropdown-wrapper>a.active .dropdown-arrow {
+  transform: rotate(180deg);
+  color: #0d6efd;
+}
+
+// The dropdown menu itself
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+  min-width: 240px;
+  z-index: 1000;
+  padding: 0.5rem;
+  border: 1px solid #e9ecef;
+  animation: fadeInDown 0.2s ease-out;
+}
+
+// Links inside the dropdown
+a.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; // Space for icons in the dropdown
+
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 15px; // Slightly smaller text in dropdown
+  color: #495057;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background-color: #f0f6ff;
+    color: #0d6efd;
+  }
+
+  &.active {
+    font-weight: 600;
+    color: #0d6efd;
+    background-color: #e9f5ff;
+  }
+}
+
+// Animation for the dropdown
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

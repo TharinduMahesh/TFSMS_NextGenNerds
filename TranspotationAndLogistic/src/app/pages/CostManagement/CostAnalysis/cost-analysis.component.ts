@@ -6,11 +6,12 @@ import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 // Models and Services
 import { CollectorCostReport } from '../../../models/Logistic and Transport/TransportReports.model';
 import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
+import { PNavbarComponent } from "../../../components/pnav bar/pnav.component ";
 
 @Component({
   selector: 'app-cost-analysis',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxChartsModule, CurrencyPipe, DecimalPipe],
+  imports: [CommonModule, ReactiveFormsModule, NgxChartsModule, CurrencyPipe, DecimalPipe, PNavbarComponent],
   templateUrl: './cost-analysis.component.html',
   styleUrls: ['./cost-analysis.component.scss']
 })

@@ -1,29 +1,10 @@
+// Base page styling
 .page-container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 2rem auto;
-  padding: 2rem;
+  padding: 0 1rem;
 }
-
-.page-header {
-  text-align: center;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.5rem;
-  
-  h1 {
-    font-size: 2rem; 
-    font-weight: 700;
-    color: #212529; 
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    font-size: 1.1rem;
-    color: #6c757d; 
-    max-width: 600px;
-    margin: 0 auto;
-  }
-}
-
+// Top form for date selection
 .report-form {
   background: #ffffff;
   padding: 1.5rem 2rem;
@@ -33,7 +14,7 @@
   align-items: flex-end;
   gap: 1.5rem;
   margin-bottom: 2.5rem;
-  flex-wrap: wrap; 
+  flex-wrap: wrap; // This is a good start for responsiveness
 
   .form-row {
     display: flex;
@@ -59,15 +40,6 @@
       border-radius: 8px;
       font-size: 1rem;
       font-family: inherit;
-      background-color: #f8f9fa;
-      transition: all 0.2s ease-in-out;
-
-      &:focus {
-        border-color: #007bff;
-        outline: 0;
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-        background-color: #fff;
-      }
     }
   }
 
@@ -81,108 +53,35 @@
       font-weight: 600;
       font-size: 15px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
 
-      &:hover:not(:disabled) {
-        background-color: #0056b3;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-      }
-      
       &:disabled {
         background-color: #a0cffb;
         cursor: wait;
         opacity: 0.7;
       }
-
-      span { 
-        display: inline-block;
-        vertical-align: middle;
-      }
     }
   }
 }
 
-
+// General states
 .report-results {
   .loading-indicator,
   .error-message,
   .empty-state {
-    padding: 3rem;
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #6c757d;
-    background-color: #fff;
-    border-radius: 8px;
-    border: 1px dashed #dcdfe2;
-  }
-
-  .error-message {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-  }
-  
-  .empty-state p {
-    margin-bottom: 1rem;
+    padding: 3rem; text-align: center; font-size: 1.1rem;
+    color: #6c757d; background-color: #fff; border-radius: 8px;
   }
 }
 
-.table-wrapper {
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th, td {
-      padding: 1.25rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid #e9ecef;
-    }
-
-    th {
-      background-color: #f8f9fa;
-      color: #495057;
-      font-weight: 600;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.75px;
-    }
-
-    td {
-      color: #343a40;
-      font-size: 15px;
-      font-weight: 500;
-    }
-    
-    
-    td:not(:first-child) {
-      text-align: right;
-    }
-    th:not(:first-child) {
-      text-align: right;
-    }
-
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    tbody tr:hover {
-      background-color: #f1f3f5;
-    }
-  }
-}
-
+// KPI Summary cards
 .summary-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2.5rem;
+  
 }
 
 .card {
@@ -195,20 +94,12 @@
   &:nth-child(2) { border-color: #28a745; }
   &:nth-child(3) { border-color: #ffc107; }
   
-  .card-title {
-    font-size: 1rem;
-    color: #6c757d;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  
-  .card-value {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #343a40;
-  }
+  .card-title { font-size: 1rem; color: #6c757d; margin-bottom: 0.5rem; }
+  .card-value { font-size: 2.2rem; font-weight: 700; color: #343a40; }
+  .small-text { font-size: 1rem; }
 }
 
+// Main content area for chart and insights
 .main-content {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -221,74 +112,88 @@
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.07);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
   ngx-charts-bar-vertical {
-    width: 100% !important;
-    display: block;
+    display: block; // Ensures the chart fills the container
+    height: 400px !important; // Gives the chart a consistent height
   }
 }
+
 .insights-panel {
   background-color: #f8f9fa;
   padding: 1.5rem;
   border-radius: 12px;
+  border: 1px solid #dee2e6;
   
-  h3 {
-    margin-top: 0;
-    font-size: 1.25rem;
-    border-bottom: 2px solid #dee2e6;
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
-  }
+  h3 { margin-top: 0; }
 
   .insight-item {
     margin-bottom: 1.5rem;
-    
     .insight-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 4px;
-      color: #fff;
-      text-transform: uppercase;
-      
+      font-size: 0.8rem; font-weight: 700; padding: 4px 8px;
+      border-radius: 4px; color: #fff;
       &.highlight-cost { background-color: #dc3545; }
       &.highlight-efficient { background-color: #28a745; }
-      &.recommendation { background-color: #17a2b8; }
     }
-    
-    p {
-      margin-top: 0.75rem;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: #495057;
-      strong { color: #000; }
-    }
+    p { margin-top: 0.75rem; font-size: 0.95rem; line-height: 1.6; }
   }
 }
 
+// Simple loading spinner
+.loader {
+  width: 16px; height: 16px; border: 2px solid #FFF;
+  border-bottom-color: transparent; border-radius: 50%;
+  display: inline-block; animation: rotation 1s linear infinite;
+  margin-right: 8px;
+}
+@keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+// ==============================================================
+//           ↓↓↓  RESPONSIVE STYLES (NO EFFECT ON DESKTOP) ↓↓↓
+// ==============================================================
+
+// For tablets and smaller devices
 @media (max-width: 992px) {
   .main-content {
+    // Switch the two-column grid to a single column
     grid-template-columns: 1fr;
   }
 }
 
-.loader {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #FFF;
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-  margin-right: 8px;
-  vertical-align: middle;
-}
+// For mobile phones
+@media (max-width: 768px) {
+  .page-header {
+    h1 { font-size: 1.6rem; }
+    p { font-size: 1rem; }
+  }
 
-@keyframes rotation {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  .report-form {
+    flex-direction: column;
+    align-items: stretch;
+
+    .form-row {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .form-actions {
+      width: 100%;
+      .btn-primary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .summary-cards {
+    gap: 1rem;
+    .card {
+      padding: 1rem;
+      .card-value {
+        font-size: 1.8rem;
+      }
+    }
+  }
+  
+  .main-content {
+    gap: 1.5rem;
+  }
 }

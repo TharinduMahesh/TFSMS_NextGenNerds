@@ -1,9 +1,5 @@
 <div class="page-container">
-  <header class="page-header">
-    <h1>Collector Performance Report</h1>
-    <p>Analyze the on-time departure performance for each collector.</p>
-  </header>
-
+  <app-pnavbar></app-pnavbar>
   <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="form-wrapper report-form">
     <div class="form-row">
       <div class="form-group">

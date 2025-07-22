@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 // Models and Services
 import { RoutePerformanceReport } from '../../../../models/Logistic and Transport/TransportReports.model';
 import { TransportReportService } from '../../../../services/LogisticAndTransport/TransportReport.service';
+import { PNavbarComponent } from "../../../../components/pnav bar/pnav.component ";
 
 @Component({
   selector: 'app-route-performance-report',
@@ -13,9 +14,10 @@ import { TransportReportService } from '../../../../services/LogisticAndTranspor
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DecimalPipe, 
-    CurrencyPipe
-  ],
+    DecimalPipe,
+    CurrencyPipe,
+    PNavbarComponent
+],
   templateUrl: './r-p-report.component.html',
   styleUrls: ['./r-p-report.component.scss']
 })

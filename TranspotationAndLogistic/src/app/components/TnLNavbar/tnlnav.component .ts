@@ -7,8 +7,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router'; // For navigatio
   selector: 'app-tnlnavbar',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive], // Import necessary modules
-  templateUrl: './tnLnav.component.html',
-  styleUrls: ['./tnLnav.component.scss']
+  templateUrl: './tnlnav.component.html',
+  styleUrls: ['./tnlnav.component.scss']
 })
 export class TnLNavbarComponent {
   

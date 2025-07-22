@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // Models and Services
-import { CollectorCostReport } from '../../../../models/Logistic and Transport/TransportReports.model';
-import { TransportReportService } from '../../../../services/LogisticAndTransport/TransportReport.service';
+import { CollectorCostReport } from '../../../models/Logistic and Transport/TransportReports.model';
+import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
+import { PNavbarComponent } from "../../../components/pnav bar/pnav.component ";
 
 @Component({
   selector: 'app-cost-report',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, PNavbarComponent],
   templateUrl: './ct-report.component.html',
   styleUrls: ['./ct-report.component.scss']
 })

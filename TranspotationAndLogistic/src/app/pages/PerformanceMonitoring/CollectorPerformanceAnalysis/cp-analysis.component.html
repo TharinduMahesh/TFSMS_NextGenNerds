@@ -1,9 +1,5 @@
 <div class="page-container">
-  <header class="page-header">
-    <h1>Collector Performance Dashboard</h1>
-    <p>Visual analysis of collector punctuality and on-time performance.</p>
-  </header>
-
+  <app-pnavbar></app-pnavbar>
   <!-- Form for date selection (same as before) -->
   <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="form-wrapper report-form">
     <!-- ... date picker form groups ... -->

@@ -20,7 +20,7 @@ import { VehicleCreateComponent } from './pages/CostManagement/Vehicle/v-create/
 import { VehicleEditComponent } from './pages/CostManagement/Vehicle/v-edit/v-edit.component';
 import { TripReviewComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-review/t-review.component';
 import { TripScheduleComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-schedule/t-sched.component';
-import { CostReportComponent } from './pages/PerformanceMonitoring/Reports/Cost-report/ct-report.component';
+import { CostReportComponent } from './pages/CostManagement/Cost-report/ct-report.component';
 import { CollectorPerformanceReportComponent } from './pages/PerformanceMonitoring/Reports/Collector-performance-report/c-p-report.component';
 import { RoutePerformanceReportComponent } from './pages/PerformanceMonitoring/Reports/route-performance-report/r-p-report.component';import { CostAnalysisComponent } from './pages/CostManagement/CostAnalysis/cost-analysis.component';
 import { CollectorPerformanceAnalysisComponent } from './pages/PerformanceMonitoring/CollectorPerformanceAnalysis/cp-analysis.component';
@@ -31,8 +31,6 @@ import { InvoiceReviewComponent } from './pages/ledgerManagement/InvoiceReview/i
 import { DispatchEntryComponent } from './pages/ledgerManagement/Dispatch Entry/dispatch-entry.component';
 import { SalesEntryComponent } from './pages/ledgerManagement/SalesEntry/s-entry.component';
 import { TransportDashboardComponent } from './pages/transpotation and logistic dashboard/tnlDash.component';
-import { Component } from '@angular/core';
-import { TnLNavbarComponent } from './components/TnLNavbar/tnlnav.component ';
 import { PerformanceDashboardComponent } from './pages/Performance Monitoring dashboard/pdashboard.component';
 
 export const routes: Routes = [
@@ -104,26 +102,6 @@ export const routes: Routes = [
     component: TripScheduleComponent
   },
   {
-    path: 'ct-report',
-    component: CostReportComponent
-  },
-  {
-    path: 'c-p-report',
-    component: CollectorPerformanceReportComponent
-  },
-  {
-    path: 'r-p-report',
-    component: RoutePerformanceReportComponent
-  },
-  {
-    path: 'cost-analysis', 
-    component: CostAnalysisComponent
-  },
-  {
-    path: 'perform-analysis',
-    component: CollectorPerformanceAnalysisComponent
-  },
-  {
     path: 't-p-entry',
     component: TeaPackingEntryComponent
   },
@@ -171,6 +149,26 @@ export const routes: Routes = [
   {
     path: 'performancedashboard',
     component: PerformanceDashboardComponent
+  },
+  {
+    path: 'performancedashboard/costs-report',
+    component: CostReportComponent
+  },
+  {
+    path: 'performancedashboard/collector-report',
+    component: CollectorPerformanceReportComponent
+  },
+  {
+    path: 'performancedashboard/route-report',
+    component: RoutePerformanceReportComponent
+  },
+  {
+    path: 'performancedashboard/cost-analysis',
+    component: CostAnalysisComponent
+  },
+  {
+    path: 'performancedashboard/collector-performance-analysis',
+    component: CollectorPerformanceAnalysisComponent
   }
   
 

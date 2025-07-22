@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import '../../models/feedback.dart';
 import '../../services/feedback_service.dart';
 import '../../providers/language_provider.dart';
-import '../../widgets/language_selector.dart';
-import '../thank_you_page.dart';
+import '../../providers/theme_provider.dart';
+import '../../widgets/settings_button.dart';
+import 'thank_you_page.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
@@ -135,10 +136,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LanguageProvider>(
-      builder: (context, languageProvider, child) {
+    return Consumer2<LanguageProvider, ThemeProvider>(
+      builder: (context, languageProvider, themeProvider, child) {
         return Scaffold(
-          backgroundColor: const Color(0xFFF8FFF0),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             title: Text(
               languageProvider.getText('feedback'),
@@ -152,7 +153,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
             elevation: 0,
             iconTheme: const IconThemeData(color: Colors.white),
             actions: const [
-              LanguageSelector(),
+              SettingsButton(),
             ],
           ),
           body: SingleChildScrollView(

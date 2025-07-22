@@ -13,19 +13,36 @@ class FeedbackModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'rating': rating,
-      'tags': tags,
-      'comment': comment,
-      'submittedAt': submittedAt.toIso8601String(),
+      'dto': {
+        'rating': rating,
+        'tags': tags.join(','), // Convert array to comma-separated string
+        'comment': comment,
+        'submittedAt': submittedAt.toIso8601String(),
+      }
     };
   }
 
   factory FeedbackModel.fromJson(Map<String, dynamic> json) {
+    // Handle both old and new formats
+    final data = json['dto'] ?? json;
+    final tagsData = data['tags'];
+    List<String> tagsList;
+    
+    if (tagsData is String) {
+      // If tags is a string, split by comma
+      tagsList = tagsData.isEmpty ? [] : tagsData.split(',');
+    } else if (tagsData is List) {
+      // If tags is already a list
+      tagsList = List<String>.from(tagsData);
+    } else {
+      tagsList = [];
+    }
+    
     return FeedbackModel(
-      rating: (json['rating'] as num).toDouble(),
-      tags: List<String>.from(json['tags'] ?? []),
-      comment: json['comment'] ?? '',
-      submittedAt: DateTime.parse(json['submittedAt'] ?? DateTime.now().toIso8601String()),
+      rating: (data['rating'] as num).toDouble(),
+      tags: tagsList,
+      comment: data['comment'] ?? '',
+      submittedAt: DateTime.parse(data['submittedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 }

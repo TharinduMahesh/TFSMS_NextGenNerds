@@ -7,55 +7,53 @@ class ThankYouPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LanguageProvider>(
-      builder: (context, languageProvider, child) {
-        return Scaffold(
-          backgroundColor: const Color(0xFFF8FFF0),
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Success Icon
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade100,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.green.shade400, width: 4),
-                    ),
-                    child: Icon(
-                      Icons.check_circle_outline,
-                      size: 80,
-                      color: Colors.green.shade700,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  
-                  // Thank You Text
-                  Text(
-                    languageProvider.getText('thankYou'),
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green.shade800,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  
-                  // Subtitle
-                  Text(
-                    languageProvider.getText('feedbackSubmittedSuccessfully'),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey.shade700,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FFF0),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Success Icon
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.green.shade100,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.green.shade400, width: 4),
+                ),
+                child: Icon(
+                  Icons.check_circle_outline,
+                  size: 80,
+                  color: Colors.green.shade700,
+                ),
+              ),
+              const SizedBox(height: 32),
+              
+              // Thank You Text
+              Text(
+                'Thank You!',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green.shade800,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              
+              // Subtitle
+              Text(
+                'Your feedback has been submitted successfully',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 12),
               
               // Description
@@ -98,8 +96,8 @@ class ThankYouPage extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.home, size: 24),
-                  label: Text(
-                    languageProvider.getText('goHome'),
+                  label: const Text(
+                    'Back to Home',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -114,8 +112,6 @@ class ThankYouPage extends StatelessWidget {
           ),
         ),
       ),
-      );
-    },
-  );
-}
+    );
+  }
 }

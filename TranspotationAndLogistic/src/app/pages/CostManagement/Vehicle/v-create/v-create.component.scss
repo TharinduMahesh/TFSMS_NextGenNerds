@@ -1,4 +1,4 @@
-/* --- Main Page Container (Consistent with other create pages) --- */
+/* --- Main Page Container --- */
 .page-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -8,7 +8,7 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Page Header (Exact match from other create pages, plus subtitle) --- */
+/* --- Page Header --- */
 .page-header {
   text-align: center;
   margin-bottom: 2.5rem;
@@ -21,7 +21,6 @@
     font-weight: 600;
     color: #212529;
     margin: 0;
-    letter-spacing: 0.5px;
   }
 
   p {
@@ -48,15 +47,12 @@
     color: #333;
   }
 
-  // Common styles for all form fields
-  input,
-  select,
-  textarea {
+  input, select, textarea {
     padding: 0.6rem 0.75rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 1rem;
-    font-family: inherit; // Ensure textarea uses the same font
+    font-family: inherit;
     background-color: #fff;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
@@ -67,13 +63,11 @@
     }
   }
 
-  // Specific style for textarea
   textarea {
-    resize: vertical; // Allow vertical resizing only
+    resize: vertical;
     min-height: 80px;
   }
 
-  // Custom arrow for select dropdowns
   select {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -84,13 +78,8 @@
     background-position: right 0.75rem center;
     background-size: 1.5em;
     cursor: pointer;
-
-    &:invalid {
-      color: #757575;
-    }
   }
   
-  // Helper text style
   .form-text {
     font-size: 0.875rem;
     color: #6c757d;
@@ -98,7 +87,7 @@
   }
 }
 
-/* --- Form Actions (Buttons) --- */
+/* --- Form Actions --- */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -113,16 +102,8 @@
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover:not(:disabled) {
-      background-color: #2e7d32;
-    }
-
-    &:disabled {
-      background-color: #a5d6a7;
-      cursor: not-allowed;
-    }
+    &:hover:not(:disabled) { background-color: #2e7d32; }
+    &:disabled { background-color: #a5d6a7; cursor: not-allowed; }
   }
 
   .btn-secondary {
@@ -133,10 +114,6 @@
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #f57c00;
-    }
+    &:hover { background-color: #f57c00; }
   }
 }

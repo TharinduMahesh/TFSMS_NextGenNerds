@@ -4,8 +4,8 @@ using TfactoryMng.Services;
 
 namespace TfactoryMng.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class VehiclesController : ControllerBase
     {
         private readonly IVehicleService _vehicleService;
@@ -16,62 +16,64 @@ namespace TfactoryMng.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<VehicleResponseDto>>> GetAllVehicles()
         {
             var vehicles = await _vehicleService.GetAllAsync();
             return Ok(vehicles);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<VehicleResponseDto>> GetVehicleById(int id)
         {
             var vehicle = await _vehicleService.GetByIdAsync(id);
-            return vehicle == null ? NotFound() : Ok(vehicle);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicle);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateUpdateVehicleDto dto)
+        public async Task<ActionResult<VehicleResponseDto>> CreateVehicle(CreateUpdateVehicleDto createDto)
         {
             try
             {
-                var newVehicle = await _vehicleService.CreateAsync(dto);
-                return CreatedAtAction(nameof(GetById), new { id = newVehicle.VehicleId }, newVehicle);
+                var newVehicle = await _vehicleService.CreateAsync(createDto);
+                return CreatedAtAction(nameof(GetVehicleById), new { id = newVehicle.VehicleId }, newVehicle);
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { message = ex.Message });
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, CreateUpdateVehicleDto dto)
+        public async Task<IActionResult> UpdateVehicle(int id, CreateUpdateVehicleDto updateDto)
         {
             try
             {
-                var updatedVehicle = await _vehicleService.UpdateAsync(id, dto);
-                return updatedVehicle == null ? NotFound() : Ok(updatedVehicle);
+                var updatedVehicle = await _vehicleService.UpdateAsync(id, updateDto);
+                if (updatedVehicle == null)
+                {
+                    return NotFound();
+                }
+                return NoContent();
             }
-            // --- ADD THIS CATCH BLOCK ---
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
-                // This catches the "Collector not found" error
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { message = ex.Message });
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteVehicle(int id)
         {
             var success = await _vehicleService.DeleteAsync(id);
-            return success ? NoContent() : NotFound();
+            if (!success)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
     }
 }

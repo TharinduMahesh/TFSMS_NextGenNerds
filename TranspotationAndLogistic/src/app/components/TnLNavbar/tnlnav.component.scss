@@ -1,0 +1,53 @@
+
+/* Reusable Navigation Bar Styles */
+:host {
+  display: block; // Ensures the component takes up layout space
+  
+  // Define necessary color variables locally or import from a global stylesheet
+  --color-primary-blue: #007bff;
+  --color-primary-blue-dark: #0056b3;
+  --color-text-light: #6c757d;
+  --color-card-bg: #ffffff;
+  --color-border: #dee2e6;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.dashboard-nav {
+  display: flex;
+  background-color: var(--color-card-bg);
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+  padding: 0 0.5rem;
+  border: 1px solid var(--color-border);
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 1.25rem;
+    text-decoration: none;
+    color: var(--color-text-light);
+    font-weight: 600;
+    font-size: 15px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease-in-out;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.5;
+    }
+    
+    &:hover {
+      background-color: #e9f5ff;
+      color: var(--color-primary-blue-dark);
+    }
+
+    &.active {
+      color: var(--color-primary-blue);
+      border-bottom-color: var(--color-primary-blue);
+    }
+  }
+}

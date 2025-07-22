@@ -1,8 +1,11 @@
-// Reusing the same professional modal styles
+/* --- MASTER VIEW MODAL STYLES --- */
 .modal-overlay {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,13 +14,9 @@
   animation: fadeIn 0.2s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; } to { opacity: 1; }
-}
-
 .modal-content {
-  background: #ffffff;
-  padding: 2rem;
+  background: #fff;
+  padding: 2rem 2.5rem;
   border-radius: 12px;
   width: 550px;
   max-width: 90vw;
@@ -26,61 +25,99 @@
   animation: slideIn 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-@keyframes slideIn {
-  from { transform: translateY(20px) scale(0.98); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
-}
-
 .close-btn {
-  position: absolute; top: 1rem; right: 1rem;
-  background: transparent; border: none; font-size: 1.5rem;
-  color: #888; cursor: pointer; transition: color 0.2s;
-  &:hover { color: #333; }
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+    transform: rotate(90deg);
+  }
 }
 
 .modal-title {
-  margin-top: 0; margin-bottom: 1.5rem;
-  font-size: 1.5rem; font-weight: 600; color: #333;
-  text-align: center; border-bottom: 1px solid #eee;
-  padding-bottom: 0.8rem;
+  margin: 0 0 1.5rem 0;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #212529;
+  text-align: center;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 1rem;
 }
 
-.details-grid {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 0.8rem 1.5rem;
-  font-size: 15px;
+.details-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 
-  hr {
-    grid-column: 1 / -1; /* Make hr span both columns */
-    border: none; border-top: 1px solid #eee; margin: 0.5rem 0;
-  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
 
-  .label { font-weight: 500; color: #6c757d; text-align: right; }
-  .value { font-weight: 600; color: #212529; }
-  
-  .plate {
-    background-color: #f7b731;
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-weight: 700;
-    display: inline-block;
-  }
+    &:last-child {
+      border-bottom: none;
+    }
 
-  .full-width {
-    grid-column: 1 / -1;
-    text-align: left;
+    .label {
+      font-weight: 500;
+      color: #64748b;
+    }
+    .value {
+      font-weight: 600;
+      color: #1e293b;
+      text-align: right;
+    }
   }
-  
-  .notes {
-    background-color: #f8f9fa;
-    padding: 0.75rem;
-    border-radius: 6px;
-    margin-top: -0.5rem;
-    min-height: 50px;
-    white-space: pre-wrap;
-    color: #495057;
-  }
+}
+
+.list-title {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.notes-container {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  color: #475569;
+  font-size: 0.95rem;
+  white-space: pre-wrap; // Respects line breaks in the notes
+  min-height: 60px;
+}
+
+/* --- KEYFRAMES FOR ANIMATIONS --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideIn {
+  from { transform: translateY(20px) scale(0.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
 }

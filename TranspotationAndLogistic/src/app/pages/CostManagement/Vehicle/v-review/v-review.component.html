@@ -1,6 +1,7 @@
 <div class="page-container">
+  <app-tnlnavbar></app-tnlnavbar>
   <div class="top-bar">
-    <input type="text" placeholder="Search by License Plate or Model..." 
+    <input type="text" placeholder="Search by Plate, Model, Collector..." 
            [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
     <button class="add-btn" (click)="addNewVehicle()">+ Add New Vehicle</button>
   </div>
@@ -17,20 +18,19 @@
           <th>License Plate</th>
           <th>Model</th>
           <th>Volume (m³)</th>
-          <!-- Corrected Header -->
-          <th>Assigned Collector ID</th> 
+          <th>Assigned Collector</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        @for (vehicle of filteredVehicles(); track trackById($index, vehicle)) {
+        @for (vehicle of filteredVehicles(); track vehicle.vehicleId) {
           <tr>
             <td>{{ vehicle.vehicleId }}</td>
             <td>{{ vehicle.licensePlate }}</td>
             <td>{{ vehicle.model || 'N/A' }}</td>
-            <td>{{ vehicle.volume | number:'1.1-1' }}</td>
-            <!-- THE FIX IS HERE: Changed vehicle.collectorName to vehicle.collectorId -->
-            <td>{{ vehicle.collectorId || 'Unassigned' }}</td>
+            <td>{{ vehicle.volume }}</td>
+            <!-- This line is now valid -->
+            <td>{{ vehicle.collectorName || 'Unassigned' }}</td>
             <td class="actions-cell">
               <button (click)="onView(vehicle)" class="btn-action btn-view">View</button>
               <button (click)="onEdit(vehicle)" class="btn-action btn-edit">Edit</button>
@@ -43,18 +43,14 @@
       </tbody>
     </table>
   }
-</div>
-
-<!-- View Modal -->
+  <!-- View Modal -->
 @if (isViewModalOpen()) {
   <app-v-view [vehicle]="dataToView()!" (close)="closeViewModal()"></app-v-view>
 }
 
 <!-- Edit Modal -->
 @if (isEditModalOpen()) {
-  <app-v-edit 
-    [vehicle]="dataToEdit()!" 
-    (close)="closeEditModal()" 
-    (save)="handleSave($event)">
-  </app-v-edit>
+  <app-v-edit [vehicle]="dataToEdit()!" (close)="closeEditModal()" (save)="handleSave($event)"></app-v-edit>
 }
+</div>
+

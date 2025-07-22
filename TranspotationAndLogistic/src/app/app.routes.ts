@@ -30,6 +30,10 @@ import { InvoiceCreateComponent } from './pages/ledgerManagement/InvoiceCreate/i
 import { InvoiceReviewComponent } from './pages/ledgerManagement/InvoiceReview/in-review.component';
 import { DispatchEntryComponent } from './pages/ledgerManagement/Dispatch Entry/dispatch-entry.component';
 import { SalesEntryComponent } from './pages/ledgerManagement/SalesEntry/s-entry.component';
+import { TransportDashboardComponent } from './pages/transpotation and logistic dashboard/tnlDash.component';
+import { Component } from '@angular/core';
+import { TnLNavbarComponent } from './components/TnLNavbar/tnlnav.component ';
+import { PerformanceDashboardComponent } from './pages/Performance Monitoring dashboard/pdashboard.component';
 
 export const routes: Routes = [
     {
@@ -55,10 +59,6 @@ export const routes: Routes = [
   {
     path : 'r-edit',
     component : RtEditComponent
-  },
-  {
-    path : 'r-review',
-    component : RtReviewComponent
   },
   {
     path : 'r-view',
@@ -147,5 +147,31 @@ export const routes: Routes = [
   {
     path: 's-entry',
     component: SalesEntryComponent
+  },
+  {
+    path: 'transportdashboard',
+    component: TransportDashboardComponent
+  },
+  {
+    path: 'transportdashboard/c-review',
+    component: CollectorReviewComponent
+  },
+  {
+    path: 'transportdashboard/r-review',
+    component: RtReviewComponent
+  },
+  {
+    path: 'transportdashboard/v-review',
+    component: VehicleReviewComponent
+  },
+  {
+    path: 'transportdashboard/t-review',
+    component: TripReviewComponent
+  },
+  {
+    path: 'performancedashboard',
+    component: PerformanceDashboardComponent
   }
+  
+
   ];

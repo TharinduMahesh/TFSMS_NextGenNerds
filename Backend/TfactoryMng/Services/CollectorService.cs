@@ -75,8 +75,7 @@ namespace TfactoryMng.Services
             RatePerKm = c.RatePerKm,
             // Map vehicle details if they exist
             VehicleId = c.Vehicle?.VehicleId,
-            VehicleLicensePlate = c.Vehicle?.LicensePlate,
-            VehicleVolume = c.Vehicle?.Volume
+            VehicleLicensePlate = c.Vehicle?.LicensePlate
         };
     }
 }

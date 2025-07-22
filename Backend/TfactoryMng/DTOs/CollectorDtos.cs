@@ -23,8 +23,8 @@ namespace TfactoryMng.DTOs
         public string? ContactNumber { get; set; }
         public decimal RatePerKm { get; set; }
 
+        // Vehicle details
         public int? VehicleId { get; set; }
         public string? VehicleLicensePlate { get; set; }
-        public double? VehicleVolume { get; set; }
     }
 }

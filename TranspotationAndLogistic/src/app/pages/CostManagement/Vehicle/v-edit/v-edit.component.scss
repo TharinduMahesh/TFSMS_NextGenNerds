@@ -21,6 +21,9 @@
   max-width: 90vw;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   transform: scale(1);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
 }
 
 .close-btn {
@@ -36,6 +39,7 @@
   font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
+  scroll-behavior: smooth;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,8 +65,8 @@
 
   h1 {
     font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 300;
     color: #212529;
     margin: 0;
   }

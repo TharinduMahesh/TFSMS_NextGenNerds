@@ -20,7 +20,7 @@ app-sidebar {
 /* Adjust main content area to not overlap with navbar and sidebar */
 .content {
   margin-left: 290px; /* Equal to sidebar width */
-  margin-top: 60px; /* Equal to navbar height */
+  margin-top: 20px; /* Equal to navbar height */
   padding: 20px;
   // background-color: #f5f5f5;
   width: calc(100% - 250px);

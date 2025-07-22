@@ -2,16 +2,17 @@ import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-// --- Import Vehicle-specific models, services, and components ---
+// Import necessary models and components
 import { VehicleResponse, CreateUpdateVehiclePayload } from '../../../../models/Logistic and Transport/VehicleManagement.model';
 import { VehicleService } from '../../../../services/LogisticAndTransport/Vehicle.service';
 import { VehicleViewComponent } from '../v-view/v-view.component';
 import { VehicleEditComponent } from '../v-edit/v-edit.component';
+import { TnLNavbarComponent } from "../../../../components/TnLNavbar/tnlnav.component ";
 
 @Component({
-  selector: 'app-vehicle-review', // Correct selector
+  selector: 'app-vehicle-review',
   standalone: true,
-  imports: [CommonModule, VehicleViewComponent, VehicleEditComponent], // Import correct components
+  imports: [CommonModule, VehicleViewComponent, VehicleEditComponent, TnLNavbarComponent],
   templateUrl: './v-review.component.html',
   styleUrls: ['./v-review.component.scss']
 })
@@ -19,26 +20,25 @@ export class VehicleReviewComponent implements OnInit {
   private vehicleService = inject(VehicleService);
   private router = inject(Router);
 
-  // --- State Signals for Vehicles ---
+  // --- State Signals ---
   private allVehicles = signal<VehicleResponse[]>([]);
   isLoading = signal(true);
   error = signal<string | null>(null);
   searchTerm = signal('');
 
-  // --- View Modal Management ---
+  // --- View & Edit Modal Management ---
   isViewModalOpen = signal(false);
   dataToView = signal<VehicleResponse | null>(null);
-  
-  // --- Edit Modal Management ---
   isEditModalOpen = signal(false);
   dataToEdit = signal<VehicleResponse | null>(null);
 
-  // --- Computed Signal to filter vehicles ---
+  // --- Computed Signal for Filtering (Now works correctly) ---
   filteredVehicles = computed(() => {
     const term = this.searchTerm().toLowerCase();
     return this.allVehicles().filter(v =>
       v.licensePlate.toLowerCase().includes(term) ||
-      (v.model && v.model.toLowerCase().includes(term)) ||
+      v.model?.toLowerCase().includes(term) ||
+      v.collectorName?.toLowerCase().includes(term) || // This line is now valid
       v.vehicleId.toString().includes(term)
     );
   });
@@ -62,15 +62,11 @@ export class VehicleReviewComponent implements OnInit {
     });
   }
 
-  trackById(index: number, item: VehicleResponse): number {
-    return item.vehicleId;
-  }
-
   addNewVehicle(): void {
     this.router.navigate(['/v-create']);
   }
 
-  // --- Event Handlers for Modals ---
+  // --- Event Handlers ---
   onView(vehicle: VehicleResponse): void {
     this.dataToView.set(vehicle);
     this.isViewModalOpen.set(true);
@@ -82,15 +78,15 @@ export class VehicleReviewComponent implements OnInit {
   }
 
   onDelete(vehicle: VehicleResponse): void {
-    const confirmationMessage = `Are you sure you want to delete vehicle "${vehicle.licensePlate}"? This action cannot be undone.`;
-    if (!confirm(confirmationMessage)) return;
+    const confirmation = `Are you sure you want to delete the vehicle with license plate "${vehicle.licensePlate}"?`;
+    if (!confirm(confirmation)) return;
 
     this.vehicleService.deleteVehicle(vehicle.vehicleId).subscribe({
       next: () => {
-        this.fetchVehicles(); 
-        alert(`Vehicle "${vehicle.licensePlate}" was deleted successfully.`);
+        this.fetchVehicles();
+        alert('Vehicle deleted successfully.');
       },
-      error: (err) => alert(`Error deleting vehicle: ${err.message}.`)
+      error: (err) => alert(`Error deleting vehicle: ${err.message}`)
     });
   }
   

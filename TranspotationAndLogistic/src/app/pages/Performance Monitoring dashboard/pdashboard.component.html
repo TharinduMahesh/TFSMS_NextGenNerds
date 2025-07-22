@@ -1,0 +1,49 @@
+<div class="page-container">
+    <app-pnavbar></app-pnavbar>
+  @if (isLoading()) {
+    <div class="loading-indicator">Building dashboard...</div>
+  } @else if(error()) {
+    <div class="error-message">{{ error() }}</div>
+  } @else {
+    <!-- KPI Summary Cards -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="card-label">Total Transport Cost (Last 30 Days)</div>
+        <div class="card-value">{{ totalCost() | currency:'LKR ' }}</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-label">Average On-Time Performance</div>
+        <div class="card-value">{{ averageOnTime() | number:'1.1-1' }}%</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-label">Total Trips Completed</div>
+        <div class="card-value">{{ totalTrips() | number }}</div>
+      </div>
+      @if (mostEfficientRoute(); as route) {
+        <div class="summary-card highlight">
+          <div class="card-label">Most Efficient Route</div>
+          <div class="card-value small">{{ route.routeName }}</div>
+        </div>
+      }
+    </div>
+    
+    <!-- Chart -->
+    <div class="dashboard-card chart-container">
+      <h3>Collector Cost vs. Performance</h3>
+      @if(chartData().length > 0) {
+        <ngx-charts-bar-vertical-2d
+          [view]="chartView"
+          [scheme]="chartColorScheme"
+          [results]="chartData()"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="true"
+          yAxisLabel="Total Cost (LKR)"
+          xAxisLabel="Collector">
+        </ngx-charts-bar-vertical-2d>
+      } @else {
+        <p class="empty-state">Not enough data to generate a chart.</p>
+      }
+    </div>
+  }
+</div>

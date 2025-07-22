@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 
 import { TripResponse, UpdateTripStatusPayload } from '../../../../models/Logistic and Transport/TripTracking.model';
 import { TransportReportService } from '../../../../services/LogisticAndTransport/TransportReport.service';
+import { TnLNavbarComponent } from "../../../../components/TnLNavbar/tnlnav.component ";
 
 @Component({
   selector: 'app-trip-review',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TnLNavbarComponent],
   templateUrl: './t-review.component.html',
   styleUrls: ['./t-review.component.scss']
 })

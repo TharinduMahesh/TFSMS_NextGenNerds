@@ -1,8 +1,6 @@
 import { Component, Input, Output, EventEmitter, inject, OnChanges, SimpleChanges, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-// Import necessary services and models
 import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
 import { CreateUpdateVehiclePayload, VehicleResponse } from '../../../../models/Logistic and Transport/VehicleManagement.model';
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
@@ -15,18 +13,15 @@ import { CollectorResponse } from '../../../../models/Logistic and Transport/Col
   styleUrls: ['./v-edit.component.scss']
 })
 export class VehicleEditComponent implements OnInit, OnChanges {
-  // --- Injected Services ---
   private fb = inject(FormBuilder);
   private collectorService = inject(CollectorService);
 
-  // --- Inputs & Outputs for Modal Behavior ---
-  @Input({ required: true }) vehicle!: VehicleResponse;
+  @Input({ required: true }) vehicle!: VehicleResponse; 
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<{ vehicleId: number, payload: CreateUpdateVehiclePayload }>();
 
-  // --- Form & State Properties ---
   vehicleForm: FormGroup;
-  collectors = signal<CollectorResponse[]>([]); // To populate the dropdown
+  collectors = signal<CollectorResponse[]>([]);
 
   constructor() {
     this.vehicleForm = this.fb.group({
@@ -39,13 +34,11 @@ export class VehicleEditComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    // Fetch all collectors for the dropdown when the component initializes
     this.collectorService.getAllCollectors().subscribe(allCollectors => {
       this.collectors.set(allCollectors);
     });
   }
 
-  // Use ngOnChanges to populate the form when the vehicle data is passed in
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['vehicle'] && this.vehicle) {
       this.vehicleForm.patchValue(this.vehicle);
@@ -56,11 +49,10 @@ export class VehicleEditComponent implements OnInit, OnChanges {
     if (this.vehicleForm.invalid || !this.vehicle) return;
 
     const payload: CreateUpdateVehiclePayload = this.vehicleForm.value;
-    // Emit the ID and payload for the parent component to handle
     this.save.emit({ vehicleId: this.vehicle.vehicleId, payload });
   }
 
   onCancel(): void {
-    this.close.emit(); // Emit the close event
+    this.close.emit();
   }
 }

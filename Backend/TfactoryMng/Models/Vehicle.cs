@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TfactoryMng.Model
 {
@@ -7,11 +8,12 @@ namespace TfactoryMng.Model
         [Key]
         public int VehicleId { get; set; }
 
-        [Required, StringLength(50)]
+        [Required]
+        [StringLength(50)]
         public string LicensePlate { get; set; } = string.Empty;
 
         [Required]
-        public double Volume { get; set; }
+        public decimal Volume { get; set; }
 
         [StringLength(100)]
         public string? Model { get; set; }
@@ -19,8 +21,10 @@ namespace TfactoryMng.Model
         [StringLength(500)]
         public string? ConditionNotes { get; set; }
 
-        // The relationship to its owner
+        [Required]
         public int CollectorId { get; set; }
-        public Collector Collector { get; set; }
+
+        [ForeignKey("CollectorId")]
+        public Collector Collector { get; set; } = null!;
     }
 }

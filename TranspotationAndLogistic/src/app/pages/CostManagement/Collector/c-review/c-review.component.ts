@@ -7,11 +7,12 @@ import { CollectorResponse, CreateUpdateCollectorPayload } from '../../../../mod
 import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
 import { CollectorViewComponent } from '../c-view/c-view.component';
 import { CollectorEditComponent } from '../c-edit/c-edit.component';
+import { TnLNavbarComponent } from '../../../../components/TnLNavbar/tnlnav.component ';
 
 @Component({
-  selector: 'app-collector-review',
+  selector: 'app-c-review',
   standalone: true,
-  imports: [CommonModule,CollectorViewComponent,CollectorEditComponent],
+  imports: [CommonModule, CollectorViewComponent, CollectorEditComponent, TnLNavbarComponent],
   templateUrl: './c-review.component.html',
   styleUrls: ['./c-review.component.scss']
 })

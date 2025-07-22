@@ -16,20 +16,16 @@ namespace TfactoryMng.Services
 
         public async Task<VehicleResponseDto> CreateAsync(CreateUpdateVehicleDto dto)
         {
-            // 1. Validate collector exists.
             if (!await _context.Collectors.AnyAsync(c => c.CollectorId == dto.CollectorId))
             {
-                throw new KeyNotFoundException($"Cannot create vehicle. Collector with ID {dto.CollectorId} not found.");
+                throw new KeyNotFoundException($"Collector with ID {dto.CollectorId} not found.");
             }
 
-            // 2. Validate license plate uniqueness.
             if (await _context.Vehicles.AnyAsync(v => v.LicensePlate == dto.LicensePlate))
             {
                 throw new InvalidOperationException($"A vehicle with license plate '{dto.LicensePlate}' already exists.");
             }
 
-            // 3. Validate this collector doesn't already have a vehicle (one-to-one).
-            // This is the line that had the syntax error.
             if (await _context.Vehicles.AnyAsync(v => v.CollectorId == dto.CollectorId))
             {
                 throw new InvalidOperationException($"Collector with ID {dto.CollectorId} already has a vehicle assigned.");
@@ -39,7 +35,7 @@ namespace TfactoryMng.Services
             {
                 CollectorId = dto.CollectorId,
                 LicensePlate = dto.LicensePlate,
-                Volume = dto.Volume,
+                Volume = (decimal)dto.Volume,
                 Model = dto.Model,
                 ConditionNotes = dto.ConditionNotes,
             };
@@ -47,18 +43,18 @@ namespace TfactoryMng.Services
             _context.Vehicles.Add(vehicle);
             await _context.SaveChangesAsync();
 
+            await _context.Entry(vehicle).Reference(v => v.Collector).LoadAsync();
             return MapToDto(vehicle);
         }
 
         public async Task<VehicleResponseDto?> UpdateAsync(int id, CreateUpdateVehicleDto dto)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _context.Vehicles.Include(v => v.Collector).FirstOrDefaultAsync(v => v.VehicleId == id);
             if (vehicle == null) return null;
 
-            // Validations (Ensure these lines are also clean and correct)
             if (vehicle.CollectorId != dto.CollectorId && !await _context.Collectors.AnyAsync(c => c.CollectorId == dto.CollectorId))
             {
-                throw new KeyNotFoundException($"Cannot update vehicle. Collector with ID {dto.CollectorId} not found.");
+                throw new KeyNotFoundException($"Collector with ID {dto.CollectorId} not found.");
             }
             if (vehicle.LicensePlate != dto.LicensePlate && await _context.Vehicles.AnyAsync(v => v.LicensePlate == dto.LicensePlate && v.VehicleId != id))
             {
@@ -69,14 +65,15 @@ namespace TfactoryMng.Services
                 throw new InvalidOperationException($"Collector with ID {dto.CollectorId} already has another vehicle assigned.");
             }
 
-            // Update properties
             vehicle.CollectorId = dto.CollectorId;
             vehicle.LicensePlate = dto.LicensePlate;
-            vehicle.Volume = dto.Volume;
+            vehicle.Volume = (decimal)dto.Volume;
             vehicle.Model = dto.Model;
             vehicle.ConditionNotes = dto.ConditionNotes;
 
             await _context.SaveChangesAsync();
+
+            await _context.Entry(vehicle).Reference(v => v.Collector).LoadAsync();
             return MapToDto(vehicle);
         }
 
@@ -93,6 +90,7 @@ namespace TfactoryMng.Services
         public async Task<IEnumerable<VehicleResponseDto>> GetAllAsync()
         {
             return await _context.Vehicles
+                .Include(v => v.Collector)
                 .Select(v => MapToDto(v))
                 .AsNoTracking()
                 .ToListAsync();
@@ -100,7 +98,10 @@ namespace TfactoryMng.Services
 
         public async Task<VehicleResponseDto?> GetByIdAsync(int id)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _context.Vehicles
+                .Include(v => v.Collector)
+                .FirstOrDefaultAsync(v => v.VehicleId == id);
+
             return vehicle == null ? null : MapToDto(vehicle);
         }
 
@@ -112,8 +113,9 @@ namespace TfactoryMng.Services
                 LicensePlate = vehicle.LicensePlate,
                 Model = vehicle.Model,
                 ConditionNotes = vehicle.ConditionNotes,
-                Volume = vehicle.Volume,
-                CollectorId = vehicle.CollectorId
+                Volume = (double)vehicle.Volume,
+                CollectorId = vehicle.CollectorId,
+                CollectorName = vehicle.Collector?.Name
             };
         }
     }

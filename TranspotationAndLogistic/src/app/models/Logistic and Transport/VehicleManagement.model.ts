@@ -6,9 +6,10 @@ export interface VehicleResponse {
   model?: string;
   conditionNotes?: string;
   collectorId: number;
+  collectorName?: string; // <-- THIS IS THE CRUCIAL ADDITION
 }
 
-// For CREATING or UPDATING a vehicle (and linking it to a collector)
+// For CREATING or UPDATING a vehicle
 export interface CreateUpdateVehiclePayload {
   collectorId: number;
   licensePlate: string;

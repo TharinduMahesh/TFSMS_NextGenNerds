@@ -1,9 +1,11 @@
+/* --- Main Page Container --- */
 .page-container {
-  padding: 2rem 1.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f8f9fa;
+  max-width: 1600px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
 }
 
+/* --- Top Bar for Page Title & 'Add New' Button --- */
 .top-bar {
   display: flex;
   align-items: center;
@@ -12,89 +14,89 @@
   padding-bottom: 1rem;
   border-bottom: 1px solid #dee2e6;
 
-  .page-title h2 {
+  h2 {
     margin: 0;
     font-size: 1.75rem;
     font-weight: 600;
     color: #343a40;
   }
-  .page-title p {
-    margin: 0;
-    color: #6c757d;
-  }
-
+  
   .add-btn {
+    background-color: #28a745; // Green button for 'Add'
+    color: white;
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 6px;
-    background-color: #007bff;
-    color: white;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: background-color 0.2s, transform 0.2s;
+    transition: background-color 0.2s ease;
+
     &:hover {
-      background-color: #0056b3;
-      transform: translateY(-2px);
+      background-color: #218838;
     }
   }
 }
 
-.loading-indicator, .error-message {
-  padding: 3rem;
-  text-align: center;
-  font-size: 1.1rem;
-  color: #6c757d;
-}
-
-.error-message {
-  color: #721c24;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 8px;
-}
-
-.table-wrapper {
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
+/* 
+==================================================
+   ↓↓↓   START: PROFESSIONAL TABLE STYLING    ↓↓↓
+==================================================
+*/
 table {
   width: 100%;
   border-collapse: collapse;
-  
-  th, td {
-    padding: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); // Softer shadow
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 14px;
+
+  thead tr {
+    background-color: #343a40; // Dark header background
+    color: #ffffff;
     text-align: left;
+  }
+
+  th, td {
+    padding: 1rem 1.25rem; // Consistent padding
+  }
+
+  tbody tr {
     border-bottom: 1px solid #e9ecef;
-    vertical-align: middle;
-  }
+    transition: background-color 0.2s ease;
 
-  th {
-    background-color: #f8f9fa;
-    color: #495057;
-    font-weight: 600;
-    font-size: 13px;
-    text-transform: uppercase;
-  }
+    // Alternating row colors (stripe effect)
+    &:nth-of-type(even) {
+      background-color: #f8f9fa;
+    }
 
-  td {
-    color: #343a40;
-    font-size: 14px;
-  }
+    &:last-of-type {
+      border-bottom: none;
+    }
 
-  tbody tr:last-child td {
-    border-bottom: none;
+    &:hover {
+      background-color: #dee2e6; // A darker hover for better contrast
+    }
   }
-
-  tbody tr:hover {
-    background-color: #e9f5ff;
+  
+  // Style for the 'empty' message
+  td[colspan="6"] {
+    text-align: center;
+    font-style: italic;
+    color: #6c757d;
+    padding: 2.5rem;
   }
 }
+/* 
+==================================================
+   ↑↑↑   END: PROFESSIONAL TABLE STYLING      ↑↑↑
+==================================================
+*/
+
+
+/* --- Specific Styles for Columns in This Table --- */
 
 .status-cell .status {
+  display: inline-block;
   padding: 5px 12px;
   border-radius: 16px;
   font-weight: 600;
@@ -103,39 +105,54 @@ table {
   text-align: center;
   min-width: 90px;
   
-  &.status-completed { background-color: #28a745; }
-  &.status-departed { background-color: #17a2b8; }
-  &.status-pending { background-color: #ffc107; color: #212529; }
+  // Matched with your color theme
+  &.status-completed { background-color: #28a745; } // Green
+  &.status-departed { background-color: #17a2b8; } // Teal
+  &.status-pending { background-color: #ffc107; color: #212529; } // Yellow
 }
 
 tr.is-late > td:first-child {
-  border-left: 4px solid #dc3545;
+  border-left: 4px solid #dc3545; // Keeps the 'late' indicator
 }
 
-.actions-cell .btn-action {
-  padding: 6px 12px; font-size: 13px; border: none;
-  border-radius: 5px; color: white; cursor: pointer;
-  font-weight: 500; transition: filter 0.2s;
+
+/* --- Action Buttons in Table --- */
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
   
-  &:hover { filter: brightness(0.9); }
-}
-.btn-depart { background-color: #007bff; }
-.btn-arrive { background-color: #28a745; }
-
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  color: #6c757d;
-
-  p { margin-bottom: 1rem; }
-
-  .add-btn-small {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
+  .btn-action {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid transparent;
     border-radius: 5px;
+    font-weight: 500;
     cursor: pointer;
-    &:hover { background-color: #0056b3; }
+    transition: all 0.2s ease;
   }
+  
+  // Buttons with colored backgrounds
+  .btn-depart {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    &:hover { background-color: #bbdefb; }
+  }
+
+  .btn-arrive {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+    &:hover { background-color: #c8e6c9; }
+  }
+}
+
+/* --- Loading/Error States --- */
+.loading-indicator, .error-message {
+  text-align: center;
+  padding: 3rem 1rem;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #6c757d;
+}
+.error-message {
+  color: #721c24;
+  font-weight: 500;
 }

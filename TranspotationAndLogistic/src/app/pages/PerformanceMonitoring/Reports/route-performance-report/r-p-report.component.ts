@@ -13,8 +13,8 @@ import { TransportReportService } from '../../../../services/LogisticAndTranspor
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DecimalPipe, // Provides the 'number' pipe
-    CurrencyPipe // Provides the 'currency' pipe
+    DecimalPipe, 
+    CurrencyPipe
   ],
   templateUrl: './r-p-report.component.html',
   styleUrls: ['./r-p-report.component.scss']

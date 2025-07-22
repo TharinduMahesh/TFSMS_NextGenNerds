@@ -2,15 +2,13 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-// Import necessary services and models
 import { VehicleService } from '../../../../services/LogisticAndTransport/Vehicle.service';
 import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
 import { CreateUpdateVehiclePayload } from '../../../../models/Logistic and Transport/VehicleManagement.model';
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({
-  selector: 'app-v-create',
+  selector: 'app-vehicle-create',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './v-create.component.html',
@@ -23,7 +21,6 @@ export class VehicleCreateComponent implements OnInit {
   private collectorService = inject(CollectorService);
 
   vehicleForm: FormGroup;
-  // This signal will hold only collectors who do NOT already have a vehicle
   availableCollectors = signal<CollectorResponse[]>([]);
 
   constructor() {
@@ -37,7 +34,6 @@ export class VehicleCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Fetch collectors and filter them to show only those without a vehicle
     this.collectorService.getAllCollectors().subscribe(allCollectors => {
       const unassignedCollectors = allCollectors.filter(c => !c.vehicleId);
       this.availableCollectors.set(unassignedCollectors);

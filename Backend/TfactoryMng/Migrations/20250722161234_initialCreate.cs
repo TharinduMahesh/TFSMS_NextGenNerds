@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TfactoryMng.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCompletedSchema : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,7 +56,7 @@ namespace TfactoryMng.Migrations
                     VehicleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LicensePlate = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Volume = table.Column<double>(type: "float", nullable: false),
+                    Volume = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ConditionNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CollectorId = table.Column<int>(type: "int", nullable: false)
@@ -103,6 +103,7 @@ namespace TfactoryMng.Migrations
                     RouteId = table.Column<int>(type: "int", nullable: false),
                     CollectorId = table.Column<int>(type: "int", nullable: false),
                     ScheduledDeparture = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ScheduledArrival = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ActualDeparture = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ActualArrival = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

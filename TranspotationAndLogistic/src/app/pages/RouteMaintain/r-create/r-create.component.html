@@ -1,71 +1,66 @@
 <div class="page-wrapper">
   <header class="page-header">
-    <h1>Create a Route</h1>
+    <h1>Create a New Route</h1>
   </header>
 
   <div class="page-container">
-    <div class="map-preview">
-      <!--  map content-->
-      <p>Map Preview Placeholder</p>
-    </div>
-
     <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="route-form">
       <div class="form-container">
         
         <div class="form-group">
           <label for="create-rName">Route Name</label>
-          <input id="create-rName" type="text" formControlName="rName" />
+          <input id="create-rName" type="text" formControlName="rName" placeholder="e.g., Kandy City Morning Run" />
         </div>
         
         <div class="form-row">
-            <div class="form-group">
-                <label for="create-startLocation">Start Location</label>
-                <input id="create-startLocation" type="text" formControlName="startLocation" />
-            </div>
-            <div class="form-group">
-                <label for="create-endLocation">End Location</label>
-                <input id="create-endLocation" type="text" formControlName="endLocation" />
-            </div>
+          <div class="form-group">
+            <label for="create-startLocation">Start Location</label>
+            <input id="create-startLocation" type="text" formControlName="startLocation" placeholder="e.g., Main Factory" />
+          </div>
+          <div class="form-group">
+            <label for="create-endLocation">End Location</label>
+            <input id="create-endLocation" type="text" formControlName="endLocation" placeholder="e.g., Peradeniya Junction" />
+          </div>
         </div>
         
         <div class="form-group">
           <label for="create-distance">Distance (km)</label>
-          <input id="create-distance" type="number" formControlName="distance" />
+          <input id="create-distance" type="number" formControlName="distance" placeholder="e.g., 25" />
         </div>
 
         <div class="form-group">
-            <label for="create-collectorId">Assign a Collector</label>
+          <label for="create-collectorId">Assign a Collector (and their Vehicle)</label>
+          @if(isLoading()) {
+            <p>Loading collectors...</p>
+          } @else {
             <select id="create-collectorId" formControlName="collectorId">
-                <option [ngValue]="null" disabled>-- Select a Collector --</option>
-                @for(collector of availableCollectors(); track collector.collectorId) {
-                    <option [value]="collector.collectorId">
-                        {{ collector.name }} (Vehicle: {{ collector.vehicleLicensePlate || 'N/A' }}, Volume: {{collector.vehicleVolume || 'N/A'}})
-                    </option>
-                }
+              <option [ngValue]="null" disabled>-- Select a Collector --</option>
+              @for(collector of availableCollectors(); track collector.collectorId) {
+                <option [value]="collector.collectorId">
+                  {{ collector.name }} (Vehicle: {{ collector.vehicleLicensePlate || 'N/A' }})
+                </option>
+              }
             </select>
+          }
         </div>
         
         <hr />
         
-        <h3>Grower Locations</h3>
+        <h3>Grower Locations (Waypoints)</h3>
         <div formArrayName="growerLocations" class="grower-list-editable">
             @for (locationGroup of growerLocations.controls; track $index) {
               <div [formGroupName]="$index" class="grower-item-editable">
-                <input formControlName="latitude" placeholder="Latitude" type="number" step="any" />
-                <input formControlName="longitude" placeholder="Longitude" type="number" step="any" />
-                <input formControlName="description" placeholder="Location description" />
+                <!-- Simplified to only show the description input -->
+                <input formControlName="description" placeholder="Enter grower location name or address" />
                 <button type="button" (click)="removeGrowerLocation($index)" class="btn-remove" title="Remove Location">X</button>
               </div>
             }
         </div>
-        <button type="button" (click)="addGrowerLocation()" class="btn-add-location">+ Add Grower Location</button>
+        <button type="button" (click)="addGrowerLocation()" class="btn-add-location">+ Add Waypoint</button>
         
-        
-
         <div class="form-actions">
           <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
           <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Create Route</button>
-          
         </div>
 
       </div>

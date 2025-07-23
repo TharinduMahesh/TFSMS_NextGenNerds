@@ -1,5 +1,6 @@
 // For VIEWING a trip record
 export interface TripResponse {
+scheduledArrival: string|number|Date;
   tripId: number;
   routeId: number;
   routeName?: string;
@@ -16,6 +17,7 @@ export interface ScheduleTripPayload {
   routeId: number;
   collectorId: number;
   scheduledDeparture: string;
+  scheduledArrival: string; 
 }
 
 // For UPDATING a trip's status

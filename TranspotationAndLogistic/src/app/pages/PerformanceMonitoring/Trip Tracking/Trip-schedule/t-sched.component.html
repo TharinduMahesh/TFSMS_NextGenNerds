@@ -40,15 +40,21 @@
             <div class="error-message">A collector is required.</div>
         }
       </div>
+        <div class="form-group">
+          <label for="scheduledDeparture">Scheduled Departure Time</label>
+          <input id="scheduledDeparture" formControlName="scheduledDeparture" type="datetime-local" />
+          @if (tripForm.get('scheduledDeparture')?.invalid && tripForm.get('scheduledDeparture')?.touched) {
+              <div class="error-message">Departure time is required.</div>
+          }
+        </div>
 
-      <div class="form-group">
-        <label for="scheduledDeparture">Scheduled Departure Time</label>
-        <input id="scheduledDeparture" formControlName="scheduledDeparture" type="datetime-local" />
-        @if (tripForm.get('scheduledDeparture')?.invalid && tripForm.get('scheduledDeparture')?.touched) {
-            <div class="error-message">Departure time is required.</div>
-        }
-      </div>
-
+        <div class="form-group">
+          <label for="scheduledArrival">Scheduled Arrival Time</label>
+          <input id="scheduledArrival" formControlName="scheduledArrival" type="datetime-local" />
+          @if (tripForm.get('scheduledArrival')?.invalid && tripForm.get('scheduledArrival')?.touched) {
+              <div class="error-message">Arrival time is required.</div>
+          }
+        </div>
       <div class="form-actions">
         <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
         <button type="submit" class="btn-primary" [disabled]="tripForm.invalid">Schedule Trip</button>

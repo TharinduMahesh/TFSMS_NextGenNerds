@@ -7,7 +7,7 @@ import { RouteService } from '../../../services/LogisticAndTransport/RouteMainta
 
 
 import { RtViewComponent } from '../r-view/r-view.component';
-import { TnLNavbarComponent } from "../../../components/TnLNavbar/tnlnav.component ";
+import { TnLNavbarComponent } from "../../../components/TnLNavbar/tnlnav.component";
 
 @Component({
   selector: 'app-r-review', 

@@ -14,9 +14,9 @@
     <div class="form-actions">
       <button type="submit" class="btn-primary" [disabled]="isLoading()">
         @if(isLoading()){
-          <span>Generating...</span>
+        <span>Generating...</span>
         } @else {
-          <span>Generate Report</span>
+        <span>Generate Report</span>
         }
       </button>
     </div>
@@ -24,41 +24,43 @@
 
   <div class="report-results">
     @if (isLoading()) {
-      <div class="loading-indicator">Fetching report data...</div>
+    <div class="loading-indicator">Fetching report data...</div>
     } @else if(error()) {
-      <div class="error-message">{{ error() }}</div>
+    <div class="error-message">{{ error() }}</div>
     } @else if(reportData() && reportData()!.length > 0) {
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Collector Name</th>
-              <th>Total Trips Completed</th>
-              <th>On-Time Trips</th>
-              <th>On-Time Percentage</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for(item of reportData(); track item.collectorId) {
-              <tr [class.low-performance]="item.onTimePercentage < 50" 
-                  [class.high-performance]="item.onTimePercentage >= 90">
-                <td>{{ item.collectorName }} (ID: {{ item.collectorId }})</td>
-                <td>{{ item.totalTripsCompleted }}</td>
-                <td>{{ item.onTimeTrips }}</td>
-                <td>
-                  <span class="percentage-badge">
-                    {{ item.onTimePercentage | number:'1.1-1' }}%
-                  </span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Collector Name</th>
+            <th>Total Trips Completed</th>
+            <th>On-Time Trips</th>
+            <th>On-Time Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(item of reportData(); track item.collectorId) {
+          <tr [class.low-performance]="item.onTimePercentage < 50"
+            [class.average-performance]="item.onTimePercentage >= 50 && item.onTimePercentage < 75"
+            [class.good-performance]="item.onTimePercentage >= 75 && item.onTimePercentage < 90"
+            [class.high-performance]="item.onTimePercentage >= 90">
+            <td>{{ item.collectorName }} (ID: {{ item.collectorId }})</td>
+            <td>{{ item.totalTripsCompleted }}</td>
+            <td>{{ item.onTimeTrips }}</td>
+            <td>
+              <span class="percentage-badge">
+                {{ item.onTimePercentage | number:'1.1-1' }}%
+              </span>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
     } @else if (reportData()) {
-      <div class="empty-state">
-        <p>No trip data found for the selected date range.</p>
-      </div>
+    <div class="empty-state">
+      <p>No trip data found for the selected date range.</p>
+    </div>
     }
   </div>
 

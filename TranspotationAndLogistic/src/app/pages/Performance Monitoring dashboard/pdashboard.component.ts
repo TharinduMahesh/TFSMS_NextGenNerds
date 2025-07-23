@@ -1,17 +1,14 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { signal, computed } from '@angular/core';
 import { CommonModule, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts'; // Import for charts
+import { NgxChartsModule, Color, ScaleType, LegendPosition } from '@swimlane/ngx-charts';
 import { forkJoin } from 'rxjs';
 
-// Import all necessary models and the service
-import {
-  CollectorCostReport,
-  CollectorPerformanceReport,
-  RoutePerformanceReport
-} from '../../models/Logistic and Transport/TransportReports.model';
+// Models and Services
+import { CollectorCostReport, CollectorPerformanceReport, RoutePerformanceReport } from '../../models/Logistic and Transport/TransportReports.model';
 import { TransportReportService } from '../../services/LogisticAndTransport/TransportReport.service';
-import { PNavbarComponent } from "../../components/pnav bar/pnav.component ";
+import { PNavbarComponent } from "../../components/pnav bar/pnav.component";
 
 @Component({
   selector: 'app-performance-dashboard',
@@ -21,6 +18,7 @@ import { PNavbarComponent } from "../../components/pnav bar/pnav.component ";
   styleUrls: ['./pdashboard.component.scss']
 })
 export class PerformanceDashboardComponent implements OnInit {
+  // --- Injections ---
   private reportService = inject(TransportReportService);
   private router = inject(Router);
 
@@ -28,14 +26,27 @@ export class PerformanceDashboardComponent implements OnInit {
   isLoading = signal(true);
   error = signal<string | null>(null);
 
-  // --- Data Signals for KPI Cards ---
-  totalCost = signal<number>(0);
-  averageOnTime = signal<number>(0);
-  totalTrips = signal<number>(0);
-  mostEfficientRoute = signal<RoutePerformanceReport | null>(null);
+  // --- KPI Card Signals ---
+  summaryStats = signal({
+    totalCost: 0,
+    overallOnTime: 0,
+    totalTrips: 0,
+    mostEfficientRoute: 'N/A'
+  });
+
+  // --- Chart and Table Data Signals ---
+  chartData = signal<{ name: string; value: number }[]>([]);
+  topCostlyCollectors = signal<CollectorCostReport[]>([]);
+  leastEfficientRoutes = signal<RoutePerformanceReport[]>([]);
   
-  // --- Data Signal for the Chart ---
-  chartData = signal<{ name: string; series: { name: string; value: number }[] }[]>([]);
+  // --- ngx-charts Configuration ---
+  chartColorScheme: Color = {
+    name: 'cool',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6'],
+  };
+  yAxisTicks: number[] = [0, 500, 1000, 1500, 2000]; // Example ticks
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -45,11 +56,12 @@ export class PerformanceDashboardComponent implements OnInit {
     this.isLoading.set(true);
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setMonth(endDate.getMonth() - 1); // Default to last 30 days
+    startDate.setDate(endDate.getDate() - 30); // Default to the last 30 days
+    
+    const startDateStr = startDate.toISOString().split('T')[0];
+    const endDateStr = endDate.toISOString().split('T')[0];
 
-    const startDateStr = this.formatDate(startDate);
-    const endDateStr = this.formatDate(endDate);
-
+    // Fetch all three reports in parallel for maximum speed
     forkJoin({
       costs: this.reportService.getCostByCollector(startDateStr, endDateStr),
       performance: this.reportService.getPerformanceByCollector(startDateStr, endDateStr),
@@ -57,7 +69,7 @@ export class PerformanceDashboardComponent implements OnInit {
     }).subscribe({
       next: ({ costs, performance, routePerformance }) => {
         this.calculateSummaries(costs, performance, routePerformance);
-        this.prepareChartData(costs, performance);
+        this.prepareVisuals(costs, routePerformance);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -72,55 +84,40 @@ export class PerformanceDashboardComponent implements OnInit {
     performance: CollectorPerformanceReport[],
     routePerformance: RoutePerformanceReport[]
   ): void {
-    // Total Cost
-    this.totalCost.set(costs.reduce((sum, item) => sum + item.totalCost, 0));
+    const totalCost = costs.reduce((sum, item) => sum + item.totalCost, 0);
+    const totalTrips = performance.reduce((sum, item) => sum + item.totalTripsCompleted, 0);
+    const totalWeightedOnTime = performance.reduce((sum, p) => sum + (p.onTimePercentage * p.totalTripsCompleted), 0);
+    const overallOnTime = totalTrips > 0 ? totalWeightedOnTime / totalTrips : 0;
     
-    // Total Trips
-    this.totalTrips.set(performance.reduce((sum, item) => sum + item.totalTripsCompleted, 0));
-    
-    // Average On-Time Percentage
-    if (this.totalTrips() > 0) {
-      const totalOnTime = performance.reduce((sum, item) => sum + item.onTimeTrips, 0);
-      this.averageOnTime.set((totalOnTime / this.totalTrips()) * 100);
-    }
-    
-    // Most Efficient Route (lowest cost per km)
-    if (routePerformance.length > 0) {
-      const sortedByEfficiency = [...routePerformance].sort((a, b) => a.costPerKm - b.costPerKm);
-      this.mostEfficientRoute.set(sortedByEfficiency[0]);
-    }
+    const sortedByEfficiency = [...routePerformance].sort((a, b) => a.costPerKm - b.costPerKm);
+    const mostEfficientRoute = sortedByEfficiency.length > 0 ? sortedByEfficiency[0].routeName : 'N/A';
+
+    this.summaryStats.set({ totalCost, overallOnTime, totalTrips, mostEfficientRoute });
   }
 
-  private prepareChartData(
+  private prepareVisuals(
     costs: CollectorCostReport[],
-    performance: CollectorPerformanceReport[]
+    routePerformance: RoutePerformanceReport[]
   ): void {
-      const performanceMap = new Map(performance.map(p => [p.collectorId, p.onTimePercentage]));
-      const chartResult = costs.map(costItem => ({
-        name: costItem.collectorName,
-        series: [
-          { name: 'Total Cost (LKR)', value: costItem.totalCost },
-          { name: 'On-Time %', value: performanceMap.get(costItem.collectorId) || 0 }
-        ]
-      }));
-      this.chartData.set(chartResult);
-  }
+    // Chart: Top 7 routes by total cost
+    const chartResult = [...routePerformance]
+      .sort((a, b) => b.totalCost - a.totalCost)
+      .slice(0, 7)
+      .map(item => ({ name: item.routeName, value: item.totalCost }));
+    this.chartData.set(chartResult);
+    
+    // Table 1: Top 5 most costly collectors
+    this.topCostlyCollectors.set(
+      costs.sort((a, b) => b.totalCost - a.totalCost).slice(0, 5)
+    );
 
-  private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
+    // Table 2: Top 5 least efficient routes (highest cost per km)
+    this.leastEfficientRoutes.set(
+      routePerformance.sort((a, b) => b.costPerKm - a.costPerKm).slice(0, 5)
+    );
   }
-
-  // Navigation helper
+  
   navigateTo(path: string): void {
     this.router.navigate([`/${path}`]);
   }
-
-  // Chart options
-  chartView: [number, number] = [0, 400];
-  chartColorScheme: Color = {
-    name: 'vivid',
-    selectable: true,
-    group: ScaleType.Ordinal,
-    domain: ['#007bff', '#28a745', '#ffc107', '#dc3545'],
-  };
 }

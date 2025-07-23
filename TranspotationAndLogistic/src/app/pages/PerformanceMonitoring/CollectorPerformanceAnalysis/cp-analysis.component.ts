@@ -5,14 +5,12 @@ import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-// Models and Services
+// --- Note: Ensure component/model/service paths are correct for your project ---
+import { PNavbarComponent } from '../../../components/pnav bar/pnav.component';
 import { CollectorPerformanceReport } from '../../../models/Logistic and Transport/TransportReports.model';
-import { CollectorResponse } from '../../../models/Logistic and Transport/CollectorManagement.model';
-import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
 import { CollectorService } from '../../../services/LogisticAndTransport/Collector.service';
-import { PNavbarComponent } from "../../../components/pnav bar/pnav.component ";
+import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
 
-// We'll create an enriched type for our component's state
 type EnrichedPerformanceReport = CollectorPerformanceReport & { vehicleCondition?: string };
 
 @Component({
@@ -23,30 +21,31 @@ type EnrichedPerformanceReport = CollectorPerformanceReport & { vehicleCondition
   styleUrls: ['./cp-analysis.component.scss']
 })
 export class CollectorPerformanceAnalysisComponent implements OnInit {
+  // --- Injections and Form Setup ---
   private fb = inject(FormBuilder);
   private reportService = inject(TransportReportService);
   private collectorService = inject(CollectorService);
-
   reportForm: FormGroup;
   
+  // --- State and Data Signals ---
   reportData = signal<EnrichedPerformanceReport[]>([]);
   chartData = signal<{ name: string, value: number }[]>([]);
-  isLoading = signal(false);
+  isLoading = signal(true);
   error = signal<string | null>(null);
-
-  // --- Summary Card Signals ---
   averageOnTimePercentage = signal<number>(0);
   topPerformer = signal<EnrichedPerformanceReport | null>(null);
   bottomPerformer = signal<EnrichedPerformanceReport | null>(null);
 
-  // ngx-charts options for Horizontal Bar Chart
-  view: [number, number] = [0, 400];
+  // --- ngx-charts options ---
+  view: [number, number] = [800, 400];
   showXAxis = true;
   showYAxis = true;
   showXAxisLabel = true;
-  xAxisLabel = 'On-Time Departure Percentage';
   showYAxisLabel = true;
-  yAxisLabel = 'Collector';
+  
+  xAxisLabel = 'Collector';                     
+  yAxisLabel = 'On-Time Departure Percentage';  
+  
   colorScheme: Color = {
     name: 'performance',
     selectable: true,
@@ -78,35 +77,25 @@ export class CollectorPerformanceAnalysisComponent implements OnInit {
     
     this.isLoading.set(true);
     this.error.set(null);
-    this.reportData.set([]);
 
     const { startDate, endDate } = this.reportForm.value;
 
-    // Use forkJoin to fetch performance report AND collector details (for vehicle notes)
     forkJoin({
       performance: this.reportService.getPerformanceByCollector(startDate, endDate),
-      collectors: this.collectorService.getAllCollectors() // You might need to add a full Vehicle service call here if collector doesn't include vehicle details
+      collectors: this.collectorService.getAllCollectors() 
     }).pipe(
       map(({ performance, collectors }) => {
-        const collectorVehicleMap = new Map(collectors.map(c => [c.collectorId, c.vehicleConditionNotes])); // Placeholder
-        // Enrich the performance data with vehicle condition notes
+        const collectorVehicleMap = new Map(collectors.map(c => [c.collectorId, c.vehicleLicensePlate]));
         return performance.map(p => ({
           ...p,
-          vehicleCondition: collectorVehicleMap.get(p.collectorId) || 'No vehicle data'
+          vehicleCondition: `Assigned: ${collectorVehicleMap.get(p.collectorId) || 'None'}`
         }));
       })
     ).subscribe({
       next: (enrichedData) => {
-        // Sort data by performance for ranking
         const sortedData = enrichedData.sort((a, b) => b.onTimePercentage - a.onTimePercentage);
         this.reportData.set(sortedData);
-        
-        // Prepare data for the chart
-        this.chartData.set(sortedData.map(item => ({
-          name: item.collectorName,
-          value: item.onTimePercentage
-        })));
-        
+        this.chartData.set(sortedData.map(item => ({ name: item.collectorName, value: item.onTimePercentage })));
         this.calculateSummaries(sortedData);
         this.isLoading.set(false);
       },
@@ -119,14 +108,15 @@ export class CollectorPerformanceAnalysisComponent implements OnInit {
 
   private calculateSummaries(data: EnrichedPerformanceReport[]): void {
     if (data.length === 0) {
-      // Reset all summaries
+      this.averageOnTimePercentage.set(0);
+      this.topPerformer.set(null);
+      this.bottomPerformer.set(null);
       return;
     }
     
     const totalPercentage = data.reduce((sum, item) => sum + item.onTimePercentage, 0);
     this.averageOnTimePercentage.set(totalPercentage / data.length);
     
-    // Data is sorted, so first and last are top and bottom performers
     this.topPerformer.set(data[0]);
     this.bottomPerformer.set(data[data.length - 1]);
   }

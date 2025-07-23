@@ -32,6 +32,7 @@ import { DispatchEntryComponent } from './pages/ledgerManagement/Dispatch Entry/
 import { SalesEntryComponent } from './pages/ledgerManagement/SalesEntry/s-entry.component';
 import { TransportDashboardComponent } from './pages/transpotation and logistic dashboard/tnlDash.component';
 import { PerformanceDashboardComponent } from './pages/Performance Monitoring dashboard/pdashboard.component';
+import { RoutePerformanceAnalysisComponent } from './pages/PerformanceMonitoring/Routes Performance Analysis/r-p-analysis.component';
 
 export const routes: Routes = [
     {
@@ -169,7 +170,9 @@ export const routes: Routes = [
   {
     path: 'performancedashboard/collector-performance-analysis',
     component: CollectorPerformanceAnalysisComponent
+  },
+  {
+    path: 'performancedashboard/routes-analysis',
+    component: RoutePerformanceAnalysisComponent
   }
-  
-
   ];

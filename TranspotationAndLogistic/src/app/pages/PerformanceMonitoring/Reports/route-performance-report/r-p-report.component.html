@@ -15,9 +15,9 @@
     <div class="form-actions">
       <button type="submit" class="btn-primary" [disabled]="isLoading()">
         @if(isLoading()){
-          <span>Generating...</span>
+        <span>Generating...</span>
         } @else {
-          <span>Generate Report</span>
+        <span>Generate Report</span>
         }
       </button>
     </div>
@@ -25,46 +25,47 @@
 
   <div class="report-results">
     @if (isLoading()) {
-      <div class="loading-indicator">Fetching report data...</div>
+    <div class="loading-indicator">Fetching report data...</div>
     } @else if(error()) {
-      <div class="error-message">{{ error() }}</div>
+    <div class="error-message">{{ error() }}</div>
     } @else if(reportData() && reportData()!.length > 0) {
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Route Name</th>
-              <th>Total Trips</th>
-              <th>Avg. Duration (Hours)</th>
-              <th>On-Time Dept. %</th>
-              <th>Total Cost</th>
-              <th>Cost per Km</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for(item of reportData(); track item.routeId) {
-              <tr>
-                <td>{{ item.routeName }} (ID: {{ item.routeId }})</td>
-                <td>{{ item.totalTrips }}</td>
-                <td>{{ item.averageTripDurationHours | number:'1.1-2' }}</td>
-                <td>
-                    <span class="percentage-badge"
-                          [class.high-performance]="item.onTimeDeparturePercentage >= 90"
-                          [class.low-performance]="item.onTimeDeparturePercentage < 50">
-                        {{ item.onTimeDeparturePercentage | number:'1.1-1' }}%
-                    </span>
-                </td>
-                <td>{{ item.totalCost | currency:'LKR ' }}</td>
-                <td>{{ item.costPerKm | currency:'LKR ' }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Route Name</th>
+            <th>Total Trips</th>
+            <th>Avg. Duration (Hours)</th>
+            <th>On-Time Dept. %</th>
+            <th>Total Cost</th>
+            <th>Cost per Km</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(item of reportData(); track item.routeId) {
+          <tr>
+            <td>{{ item.routeName }} (ID: {{ item.routeId }})</td>
+            <td>{{ item.totalTrips }}</td>
+            <td>{{ item.averageTripDurationHours | number:'1.1-2' }}</td>
+            <td>
+              <span class="percentage-badge" [class.high-performance]="item.onTimeDeparturePercentage >= 90"
+                [class.good-performance]="item.onTimeDeparturePercentage >= 75 && item.onTimeDeparturePercentage < 90"
+                [class.average-performance]="item.onTimeDeparturePercentage >= 50 && item.onTimeDeparturePercentage < 75"
+                [class.low-performance]="item.onTimeDeparturePercentage < 50">
+                {{ item.onTimeDeparturePercentage | number:'1.1-1' }}%
+              </span>
+            </td>
+            <td>{{ item.totalCost | currency:'LKR ' }}</td>
+            <td>{{ item.costPerKm | currency:'LKR ' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
     } @else if (reportData()) {
-      <div class="empty-state">
-        <p>No completed trip data found for the selected date range.</p>
-      </div>
+    <div class="empty-state">
+      <p>No completed trip data found for the selected date range.</p>
+    </div>
     }
   </div>
 </div>

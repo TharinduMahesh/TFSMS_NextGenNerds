@@ -1,18 +1,27 @@
 <div class="page-container">
   <app-pnavbar></app-pnavbar>
-  <!-- Form for date selection (same as before) -->
-  <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="form-wrapper report-form">
-    <!-- ... date picker form groups ... -->
-    <div class="form-actions">
-      <button type="submit" class="btn-primary" [disabled]="isLoading()">
-        @if(isLoading()){
-          <span><i class="loader"></i> Analyzing...</span>
-        } @else {
-          <span>Analyze Performance</span>
-        }
-      </button>
-    </div>
-  </form>
+
+  <header class="page-controls">
+    <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="controls-form">
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input id="startDate" formControlName="startDate" type="date" />
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input id="endDate" formControlName="endDate" type="date" />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="isLoading()">
+          @if(isLoading()){
+            <span><i class="loader"></i> Analyzing...</span>
+          } @else {
+            <span>Analyze Performance</span>
+          }
+        </button>
+      </div>
+    </form>
+  </header>
 
   <div class="report-results">
     @if (isLoading()) {
@@ -21,7 +30,7 @@
       <div class="error-message">{{ error() }}</div>
     } @else if(reportData().length > 0) {
 
-      <!-- Summary Cards -->
+      <!-- Summary KPI Cards -->
       <div class="summary-cards">
         <div class="card">
           <div class="card-title">Average On-Time %</div>
@@ -41,10 +50,11 @@
         }
       </div>
 
-      <!-- Main Chart and Insights -->
+      <!-- Main Chart and Insights Grid -->
       <div class="main-content">
         <div class="chart-container">
-          <ngx-charts-bar-horizontal
+          <!-- The component is now correctly ngx-charts-bar-vertical -->
+          <ngx-charts-bar-vertical
             [view]="view"
             [scheme]="colorScheme"
             [results]="chartData()"
@@ -56,7 +66,8 @@
             [showYAxisLabel]="showYAxisLabel"
             [xAxisLabel]="xAxisLabel"
             [yAxisLabel]="yAxisLabel">
-          </ngx-charts-bar-horizontal>
+            []
+          </ngx-charts-bar-vertical>
         </div>
         
         <div class="insights-panel">
@@ -71,12 +82,8 @@
           }
           @if(bottomPerformer(); as performer) {
             <div class="insight-item">
-              <span class="insight-label highlight-cost">Opportunity</span>
-              <p><strong>{{ performer.collectorName }}</strong> has the lowest on-time rate. 
-                 <strong>Vehicle Condition:</strong> *{{ performer.vehicleCondition || 'No notes' }}*.</p>
-              <!-- <p class="recommendation">
-                If performance is consistently low and vehicle condition notes exist, consider scheduling vehicle maintenance.
-              </p> -->
+              <span class="insight-label highlight-cost">For Improvement</span>
+              <p><strong>{{ performer.collectorName }}</strong> has the lowest on-time rate. This could be investigated further by checking vehicle status.</p>
             </div>
           }
         </div>
@@ -84,7 +91,7 @@
       
     } @else {
       <div class="empty-state">
-        <p>No trip data found to analyze performance.</p>
+        <p>No trip data found for the selected date range to analyze performance.</p>
       </div>
     }
   </div>

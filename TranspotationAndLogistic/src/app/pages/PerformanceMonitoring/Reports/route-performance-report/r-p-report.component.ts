@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 // Models and Services
 import { RoutePerformanceReport } from '../../../../models/Logistic and Transport/TransportReports.model';
 import { TransportReportService } from '../../../../services/LogisticAndTransport/TransportReport.service';
-import { PNavbarComponent } from "../../../../components/pnav bar/pnav.component ";
+import { PNavbarComponent } from "../../../../components/pnav bar/pnav.component";
 
 @Component({
   selector: 'app-route-performance-report',

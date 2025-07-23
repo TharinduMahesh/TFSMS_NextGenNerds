@@ -117,11 +117,15 @@
     }
 
     th {
-      background-color: #f8f9fa;
-      color: #495057;
+      padding: 1rem 1.25rem;
+      text-align: left;
       font-weight: 600;
       font-size: 13px;
+      color: #f8f9fa;
       text-transform: uppercase;
+      letter-spacing: 0.75px;
+      border-bottom: 2px solid #e9ecef;
+      background-color: #6c757d; // A light, clean grey for the header
     }
 
     td {
@@ -146,29 +150,38 @@
     tbody tr:hover { background-color: #f1f3f5; }
 
     .percentage-badge {
-      display: inline-block;
-      padding: 6px 14px;
-      font-weight: 700;
-      border-radius: 16px;
-      font-size: 14px;
-      color: #fff;
-      min-width: 80px;
-      text-align: center;
-    }
+  display: inline-block;
+  padding: 7px 15px;
+  font-weight: 700;
+  border-radius: 20px; // Pill shape
+  font-size: 14px;
+  color: #fff; // Default text color is white
+  min-width: 80px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
 
-    tr.high-performance .percentage-badge,
-    td [class*="high-performance"] { // For conditional class on badge
-        background-color: #28a745; 
-    }
-    
-    tr:not([class]) .percentage-badge {
-       background-color: #ffc107; // Yellow/orange for average
-       color: #212529;
-    }
-    
-    tr.low-performance .percentage-badge,
-    td [class*="low-performance"] {
-      background-color: #dc3545;
-    }
-  }
+// --- NEW 4-TIER PERFORMANCE STYLES ---
+
+// Tier 1: HIGH PERFORMANCE (e.g., >= 90%)
+.percentage-badge.high-performance {
+  background-color: #28a745; // Vibrant Green
+}
+
+// Tier 2: GOOD PERFORMANCE (e.g., 75% - 89.9%)
+.percentage-badge.good-performance {
+  background-color: #20c997; // A lighter, teal-like green
+}
+
+// Tier 3: AVERAGE PERFORMANCE (e.g., 50% - 74.9%)
+.percentage-badge.average-performance {
+  background-color: #ffc107; // Yellow/Amber
+  color: #212529; // Use dark text for better readability on yellow
+}
+
+// Tier 4: LOW PERFORMANCE (e.g., < 50%)
+.percentage-badge.low-performance {
+  background-color: #dc3545; // Red
+}
+}
 }

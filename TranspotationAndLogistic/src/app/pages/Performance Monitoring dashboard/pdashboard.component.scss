@@ -1,94 +1,115 @@
-// Main page layout
+:host {
+  display: block;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+}
+
 .page-container {
   max-width: 1600px;
   margin: 2rem auto;
   padding: 0 1rem;
-  background-color: #f4f7f9;
 }
 
-.loading-indicator, .error-message {
-  padding: 3rem;
-  text-align: center;
-  font-size: 1.2rem;
-  color: #6c757d;
-}
-.error-message { color: #dc3545; }
+.empty-state-small { text-align: center; color: #95a5a6; padding: 1rem; }
 
-// KPI Card Grid
-.summary-grid {
+// --- KPI Card Grid ---
+.kpi-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1.5rem; // Increased gap for better spacing
+  margin: 1.5rem 0 2.5rem 0;
 }
 
-.summary-card {
+.kpi-card {
+  position: relative;
   background: #ffffff;
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem; // Adjusted padding for better visual balance
   border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-  border-left: 5px solid;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px; // Adjusted for new font/padding
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
 
-  .card-label {
-    font-size: 1rem;
-    color: #6c757d;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px;
+    height: 100%;
+    background-color: var(--accent-color);
+  }
+
+  &:nth-child(1) { --accent-color: #e74c3c; } // Red
+  &:nth-child(2) { --accent-color: #2ecc71; } // Green
+  &:nth-child(3) { --accent-color: #8e4ad; } // Purple
+  &:nth-child(4) { --accent-color: #3498db; } // Blue
+
+  .label {
+    font-size: 14px;
     font-weight: 500;
-    margin-bottom: 0.5rem;
+    color: #7f8c8d;
   }
 
-  .card-value {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #212529;
-
-    &.small { font-size: 1.25rem; }
+  .value {
+    font-size: 1.75rem; // Adjusted size
+    font-weight: 700;
+    color: #2c3e50;
+    align-self: flex-start; // Pushes the value to the bottom right
+    
+    &.accent-red { color: #c0392b; }
+    &.accent-green { color: #27ae60; }
+    &.accent-blue { color: #2980b9; }
+    &.small-text { font-size: 1.4rem; }
   }
+}
+
+// --- Main Content Grid ---
+.main-content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: flex-start;
   
-  // Card accent colors
-  &:nth-child(1) { border-color: #007bff; } // Blue
-  &:nth-child(2) { border-color: #ffc107; } // Yellow
-  &:nth-child(3) { border-color: #6f42c1; } // Purple
-  &.highlight { border-color: #28a745; } // Green
-}
-
-// Chart Container Card
-.dashboard-card {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-
-  h3 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.25rem;
-    color: #343a40;
-  }
-}
-
-.chart-container {
-  height: 450px;
-  width: 100%;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 2rem;
-  color: #6c757d;
-}
-
-@media (max-width: 992px) {
-  .summary-grid {
-    // Switch to a 2x2 layout
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-// For mobile phones (e.g., screen width less than 576px)
-@media (max-width: 576px) {
-  .summary-grid {
-    // Switch to a single column layout
+  // RESPONSIVE FIX: On screens smaller than 1200px, stack the columns
+  @media (max-width: 1200px) {
     grid-template-columns: 1fr;
   }
+}
+
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  h3 { margin: 0 0 0.5rem 0; font-size: 1.2rem; color: #34495e; }
+  .card-subtitle { margin: 0 0 1rem 0; color: #95a5a6; font-size: 0.9rem; }
+}
+
+.chart-card { height: 420px; }
+
+// --- Summary Tables Container ---
+.tables-container {
+  display: flex;
+  // RESPONSIVE FIX: Stack tables vertically instead of in a row
+  flex-direction: column;
+  gap: 1.5rem; // Use a reasonable gap
+  // RESPONSIVE FIX: Remove the fixed, large margin
+  margin: 30px;
+}
+
+// Reusable table styles
+.table-container {
+  min-height: auto; // Remove fixed height for better flexibility
+  table { width: 100%; border-collapse: collapse; td { padding: 0.8rem 0.25rem; border-bottom: 1px solid #ecf0f1; font-size: 0.95rem; } }
+  .rank { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 50%; background-color: #ecf0f1; color: #7f8c8d; font-weight: 700; margin-right: 0.75rem; &.danger { background-color: #e74c3c; color: white; } }
+  .value-cell { font-weight: 700; text-align: right; &.danger { color: #c0392b; } }
 }

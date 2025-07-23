@@ -134,6 +134,9 @@ namespace TfactoryMng.Migrations
                     b.Property<int>("RouteId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("ScheduledArrival")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("ScheduledDeparture")
                         .HasColumnType("datetime2");
 

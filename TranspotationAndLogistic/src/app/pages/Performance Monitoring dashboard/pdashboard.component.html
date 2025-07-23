@@ -1,49 +1,93 @@
 <div class="page-container">
   <app-pnavbar></app-pnavbar>
+
   @if (isLoading()) {
     <div class="loading-indicator">Building dashboard...</div>
-  } @else if(error()) {
+  } @else if (error()) {
     <div class="error-message">{{ error() }}</div>
   } @else {
-    <!-- KPI Summary Cards -->
-    <div class="summary-grid">
-      <div class="summary-card">
-        <div class="card-label">Total Transport Cost (Last 30 Days)</div>
-        <div class="card-value">{{ totalCost() | currency:'LKR ' }}</div>
+    <!-- Section 1: KPI Summary Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card" (click)="navigateTo('reports/costs-by-collector')">
+        <span class="label">Total Transport Cost (Last 30 Days)</span>
+        <span class="value accent-red">{{ summaryStats().totalCost | currency:'LKR ' }}</span>
       </div>
-      <div class="summary-card">
-        <div class="card-label">Average On-Time Performance</div>
-        <div class="card-value">{{ averageOnTime() | number:'1.1-1' }}%</div>
+      <div class="kpi-card" (click)="navigateTo('reports/performance-by-collector')">
+        <span class="label">Overall On-Time Performance</span>
+        <span class="value accent-green">{{ summaryStats().overallOnTime | number:'1.1-1' }}%</span>
       </div>
-      <div class="summary-card">
-        <div class="card-label">Total Trips Completed</div>
-        <div class="card-value">{{ totalTrips() | number }}</div>
+      <div class="kpi-card" (click)="navigateTo('trip-review')">
+        <span class="label">Total Trips Completed</span>
+        <span class="value">{{ summaryStats().totalTrips }}</span>
       </div>
-      @if (mostEfficientRoute(); as route) {
-        <div class="summary-card highlight">
-          <div class="card-label">Most Efficient Route</div>
-          <div class="card-value small">{{ route.routeName }}</div>
-        </div>
-      }
+      <div class="kpi-card" (click)="navigateTo('reports/performance-by-route')">
+        <span class="label">Most Cost-Efficient Route</span>
+        <span class="value accent-blue small-text">{{ summaryStats().mostEfficientRoute }}</span>
+      </div>
     </div>
-    
-    <!-- Chart -->
-    <div class="dashboard-card chart-container">
-      <h3>Collector Cost vs. Performance</h3>
-      @if(chartData().length > 0) {
-        <ngx-charts-bar-vertical-2d
-          [view]="chartView"
-          [scheme]="chartColorScheme"
-          [results]="chartData()"
-          [xAxis]="true"
-          [yAxis]="true"
-          [legend]="true"
-          yAxisLabel="Total Cost (LKR)"
-          xAxisLabel="Collector">
-        </ngx-charts-bar-vertical-2d>
-      } @else {
-        <p class="empty-state">Not enough data to generate a chart.</p>
-      }
+
+    <!-- Section 2: Main Content Grid (Chart + Tables) -->
+    <div class="main-content-grid">
+      <!-- Chart -->
+      <div class="dashboard-card chart-card">
+        <h3>Top Routes by Total Cost (LKR)</h3>
+        @if (chartData().length > 0) {
+          <ngx-charts-bar-vertical
+            [results]="chartData()"
+            [scheme]="chartColorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [yAxisTicks]="yAxisTicks"
+            [legend]="false"
+            yAxisLabel="Total Cost"
+            xAxisLabel="Route Name">
+          </ngx-charts-bar-vertical>
+        } @else {
+          <p class="empty-state">No chart data available.</p>
+        }
+      </div>
+
+    <hr>
+
+      <!-- Summary Tables Container -->
+      <div class="tables-container">
+        <!-- Top Collectors Table -->
+        <div class="dashboard-card">
+          <h3>Highest Cost Collectors</h3>
+          <p class="card-subtitle">Greatest transport expenditure.</p>
+          <div class="table-container">
+            <table>
+              <tbody>
+                @for(collector of topCostlyCollectors(); track collector.collectorId; let i = $index) {
+                  <tr>
+                    <td><span class="rank">{{ i + 1 }}</span></td>
+                    <td>{{ collector.collectorName }}</td>
+                    <td class="value-cell">{{ collector.totalCost | currency:'LKR '}}</td>
+                  </tr>
+                } @empty { <tr><td colspan="3" class="empty-state-small">No data</td></tr> }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Least Efficient Routes Table -->
+        <div class="dashboard-card">
+          <h3>Least Efficient Routes</h3>
+          <p class="card-subtitle">Highest cost per kilometer.</p>
+          <div class="table-container">
+            <table>
+              <tbody>
+                @for(route of leastEfficientRoutes(); track route.routeId; let i = $index) {
+                  <tr>
+                    <td><span class="rank danger">{{ i + 1 }}</span></td>
+                    <td>{{ route.routeName }}</td>
+                    <td class="value-cell danger">{{ route.costPerKm | currency:'LKR '}}/km</td>
+                  </tr>
+                } @empty { <tr><td colspan="3" class="empty-state-small">No data</td></tr> }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   }
 </div>

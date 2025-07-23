@@ -16,24 +16,23 @@ namespace TfactoryMng.Services
 
         public async Task<TripResponseDto> ScheduleTripAsync(ScheduleTripDto dto)
         {
-            // Validate that the route and collector exist
+            // Validations remain the same
             if (!await _context.RtLists.AnyAsync(r => r.rId == dto.RouteId))
                 throw new KeyNotFoundException($"Route with ID {dto.RouteId} not found.");
-
             if (!await _context.Collectors.AnyAsync(c => c.CollectorId == dto.CollectorId))
-                throw new KeyNotFoundException($"Collector with ID {dto.CollectorId} not found.");
+                throw new KeyNotFoundException($"Route with ID {dto.RouteId} not found.");
 
             var newTrip = new TripRecord
             {
                 RouteId = dto.RouteId,
                 CollectorId = dto.CollectorId,
-                ScheduledDeparture = dto.ScheduledDeparture
+                ScheduledDeparture = dto.ScheduledDeparture,
+                ScheduledArrival = dto.ScheduledArrival
             };
 
             _context.TripRecords.Add(newTrip);
             await _context.SaveChangesAsync();
 
-            // Return the full DTO by fetching the newly created trip with its details
             return await GetTripByIdAsync(newTrip.TripId)
                    ?? throw new InvalidOperationException("Could not retrieve newly created trip.");
         }
@@ -90,6 +89,8 @@ namespace TfactoryMng.Services
             CollectorId = t.CollectorId,
             CollectorName = t.Collector?.Name,
             ScheduledDeparture = t.ScheduledDeparture,
+            // --- ADD THIS NEW MAPPING ---
+            ScheduledArrival = t.ScheduledArrival,
             ActualDeparture = t.ActualDeparture,
             ActualArrival = t.ActualArrival,
             IsOnTime = t.IsOnTime

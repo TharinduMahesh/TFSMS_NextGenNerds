@@ -2,7 +2,6 @@
   <app-pnavbar></app-pnavbar>
 
   <header class="page-controls">
-    
     <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="controls-form">
       <div class="form-group">
         <label for="startDate">Start Date</label>
@@ -17,7 +16,7 @@
           @if(isLoading()){
             <span><i class="loader"></i> Analyzing...</span>
           } @else {
-            <span>Analyze Costs</span>
+            <span>Analyze Routes</span>
           }
         </button>
       </div>
@@ -26,38 +25,44 @@
 
   <div class="report-results">
     @if (isLoading()) {
-      <div class="loading-indicator">Generating analytics...</div>
+      <div class="loading-indicator">Generating route analytics...</div>
     } @else if(error()) {
       <div class="error-message">{{ error() }}</div>
     } @else if(reportData().length > 0) {
 
-      <!-- Summary KPI Cards -->
+      <!-- Summary KPI Cards for Routes -->
       <div class="summary-cards">
         <div class="card">
-          <div class="card-title">Total Cost</div>
-          <div class="card-value">{{ totalCost() | currency:'LKR ' }}</div>
+          <div class="card-title">Average Trip Duration</div>
+          <div class="card-value">{{ averageTripDuration() | number:'1.1-1' }} hrs</div>
         </div>
-        <div class="card">
-          <div class="card-title">Total Trips</div>
-          <div class="card-value">{{ totalTrips() | number }}</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Average Cost / Trip</div>
-          <div class="card-value">{{ averageCostPerTrip() | currency:'LKR ' }}</div>
-        </div>
+        @if(bestOnTimeRoute(); as route) {
+          <div class="card highlight-green">
+            <div class="card-title">Best On-Time Route</div>
+            <div class="card-value small-text">{{ route.routeName }}</div>
+          </div>
+        }
+        @if(leastEfficientRoute(); as route) {
+          <div class="card highlight-red">
+            <div class="card-title">Highest Cost per Km</div>
+            <div class="card-value small-text">{{ route.routeName }}</div>
+          </div>
+        }
       </div>
 
       <!-- Main Chart and Insights Grid -->
       <div class="main-content">
         <div class="chart-container">
+          <!-- Uses the VERTICAL bar chart component -->
           <ngx-charts-bar-vertical
+            [view]="chartView"
             [scheme]="chartColorScheme"
             [results]="chartData()"
-            [xAxis]="true"
-            [yAxis]="true"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
             [legend]="false"
-            [showXAxisLabel]="true"
-            [showYAxisLabel]="true"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
             [xAxisLabel]="xAxisLabel"
             [yAxisLabel]="yAxisLabel">
           </ngx-charts-bar-vertical>
@@ -65,19 +70,18 @@
         
         <div class="insights-panel">
           <h3>Analysis & Insights</h3>
-          @if(highestCostCollector(); as topCollector) {
+          @if(bestOnTimeRoute(); as route) {
             <div class="insight-item">
-              <span class="insight-label highlight-cost">Highest Expenditure</span>
-              <p><strong>{{ topCollector.collectorName }}</strong> incurred the highest cost at 
-                 <strong>{{ topCollector.totalCost | currency:'LKR' }}</strong> 
-                 over {{ topCollector.totalTrips }} trips.</p>
+              <span class="insight-label highlight-efficient">Most Punctual</span>
+              <p>The <strong>{{ route.routeName }}</strong> route has the highest on-time departure rate at 
+                 <strong>{{ route.onTimeDeparturePercentage | number:'1.1-1' }}%</strong>.</p>
             </div>
           }
-          @if(lowestCostCollector(); as lowCollector) {
+          @if(leastEfficientRoute(); as route) {
             <div class="insight-item">
-              <span class="insight-label highlight-efficient">Most Cost-Efficient</span>
-              <p><strong>{{ lowCollector.collectorName }}</strong> had the lowest total cost at 
-                 <strong>{{ lowCollector.totalCost | currency:'LKR' }}</strong>.</p>
+              <span class="insight-label highlight-cost">Cost Inefficiency</span>
+              <p>The <strong>{{ route.routeName }}</strong> route is the least cost-efficient at 
+                 <strong>{{ route.costPerKm | currency:'LKR ' }}</strong> per kilometer.</p>
             </div>
           }
         </div>
@@ -85,7 +89,7 @@
       
     } @else {
       <div class="empty-state">
-        <p>No trip data found for the selected date range to analyze costs.</p>
+        <p>No trip data found to analyze route performance.</p>
       </div>
     }
   </div>

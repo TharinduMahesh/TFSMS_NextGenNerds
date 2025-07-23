@@ -40,7 +40,8 @@ export class TripScheduleComponent implements OnInit {
     this.tripForm = this.fb.group({
       routeId: [null, Validators.required],
       collectorId: [null, Validators.required],
-      scheduledDeparture: ['', Validators.required]
+      scheduledDeparture: ['', Validators.required],
+      scheduledArrival: ['', Validators.required] 
     });
   }
 

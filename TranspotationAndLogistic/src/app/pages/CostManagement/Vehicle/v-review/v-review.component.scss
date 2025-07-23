@@ -18,12 +18,12 @@
 
   input[type="text"] {
     padding: 0.6rem 1rem;
-    border: 1px solid #dee2e6;
+    border: 1px solid #dee2e678;
     border-radius: 6px;
     font-size: 1rem;
-    background-color: #fff;
+    background-color: #dee2e6;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    width: 350px;
+    width: 250px;
 
     &:focus {
       border-color: #495057;
@@ -37,7 +37,7 @@
 
   .add-btn {
     margin-left: auto;
-    background-color: #388e3c; // Consistent green button
+    background-color: #28a745; // Consistent green button
     color: white;
     padding: 0.6rem 1.2rem;
     border: none;

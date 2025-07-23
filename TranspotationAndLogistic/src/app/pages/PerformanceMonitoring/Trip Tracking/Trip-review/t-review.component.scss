@@ -5,66 +5,86 @@
   padding: 0 1rem;
 }
 
-/* --- Top Bar for Page Title & 'Add New' Button --- */
+/* --- Top Bar for Page Title, Search Bar & 'Add New' Button --- */
 .top-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #dee2e6;
-
-  h2 {
-    margin: 0;
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #343a40;
-  }
-  
-  .add-btn {
-    background-color: #28a745; // Green button for 'Add'
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #218838;
-    }
-  }
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* 
-==================================================
-   ↓↓↓   START: PROFESSIONAL TABLE STYLING    ↓↓↓
-==================================================
-*/
+.top-bar .page-title {
+  flex: 1;
+}
+
+.top-bar h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.top-bar input[type="text"] {
+  padding: 0.6rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 250px;
+}
+
+.top-bar input[type="text"]:focus {
+  border-color: #495057;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
+}
+
+.top-bar input[type="text"]::placeholder {
+  color: #adb5bd;
+}
+
+.top-bar .add-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.top-bar .add-btn:hover {
+  background-color: #218838;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); // Softer shadow
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   border-radius: 8px;
   overflow: hidden;
-  font-size: 14px;
+  font-size: 13px;
 
   thead tr {
-    background-color: #343a40; // Dark header background
+    background-color: #343a40;
     color: #ffffff;
     text-align: left;
   }
 
   th, td {
-    padding: 1rem 1.25rem; // Consistent padding
+    padding: 1rem 1.25rem;
   }
 
   tbody tr {
     border-bottom: 1px solid #e9ecef;
     transition: background-color 0.2s ease;
 
-    // Alternating row colors (stripe effect)
     &:nth-of-type(even) {
       background-color: #f8f9fa;
     }
@@ -74,26 +94,17 @@ table {
     }
 
     &:hover {
-      background-color: #dee2e6; // A darker hover for better contrast
+      background-color: #dee2e6;
     }
   }
   
-  // Style for the 'empty' message
-  td[colspan="6"] {
+  td[colspan="7"] {
     text-align: center;
     font-style: italic;
     color: #6c757d;
     padding: 2.5rem;
   }
 }
-/* 
-==================================================
-   ↑↑↑   END: PROFESSIONAL TABLE STYLING      ↑↑↑
-==================================================
-*/
-
-
-/* --- Specific Styles for Columns in This Table --- */
 
 .status-cell .status {
   display: inline-block;
@@ -105,18 +116,15 @@ table {
   text-align: center;
   min-width: 90px;
   
-  // Matched with your color theme
-  &.status-completed { background-color: #28a745; } // Green
-  &.status-departed { background-color: #17a2b8; } // Teal
-  &.status-pending { background-color: #ffc107; color: #212529; } // Yellow
+  &.status-completed { background-color: #28a745; }
+  &.status-departed { background-color: #17a2b8; }
+  &.status-pending { background-color: #ffc107; color: #212529; }
 }
 
 tr.is-late > td:first-child {
-  border-left: 4px solid #dc3545; // Keeps the 'late' indicator
+  border-left: 4px solid #dc3545;
 }
 
-
-/* --- Action Buttons in Table --- */
 .actions-cell {
   display: flex;
   gap: 0.5rem;
@@ -130,7 +138,6 @@ tr.is-late > td:first-child {
     transition: all 0.2s ease;
   }
   
-  // Buttons with colored backgrounds
   .btn-depart {
     background-color: #e3f2fd;
     color: #0d47a1;
@@ -142,9 +149,14 @@ tr.is-late > td:first-child {
     color: #1b5e20;
     &:hover { background-color: #c8e6c9; }
   }
+
+  .btn-delete {
+    background-color: #f8d7da;
+    color: #721c24;
+    &:hover { background-color: #f5c6cb; }
+  }
 }
 
-/* --- Loading/Error States --- */
 .loading-indicator, .error-message {
   text-align: center;
   padding: 3rem 1rem;
@@ -152,7 +164,53 @@ tr.is-late > td:first-child {
   font-style: italic;
   color: #6c757d;
 }
+
 .error-message {
   color: #721c24;
   font-weight: 500;
+}
+
+/* Mobile styles (≤480px) */
+@media screen and (max-width: 480px) {
+  .page-container {
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+  }
+  
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.8rem;
+  }
+
+  .top-bar input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .top-bar .add-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  table {
+    font-size: 0.7rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.5rem;
+  }
+
+  .actions-cell {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .actions-cell .btn-action {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
 }

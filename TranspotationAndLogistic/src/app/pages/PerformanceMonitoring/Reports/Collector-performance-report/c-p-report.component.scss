@@ -102,6 +102,7 @@
 
 // Styling for the results area
 .report-results {
+  margin-top: 2rem;
   .loading-indicator,
   .error-message,
   .empty-state {
@@ -114,85 +115,95 @@
     border-radius: 8px;
     border: 1px dashed #dcdfe2;
   }
-
-  .error-message { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
 }
 
-// Table styling, including performance indicators
+// Table wrapper style from your inspiration image
 .table-wrapper {
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+  background-color: #ffffff; // The table sits on a white card
+  border-radius: 12px;
+  padding: 0.5rem 1rem; // Some padding inside the card
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08); // A slightly deeper shadow
+  border: 1px solid #e9ecef;
 
   table {
     width: 100%;
     border-collapse: collapse;
 
-    th, td {
-      padding: 1.25rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid #e9ecef;
-      vertical-align: middle;
-    }
-
+    // Table Header (th) styles
     th {
-      background-color: #f8f9fa;
-      color: #495057;
+      padding: 1rem 1.25rem;
+      text-align: left;
       font-weight: 600;
       font-size: 13px;
+      color: #f8f9fa;
       text-transform: uppercase;
+      letter-spacing: 0.75px;
+      border-bottom: 2px solid #e9ecef;
+      background-color: #6c757d; 
     }
 
+    // Table Data (td) styles
     td {
-      color: #343a40;
+      padding: 1.25rem; // More vertical padding for a spacious feel
+      text-align: left;
+      vertical-align: middle;
       font-size: 15px;
       font-weight: 500;
+      color: #343a40;
+      border-bottom: 1px solid #e9ecef;
     }
-    
-    // Center-align the numeric performance data
-    td:not(:first-child),
-    th:not(:first-child) {
+
+    // Align all columns except the first one to the center for a clean look
+    th:not(:first-child),
+    td:not(:first-child) {
       text-align: center;
     }
     
-    // Left-align the name column
-    td:first-child, th:first-child {
-      text-align: left;
-    }
-
     tbody tr:last-child td {
-      border-bottom: none;
+      border-bottom: none; // Remove the line under the last row
     }
 
-    tbody tr:hover {
-      background-color: #f1f3f5;
+    tbody tr {
+      transition: background-color 0.15s ease-in-out;
+      &:hover {
+        background-color: #f8f9fa;
+      }
     }
 
-    // Specific style for the percentage badge
+    // Styles for the colorful performance badge
     .percentage-badge {
-      display: inline-block;
-      padding: 6px 14px;
-      font-weight: 700;
-      border-radius: 16px;
-      font-size: 14px;
-      color: #fff;
-      min-width: 80px; // Ensures badges have a consistent size
-    }
+  display: inline-block;
+  padding: 7px 15px;
+  font-weight: 700;
+  border-radius: 20px; // Pill shape
+  font-size: 14px;
+  color: #fff; // Default text color is white
+  min-width: 80px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
 
-    // Conditional row styling based on performance
-    // Using your established green and red colors
-    tr.high-performance .percentage-badge {
-      background-color: #28a745; 
-    }
-    
-    tr:not(.high-performance):not(.low-performance) .percentage-badge {
-       background-color: #ffc107; // Yellow/orange for average
-       color: #212529;
-    }
-    
-    tr.low-performance .percentage-badge {
-      background-color: #dc3545;
-    }
+// --- NEW 4-TIER PERFORMANCE STYLES ---
+
+// Tier 1: HIGH PERFORMANCE (>= 90%)
+tr.high-performance .percentage-badge {
+  background-color: #28a745; // Vibrant Green
+}
+
+// Tier 2: GOOD PERFORMANCE (75% to 89.9%)
+tr.good-performance .percentage-badge {
+  background-color: #20c997; // A lighter, teal-like green
+}
+
+// Tier 3: AVERAGE PERFORMANCE (50% to 74.9%)
+tr.average-performance .percentage-badge {
+  background-color: #ffc107; // Yellow/Amber
+  color: #212529; // Use dark text for better readability on yellow
+}
+
+// Tier 4: LOW PERFORMANCE (< 50%)
+tr.low-performance .percentage-badge {
+  background-color: #dc3545; // Red
+}
   }
 }

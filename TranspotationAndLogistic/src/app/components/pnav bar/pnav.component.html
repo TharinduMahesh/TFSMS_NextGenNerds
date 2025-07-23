@@ -37,18 +37,13 @@
     <!-- Dropdown Wrapper and Toggle Link with Icon -->
     <div class="dropdown-wrapper">
       <a (click)="toggleDropdown()" [class.active]="isDropdownActive()" [class.dropdown-open]="isDropdownOpen()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="1"></circle>
-            <circle cx="19" cy="12" r="1"></circle>
-            <circle cx="5" cy="12" r="1"></circle>
-        </svg>
         <span>{{ dropdownLabel() }}</span>
         <svg xmlns="http://www.w3.org/2000/svg" class="dropdown-arrow" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </a>
       
       @if (isDropdownOpen()) {
         <div class="dropdown-menu">
-          <a class="dropdown-item" routerLink="" routerLinkActive="active" (click)="isDropdownOpen.set(false)">
+          <a class="dropdown-item" routerLink="/performancedashboard/routes-analysis" routerLinkActive="active" (click)="isDropdownOpen.set(false)">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                 <circle cx="12" cy="12" r="3" />

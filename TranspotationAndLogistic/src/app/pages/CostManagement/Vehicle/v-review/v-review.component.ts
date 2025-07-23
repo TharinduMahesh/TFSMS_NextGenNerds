@@ -7,7 +7,7 @@ import { VehicleResponse, CreateUpdateVehiclePayload } from '../../../../models/
 import { VehicleService } from '../../../../services/LogisticAndTransport/Vehicle.service';
 import { VehicleViewComponent } from '../v-view/v-view.component';
 import { VehicleEditComponent } from '../v-edit/v-edit.component';
-import { TnLNavbarComponent } from "../../../../components/TnLNavbar/tnlnav.component ";
+import { TnLNavbarComponent } from "../../../../components/TnLNavbar/tnlnav.component";
 
 @Component({
   selector: 'app-vehicle-review',

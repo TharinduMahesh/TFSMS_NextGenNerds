@@ -12,8 +12,8 @@ using TfactoryMng.Data;
 namespace TfactoryMng.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250719194449_vehiclenew")]
-    partial class vehiclenew
+    [Migration("20250722161234_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -136,6 +136,9 @@ namespace TfactoryMng.Migrations
 
                     b.Property<int>("RouteId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("ScheduledArrival")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ScheduledDeparture")
                         .HasColumnType("datetime2");

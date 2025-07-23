@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 // Models and Services
 import { CollectorCostReport } from '../../../models/Logistic and Transport/TransportReports.model';
 import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
-import { PNavbarComponent } from "../../../components/pnav bar/pnav.component ";
+import { PNavbarComponent } from "../../../components/pnav bar/pnav.component";
 
 @Component({
   selector: 'app-cost-report',
@@ -36,6 +36,9 @@ export class CostReportComponent {
       startDate: [this.formatDate(oneMonthAgo), Validators.required],
       endDate: [this.formatDate(today), Validators.required]
     });
+  }
+  ngOnInit(): void {
+    this.generateReport(); // Call generateReport on page load
   }
 
   // Helper function to format date as 'YYYY-MM-DD' for the date input

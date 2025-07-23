@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 // Models and Services
 import { CollectorPerformanceReport } from '../../../../models/Logistic and Transport/TransportReports.model';
 import { TransportReportService } from '../../../../services/LogisticAndTransport/TransportReport.service';
-import { PNavbarComponent } from "../../../../components/pnav bar/pnav.component ";
+import { PNavbarComponent } from "../../../../components/pnav bar/pnav.component";
 
 @Component({
   selector: 'app-collector-performance-report',
@@ -33,6 +33,10 @@ export class CollectorPerformanceReportComponent {
       startDate: [this.formatDate(oneMonthAgo), Validators.required],
       endDate: [this.formatDate(today), Validators.required]
     });
+  }
+
+  ngOnInit(): void {
+    this.generateReport(); 
   }
 
   private formatDate(date: Date): string {

@@ -13,6 +13,10 @@ namespace TfactoryMng.DTOs
 
         [Required]
         public DateTime ScheduledDeparture { get; set; }
+
+        // --- ADD THIS NEW PROPERTY ---
+        [Required]
+        public DateTime ScheduledArrival { get; set; }
     }
 
     // For updating a trip's status (e.g., when it departs or arrives)
@@ -31,6 +35,10 @@ namespace TfactoryMng.DTOs
         public int CollectorId { get; set; }
         public string? CollectorName { get; set; }
         public DateTime ScheduledDeparture { get; set; }
+
+        // --- ADD THIS NEW PROPERTY ---
+        public DateTime ScheduledArrival { get; set; }
+
         public DateTime? ActualDeparture { get; set; }
         public DateTime? ActualArrival { get; set; }
         public bool IsOnTime { get; set; }

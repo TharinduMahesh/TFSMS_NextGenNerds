@@ -18,7 +18,7 @@ export class PNavbarComponent implements OnInit, OnDestroy {
   isDropdownOpen = signal(false);
   
   // This signal holds the text for the dropdown toggle
-  dropdownLabel = signal("More");
+  dropdownLabel = signal("Routes analysis");
 
   // These are the routes that belong to the dropdown
   private readonly dropdownRoutes: { path: string; label: string }[] = [
@@ -52,7 +52,7 @@ export class PNavbarComponent implements OnInit, OnDestroy {
     if (activeDropdownRoute) {
       this.dropdownLabel.set(activeDropdownRoute.label);
     } else {
-      this.dropdownLabel.set("More");
+      this.dropdownLabel.set("Routes Analysis");
     }
   }
   toggleDropdown(): void {

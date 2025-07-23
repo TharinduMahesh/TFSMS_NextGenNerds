@@ -1,0 +1,106 @@
+// Base page layout and typography
+.page-container {
+  max-width: 1600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  background-color: #f4f7f6;
+}
+
+// Integrated Controls Header
+.page-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background-color: #ffffff;
+  padding: 1.25rem 2rem;
+  border-radius: 14px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+}
+.page-title {
+  h1 { font-size: 1.75rem; font-weight: 700; color: #2c3e50; margin: 0 0 0.25rem; }
+  p { font-size: 1rem; color: #7f8c8d; margin: 0; }
+}
+.controls-form { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.form-group {
+  display: flex; flex-direction: column;
+  label { font-weight: 600; margin-bottom: 0.5rem; color: #495057; font-size: 13px; }
+  input[type="date"] { padding: 0.6rem 0.8rem; border: 1px solid #ced4da; border-radius: 8px; font-size: 15px; }
+}
+.form-actions .btn-primary {
+  padding: 0.65rem 1.5rem; background-color: #0d6efd; color: white; border: none; border-radius: 8px;
+  font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center;
+  &:hover:not(:disabled) {
+    background-color: #0056b3; transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  }
+  &:disabled { background-color: #a0cffb; cursor: not-allowed; }
+}
+.loader { width: 16px; height: 16px; border: 2px solid #FFF; border-bottom-color: transparent;
+  border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; margin-right: 8px; }
+@keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+// --- KPI SUMMARY CARDS ---
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem; margin-bottom: 2rem;
+}
+.card {
+  background: #ffffff; padding: 1.25rem; border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); border-left: 5px solid #007bff;
+  .card-title { font-size: 0.9rem; color: #6c757d; font-weight: 600; margin-bottom: 0.4rem; }
+  .card-value { font-size: 2rem; font-weight: 700; color: #343a40;
+    &.small-text { font-size: 1.4rem; font-weight: 600; }
+  }
+  &.highlight-green { border-color: #28a745; }
+  &.highlight-red { border-color: #dc3545; }
+}
+
+// --- Main Content Area ---
+.main-content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: flex-start;
+  
+  // RESPONSIVE FIX: On screens smaller than 1200px, stack the columns
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-container {
+  padding: 2rem 1.5rem; background-color: #fff; border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.07); height: 450px;
+  
+  ngx-charts-bar-vertical { // Target the VERTICAL chart
+    width: 100% !important; display: block;
+    fill: #495057; // This sets the color for the axis text
+  }
+}
+.insights-panel {
+  background-color: #ffffff; padding: 2rem; border-radius: 12px; border: 1px solid #e9ecef;
+  h3 { margin-top: 0; font-size: 1.3rem; border-bottom: 1px solid #dee2e6;
+    padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
+  .insight-item {
+    margin-bottom: 1.5rem; &:last-child { margin-bottom: 0; }
+    .insight-label { font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; color: #fff;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      &.highlight-efficient { background-color: #28a745; }
+      &.highlight-cost { background-color: #dc3545; }
+    }
+    p { margin-top: 0.75rem; font-size: 1rem; line-height: 1.6; color: #495057; strong { color: #212529; } }
+  }
+}
+
+// Standard loading/error/empty states
+.loading-indicator,
+.error-message,
+.empty-state {
+  padding: 3rem; text-align: center; font-size: 1.1rem; font-weight: 500;
+  color: #6c757d; background-color: #fff; border-radius: 8px; border: 1px dashed #dcdfe2;
+}
+.error-message { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }

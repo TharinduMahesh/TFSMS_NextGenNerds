@@ -1,3 +1,4 @@
+/* Base styles for desktop (>480px) */
 .route-container {
   max-width: 1600px;
   margin: 2rem auto;
@@ -10,71 +11,66 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background-color: #f8f9fa; // Soft, light background
+  background-color: #f8f9fa;
   border-radius: 8px;
   margin-bottom: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
-  // Common styles for both input and select
-  input[type="text"],
-  select {
-    padding: 0.6rem 1rem;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #fff;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.top-bar input[type="text"],
+.top-bar select {
+  padding: 0.6rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 
-    &:focus {
-      border-color: #495057;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
-    }
-  }
+.top-bar input[type="text"]:focus,
+.top-bar select:focus {
+  border-color: #495057;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
+}
 
-  input[type="text"] {
-    width: 250px; // A good default width for search
-    &::placeholder {
-      color: #adb5bd;
-    }
-  }
+.top-bar input[type="text"] {
+  width: 250px;
+}
 
-  select {
-    /* --- KEY PART: Custom Dropdown Arrow --- */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+.top-bar input[type="text"]::placeholder {
+  color: #adb5bd;
+}
 
-    // Add space on the right for the custom arrow
-    padding-right: 2.5rem;
+.top-bar select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 2.5rem;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.5em;
+  cursor: pointer;
+}
 
-    // The custom arrow symbol using an embedded SVG
-    background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 0.5rem center;
-    background-size: 1.5em;
-    cursor: pointer;
-  }
+.top-bar .add-route {
+  margin-left: auto;
+  background-color: #28a745;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease;
+}
 
-  // "+ Add New Route" Button
-  .add-route {
-    margin-left: auto; // Pushes the button to the far right
-    background-color: #28a745;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #218838;
-    }
-  }
+.top-bar .add-route:hover {
+  background-color: #218838;
 }
 
 /* --- Professional Table Styling --- */
@@ -85,83 +81,160 @@ table {
   border-radius: 8px;
   overflow: hidden;
   font-size: 0.8rem;
+}
 
-  thead tr {
-    background-color: #343a40;
-    color: white;
-    text-align: left;
-  }
+table thead tr {
+  background-color: #343a40;
+  color: white;
+  text-align: left;
+}
 
-  th, td {
-    padding: 1rem 1rem;
-  }
+table th,
+table td {
+  padding: 1rem;
+}
 
-  tbody tr {
-    border-bottom: 1px solid #dee2e6;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+table tbody tr {
+  border-bottom: 1px solid #dee2e6;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
 
-    &:nth-of-type(even) {
-      background-color: #f8f9fa;
-    }
+table tbody tr:nth-of-type(even) {
+  background-color: #f8f9fa;
+}
 
-    &:last-of-type {
-      border-bottom: 2px solid #28a745;
-    }
+table tbody tr:last-of-type {
+  border-bottom: 2px solid #28a745;
+}
 
-    &:hover, &.selected {
-      background-color: #e9ecef;
-    }
-  }
-  
-  td[colspan="7"] {
-    text-align: center;
-    font-style: italic;
-    color: #6c757d;
-    padding: 2rem;
-  }
+table tbody tr:hover,
+table tbody tr.selected {
+  background-color: #e9ecef;
+}
+
+table td[colspan="7"] {
+  text-align: center;
+  font-style: italic;
+  color: #6c757d;
+  padding: 2rem;
 }
 
 /* --- Action Buttons in Table --- */
 .actions-cell {
   display: flex;
   gap: 0.5rem;
-  
-  button {
-    padding: 0.4rem 0.8rem;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
+}
 
-  .view-btn {
-    background-color: #e9ecef;
-    color: #495057;
-    &:hover { background-color: #ced4da; }
-  }
-  .edit-btn {
-    background-color: #fff3cd;
-    color: #856404;
-    &:hover { background-color: #ffeeba; }
-  }
-  .delete-btn {
-    background-color: #f8d7da;
-    color: #721c24;
-    &:hover { background-color: #f5c6cb; }
-  }
+.actions-cell button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actions-cell .view-btn {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.actions-cell .view-btn:hover {
+  background-color: #ced4da;
+}
+
+.actions-cell .edit-btn {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.actions-cell .edit-btn:hover {
+  background-color: #ffeeba;
+}
+
+.actions-cell .delete-btn {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.actions-cell .delete-btn:hover {
+  background-color: #f5c6cb;
 }
 
 /* --- Loading/Error States --- */
-.loading, .error {
+.loading,
+.error {
   text-align: center;
   padding: 3rem 1rem;
   font-size: 1.2rem;
   font-style: italic;
   color: #6c757d;
 }
+
 .error {
   color: #721c24;
   font-weight: 500;
+}
+
+/* Mobile styles (≤480px) */
+@media screen and (max-width: 480px) {
+  .route-container {
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+  }
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .top-bar input[type="text"],
+  .top-bar select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .top-bar select {
+    padding-right: 2rem;
+    background-size: 1.2em;
+  }
+
+  .top-bar .add-route {
+    margin-left: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  table {
+    font-size: 0.7rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.5rem;
+  }
+
+  table td[colspan="7"] {
+    padding: 1rem;
+  }
+
+  .actions-cell {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .actions-cell button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .loading,
+  .error {
+    padding: 2rem 0.5rem;
+    font-size: 1rem;
+  }
 }

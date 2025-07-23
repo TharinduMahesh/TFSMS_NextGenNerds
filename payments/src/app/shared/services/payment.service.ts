@@ -7,7 +7,6 @@ import { map, catchError } from "rxjs/operators"
 import  { Payment } from "../../models/payment.model"
 import  { PaymentCalculationRequest, PaymentCalculationResult } from "../../models/payment-calculation.model"
 import { environment } from "../../shared/environments/environment"
-import  { SupplierTotalPaymentRecord } from "../../models/supplier-total-payment.model"
 import  { PaymentHistory } from "../../models/payment-history.model" // Ensure this is imported
 
 @Injectable({
@@ -86,6 +85,16 @@ export class PaymentService {
         return of(null)
       }),
     )
+  }
+
+  getPendingPayments(): Observable<Payment[]> {
+    return this.http.get<Payment[]>(`${this.apiUrl}/pending`).pipe(
+       catchError((error) => {
+        console.error(`Error fetching PendingPayment`, error)
+        return of([])
+      }),
+    )
+    
   }
 
   getPaymentsBySupplier(SupplierId: number): Observable<Payment[]> {

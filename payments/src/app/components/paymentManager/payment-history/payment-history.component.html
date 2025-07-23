@@ -1,63 +1,43 @@
-<div class="container mx-auto p-6 bg-gray-50 min-h-screen">
-  <h2 class="text-3xl font-extrabold mb-8 text-gray-900 text-center">Payment History</h2>
+<!-- src/app/pages/payment-history/payment-history.component.html -->
 
-  <div *ngIf="loading" class="text-center text-gray-500 py-8">Loading history...</div>
-  <div *ngIf="error" class="text-center text-red-600 py-8">{{ error }}</div>
+<div class="container">
+  <h2>Payment History</h2>
 
-  <div *ngIf="!loading && !error">
-    <div *ngIf="paymentHistory.length === 0" class="text-center text-gray-500 py-12 text-lg">
+  <div *ngIf="isLoading" class="loading-message">
+    Loading history...
+  </div>
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!isLoading && !error">
+    <div *ngIf="paymentHistory.length === 0" class="no-data-message">
       No payment history available.
     </div>
-    <div *ngIf="paymentHistory.length > 0" class="shadow overflow-hidden border border-gray-200 rounded-lg">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+
+    <div *ngIf="paymentHistory.length > 0">
+      <table class="payment-history-table">
+        <thead>
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              History ID
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Payment ID
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Supplier ID
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Action
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Details
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Action By
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Action Date
-            </th>
+            <th>History ID</th>
+            <th>Payment ID</th>
+            <th>Supplier ID</th>
+            <th>Action</th>
+            <th>Details</th>
+            <th>Action By</th>
+            <th>Action Date</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody>
+          <!-- Note the use of camelCase properties (e.g., record.historyId) -->
           <tr *ngFor="let record of paymentHistory">
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              {{ record.HistoryId }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {{ record.PaymentId || 'N/A' }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {{ record.SupplierId }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {{ record.Action }}
-            </td>
-            <td class="px-6 py-4 text-sm text-gray-700">
-              {{ record.Details }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {{ record.ActionBy }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {{ record.ActionDate | date:'medium' }}
-            </td>
+            <td>{{ record.HistoryId }}</td>
+            <td>{{ record.PaymentId || 'N/A' }}</td>
+            <td>{{ record.SupplierId }}</td>
+            <td>{{ record.Action }}</td>
+            <td>{{ record.Details }}</td>
+            <td>{{ record.ActionBy }}</td>
+            <td>{{ record.ActionDate | date:'MMM d, y, h:mm a' }}</td>
           </tr>
         </tbody>
       </table>

@@ -7,3 +7,6 @@ export interface PaymentHistory {
   Details: string // Renamed from 'details' to match C# casing
   ActionBy: string // New field
 }
+// src/app/models/payment-history.model.ts
+
+// This interface defines a single entry in the payment history log.

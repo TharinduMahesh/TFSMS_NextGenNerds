@@ -361,21 +361,78 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   
 
   // Export functionality
-  exportPaymentsData(format: string): void {
-    this.loading = true
-    this.ExportService.exportPayments(format).subscribe({
-      next: (blob) => {
-        const filename = `payments-export.${format.toLowerCase()}`
-        this.ExportService.downloadFile(blob, filename)
-        this.loading = false
+  // exportPaymentsData(format: string): void {
+  //   this.loading = true
+  //   this.ExportService.exportPayments(format).subscribe({
+  //     next: (blob) => {
+  //       const filename = `payments-export.${format.toLowerCase()}`
+  //       this.ExportService.downloadFile(blob, filename)
+  //       this.loading = false
+  //     },
+  //     error: (err) => {
+  //       console.error("Error exporting payments:", err)
+  //       this.error = "Failed to export payments. Please try again."
+  //       this.loading = false
+  //     },
+  //   })
+  // }
+
+
+   loadPendingPayments(): void {
+    this.loading = true;
+    this.error = null;
+    // Call the new service method
+    this.paymentService.getPendingPayments().subscribe({
+      next: (data) => {
+        // The data is already filtered by the backend, no client-side filter needed.
+        this.payments = this.normalizePaymentData(data);
+        this.applyFilters(); // This now operates on the pending list
+        this.loading = false;
       },
       error: (err) => {
-        console.error("Error exporting payments:", err)
-        this.error = "Failed to export payments. Please try again."
-        this.loading = false
+        console.error("Error loading pending payments:", err);
+        this.error = "Failed to load pending payments.";
+        this.loading = false;
       },
-    })
+    });
   }
+
+  exportPaymentsData(format: string): void {
+    if (this.filteredPayments.length === 0) {
+      alert("There are no pending payments in the current view to finalize.");
+      return;
+    }
+
+    if (!confirm(`This will finalize ${this.filteredPayments.length} pending payment(s) in the current view and generate a payment sheet. This action cannot be undone. Are you sure?`)) {
+      return;
+    }
+
+    this.loading = true;
+    this.error = null;
+
+    // [THE FIX] Pass the current filter dates to the export service.
+    // The service will handle whether they are empty or not.
+    this.ExportService.exportPayments(format, this.customStartDate, this.customEndDate).subscribe({
+      next: (blob) => {
+        console.log("Payment sheet generated successfully by the backend.");
+        
+        // After the export is successful, we must reload the list of PENDING payments.
+        // The list should now be smaller or empty.
+        this.loadPendingPayments();
+
+        const filename = `payments-export-${new Date().toISOString().split('T')[0]}.${format.toLowerCase()}`;
+        this.ExportService.downloadFile(blob, filename);
+        
+        this.loading = false;
+        this.loadSummaryMetrics();
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = "Failed to generate the payment sheet. No payments were finalized.";
+        console.error("Error exporting payments:", err);
+      }
+    });
+}
 
   private normalizePaymentData(payments: any[]): Payment[] {
     return payments.map((payment) => {
@@ -385,6 +442,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
         NormalTeaLeafWeight: payment.NormalTeaLeafWeight || payment.normalTeaLeafWeight || 0,
         GoldenTipTeaLeafWeight: payment.GoldenTipTeaLeafWeight || payment.goldenTipTeaLeafWeight || 0,
         Rate: payment.Rate || payment.rate || 0,
+        Status :payment.Status || payment.status || "Pending",
         GrossAmount: payment.GrossAmount || payment.grossAmount || 0,
         IncentiveAddition: payment.IncentiveAddition || payment.incentiveAddition || 0,
         NetAmount: payment.NetAmount || payment.netAmount || 0,
@@ -398,27 +456,43 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     })
   }
 
+  // loadPayments(): void {
+  //   this.loading = true
+  //   this.error = null
+  //   this.paymentService.getPayments().subscribe({
+  //     next: (data) => {
+  //       console.log("Payments data received:", data)
+  //       const paymentsArray = Array.isArray(data) ? data : []
+  //       this.payments = this.normalizePaymentData(paymentsArray)
+  //       console.log("Normalized payments:", this.payments)
+  //       this.applyFilters()
+  //       this.loading = false
+  //     },
+  //     error: (err) => {
+  //       console.error("Error loading payments:", err)
+  //       this.error = "Failed to load payments. Please try again later."
+  //       this.loading = false
+  //       this.payments = []
+  //       this.filteredPayments = []
+  //     },
+  //   })
+  // }
+
   loadPayments(): void {
-    this.loading = true
-    this.error = null
-    this.paymentService.getPayments().subscribe({
-      next: (data) => {
-        console.log("Payments data received:", data)
-        const paymentsArray = Array.isArray(data) ? data : []
-        this.payments = this.normalizePaymentData(paymentsArray)
-        console.log("Normalized payments:", this.payments)
-        this.applyFilters()
-        this.loading = false
-      },
-      error: (err) => {
-        console.error("Error loading payments:", err)
-        this.error = "Failed to load payments. Please try again later."
-        this.loading = false
-        this.payments = []
-        this.filteredPayments = []
-      },
-    })
-  }
+  this.loading = true;
+  this.error = null;
+  this.paymentService.getPayments().subscribe({ // Assume this service call is modified or a new one is created
+    next: (data) => {
+      // Now, filter the data to only show PENDING payments on this page.
+      this.payments = this.normalizePaymentData(data).filter(p => p.Status === 'Pending');
+      this.applyFilters(); // applyFilters will now work on the smaller "Pending" list
+      this.loading = false;
+    },
+    // ... error handling
+  });
+}
+
+  
 
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({
@@ -511,6 +585,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       GrossAmount: formValues.GrossAmount,
       IncentiveAddition: formValues.IncentiveAddition,
       NetAmount: formValues.NetAmount,
+      Status : formValues.Status,
       PaymentMethod: formValues.PaymentMethod,
       PaymentDate: new Date(formValues.PaymentDate),
     }
@@ -578,6 +653,8 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       }
     })
   }
+
+
 
   
 

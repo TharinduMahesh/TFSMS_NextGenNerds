@@ -3,6 +3,9 @@ import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 import  { AuthService } from "../../../shared/services/auth.service"
 import { RouterModule } from "@angular/router"
+import  { ToastService } from "../../../shared/services/toast.service" // Import ToastService
+import { ConfirmationService } from "../../../shared/services/confirmation.service"
+
 
 @Component({
   selector: "app-admin-user-management",
@@ -16,13 +19,15 @@ export class AdminUserManagementComponent implements OnInit {
   users: any[] = []
   roles: string[] = ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] // Define available roles
   selectedUserId: string | null = null
-  alertMessage = ""
+  alertMessage =  " "
   showAlert = false
   alertType = "" // 'success', 'error'
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private toastService: ToastService ,
+    private confirmationService: ConfirmationService // Inject ConfirmationService
   ) {
     this.userForm = this.fb.group({
       Email: ["", [Validators.required, Validators.email]],
@@ -109,6 +114,60 @@ export class AdminUserManagementComponent implements OnInit {
     this.userForm.get("Email")?.disable()
   }
 
+
+//   resetPassword(userId: string): void {
+//   const user = this.users.find(u => u.id === userId);
+//   const userName = user ? `${user.firstName} ${user.lastName}` : 'this user';
+  
+//   const confirmation = confirm(`Are you sure you want to reset the password for ${userName}? They will be forced to change it on their next login.`);
+  
+//   if (confirmation) {
+//     this.authService.resetUserPasswordByAdmin(userId).subscribe({
+      
+//       next: (res) => {
+//         // --- THIS IS THE REPLACEMENT ---
+//         // Instead of showAlertMessage, we call the toast service.
+//         // The first argument is the title, the second is the message.
+//         this.toastService.showSuccess('Success!', `Password for ${userName} has been reset.`);
+//       },
+      
+//       error: (err) => {
+//         const errorMessage = err.error?.message || "Failed to reset password.";
+//         // --- THIS IS THE REPLACEMENT ---
+//         this.toastService.showError('Error', errorMessage);
+//       }
+
+//       // The `complete` block is not needed for this logic, you can keep it or remove it.
+//     });
+//   }
+// }
+
+
+ async resetPassword(userId: string): Promise<void> {
+    const user = this.users.find(u => u.id === userId);
+    const userName = user ? `${user.firstName} ${user.lastName}` : 'this user';
+    
+    // --- THIS IS THE REPLACEMENT ---
+    // We 'await' the result of the promise from our service.
+    const confirmation = await this.confirmationService.confirm(
+      `Are you sure you want to reset the password for ${userName}? They will be forced to change it on their next login.`
+    );
+    // --- END OF REPLACEMENT ---
+    
+    if (confirmation) {
+      // The rest of the logic remains the same.
+      this.authService.resetUserPasswordByAdmin(userId).subscribe({
+        next: (res) => {
+          this.toastService.showSuccess('Success!', `Password for ${userName} has been reset.`);
+        },
+        error: (err) => {
+          const errorMessage = err.error?.message || "Failed to reset password.";
+          this.toastService.showError('Error', errorMessage);
+        }
+      });
+    }
+  }
+
   deleteUser(userId: string): void {
     if (confirm("Are you sure you want to delete this user?")) {
       this.authService.deleteUserByAdmin(userId).subscribe({
@@ -131,12 +190,12 @@ export class AdminUserManagementComponent implements OnInit {
     this.userForm.get("Role")?.setValue("") // Reset role dropdown
   }
 
-  showAlertMessage(message: string, type: string): void {
-    this.alertMessage = message
-    this.alertType = type
-    this.showAlert = true
+ showAlertMessage(message: string, type: string): void {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
     setTimeout(() => {
-      this.showAlert = false
-    }, 5000)
+      this.showAlert = false;
+    }, 5000);
   }
 }

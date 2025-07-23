@@ -1,10 +1,12 @@
 <div class="admin-user-management-container">
   <h2>User Management</h2>
 
-  <!-- Alert Message -->
-  <div *ngIf="showAlert" class="alert" [ngClass]="{'alert-success': alertType === 'success', 'alert-error': alertType === 'error'}">
-    {{ alertMessage }}
-  </div>
+
+<!-- Alert Message -->
+<div *ngIf="showAlert" class="alert" [ngClass]="{'alert-success': alertType === 'success', 'alert-danger': alertType === 'error'}">
+  {{ alertMessage }}
+</div>
+
 
   <div class="form-section">
     <h3>{{ selectedUserId ? 'Edit User' : 'Add New User' }}</h3>
@@ -70,6 +72,7 @@
         </div>
         <div class="user-actions">
           <button (click)="editUser(user)">Edit</button>
+           <button class="reset-password-btn" (click)="resetPassword(user.id)">Reset Password</button>
           <button (click)="deleteUser(user.id)">Delete</button>
         </div>
       </li>

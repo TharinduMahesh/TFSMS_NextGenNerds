@@ -142,6 +142,8 @@ import  { HttpClient } from "@angular/common/http"
 import { isPlatformBrowser } from "@angular/common"
 import { TOKEN_KEY } from "../constans"
 import  { JwtPayload } from "jwt-decode" // You might need to install jwt-decode: npm install jwt-decode
+import { Router } from "@angular/router" // Import Router
+import { Observable } from "rxjs"
 
 interface CustomJwtPayload extends JwtPayload {
   role?: string // Add role property to the JWT payload interface
@@ -156,6 +158,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private router: Router, // Inject Router
     @Inject(PLATFORM_ID) private platformId: Object, // <-- Corrected: @Inject(PLATFORM_ID) is back
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId)
@@ -259,4 +262,41 @@ export class AuthService {
   setNewPassword(data: { Token: string; NewPassword: string }) {
     return this.http.post<any>(`${this.baseUrl}/set-password`, data)
   }
+
+   logout() {
+    this.deletetoken(); // This handles token removal and state broadcast
+    this.router.navigateByUrl('/sign-in'); // This handles the redirect
+  }
+
+  resetUserPasswordByAdmin(userId: string): Observable<any> {
+    // The authInterceptor will automatically add the admin's authorization token.
+    // We are sending a POST request with an empty body {} because the userId is in the URL.
+    return this.http.post(`${this.baseUrl}/api/admin/users/${userId}/reset-password`, {});
+  }
+
+  isTokenValid(): boolean {
+    const token = this.gettoken()
+    if (!token) {
+      console.log(" No token found for validation")
+      return false
+    }
+
+    try {
+      const payload = JSON.parse(window.atob(token.split(".")[1]))
+      const currentTime = Math.floor(Date.now() / 1000)
+      const isValid = payload.exp > currentTime
+
+      console.log(" Token validation:", {
+        exp: payload.exp,
+        currentTime,
+        isValid,
+        expiresIn: payload.exp - currentTime + " seconds",
+      })
+
+      return isValid
+    } catch (error) {
+      console.error("Error validating token:", error)
+      return false
+    }
+}
 }

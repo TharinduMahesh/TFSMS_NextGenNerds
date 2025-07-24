@@ -22,15 +22,15 @@ export class SidebarComponent {
     '/suppliers': 'Suppliers',
     '/collector': 'Collector',
     '/ledger-management': 'Ledger Management',
-    '/green-leaf-collection': 'Green Leaf Collection',
+    '/green-leaf-collection-entry': 'Green Leaf Collection',
     '/process-management': 'Process Management',
     '/payment': 'Payment',
     '/report': 'Reports',
     '/report/dashboard': 'Report Dashboard',
-    '/report/tea-packing-and-ledger': 'Tea Packing and Ledger',
+    '/report/green-': 'Tea Packing and Ledger',
     '/report/claims-and-returns': 'Claims and Returns',
     '/report/sales': 'Sales Reports',
-    '/report/sales/Fiancial-Reports/farmer-loan-report': 'Loan Details',
+    '/report/sales/Financial-Reports/farmer-loan-report': 'Loan Details',
     '/report/monthly-nsa': 'Monthly NSA'
   };
 
@@ -46,7 +46,7 @@ export class SidebarComponent {
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
+    ).subscribe((event: NavigationEnd) => { //change is made if try to undo IT IS HERE
       this.currentUrl = event.url;
       this.updatePageTitle(this.currentUrl);
       this.cdRef.detectChanges();
@@ -85,11 +85,11 @@ export class SidebarComponent {
     this.cdRef.detectChanges();
   }
 
-  navigateTo(route: string) {
-    const fullRoute = `/report/${route}`;
-    this.router.navigate([fullRoute]);
-    this.updatePageTitle(fullRoute);
-  }
+  // navigateTo(route: string) {
+  //   const fullRoute = `/report/${route}`;
+  //   this.router.navigate([fullRoute]);
+  //   this.updatePageTitle(fullRoute);
+  // }
 
   @HostListener('document:click', ['$event'])
   closeDropdown(event: Event) {

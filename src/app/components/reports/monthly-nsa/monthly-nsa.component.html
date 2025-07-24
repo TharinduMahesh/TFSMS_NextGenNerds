@@ -1,33 +1,184 @@
-<div class="nsa-container">
-    <h1 class="page-title">Monthly NSA</h1>
-  
-    <div class="report-section">
-      <div class="report-box total-kilos">
-        <h2>5000</h2>
-        <p>Monthly Kilos Sold</p>
+    <div class="nsa-report-container">
+      <h1 class="report-title">Net Sales Average Report</h1>
+
+      <!-- Global Filters Section -->
+      <div class="report-section filter-section">
+        <div class="filter-controls">
+          <div class="form-group">
+            <label for="reportPeriod">Select Period:</label>
+            <select id="reportPeriod" [(ngModel)]="selectedPeriod" (change)="applyFilters()" name="reportPeriod">
+              <option value="currentMonth">Current Month</option>
+              <option value="last3Months">Last 3Months</option>
+              <option value="currentQuarter">Current Quarter</option>
+              <option value="currentYear">Current Year</option>
+              <option value="custom">Custom Date Range</option>
+            </select>
+          </div>
+          <div class="form-group" *ngIf="selectedPeriod === 'custom'">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" [(ngModel)]="startDate" (change)="applyFilters()" name="startDate">
+          </div>
+          <div class="form-group" *ngIf="selectedPeriod === 'custom'">
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" [(ngModel)]="endDate" (change)="applyFilters()" name="endDate">
+          </div>
+          <div class="form-group">
+            <button class="clear-filters-button" (click)="clearFilters()">Reset Filters</button>
+          </div>
+        </div>
+        <div class="report-meta">
+          <p>Report Period: <strong>{{ displayPeriod }}</strong></p>
+          <p>Generated On: <strong>{{ reportGeneratedDate | date:'yyyy-MM-dd HH:mm' }}</strong></p>
+        </div>
       </div>
-      <div class="report-box monthly-proceeds">
-        <h2>LKR 25,000</h2>
-        <p>Monthly Proceeds</p>
+
+      <!-- Summary KPI Cards Section -->
+      <div class="report-section kpi-section">
+        <div class="kpi-cards-grid">
+          <div class="kpi-card overall-nsa">
+            <h3>Overall NSA</h3>
+            <p>{{ summary.overallNsa | number:'1.2-2' }}</p>
+          </div>
+          <div class="kpi-card total-kilos">
+            <h3>Total Adjusted Kilos</h3>
+            <p>{{ summary.totalAdjustedKilos }}</p>
+          </div>
+          <div class="kpi-card total-proceeds">
+            <h3>Total Adjusted Proceeds</h3>
+            <p>{{ summary.totalAdjustedProceeds | number:'1.2-2' }}</p>
+          </div>
+          <div class="kpi-card nsa-variance">
+            <h3>NSA Variance (%)</h3>
+            <p [class.positive]="summary.nsaVariance > 0" [class.negative]="summary.nsaVariance < 0">
+              {{ summary.nsaVariance | number:'1.2-2' }}%
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="report-box adjusted-kilos">
-        <h2>4800</h2>
-        <p>Adjusted Kilos</p>
+
+      <!-- Charts Section -->
+      <div class="report-section charts-section">
+        <div class="charts-grid">
+          <!-- 1. NSA Trend Over Time (Line Chart) -->
+          <div class="chart-card">
+            <h3>NSA Trend ({{ chartPeriodUnit }})</h3>
+            <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser"> <!-- NEW: *ngIf="isBrowser" -->
+              <canvas baseChart
+                [data]="monthlyNsaChartData"
+                [options]="monthlyNsaChartOptions"
+                [type]="monthlyNsaChartType">
+              </canvas>
+            </div>
+          </div>
+
+          <!-- 2. Adjusted Proceeds Trend (Bar Chart) -->
+          <div class="chart-card">
+            <h3>Adjusted Proceeds Trend ({{ chartPeriodUnit }})</h3>
+            <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser"> <!-- NEW: *ngIf="isBrowser" -->
+              <canvas baseChart
+                [data]="adjustedProceedsBarChartData"
+                [options]="adjustedProceedsBarChartOptions"
+                [type]="adjustedProceedsBarChartType">
+              </canvas>
+            </div>
+          </div>
+
+          <!-- 3. Adjusted Kilos Trend (Bar Chart) -->
+          <div class="chart-card">
+            <h3>Adjusted Kilos Trend ({{ chartPeriodUnit }})</h3>
+            <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser"> <!-- NEW: *ngIf="isBrowser" -->
+              <canvas baseChart
+                [data]="adjustedKilosBarChartData"
+                [options]="adjustedKilosBarChartOptions"
+                [type]="adjustedKilosBarChartType">
+              </canvas>
+            </div>
+          </div>
+
+          <!-- 4. NSA Comparison (Bar Chart) - Simple comparison -->
+          <div class="chart-card">
+            <h3>NSA Comparison</h3>
+            <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser"> <!-- NEW: *ngIf="isBrowser" -->
+              <canvas baseChart
+                [data]="nsaComparisonBarChartData"
+                [options]="nsaComparisonBarChartOptions"
+                [type]="nsaComparisonBarChartType">
+              </canvas>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="report-box adjusted-proceeds">
-        <h2>LKR 24,000</h2>
-        <p>Adjusted Proceeds</p>
+
+      <!-- Detailed Data Tables Section -->
+      <div class="report-section table-section">
+        <h3>Period-by-Period Summary</h3>
+        <div class="table-responsive">
+          <table class="nsa-report-table summary-table">
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>Adjusted Kilos</th>
+                <th>Adjusted Proceeds</th>
+                <th>NSA Value</th>
+                <th>Variance to Prev. Period NSA (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let periodSummary of periodSummaries">
+                <td>{{ periodSummary.period }}</td>
+                <td>{{ periodSummary.adjustedKilos }}</td>
+                <td>{{ periodSummary.adjustedProceeds | number:'1.2-2' }}</td>
+                <td>{{ periodSummary.nsaValue | number:'1.2-2' }}</td>
+                <td [class.positive]="periodSummary.variance > 0" [class.negative]="periodSummary.variance < 0">
+                  {{ periodSummary.variance | number:'1.2-2' }}%
+                </td>
+              </tr>
+              <tr *ngIf="periodSummaries.length === 0">
+                <td colspan="5" class="no-data">No period summary data available for the selected range.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="sub-heading">Raw NSA Entries List</h3>
+        <div class="table-responsive">
+          <table class="nsa-report-table raw-data-table">
+            <thead>
+              <tr>
+                <th>Entry No.</th>
+                <th>Date</th>
+                <th>Monthly Kilos Sold</th>
+                <th>Proceeds</th>
+                <th>Adjusted Kilos</th>
+                <th>Adjusted Proceeds</th>
+                <th>NSA Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let record of filteredNsaRecords">
+                <td>{{ record.id }}</td>
+                <td>{{ record.entryDate | date:'yyyy-MM-dd' }}</td>
+                <td>{{ record.monthlyKilosSold }}</td>
+                <td>{{ record.proceeds | number:'1.2-2' }}</td>
+                <td>{{ record.adjustedKilos }}</td>
+                <td>{{ record.adjustedProceeds | number:'1.2-2' }}</td>
+                <td>{{ record.nsaValue | number:'1.2-2' }}</td>
+              </tr>
+              <tr *ngIf="filteredNsaRecords.length === 0">
+                <td colspan="7" class="no-data">No raw NSA entry data available for the selected range.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="report-box net-sale-average">
-        <h2>5.00</h2>
-        <p>Net Sale Average (NSA)</p>
+
+      <div class="report-footer">
+        <p>Data as of {{ reportGeneratedDate | date:'yyyy-MM-dd HH:mm' }}</p>
+        <button class="export-button" (click)="exportReport()">Export Report (CSV)</button>
       </div>
-      <div class="report-box year-to-date-nsa">
-        <h2>4.85</h2>
-        <p>Year-to-Date NSA</p>
+
+      <div class="exit-button-container">
+        <button class="exit-button" (click)="exitPage()">Exit</button>
       </div>
     </div>
-  
-    <button class="visual-reports-button">VISUAL REPORTS</button>
-  </div>
-  
+    

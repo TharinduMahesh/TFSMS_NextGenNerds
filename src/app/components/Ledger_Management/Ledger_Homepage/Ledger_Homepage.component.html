@@ -1,0 +1,16 @@
+<div class="ledger-management-container">
+  <h1 class="page-title">Ledger Management</h1> <!-- Added this line for the main title -->
+
+  <div *ngFor="let section of sections" class="ledger-section">
+    <h3>{{ section.title }}</h3>
+    <div class="ledger-features">
+      <button
+        *ngFor="let feature of section.features"
+        class="ledger-card"
+        [routerLink]="[feature.route]"
+      >
+        {{ feature.label }}
+      </button>
+    </div>
+  </div>
+</div>

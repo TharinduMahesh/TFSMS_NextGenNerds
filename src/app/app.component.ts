@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from "./components/sidebar/sidebar/sidebar.component";
-import { DashboardComponent } from "./components/dashboard/dahsboard/dahsboard.component";
+
 import { TeaPackingLedgerComponent } from './components/reports/tea-packing-and-ledger/tea-packing-and-ledger.component';
+import { LedgerManagementComponent } from './components/Ledger_Management/Ledger_Homepage/Ledger_Homepage.component';
 //import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, DashboardComponent, TeaPackingLedgerComponent],
+  imports: [RouterOutlet, SidebarComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

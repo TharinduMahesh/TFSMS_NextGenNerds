@@ -1,0 +1,98 @@
+<div class="green-leaf-collection-container">
+  <h1 class="page-title">Green Leaf Collection Entry</h1>
+
+  <div class="form-section">
+    <h2>Collection Form</h2>
+    <form #collectionForm="ngForm" (ngSubmit)="addOrUpdateCollection()">
+      <div class="form-fields-grid">
+        <div class="form-group">
+          <label for="collectionDate">Collection Date:</label>
+          <input type="date" id="collectionDate" [(ngModel)]="collectionDate" name="collectionDate" required
+                 > <!-- FIX: Removed (change)="onSupplierChange()" -->
+        </div>
+        <div class="form-group">
+          <label for="supplier">Supplier ID:</label>
+          <select id="supplier" [(ngModel)]="selectedSupplierId" name="selectedSupplierId" required
+                  (change)="onSupplierChange()">
+            <option [ngValue]="null">Select Supplier</option>
+            <option *ngFor="let supplier of suppliers" [ngValue]="supplier.supplierId">
+              {{ supplier.supplierId }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Initial Weights (Auto-populated and Editable) -->
+        <div class="form-group">
+          <label for="normalTeaLeafWeight">Normal Tea Leaf (Kg):</label>
+          <input type="number" id="normalTeaLeafWeight" [(ngModel)]="normalTeaLeafWeight" name="normalTeaLeafWeight"
+                 placeholder="Enter Actual Normal Weight" required min="0">
+        </div>
+        <div class="form-group">
+          <label for="goldenTipTeaLeafWeight">Golden Tip Tea Leaf (Kg):</label>
+          <input type="number" id="goldenTipTeaLeafWeight" [(ngModel)]="goldenTipTeaLeafWeight" name="goldenTipTeaLeafWeight"
+                 placeholder="Enter Actual Golden Tip Weight" required min="0">
+        </div>
+
+        <!-- Display only: Original Initial Weights (for user reference) -->
+        <div class="form-group" *ngIf="initialNormalTeaLeafWeight !== null">
+          <label>Initial Normal (Kg):</label>
+          <p class="display-value">{{ initialNormalTeaLeafWeight }}</p>
+        </div>
+        <div class="form-group" *ngIf="initialGoldenTipTeaLeafWeight !== null">
+          <label>Initial Golden Tip (Kg):</label>
+          <p class="display-value">{{ initialGoldenTipTeaLeafWeight }}</p>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="action-button secondary-button" type="button" (click)="clearForm()">Clear Form</button>
+        <button class="action-button primary-button" type="submit">
+          {{ editingCollectionId ? 'Update Collection' : 'Add Collection' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="records-section">
+    <h2>Collection Records</h2>
+    <div class="table-responsive">
+      <table class="collection-table">
+        <thead>
+          <tr>
+            <th>Collection ID</th>
+            <th>Supplier ID</th>
+            <th>Collection Date</th>
+            <th>Normal Tea (Kg)</th>
+            <th>Golden Tip (Kg)</th>
+            <th>Difference</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of collectionRecords">
+            <td>C{{ record.collectionId | number:'3.0' }}</td>
+            <td>{{ record.supplierId }}</td>
+            <td>{{ record.collectionDate | date:'yyyy-MM-dd' }}</td>
+            <td>{{ record.normalTeaLeafWeight }}</td>
+            <td>{{ record.goldenTipTeaLeafWeight }}</td>
+            <td>
+              <span [class.difference-yes]="record.hasDifference" [class.difference-no]="!record.hasDifference">
+                {{ record.hasDifference ? 'Yes' : 'No' }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button class="action-btn edit-btn" (click)="editCollection(record)">Edit</button>
+              <button class="action-btn delete-btn" (click)="confirmDelete(record.collectionId)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="collectionRecords.length === 0">
+            <td colspan="7" class="no-data">No collection records found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

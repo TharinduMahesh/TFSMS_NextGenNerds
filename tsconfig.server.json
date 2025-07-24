@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.app.json", // Extends the client app config for shared settings
+  "compilerOptions": {
+    "outDir": "./out-tsc/server",
+    "target": "es2022", // Or "es2020" or "esnext"
+    "module": "es2022", // Or "commonjs" if your Node.js server uses CommonJS
+    "types": [
+      "node" // Crucial for Node.js specific types
+    ]
+  },
+  "files": [
+    "src/main.server.ts", // Explicitly include server-side entry point
+    "src/server.ts"       // Explicitly include server application file
+  ]
+}

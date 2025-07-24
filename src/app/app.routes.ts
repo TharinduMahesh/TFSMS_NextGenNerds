@@ -189,7 +189,9 @@ export const routes: Routes = [
   // --- REPORT SECTION ROUTES ---
   { path: 'report/tea-packing-and-ledger', component: TeaPackingLedgerComponent },
   { path: 'report/claims-and-returns', component: ClaimsAndReturnsComponent },
-  { path: 'report/sales', component: FinancialReportsNavigationComponent },
+  { path: 'report/sales', component: FinancialReportsNavigationComponent 
+    
+  },
   { path: 'report/monthly-nsa', component: MonthlyNsaComponent },
   { path: 'report/sales/farmer-loan-report', component: FarmerLoanReportComponent },
   { path: 'report/green-leaf-collection-report', component: GreenLeafCollectionReportComponent },

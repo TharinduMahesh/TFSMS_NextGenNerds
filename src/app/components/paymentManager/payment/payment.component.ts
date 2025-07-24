@@ -398,39 +398,36 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   }
 
  exportPaymentsData(format: string): void {
-    // Filter for pending payments only for export
-    const pendingPayments = this.filteredPayments.filter(p => p.Status === 'Pending' || !p.Status);
-    
-    if (pendingPayments.length === 0) {
+    if (this.filteredPayments.length === 0) {
       alert("There are no pending payments in the current view to finalize.");
       return;
     }
 
-    if (!confirm(`This will finalize ${pendingPayments.length} pending payment(s) and generate a payment sheet. This action cannot be undone. Are you sure?`)) {
+    // ✨ FIX: Corrected the template literal for the confirmation message.
+    if (!confirm(`This will finalize ${this.filteredPayments.length} pending payment(s) in the current view and generate a payment sheet. This action cannot be undone. Are you sure?`)) {
       return;
     }
 
-    this.loading = true;
+    this.loading = true; // Start loading for the entire operation.
     this.error = null;
 
     this.ExportService.exportPayments(format, this.customStartDate, this.customEndDate).subscribe({
       next: (blob) => {
-        console.log("Payment sheet generated successfully");
-        
+        console.log("Payment sheet generated successfully by the backend.");
+
+        // Download the file immediately.
         const filename = `payments-export-${new Date().toISOString().split('T')[0]}.${format.toLowerCase()}`;
         this.ExportService.downloadFile(blob, filename);
-        
-        // IMPORTANT: Reload payments to see the status changes
-        setTimeout(() => {
-          this.loadPayments();
-          this.loadSummaryMetrics();
-        }, 1000); // Small delay to ensure backend has processed
-        
-        this.loading = false;
+
+        // ✨ FIX: Trigger the data reload. The loading spinner will remain active
+        // until loadPayments() completes, preventing the user from clicking again on stale data.
+        this.loadPayments();
+        this.loadSummaryMetrics();
       },
       error: (err) => {
+        // On error, we must manually turn off the loading spinner.
         this.loading = false;
-        this.error = "Failed to generate payment sheet. No payments were finalized.";
+        this.error = "Failed to generate the payment sheet. No payments were finalized.";
         console.error("Error exporting payments:", err);
       }
     });
@@ -481,15 +478,13 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   // }
 
 loadPayments(): void {
-    this.loading = true;
+    this.loading = true; // This function takes control of the loading state.
     this.error = null;
     this.paymentService.getPayments().subscribe({
       next: (data) => {
-        // Filter for pending payments only
-        const allPayments = this.normalizePaymentData(data);
-        this.payments = allPayments
-        this.applyFilters();
-        this.loading = false;
+        this.payments = this.normalizePaymentData(data);
+        this.applyFilters(); // This is where `this.filteredPayments` is updated.
+        this.loading = false; // Correctly sets loading to false upon completion.
       },
       error: (err) => {
         console.error("Error loading payments:", err);
@@ -498,7 +493,7 @@ loadPayments(): void {
       },
     });
 }
-  
+
 
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({

@@ -251,10 +251,11 @@
               <td>{{ payment.PaymentMethod }}</td>
               <td>{{ payment.PaymentDate | date:'short' }}</td>
                <td>
-          <span class="status-badge" [ngClass]="'status-' + payment.Status.toLowerCase()">
-            {{ payment.Status }}
-          </span>
-        </td>
+          <td>
+      <span class="status" [ngClass]="payment.Status === 'Completed' ? 'status-completed' : 'status-pending'">
+        {{ payment.Status }}
+      </span>
+    </td>
               <td>
                 <div class="action-buttons">
                   <button

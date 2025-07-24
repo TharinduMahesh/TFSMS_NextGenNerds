@@ -64,7 +64,7 @@ export class StockLedgerViewComponent implements OnInit {
   }
   
   goToPackingEntry(): void {
-    this.router.navigate(['t-p-entry']);
+    this.router.navigate(['/ledgerManagementdashboard/tea-packing']);
   }
   
   // Placeholder for when you build the invoice create page
@@ -74,7 +74,7 @@ export class StockLedgerViewComponent implements OnInit {
       return;
     }
     // We pass the stock ID to the invoice creation page
-    this.router.navigate(['in-create'], { queryParams: { stockId: stockItem.stockLedgerEntryId } });
+    this.router.navigate(['/ledgerManagementdashboard/invoice-create'], { queryParams: { stockId: stockItem.stockLedgerEntryId } });
     console.log(`Navigating to create invoice for Stock ID: ${stockItem.stockLedgerEntryId}`);
   }
 }

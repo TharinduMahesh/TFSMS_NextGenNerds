@@ -1,29 +1,27 @@
-// Payload for creating a new invoice
+import { SalesCharge } from './salesCharge.model';
+
 export interface CreateInvoicePayload {
   stockLedgerEntryId: number;
   brokerName?: string;
   invoiceDate: string;
 }
 
-// ==========================================================
-//           ↓↓↓ THE CORRECTION IS IN THIS INTERFACE ↓↓↓
-// ==========================================================
 export interface InvoiceResponse {
   invoiceId: number;
-  invoiceNumber: string;       // Corrected to camelCase
+  invoiceNumber: string;
   stockLedgerEntryId: number;
   invoiceDate: string;
   status: string;
   teaGrade?: string;
   gardenMark?: string;
-  weightKg?: number;          // Corrected to camelCase
-  brokerName?: string;        // Corrected to camelCase
+  weightKg?: number;
+  brokerName?: string;
+  buyerName?: string;
+  soldPricePerKg?: number;
+  totalAmount?: number;
+  salesCharges: SalesCharge[];
 }
-// ==========================================================
-//                 END OF CORRECTION
-// ==========================================================
 
-// Payload to FINALIZE a sale for an existing invoice
 export interface FinalizeSalePayload {
   invoiceId: number;
   buyerName: string;
@@ -31,7 +29,6 @@ export interface FinalizeSalePayload {
   salesCharges: SalesChargePayload[];
 }
 
-// Sub-model for charges within the finalize payload
 export interface SalesChargePayload {
   chargeType: string;
   amount: number;

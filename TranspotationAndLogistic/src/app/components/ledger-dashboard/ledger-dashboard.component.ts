@@ -25,16 +25,25 @@ export class LedgerDashboardComponent {
     {
       title: 'Tea Packing and Ledger Update',
       items: [
-        { label: 'TEA PACKING', route: '/t-pack', keywords: ['TEA', 'PACKING'] },
-        { label: 'STOCK LEDGER', route: '/s-ledger', keywords: ['STOCK', 'LEDGER'] }
+        { label: 'TEA PACKING', route: '/ledgerManagementdashboard/tea-packing', keywords: ['TEA', 'PACKING'] },
+        { label: 'STOCK LEDGER', route: '/ledgerManagementdashboard/stock-ledger', keywords: ['STOCK', 'LEDGER'] }
       ]
     },
     {
       title: 'Invoice Generation and Dispatch',
       items: [
-        { label: 'INVOICE CREATION', route: '/in-manage', keywords: ['INVOICE', 'CREATION'] },
-        { label: 'DISPATCH DETAILS ENTRY', route: '/dis-view', keywords: ['DISPATCH', 'DETAILS','ENTRY'] },
-        { label: 'DISPATCH REGISTER', route: '/dis-reg', keywords: ['DISPATCH', 'REGISTER'] }
+        { label: 'INVOICE CREATION', route: '/ledgerManagementdashboard/invoice-create', keywords: ['INVOICE', 'CREATION'] },
+        { label: 'INVOICE DETAILS', route: '/ledgerManagementdashboard/invoice-review', keywords: ['DISPATCH', 'REGISTER'] },
+        { label: 'DISPATCH DETAILS ENTRY', route: '/ledgerManagementdashboard/dispatch-entry', keywords: ['DISPATCH', 'DETAILS','ENTRY'] },
+        
+      ]
+    },
+    {
+      title: 'Sales Management',
+      items: [
+        
+        // { label: 'SALES CHARGE ENTRY', route: '/ledgerManagementdashboard/sales-entry', keywords: ['sales', 'change', 'entry'] },
+        { label: 'GRATIS ISSUE ENTRY', route: '/gratis-e-entry', keywords: ['sales', 'change', 'entry'] },
       ]
     },
     {
@@ -52,14 +61,7 @@ export class LedgerDashboardComponent {
         { label: 'DENATURED TEA REPORT', route: '/d-t-report', keywords: ['DENATURED', 'TEA', 'REPORT'] }
       ]
     },
-    {
-      title: 'Sales Management',
-      items: [
-        { label: 'SLAES ENTRY', route: '/s-entry', keywords: ['SLAES', 'issue'] },
-        { label: 'GRATIS ISSUE ENTRY', route: '/gratis-e-entry', keywords: ['sales', 'change', 'entry'] },
-        { label: 'SALES CHARGE ENTRY', route: '/sales-c-entry', keywords: ['sales', 'change', 'entry'] }
-      ]
-    },
+    
     {
       title: 'Monthly NSA',
       items: [

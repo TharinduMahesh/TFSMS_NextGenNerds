@@ -86,13 +86,13 @@ export class DispatchEntryComponent implements OnInit {
     this.dispatchService.createDispatch(payload).subscribe({
       next: () => {
         alert('Dispatch recorded successfully!');
-        this.router.navigate(['/in-review']);
+        this.router.navigate(['/ledgerManagementdashboard/invoice-review']); // Navigate to the invoice review page
       },
       error: (err) => alert(`Error recording dispatch: ${err.message}`)
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['/in-review']);
+    this.router.navigate(['/ledgerManagementdashboard/invoice-review']); // Navigate back to the invoice review page
   }
 }

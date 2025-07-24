@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common'; // Removed unused CurrencyPipe/D
 import { Router } from '@angular/router';
 import { InvoiceResponse } from '../../../models/Ledger Management/invoiceSales.model';
 import { InvoiceSalesService } from '../../../services/LedgerManagement/invoiceSales.service';
+import { InvoiceViewComponent } from "./invoice-view/in-view.component";
 
 @Component({
   selector: 'app-invoice-review',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, InvoiceViewComponent],
   templateUrl: './in-review.component.html',
   styleUrls: ['./in-review.component.scss']
 })
@@ -58,21 +59,36 @@ export class InvoiceReviewComponent implements OnInit {
 
   // Action to navigate to the dispatch entry page
   recordDispatchFor(invoice: InvoiceResponse): void {
-    if (invoice.status !== 'Pending') { 
+    if (invoice.status !== 'Pending') {
       alert(`This invoice cannot be dispatched. Status: ${invoice.status}`);
       return;
     }
     // Corrected navigation path from the last time
-    this.router.navigate(['dispatch-entry'], { queryParams: { invoiceId: invoice.invoiceId } });
+    this.router.navigate(['/ledgerManagementdashboard/dispatch-entry'], { queryParams: { invoiceId: invoice.invoiceId } });
   }
 
   // Action to navigate to the sales finalization page
   finalizeSaleFor(invoice: InvoiceResponse): void {
-     if (invoice.status !== 'Dispatched') {
+    if (invoice.status !== 'Dispatched') {
       alert(`This invoice must be dispatched before the sale can be finalized. Status: ${invoice.status}`);
       return;
     }
     // The path here must also match your app.routes.ts
-    this.router.navigate(['sales-entry'], { queryParams: { invoiceId: invoice.invoiceId } });
+    this.router.navigate(['/ledgerManagementdashboard/sales-entry'], { queryParams: { invoiceId: invoice.invoiceId } });
+  }
+
+
+  // Add these properties
+  isViewModalOpen = signal(false);
+  invoiceToView = signal<InvoiceResponse | null>(null);
+
+  // Add this new method
+  viewDetails(invoice: InvoiceResponse): void {
+    this.invoiceToView.set(invoice);
+    this.isViewModalOpen.set(true);
+  }
+
+  closeViewModal(): void {
+    this.isViewModalOpen.set(false);
   }
 }

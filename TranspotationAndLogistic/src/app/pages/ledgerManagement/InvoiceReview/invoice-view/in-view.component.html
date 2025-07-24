@@ -1,0 +1,57 @@
+@if (invoice) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()" aria-label="Close">×</button>
+      <h2 class="modal-title">Invoice Details</h2>
+      
+      <div class="status-header">
+        <span class="label">Status:</span>
+        <span class="status-badge" [ngClass]="'status-' + invoice.status.toLowerCase()">
+          {{ invoice.status }}
+        </span>
+      </div>
+
+      <div class="details-section">
+        <h3>Invoice Information</h3>
+        <div class="details-grid">
+          <span class="label">Invoice #:</span><span class="value">{{ invoice.invoiceNumber }}</span>
+          <span class="label">Invoice Date:</span><span class="value">{{ invoice.invoiceDate | date:'longDate' }}</span>
+          <span class="label">Broker:</span><span class="value">{{ invoice.brokerName || 'N/A' }}</span>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h3>Tea Details</h3>
+        <div class="details-grid">
+          <span class="label">Garden Mark:</span><span class="value">{{ invoice.gardenMark }}</span>
+          <span class="label">Grade:</span><span class="value">{{ invoice.teaGrade }}</span>
+          <span class="label">Weight (kg):</span><span class="value">{{ invoice.weightKg | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      @if(invoice.status === 'Sold' || invoice.status === 'Paid') {
+        <div class="details-section">
+          <h3>Sale & Financials</h3>
+          <div class="details-grid">
+            <span class="label">Buyer Name:</span><span class="value">{{ invoice.buyerName || 'N/A' }}</span>
+            <span class="label">Sold Price / kg:</span><span class="value">{{ invoice.soldPricePerKg | currency:'LKR ' }}</span>
+            <span class="label">Total Amount:</span><span class="value total">{{ invoice.totalAmount | currency:'LKR ' }}</span>
+          </div>
+          
+          <h4>Sales Charges</h4>
+          <ul class="charges-list">
+            @for (charge of invoice.salesCharges; track charge.salesChargeId) {
+              <li class="charge-item">
+                <span>{{ charge.chargeType }}</span>
+                <span>{{ charge.amount | currency:'LKR ' }}</span>
+              </li>
+            } @empty {
+              <li>No sales charges recorded.</li>
+            }
+          </ul>
+        </div>
+      }
+
+    </div>
+  </div>
+}

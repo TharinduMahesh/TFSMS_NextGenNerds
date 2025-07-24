@@ -53,7 +53,7 @@ export class TeaPackingEntryComponent implements OnInit {
     this.stockLedgerService.createPackedTeaEntry(payload).subscribe({
       next: () => {
         alert('New tea batch successfully added to the stock ledger!');
-        this.router.navigate(['/s-t-view']); // Navigate to the stock ledger list after success
+        this.router.navigate(['/ledgerManagementdashboard/stock-ledger']); // Navigate to the stock ledger list after success
       },
       error: (err) => {
         alert(`Error: ${err.message}`);
@@ -66,6 +66,6 @@ export class TeaPackingEntryComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/']); // Navigate back to a dashboard or home page
+    this.router.navigate(['/ledgerManagementdashboard/stock-ledger']); // Navigate back to a dashboard or home page
   }
 }

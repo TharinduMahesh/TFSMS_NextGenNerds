@@ -88,13 +88,13 @@ export class InvoiceCreateComponent implements OnInit {
     this.invoiceService.createInvoice(payload).subscribe({
       next: () => {
         alert('Invoice created successfully!');
-        this.router.navigate(['/in-review']); // Navigate to the invoice list
+        this.router.navigate(['/ledgerManagementdashboard/invoice-review']); // Navigate to the invoice list
       },
       error: (err) => alert(`Error creating invoice: ${err.message}`)
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['/s-t-view']);
+    this.router.navigate(['/ledgerManagementdashboard/stock-ledger']); // Navigate back to the stock ledger
   }
 }

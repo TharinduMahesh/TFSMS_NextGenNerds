@@ -57,7 +57,7 @@
                     Finalize Sale
                   </button>
                 } @else {
-                  <button class="btn-action btn-view-details">View</button>
+                  <button class="btn-action btn-view-details" (click)="viewDetails(item)">View</button>
                 }
               </td>
             </tr>
@@ -71,3 +71,10 @@
     }
   </div>
 </div>
+<!-- Add this to the bottom of invoice-review.component.html -->
+@if (isViewModalOpen() && invoiceToView()) {
+  <app-invoice-view 
+    [invoice]="invoiceToView()!" 
+    (close)="closeViewModal()">
+  </app-invoice-view>
+}

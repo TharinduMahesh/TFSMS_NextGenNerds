@@ -14,6 +14,7 @@
     @if (invoiceToDispatch(); as invoice) {
 
       <div class="form-layout-grid">
+        <!-- Left Side: Read-only Summary Box -->
         <div class="summary-box">
           <h3>Dispatching For Invoice</h3>
           <div class="summary-item">
@@ -34,9 +35,10 @@
           </div>
         </div>
         
-        <!-- Right Side: Dispatch Form (also safely inside the block) -->
+        <!-- Right Side: Dispatch Form -->
         <form [formGroup]="dispatchForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-          <!-- All your form groups and inputs go here -->
+          
+          <!-- Vehicle Number & Dispatch Date -->
           <div class="form-row">
             <div class="form-group">
               <label for="vehicleNumber">Vehicle Number</label>
@@ -47,12 +49,37 @@
               <input id="dispatchDate" formControlName="dispatchDate" type="date" />
             </div>
           </div>
-          <!-- ... other form groups ... -->
 
+          <!-- Driver Name & NIC -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="driverName">Driver Name</label>
+              <input id="driverName" formControlName="driverName" type="text" placeholder="e.g., Nimal Silva"/>
+            </div>
+            <div class="form-group">
+              <label for="driverNic">Driver NIC (Optional)</label>
+              <input id="driverNic" formControlName="driverNic" type="text" placeholder="e.g., 851234567V" />
+            </div>
+          </div>
+        
+          <!-- Seal Number & Bag Count -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="sealNumber">Seal Number (Optional)</label>
+              <input id="sealNumber" formControlName="sealNumber" type="text" placeholder="e.g., SEAL-001" />
+            </div>
+            <div class="form-group">
+              <label for="bagCount">Bag Count</label>
+              <input id="bagCount" formControlName="bagCount" type="number" placeholder="e.g., 20" />
+            </div>
+          </div>
+
+          <!-- Form Actions -->
           <div class="form-actions">
             <button type="button" class="btn-secondary" (click)="onCancel()">Back to Invoices</button>
             <button type="submit" class="btn-primary" [disabled]="dispatchForm.invalid">Record Dispatch</button>
           </div>
+
         </form>
       </div> <!-- Closes .form-layout-grid -->
 
@@ -60,5 +87,5 @@
       <!-- This block handles the case where there is no error but no invoice was found -->
       <div class="error-message-full-page">Could not load invoice data. Please return to the invoice register and try again.</div>
     }
-  } <!-- Closes the primary @if/@else if/@else -->
+  } 
 </div>

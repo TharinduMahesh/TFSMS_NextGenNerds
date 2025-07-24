@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/providers/theme_provider.dart';
 import 'package:growersignup/sreens/grower/orders/grower_location_page.dart';
 
-// Placeholder for the actual order form page
-// import '../grower/grower_order_page.dart';
-
 class GrowerOrderRequestPage extends StatefulWidget {
-  final String email; // Optional, if you need to pass email or other data
+  final String email;
   const GrowerOrderRequestPage({super.key, required this.email});
 
   @override
@@ -13,61 +13,47 @@ class GrowerOrderRequestPage extends StatefulWidget {
 }
 
 class _GrowerOrderRequestPageState extends State<GrowerOrderRequestPage> {
-  int _bottomNavIndex = 0; // Home selected
+  int _bottomNavIndex = 0;
 
-  // --- Define Colors (estimated) ---
-  static const Color pageBackgroundColor = Color(0xFFF0FBEF); // Light green
-  static const Color iconColor = Color(0xFF333333); // Dark grey/black icon
-  static const Color textColor = Colors.black54; // Muted text color
-  static const Color buttonColor = Color(0xFF0a4e41); // Dark green button
-  static const Color buttonTextColor = Colors.white;
-  static const Color appBarIconsColor = Color(0xFF333333); // Match icon color?
-  static const Color bottomNavBarBackground = Colors.white;
-  static const Color bottomNavBarSelectedColor = buttonColor; // Match button color
-  static const Color bottomNavBarUnselectedColor = Colors.grey;
-  // --- End Colors ---
+  static const Color iconColor = Color(0xFF333333);
+  static const Color appBarIconsColor = Color(0xFF333333);
 
-  // --- Bottom Nav Logic ---
   void _onBottomNavTapped(int index) {
     if (_bottomNavIndex == index) return;
     setState(() => _bottomNavIndex = index);
-    // TODO: Implement navigation based on index
-    switch (index) {
-      case 0: print("Navigate Home"); break; // Already here?
-      case 1: print("Navigate Notifications"); break;
-      case 2: print("Navigate Profile"); break;
-      case 3: print("Navigate Contact Us"); break;
-    }
+    // TODO: Navigation Logic
   }
 
-   void _openSettings() {
-     print('Settings icon tapped');
-     ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Settings not implemented yet'), backgroundColor: Colors.grey),
-      );
+  void _openSettings() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Settings not implemented yet'), backgroundColor: Colors.grey),
+    );
   }
 
   void _navigateToOrderForm() {
-     print('Request Order button tapped');
-     // TODO: Navigate to the GrowerOrderPage or similar form
-     Navigator.push(context, MaterialPageRoute(builder: (context) => GrowerLocationPage(email: widget.email))); // Pass email if needed
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Navigate to Order Form'), backgroundColor: Colors.blueAccent),
-      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GrowerLocationPage(email: widget.email)),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Navigate to Order Form'), backgroundColor: Colors.blueAccent),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
-      backgroundColor: pageBackgroundColor,
+      backgroundColor: themeProvider.isDarkMode ? Colors.black : const Color(0xFFF0FBEF),
       appBar: AppBar(
-        backgroundColor: pageBackgroundColor,
+        backgroundColor: themeProvider.isDarkMode ? Colors.black : const Color(0xFFF0FBEF),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: appBarIconsColor),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        // No title needed as per screenshot
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined, color: appBarIconsColor),
@@ -78,45 +64,40 @@ class _GrowerOrderRequestPageState extends State<GrowerOrderRequestPage> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0), // Add padding
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Large Icon
               const Icon(
-                Icons.search, // Standard search icon
+                Icons.search,
                 color: iconColor,
-                size: 150.0, // Make it large
+                size: 150.0,
               ),
-              const SizedBox(height: 40), // Space below icon
-
-              // Descriptive Text
-              const Text(
-                'Request a Collector get picked up by\na nearby community',
+              const SizedBox(height: 40),
+              Text(
+                languageProvider.getText('requestOrderDescription'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: textColor,
+                  color: Colors.black54,
                   fontSize: 15,
-                  height: 1.4, // Line spacing
+                  height: 1.4,
                 ),
               ),
-              const SizedBox(height: 30), // Space below text
-
-              // Request Button
+              const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: _navigateToOrderForm,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: buttonColor,
-                  foregroundColor: buttonTextColor,
-                  minimumSize: const Size(double.infinity, 50), // Full width
+                  backgroundColor: const Color(0xFF0a4e41),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0), // Pill shape
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
                   elevation: 2,
                 ),
-                child: const Text(
-                  'Request Order',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                child: Text(
+                  languageProvider.getText('requestOrder'),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -125,18 +106,18 @@ class _GrowerOrderRequestPageState extends State<GrowerOrderRequestPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: bottomNavBarBackground,
-        selectedItemColor: bottomNavBarSelectedColor,
-        unselectedItemColor: bottomNavBarUnselectedColor,
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color(0xFF0a4e41),
+        unselectedItemColor: Colors.grey,
         currentIndex: _bottomNavIndex,
         onTap: _onBottomNavTapped,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        items: const [
-           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
-           BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), activeIcon: Icon(Icons.notifications), label: 'Notification'),
-           BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
-           BottomNavigationBarItem(icon: Icon(Icons.star_outline), activeIcon: Icon(Icons.star), label: 'Contact us'),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: languageProvider.getText('home')),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), activeIcon: Icon(Icons.notifications), label: languageProvider.getText('notification')),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: languageProvider.getText('profile')),
+          BottomNavigationBarItem(icon: Icon(Icons.star_outline), activeIcon: Icon(Icons.star), label: languageProvider.getText('contactUs')),
         ],
       ),
     );

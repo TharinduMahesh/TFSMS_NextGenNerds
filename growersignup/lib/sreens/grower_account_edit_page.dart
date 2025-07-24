@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:growersignup/models/grower/grower_Account.dart';
 import 'package:growersignup/services/grower/grower_create_api.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/providers/theme_provider.dart';
 
 class GrowerAccountEditPage extends StatefulWidget {
   final GrowerAccountModel grower;
@@ -62,41 +65,59 @@ class _GrowerAccountEditPageState extends State<GrowerAccountEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Edit Grower')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                controller: firstNameController,
-                decoration: const InputDecoration(labelText: 'First Name'),
-                validator: (value) => value!.isEmpty ? 'Enter first name' : null,
-              ),
-              TextFormField(
-                controller: lastNameController,
-                decoration: const InputDecoration(labelText: 'Last Name'),
-                validator: (value) => value!.isEmpty ? 'Enter last name' : null,
-              ),
-              TextFormField(
-                controller: phoneController,
-                decoration: const InputDecoration(labelText: 'Phone'),
-              ),
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveChanges,
-                child: const Text('Save Changes'),
-              ),
-            ],
+    return Consumer2<LanguageProvider, ThemeProvider>(
+      builder: (context, languageProvider, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(languageProvider.getText('editGrower') ?? 'Edit Grower'),
           ),
-        ),
-      ),
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  TextFormField(
+                    controller: firstNameController,
+                    decoration: InputDecoration(
+                      labelText: languageProvider.getText('firstName') ?? 'First Name',
+                    ),
+                    validator: (value) => value!.isEmpty
+                        ? (languageProvider.getText('enterFirstName') ?? 'Enter first name')
+                        : null,
+                  ),
+                  TextFormField(
+                    controller: lastNameController,
+                    decoration: InputDecoration(
+                      labelText: languageProvider.getText('lastName') ?? 'Last Name',
+                    ),
+                    validator: (value) => value!.isEmpty
+                        ? (languageProvider.getText('enterLastName') ?? 'Enter last name')
+                        : null,
+                  ),
+                  TextFormField(
+                    controller: phoneController,
+                    decoration: InputDecoration(
+                      labelText: languageProvider.getText('phone') ?? 'Phone',
+                    ),
+                  ),
+                  TextFormField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: languageProvider.getText('email') ?? 'Email',
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _saveChanges,
+                    child: Text(languageProvider.getText('saveChanges') ?? 'Save Changes'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

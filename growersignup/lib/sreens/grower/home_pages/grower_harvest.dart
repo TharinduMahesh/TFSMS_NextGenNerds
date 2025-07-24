@@ -1,8 +1,11 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:growersignup/models/grower/grower_harvest_model.dart';
 import 'package:growersignup/services/grower/grower_harwest_api.dart';
 import 'package:growersignup/sreens/grower/orders/grower_order_page.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/providers/theme_provider.dart';
 
 class HarvestPage extends StatefulWidget {
   final String email;
@@ -17,7 +20,6 @@ class _HarvestPageState extends State<HarvestPage> {
   bool _isLoading = true;
   String _errorMessage = '';
 
-  // Define colors (reuse from your code)
   static const Color summaryCardColor = Color(0xFFDDF4DD);
   static const Color titleColor = Color(0xFF0a4e41);
   static const Color gaugeNormalColor = Color(0xFFB2E7AE);
@@ -50,83 +52,105 @@ class _HarvestPageState extends State<HarvestPage> {
   Widget build(BuildContext context) {
     final gaugeSize = MediaQuery.of(context).size.width * 0.65;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Harvest Summary', style: TextStyle(color: titleColor)),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: titleColor),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _harvestSummary == null
-              ? Center(child: Text(_errorMessage))
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Row(
+    return Consumer2<LanguageProvider, ThemeProvider>(
+      builder: (context, languageProvider, themeProvider, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              languageProvider.getText('harvestSummaryTitle'),
+              style: const TextStyle(color: titleColor),
+            ),
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            iconTheme: const IconThemeData(color: titleColor),
+          ),
+          body: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _harvestSummary == null
+                  ? Center(child: Text(_errorMessage))
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
                         children: [
-                          _buildSummaryCard('Total Harvest', '${_harvestSummary!.totalHarvest.toStringAsFixed(2)} Kg'),
-                          _buildSummaryCard('Super Tea', '${_harvestSummary!.totalSuperTeaQuantity.toStringAsFixed(2)} Kg'),
-                          _buildSummaryCard('Normal Tea', '${_harvestSummary!.totalGreenTeaQuantity.toStringAsFixed(2)} Kg'),
+                          Row(
+                            children: [
+                              _buildSummaryCard(
+                                languageProvider.getText('totalHarvest'),
+                                '${_harvestSummary!.totalHarvest.toStringAsFixed(2)} Kg',
+                              ),
+                              _buildSummaryCard(
+                                languageProvider.getText('superTea'),
+                                '${_harvestSummary!.totalSuperTeaQuantity.toStringAsFixed(2)} Kg',
+                              ),
+                              _buildSummaryCard(
+                                languageProvider.getText('normalTea'),
+                                '${_harvestSummary!.totalGreenTeaQuantity.toStringAsFixed(2)} Kg',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Text(
+                            languageProvider.getText('teaQualityDistribution'),
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: gaugeSize,
+                            height: gaugeSize * 0.6,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                CustomPaint(
+                                  size: Size(gaugeSize, gaugeSize * 0.55),
+                                  painter: TeaQualityPainter(
+                                    normalPercentage: _harvestSummary!.totalGreenTeaQuantity / _harvestSummary!.totalHarvest,
+                                    superPercentage: _harvestSummary!.totalSuperTeaQuantity / _harvestSummary!.totalHarvest,
+                                    normalColor: gaugeNormalColor,
+                                    superColor: gaugeSuperColor,
+                                    backgroundColor: gaugeBackgroundColor,
+                                    strokeWidth: 18.0,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: gaugeSize * 0.15,
+                                  child: const Icon(Icons.eco_outlined, size: 28, color: titleColor),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        '${(_harvestSummary!.totalGreenTeaQuantity / _harvestSummary!.totalHarvest * 100).toStringAsFixed(0)}%',
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        '${(_harvestSummary!.totalSuperTeaQuantity / _harvestSummary!.totalHarvest * 100).toStringAsFixed(0)}%',
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 30),
-                      const Text('Tea Quality Distribution', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: gaugeSize,
-                        height: gaugeSize * 0.6,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            CustomPaint(
-                              size: Size(gaugeSize, gaugeSize * 0.55),
-                              painter: TeaQualityPainter(
-                                normalPercentage: _harvestSummary!.totalGreenTeaQuantity / _harvestSummary!.totalHarvest,
-                                superPercentage: _harvestSummary!.totalSuperTeaQuantity / _harvestSummary!.totalHarvest,
-                                normalColor: gaugeNormalColor,
-                                superColor: gaugeSuperColor,
-                                backgroundColor: gaugeBackgroundColor,
-                                strokeWidth: 18.0,
-                              ),
-                            ),
-                            Positioned(
-                              bottom: gaugeSize * 0.15,
-                              child: const Icon(Icons.eco_outlined, size: 28, color: titleColor),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              right: 0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    '${(_harvestSummary!.totalGreenTeaQuantity / _harvestSummary!.totalHarvest * 100).toStringAsFixed(0)}%',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    '${(_harvestSummary!.totalSuperTeaQuantity / _harvestSummary!.totalHarvest * 100).toStringAsFixed(0)}%',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => GrowerOrderPage(email: widget.email)));
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.black,
-      ),
+                    ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => GrowerOrderPage(email: widget.email)),
+              );
+            },
+            child: const Icon(Icons.add),
+            backgroundColor: Colors.black,
+          ),
+        );
+      },
     );
   }
 

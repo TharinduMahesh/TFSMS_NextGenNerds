@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:growersignup/models/collector/show_collector_model.dart';
 import 'package:growersignup/services/collector/show_collector_api.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/providers/theme_provider.dart';
 
 class CollectorDetailsPage extends StatefulWidget {
   final String email;
-  const CollectorDetailsPage({super.key,required this.email});
+  const CollectorDetailsPage({super.key, required this.email});
 
   @override
   State<CollectorDetailsPage> createState() => _CollectorDetailsPageState();
@@ -16,7 +19,6 @@ class _CollectorDetailsPageState extends State<CollectorDetailsPage> {
 
   final _apiService = CollectorApiService();
 
-  // Controllers
   final _fullNameController = TextEditingController();
   final _address1Controller = TextEditingController();
   final _address2Controller = TextEditingController();
@@ -41,16 +43,14 @@ class _CollectorDetailsPageState extends State<CollectorDetailsPage> {
     if (data != null) {
       setState(() {
         _collector = data;
-        _fullNameController.text =
-            '${data.collectorFirstName} ${data.collectorLastName}';
+        _fullNameController.text = '${data.collectorFirstName} ${data.collectorLastName}';
         _address1Controller.text = data.collectorAddressLine1;
         _address2Controller.text = data.collectorAddressLine2 ?? '';
         _address3Controller.text = data.collectorCity;
         _postalCodeController.text = data.collectorPostalCode ?? '';
         _genderController.text = data.collectorGender ?? '';
         _nicController.text = data.collectorNIC;
-        _dobController.text =
-            data.collectorDOB?.toIso8601String().split("T").first ?? '';
+        _dobController.text = data.collectorDOB?.toIso8601String().split("T").first ?? '';
         _phoneController.text = data.collectorPhoneNum;
         _vehicleNumberController.text = data.collectorVehicleNum;
       });
@@ -86,15 +86,12 @@ class _CollectorDetailsPageState extends State<CollectorDetailsPage> {
 
     final success = await _apiService.updateCollectorByEmail(widget.email, updated);
 
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Details saved successfully!'), backgroundColor: Colors.green),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to save details!'), backgroundColor: Colors.red),
-      );
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(success ? 'Details saved successfully!' : 'Failed to save details!'),
+        backgroundColor: success ? Colors.green : Colors.red,
+      ),
+    );
   }
 
   void _toggleEditMode() async {
@@ -123,76 +120,85 @@ class _CollectorDetailsPageState extends State<CollectorDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0FBEF),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 1, 112, 45),
-        foregroundColor: Colors.white,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text('Personal Details', style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: TextButton(
-              onPressed: _toggleEditMode,
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              ),
-              child: Text(_isEditing ? 'Save' : 'Edit'),
+    return Consumer2<LanguageProvider, ThemeProvider>(
+      builder: (context, languageProvider, themeProvider, child) {
+        return Scaffold(
+          backgroundColor: const Color(0xFFF0FBEF),
+          appBar: AppBar(
+            backgroundColor: const Color.fromARGB(255, 1, 112, 45),
+            foregroundColor: Colors.white,
+            elevation: 1,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.of(context).pop(),
             ),
-          )
-        ],
-      ),
-      body: _collector == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDetailRow('Full Name:', _fullNameController),
-                  const SizedBox(height: 18),
-                  _buildLabel('Address:'),
-                  _buildDetailRow(null, _address1Controller),
-                  _buildDetailRow(null, _address2Controller),
-                  _buildDetailRow(null, _address3Controller),
-                  const SizedBox(height: 18),
-                  _buildDetailRow('Postal Code:', _postalCodeController),
-                  const SizedBox(height: 18),
-                  _buildDetailRow('Gender:', _genderController),
-                  const SizedBox(height: 18),
-                  _buildDetailRow('NIC Number:', _nicController),
-                  const SizedBox(height: 18),
-                  _buildDetailRow('Birthday date:', _dobController),
-                  const SizedBox(height: 18),
-                  _buildDetailRow('Phone Number:', _phoneController),
-                  const SizedBox(height: 18),
-                  _buildDetailRow('Vehicle Number:', _vehicleNumberController),
-                  const SizedBox(height: 20),
-                ],
-              ),
+            title: Text(
+              languageProvider.getText('personalDetails') ?? 'Personal Details',
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _bottomNavIndex,
-        onTap: _onBottomNavTapped,
-        selectedItemColor: const Color(0xFF0a4e41),
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), label: 'Notification'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.star_outline), label: 'Contact us'),
-        ],
-      ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: TextButton(
+                  onPressed: _toggleEditMode,
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  ),
+                  child: Text(_isEditing
+                      ? languageProvider.getText('save') ?? 'Save'
+                      : languageProvider.getText('edit') ?? 'Edit'),
+                ),
+              )
+            ],
+          ),
+          body: _collector == null
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildDetailRow(languageProvider.getText('fullName') ?? 'Full Name:', _fullNameController),
+                      const SizedBox(height: 18),
+                      _buildLabel(languageProvider.getText('address') ?? 'Address:'),
+                      _buildDetailRow(null, _address1Controller),
+                      _buildDetailRow(null, _address2Controller),
+                      _buildDetailRow(null, _address3Controller),
+                      const SizedBox(height: 18),
+                      _buildDetailRow(languageProvider.getText('postalCode') ?? 'Postal Code:', _postalCodeController),
+                      const SizedBox(height: 18),
+                      _buildDetailRow(languageProvider.getText('gender') ?? 'Gender:', _genderController),
+                      const SizedBox(height: 18),
+                      _buildDetailRow(languageProvider.getText('nic') ?? 'NIC Number:', _nicController),
+                      const SizedBox(height: 18),
+                      _buildDetailRow(languageProvider.getText('dob') ?? 'Birthday date:', _dobController),
+                      const SizedBox(height: 18),
+                      _buildDetailRow(languageProvider.getText('phone') ?? 'Phone Number:', _phoneController),
+                      const SizedBox(height: 18),
+                      _buildDetailRow(languageProvider.getText('vehicleNumber') ?? 'Vehicle Number:', _vehicleNumberController),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _bottomNavIndex,
+            onTap: _onBottomNavTapped,
+            selectedItemColor: const Color(0xFF0a4e41),
+            unselectedItemColor: Colors.grey,
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
+              BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), label: 'Notification'),
+              BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+              BottomNavigationBarItem(icon: Icon(Icons.star_outline), label: 'Contact us'),
+            ],
+          ),
+        );
+      },
     );
   }
 

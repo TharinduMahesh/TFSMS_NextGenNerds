@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:growersignup/models/grower/show_account_model.dart';
 import 'package:growersignup/services/grower/show_grower_api.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/widgets/language_selector.dart';
 
 class GrowerDetailsPage extends StatefulWidget {
   final String email;
@@ -118,8 +121,10 @@ class _SupplierDetailsPageState extends State<GrowerDetailsPage> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: pageBackgroundColor,
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        return Scaffold(
+          backgroundColor: pageBackgroundColor,
       appBar: AppBar(
         backgroundColor: pageBackgroundColor,
         elevation: 0,
@@ -127,12 +132,13 @@ class _SupplierDetailsPageState extends State<GrowerDetailsPage> {
           icon: const Icon(Icons.arrow_back_ios, color: titleColor),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          'Personal Details',
+        title: Text(
+          languageProvider.getText('personalDetails'),
           style: TextStyle(color: titleColor, fontWeight: FontWeight.bold, fontSize: 22),
         ),
         centerTitle: true,
         actions: [
+          LanguageSelector(),
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: TextButton(
@@ -181,13 +187,15 @@ class _SupplierDetailsPageState extends State<GrowerDetailsPage> {
         selectedItemColor: bottomNavBarSelectedColor,
         unselectedItemColor: bottomNavBarUnselectedColor,
         onTap: _onBottomNavTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), label: 'Notification'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.star_outline), label: 'Contact us'),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: languageProvider.getText('home')),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), label: languageProvider.getText('notifications')),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: languageProvider.getText('profile')),
+          BottomNavigationBarItem(icon: Icon(Icons.star_outline), label: languageProvider.getText('contactUs')),
         ],
       ),
+    );
+      },
     );
   }
 

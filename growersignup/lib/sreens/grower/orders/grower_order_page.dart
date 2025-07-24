@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/providers/theme_provider.dart';
 import 'package:growersignup/models/grower/grower_order_model.dart';
 import 'package:growersignup/services/grower/grower_order_api.dart';
 import 'package:growersignup/sreens/grower/orders/grower_order_request_page.dart';
 import 'package:intl/intl.dart';
 
 class GrowerOrderPage extends StatefulWidget {
-  final String email; 
-  const GrowerOrderPage({super.key,required this.email});
+  final String email;
+  const GrowerOrderPage({super.key, required this.email});
 
   @override
   State<GrowerOrderPage> createState() => _GrowerOrderPageState();
@@ -26,21 +29,7 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> {
   final List<String> _transportOptions = ['By Own', 'By Collector'];
   final List<String> _paymentOptions = ['Cash', 'Bank'];
 
-  static const Color pageBackgroundColor = Color(0xFFF8FDEF);
-  static const Color containerBackgroundColor = Colors.white;
-  static const Color appBarIconsColor = Colors.black54;
-  static const Color labelTextColor = Colors.black87;
-  static const Color inputBorderColor = Colors.black54;
-  static const Color focusedInputBorderColor = Color(0xFF0a4e41);
-  static const Color dropdownBackgroundColor = Color(0xFFDDF4DD);
-  static const Color dropdownTextColor = Colors.black87;
-  static const Color saveButtonColor = Color(0xFF0a4e41);
-  static const Color saveButtonTextColor = Colors.white;
-  static const Color bottomNavBarBackground = Colors.white;
-  static const Color bottomNavBarSelectedColor = Color(0xFF0a4e41);
-  static const Color bottomNavBarUnselectedColor = Colors.grey;
-
-  final GrowerOrderApi _apiHandler = GrowerOrderApi(); // Create an instance of ApiHandler
+  final GrowerOrderApi _apiHandler = GrowerOrderApi();
 
   @override
   void dispose() {
@@ -60,11 +49,10 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light(
-              primary: saveButtonColor,
+              primary: Color(0xFF0a4e41),
               onPrimary: Colors.white,
               onSurface: Colors.black,
             ),
-            dialogTheme: DialogThemeData(backgroundColor: Colors.white),
           ),
           child: child!,
         );
@@ -78,168 +66,65 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> {
     }
   }
 
-  Future<void> _saveOrder() async {
-    print('EMAIL: ${widget.email}');
+  Future<void> _saveOrder(BuildContext context, LanguageProvider languageProvider) async {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fix the errors'), backgroundColor: Colors.orangeAccent),
+        SnackBar(content: Text(languageProvider.getText('fixErrors')), backgroundColor: Colors.orangeAccent),
       );
       return;
     }
 
-    if (_selectedDate == null ||
-        _selectedTransportMethod == null ||
-        _selectedPaymentMethod == null) {
+    if (_selectedDate == null || _selectedTransportMethod == null || _selectedPaymentMethod == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please complete all fields'), backgroundColor: Colors.orangeAccent),
+        SnackBar(content: Text(languageProvider.getText('completeAllFields')), backgroundColor: Colors.orangeAccent),
       );
       return;
     }
-
-    final superLeafKg = double.tryParse(_superLeafController.text) ?? 0.0;
-    final greenLeafKg = double.tryParse(_greenLeafController.text) ?? 0.0;
-    final harvestDate = _selectedDate!;
-    final transportMethod = _selectedTransportMethod!;
-    final paymentMethod = _selectedPaymentMethod!;
 
     final growerModel = GrowerOrderModel(
-      superTeaQuantity: superLeafKg,
-      greenTeaQuantity: greenLeafKg,
-      placeDate: harvestDate,
-      transportMethod: transportMethod,
-      paymentMethod: paymentMethod,
+      superTeaQuantity: double.tryParse(_superLeafController.text) ?? 0.0,
+      greenTeaQuantity: double.tryParse(_greenLeafController.text) ?? 0.0,
+      placeDate: _selectedDate!,
+      transportMethod: _selectedTransportMethod!,
+      paymentMethod: _selectedPaymentMethod!,
       growerEmail: widget.email,
     );
 
     try {
       final response = await _apiHandler.getGrowerOrder(growerModel);
-
       if (response.growerOrderId != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Order saved successfully!'), backgroundColor: Colors.green),
+          SnackBar(content: Text(languageProvider.getText('orderSaved')), backgroundColor: Colors.green),
         );
         Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => GrowerOrderRequestPage(email: widget.email)),
+          context,
+          MaterialPageRoute(builder: (context) => GrowerOrderRequestPage(email: widget.email)),
         );
-        // You can clear the fields after saving
-        _superLeafController.clear();
-        _greenLeafController.clear();
-        _dateController.clear();
-        setState(() {
-          _selectedDate = null;
-          _selectedTransportMethod = null;
-          _selectedPaymentMethod = null;
-        });
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to save order'), backgroundColor: Colors.red),
+        SnackBar(content: Text(languageProvider.getText('orderFailed')), backgroundColor: Colors.red),
       );
     }
   }
 
-  void _onBottomNavTapped(int index) {
-    if (_bottomNavIndex == index) return;
-    setState(() {
-      _bottomNavIndex = index;
-    });
-    // Implement your actual page navigation logic here
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    required TextInputType keyboardType,
-    required String? Function(String?) validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      validator: validator,
-      decoration: InputDecoration(
-        hintText: hintText,
-        filled: true,
-        fillColor: Colors.grey[100],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: inputBorderColor),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: focusedInputBorderColor, width: 2.0),
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdown({
-    required String hint,
-    required String? value,
-    required List<String> items,
-    required void Function(String?) onChanged,
-    required String? Function(String?) validator,
-  }) {
-    return DropdownButtonFormField<String>(
-      value: value,
-      isExpanded: true,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: dropdownBackgroundColor,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      hint: Text(hint),
-      items: items.map((String val) {
-        return DropdownMenuItem<String>(
-          value: val,
-          child: Text(val, style: const TextStyle(color: dropdownTextColor)),
-        );
-      }).toList(),
-      onChanged: onChanged,
-      validator: validator,
-    );
-  }
-
-  Widget _buildDateField(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _selectDate(context),
-      child: AbsorbPointer(
-        child: TextFormField(
-          controller: _dateController,
-          validator: (value) => value == null || value.isEmpty ? 'Please pick a date' : null,
-          decoration: InputDecoration(
-            hintText: 'Select date',
-            suffixIcon: const Icon(Icons.calendar_today),
-            filled: true,
-            fillColor: Colors.grey[100],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: inputBorderColor),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: focusedInputBorderColor, width: 2.0),
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
-      backgroundColor: pageBackgroundColor,
+      backgroundColor: themeProvider.isDarkMode ? Colors.black : const Color(0xFFF8FDEF),
       appBar: AppBar(
-        backgroundColor: pageBackgroundColor,
+        backgroundColor: themeProvider.isDarkMode ? Colors.black : const Color(0xFFF8FDEF),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: appBarIconsColor),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black54),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_outlined, color: appBarIconsColor),
+            icon: const Icon(Icons.settings_outlined, color: Colors.black54),
             onPressed: () => print('Settings tapped'),
           ),
         ],
@@ -252,88 +137,61 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> {
             padding: const EdgeInsets.all(20),
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
-              color: containerBackgroundColor,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 5)],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('How many (kg):',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: labelTextColor)),
+                Text(languageProvider.getText('quantityKg'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
                 const SizedBox(height: 15),
                 _buildTextField(
                   controller: _superLeafController,
-                  hintText: 'Super leaf (kg)',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return 'Enter super leaf kg';
-                    if (double.tryParse(value) == null) return 'Enter a valid number';
-                    return null;
-                  },
+                  hintText: languageProvider.getText('superLeafKg'),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                 ),
                 const SizedBox(height: 15),
                 _buildTextField(
                   controller: _greenLeafController,
-                  hintText: 'Green leaf (kg)',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return 'Enter green leaf kg';
-                    if (double.tryParse(value) == null) return 'Enter a valid number';
-                    return null;
-                  },
+                  hintText: languageProvider.getText('greenLeafKg'),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                 ),
                 const SizedBox(height: 25),
-                const Text('Date you can give harvest:',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: labelTextColor)),
+                Text(languageProvider.getText('harvestDate'), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 8),
-                _buildDateField(context),
+                _buildDateField(context, languageProvider),
                 const SizedBox(height: 25),
-                const Text('How to transport:',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: labelTextColor)),
+                Text(languageProvider.getText('transportMethod'), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 8),
                 _buildDropdown(
-                  hint: 'Select method',
+                  hint: languageProvider.getText('selectMethod'),
                   value: _selectedTransportMethod,
                   items: _transportOptions,
                   onChanged: (val) => setState(() => _selectedTransportMethod = val),
-                  validator: (val) => val == null ? 'Please select transport method' : null,
                 ),
                 const SizedBox(height: 25),
-                const Text('Payment method:',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: labelTextColor)),
+                Text(languageProvider.getText('paymentMethod'), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 8),
                 _buildDropdown(
-                  hint: 'Select method',
+                  hint: languageProvider.getText('selectMethod'),
                   value: _selectedPaymentMethod,
                   items: _paymentOptions,
                   onChanged: (val) => setState(() => _selectedPaymentMethod = val),
-                  validator: (val) => val == null ? 'Please select payment method' : null,
                 ),
                 const SizedBox(height: 35),
-                  
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _saveOrder,
+                    onPressed: () => _saveOrder(context, languageProvider),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: saveButtonColor,
+                      backgroundColor: const Color(0xFF0a4e41),
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: const Text('Save Order',
-                        style: TextStyle(fontSize: 18, color: saveButtonTextColor)),
+                    child: Text(languageProvider.getText('saveOrder'), style: const TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                 ),
-                
               ],
             ),
           ),
@@ -341,20 +199,75 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _bottomNavIndex,
-        onTap: _onBottomNavTapped,
-        backgroundColor: bottomNavBarBackground,
-        selectedItemColor: bottomNavBarSelectedColor,
-        unselectedItemColor: bottomNavBarUnselectedColor,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Orders',
-          ),
+        onTap: (index) => setState(() => _bottomNavIndex = index),
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color(0xFF0a4e41),
+        unselectedItemColor: Colors.grey,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: languageProvider.getText('home')),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: languageProvider.getText('orders')),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required TextInputType keyboardType,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      validator: (value) {
+        if (value == null || value.isEmpty) return 'Required';
+        if (double.tryParse(value) == null) return 'Invalid number';
+        return null;
+      },
+      decoration: InputDecoration(
+        hintText: hintText,
+        filled: true,
+        fillColor: Colors.grey[100],
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
+  Widget _buildDropdown({
+    required String hint,
+    required String? value,
+    required List<String> items,
+    required void Function(String?) onChanged,
+  }) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: const Color(0xFFDDF4DD),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      hint: Text(hint),
+      items: items.map((val) => DropdownMenuItem(value: val, child: Text(val))).toList(),
+      onChanged: onChanged,
+      validator: (val) => val == null ? 'Required' : null,
+    );
+  }
+
+  Widget _buildDateField(BuildContext context, LanguageProvider languageProvider) {
+    return GestureDetector(
+      onTap: () => _selectDate(context),
+      child: AbsorbPointer(
+        child: TextFormField(
+          controller: _dateController,
+          validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+          decoration: InputDecoration(
+            hintText: languageProvider.getText('selectDate'),
+            suffixIcon: const Icon(Icons.calendar_today),
+            filled: true,
+            fillColor: Colors.grey[100],
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
       ),
     );
   }

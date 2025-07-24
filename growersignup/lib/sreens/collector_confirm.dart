@@ -1,147 +1,186 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/providers/theme_provider.dart';
 
-// Placeholder for a potential success page
-// import 'order_confirmed_success_page.dart';
-
-class CollectorConfirmPage extends StatefulWidget {
-  const CollectorConfirmPage({super.key});
+class GrowerNotificationsPage extends StatefulWidget {
+  const GrowerNotificationsPage({super.key});
 
   @override
-  State<CollectorConfirmPage> createState() => _CollectorConfirmPageState();
+  State<GrowerNotificationsPage> createState() => _NotificationsPageState();
 }
 
-class _CollectorConfirmPageState extends State<CollectorConfirmPage> {
-  int _bottomNavIndex = 0; // Home is selected
-
-  // --- Define Colors (estimated) ---
-  static const Color pageBackgroundColor = Color(0xFFF0FBEF);
-  static const Color iconColor = Color(0xFF333333);
-  static const Color textColor = Colors.black54;
-  static const Color buttonColor = Color(0xFF0a4e41);
-  static const Color buttonTextColor = Colors.white;
-  static const Color bottomNavBarBackground = Colors.white;
-  static const Color bottomNavBarSelectedColor = buttonColor;
-  static const Color bottomNavBarUnselectedColor = Colors.grey;
-  // --- End Colors ---
-
-  // --- Button Action ---
-  void _confirmOrder() {
-    print('Confirm Order button tapped');
-
-    // *** TODO: Implement API call to finalize the order request ***
-    // Example:
-    /*
-    try {
-        // final orderId = ...; // Get order ID if needed
-        // await ApiService().confirmOrder(orderId);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-           const SnackBar(content: Text('Order confirmed successfully!'), backgroundColor: Colors.green),
+class _NotificationsPageState extends State<GrowerNotificationsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer2<LanguageProvider, ThemeProvider>(
+      builder: (context, languageProvider, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 2,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.settings, color: Colors.black),
+                onPressed: () {
+                  // Handle settings
+                },
+              ),
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    languageProvider.getText('notifications') ?? "Notifications",
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0C330D),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  languageProvider.getText('today') ?? "Today",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const NotificationItem(
+                  title: "Payment",
+                  message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                  isSelected: false,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  languageProvider.getText('earlier') ?? "Earlier",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: 6,
+                    itemBuilder: (context, index) {
+                      return const NotificationItem(
+                        title: "Payment",
+                        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                        isSelected: false,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+          bottomNavigationBar: _navigationBar(languageProvider),
         );
-        // Navigate to a success screen or back to the home/dashboard
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const OrderSuccessPage()),
-            (route) => route.isFirst // Go to success page, clear stack up to first route
-        );
-
-    } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text('Failed to confirm order: $e'), backgroundColor: Colors.redAccent),
-        );
-    }
-    */
-
-    // Placeholder feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Order Confirmed (Simulated)!'), backgroundColor: Colors.green),
+      },
     );
-    // TODO: Implement actual navigation
-    // Example: Pop back to the home page (assuming it's the root)
-    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
-
-  // --- Bottom Nav Logic ---
-  void _onBottomNavTapped(int index) {
-    if (_bottomNavIndex == index) return;
-    setState(() => _bottomNavIndex = index);
-    // TODO: Implement navigation based on index
-    switch (index) {
-      case 0: print("Navigate Home"); break; // Already here?
-      case 1: print("Navigate Notifications"); break;
-      case 2: print("Navigate Profile"); break;
-      case 3: print("Navigate Contact Us"); break;
-    }
+  Widget _navigationBar(LanguageProvider languageProvider) {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      items: [
+        BottomNavigationBarItem(icon: const Icon(Icons.home), label: languageProvider.getText('home') ?? 'Home'),
+        BottomNavigationBarItem(icon: const Icon(Icons.notifications), label: languageProvider.getText('notifications') ?? 'Notifications'),
+        BottomNavigationBarItem(icon: const Icon(Icons.person), label: languageProvider.getText('profile') ?? 'Profile'),
+        BottomNavigationBarItem(icon: const Icon(Icons.contact_support), label: languageProvider.getText('contact') ?? 'Contact'),
+      ],
+      selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+    );
   }
+}
 
+class NotificationItem extends StatelessWidget {
+  const NotificationItem({
+    Key? key,
+    required this.title,
+    required this.message,
+    required this.isSelected,
+  }) : super(key: key);
+
+  final String title;
+  final String message;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: pageBackgroundColor,
-      // No AppBar in this design
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+    return Container(
+      decoration: BoxDecoration(
+        border: isSelected ? Border.all(color: Colors.lightBlueAccent, width: 2.0) : null,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Stack(
+            alignment: Alignment.topRight,
             children: [
-              // Large Checkmark Icon
-              const Icon(
-                Icons.check_rounded, // A bold, rounded checkmark
-                color: iconColor,
-                size: 120.0,
-              ),
-              const SizedBox(height: 40),
-
-              // Descriptive Text
-              const Text(
-                'Request a Collector get picked up by\na nearby community',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 15,
-                  height: 1.4, // Line spacing
+              Container(
+                width: 50,
+                height: 50,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF0C330D),
+                  shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(height: 30),
-
-              // Confirm Button
-              ElevatedButton(
-                onPressed: _confirmOrder,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: buttonColor,
-                  foregroundColor: buttonTextColor,
-                  minimumSize: const Size(double.infinity, 50), // Full width
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0), // Pill shape
+              Positioned(
+                top: 5,
+                right: 5,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: const BoxDecoration(
+                    color: Colors.lightGreen,
+                    shape: BoxShape.circle,
                   ),
-                  elevation: 2,
-                ),
-                child: const Text(
-                  'Confirm Order',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: bottomNavBarBackground,
-        selectedItemColor: bottomNavBarSelectedColor,
-        unselectedItemColor: bottomNavBarUnselectedColor,
-        currentIndex: _bottomNavIndex,
-        onTap: _onBottomNavTapped,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-        items: const [
-           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
-           BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), activeIcon: Icon(Icons.notifications), label: 'Notification'),
-           BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
-           BottomNavigationBarItem(icon: Icon(Icons.star_outline), activeIcon: Icon(Icons.star), label: 'Contact us'),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  message,
+                  style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                ),
+              ],
+            ),
+          ),
+          const Text(
+            "1m ago.",
+            style: TextStyle(color: Colors.grey),
+          ),
         ],
       ),
     );

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/widgets/language_selector.dart';
 
 class GrowerNotificationsPage extends StatefulWidget {
   const GrowerNotificationsPage({super.key});
@@ -10,7 +13,9 @@ class GrowerNotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<GrowerNotificationsPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 2,
@@ -87,6 +92,8 @@ class _NotificationsPageState extends State<GrowerNotificationsPage> {
         ),
       ),
       bottomNavigationBar: navigationBar(),
+        );
+      }
     );
   }
 }

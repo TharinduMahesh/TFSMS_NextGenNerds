@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../models/grower/grower_payment_model.dart';
 import '../../../services/grower/grower_payment_api.dart';
+import '../../../providers/language_provider.dart';
+import '../../../providers/theme_provider.dart';
 
 class PaymentsPage extends StatefulWidget {
   final String email;
-
   const PaymentsPage({Key? key, required this.email}) : super(key: key);
 
   @override
@@ -34,47 +36,54 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: pageBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: pageBackgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: appBarIconsColor),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text('Grower Payments', style: TextStyle(color: Colors.black)),
-      ),
-      body: FutureBuilder<PaymentResponse?>(
-        future: _paymentData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError || snapshot.data == null) {
-            return const Center(child: Text('No payment data found.'));
-          }
-
-          final payments = snapshot.data!;
-          final totalFormatted = currencyFormatter.format(payments.totalAmount);
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                _buildSummaryCard(totalFormatted),
-                const SizedBox(height: 20),
-                ...payments.payments.map(_buildTransactionCard).toList(),
-                const SizedBox(height: 80),
-              ],
+    return Consumer2<LanguageProvider, ThemeProvider>(
+      builder: (context, languageProvider, themeProvider, _) {
+        return Scaffold(
+          backgroundColor: pageBackgroundColor,
+          appBar: AppBar(
+            backgroundColor: pageBackgroundColor,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: appBarIconsColor),
+              onPressed: () => Navigator.of(context).pop(),
             ),
-          );
-        },
-      ),
+            title: Text(
+              languageProvider.getText('growerPaymentsTitle'),
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+          body: FutureBuilder<PaymentResponse?>(
+            future: _paymentData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError || snapshot.data == null) {
+                return Center(child: Text(languageProvider.getText('noPayments')));
+              }
+
+              final payments = snapshot.data!;
+              final totalFormatted = currencyFormatter.format(payments.totalAmount);
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    _buildSummaryCard(totalFormatted, languageProvider),
+                    const SizedBox(height: 20),
+                    ...payments.payments.map((item) => _buildTransactionCard(item, languageProvider)).toList(),
+                    const SizedBox(height: 80),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildSummaryCard(String totalFormatted) {
+  Widget _buildSummaryCard(String totalFormatted, LanguageProvider languageProvider) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -91,17 +100,29 @@ class _PaymentsPageState extends State<PaymentsPage> {
       ),
       child: Column(
         children: [
-          const Text('Total Payment',
-              style: TextStyle(fontSize: 16, color: summaryLabelColor, fontWeight: FontWeight.w500)),
+          Text(
+            languageProvider.getText('totalPayment'),
+            style: const TextStyle(
+              fontSize: 16,
+              color: summaryLabelColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text('Rs $totalFormatted',
-              style: const TextStyle(fontSize: 32, color: summaryValueColor, fontWeight: FontWeight.bold)),
+          Text(
+            'Rs $totalFormatted',
+            style: const TextStyle(
+              fontSize: 32,
+              color: summaryValueColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildTransactionCard(PaymentItem item) {
+  Widget _buildTransactionCard(PaymentItem item, LanguageProvider languageProvider) {
     return Card(
       color: cardBackgroundColor,
       elevation: 2.0,
@@ -111,10 +132,21 @@ class _PaymentsPageState extends State<PaymentsPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildDetailRow('Ref Number', item.refNumber),
-            _buildDetailRow('Amount', 'Rs ${currencyFormatter.format(item.amount)}', isValueBold: true),
-            _buildDetailRow('Payment Time', DateFormat('dd-MM-yyyy, HH:mm').format(item.paymentTime)),
-            _buildDetailRow('Payment Method', item.paymentMethod, isValueBold: true),
+            _buildDetailRow(languageProvider.getText('refNumber'), item.refNumber),
+            _buildDetailRow(
+              languageProvider.getText('amount'),
+              'Rs ${currencyFormatter.format(item.amount)}',
+              isValueBold: true,
+            ),
+            _buildDetailRow(
+              languageProvider.getText('paymentTime'),
+              DateFormat('dd-MM-yyyy, HH:mm').format(item.paymentTime),
+            ),
+            _buildDetailRow(
+              languageProvider.getText('paymentMethod'),
+              item.paymentMethod,
+              isValueBold: true,
+            ),
           ],
         ),
       ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:growersignup/models/collector/collector_bankdetails_model.dart';
 import 'package:growersignup/services/collector/collector_bank_details_api.dart';
-import 'package:growersignup/sreens/collector/log_in/collector_account_success.dart'; // For input formatters
+import 'package:growersignup/sreens/collector/log_in/collector_account_success.dart';
+import 'package:growersignup/providers/language_provider.dart';
+import 'package:growersignup/providers/theme_provider.dart';
 
 class collectorBankDetailsSetupPage extends StatefulWidget {
   final String email;
@@ -58,12 +61,9 @@ class _collectorBankDetailsSetupPageState extends State<collectorBankDetailsSetu
           const SnackBar(content: Text('Bank details saved successfully!'), backgroundColor: Colors.green),
         );
 
-        Navigator.of(context).pushReplacement( 
-                      MaterialPageRoute(builder: (context) => CollectorSignInSuccessPage(email: widget.email,)),
-                      );
-
-        // Navigate or proceed
-        // Navigator.push(...);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => CollectorSignInSuccessPage(email: widget.email)),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to save bank details'), backgroundColor: Colors.redAccent),
@@ -78,93 +78,99 @@ class _collectorBankDetailsSetupPageState extends State<collectorBankDetailsSetu
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: pageBackgroundColor,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Bank Details',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: titleColor),
-                ),
-                const SizedBox(height: 25),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-                  decoration: BoxDecoration(
-                    color: cardBackgroundColor,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.15),
-                        spreadRadius: 1, blurRadius: 8, offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTextFieldWithLabel(
-                          label: 'Bank Name:',
-                          controller: _bankNameController,
-                          textCapitalization: TextCapitalization.words,
-                        ),
-                        _buildTextFieldWithLabel(
-                          label: 'Branch',
-                          controller: _branchController,
-                          textCapitalization: TextCapitalization.words,
-                        ),
-                        _buildTextFieldWithLabel(
-                          label: 'Holder Name',
-                          controller: _holderNameController,
-                          textCapitalization: TextCapitalization.words,
-                        ),
-                        _buildTextFieldWithLabel(
-                          label: 'Account Number',
-                          controller: _accountNumberController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        ),
-                        const SizedBox(height: 30),
-                        Center(
-                          child: ElevatedButton(
-                            onPressed: _submitBankDetails,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: nextButtonColor,
-                              foregroundColor: nextButtonTextColor,
-                              minimumSize: const Size(double.infinity, 50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              elevation: 2,
-                            ),
-                            child: const Text('Submit', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: LinearProgressIndicator(
-                            value: 1.0,
-                            minHeight: 8,
-                            backgroundColor: progressBackgroundColor,
-                            valueColor: const AlwaysStoppedAnimation<Color>(progressValueColor),
-                          ),
-                        ),
-                      ],
+    return Consumer2<LanguageProvider, ThemeProvider>(
+      builder: (context, languageProvider, themeProvider, child) {
+        return Scaffold(
+          backgroundColor: pageBackgroundColor,
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Bank Details',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: titleColor),
                     ),
-                  ),
+                    const SizedBox(height: 25),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+                      decoration: BoxDecoration(
+                        color: cardBackgroundColor,
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.15),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildTextFieldWithLabel(
+                              label: 'Bank Name:',
+                              controller: _bankNameController,
+                              textCapitalization: TextCapitalization.words,
+                            ),
+                            _buildTextFieldWithLabel(
+                              label: 'Branch',
+                              controller: _branchController,
+                              textCapitalization: TextCapitalization.words,
+                            ),
+                            _buildTextFieldWithLabel(
+                              label: 'Holder Name',
+                              controller: _holderNameController,
+                              textCapitalization: TextCapitalization.words,
+                            ),
+                            _buildTextFieldWithLabel(
+                              label: 'Account Number',
+                              controller: _accountNumberController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            ),
+                            const SizedBox(height: 30),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: _submitBankDetails,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: nextButtonColor,
+                                  foregroundColor: nextButtonTextColor,
+                                  minimumSize: const Size(double.infinity, 50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  elevation: 2,
+                                ),
+                                child: const Text('Submit', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: LinearProgressIndicator(
+                                value: 1.0,
+                                minHeight: 8,
+                                backgroundColor: progressBackgroundColor,
+                                valueColor: const AlwaysStoppedAnimation<Color>(progressValueColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

@@ -31,9 +31,9 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
+            "server": "src/main.server.ts", 
+            "outputMode": "server", 
+            "ssr": { 
               "entry": "src/server.ts"
             }
           },
@@ -97,6 +97,7 @@
             "scripts": []
           }
         }
+        
       }
     }
   }

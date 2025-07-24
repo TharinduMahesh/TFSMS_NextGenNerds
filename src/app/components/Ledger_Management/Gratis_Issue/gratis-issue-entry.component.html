@@ -1,0 +1,113 @@
+<!-- src/app/components/gratis-issue/gratis-issue-entry/gratis-issue-entry.component.html -->
+
+<div class="gratis-issue-container">
+  <h1 class="page-title">Gratis Issue Entry</h1>
+
+  <!-- Gratis Issue Form Section -->
+  <div class="form-section">
+    <h2>Gratis Issue Form</h2>
+    <form (ngSubmit)="addIssue()">
+      <div class="form-fields-grid">
+        <!-- Row 1: Basic Issue Details -->
+        <div class="form-group">
+          <label for="issueDate">Issue Date:</label>
+          <input type="date" id="issueDate" [(ngModel)]="issueDate" name="issueDate" required>
+        </div>
+        <div class="form-group">
+          <label for="purpose">Purpose:</label>
+          <select id="purpose" [(ngModel)]="purpose" name="purpose" required>
+            <option value="" disabled>Select Purpose</option>
+            <option *ngFor="let p of purposes" [value]="p">{{ p }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="receiver">Receiver:</label>
+          <input type="text" id="receiver" [(ngModel)]="receiver" name="receiver" placeholder="e.g., Customer Name, Department" required>
+        </div>
+        <div class="form-group">
+          <label for="quantityKg">Quantity (Kg):</label>
+          <input type="number" id="quantityKg" [(ngModel)]="quantityKg" name="quantityKg" placeholder="e.g., 10.5" step="0.01" required min="0">
+        </div>
+
+        <!-- Row 2: Tea Product Details -->
+        <div class="form-group">
+          <label for="teaGrade">Tea Grade/Product Type:</label>
+          <select id="teaGrade" [(ngModel)]="teaGrade" name="teaGrade" required>
+            <option value="" disabled>Select Tea Grade</option>
+            <option *ngFor="let tg of teaGrades" [value]="tg">{{ tg }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="batchLotNumber">Batch/Lot Number (Optional):</label>
+          <input type="text" id="batchLotNumber" [(ngModel)]="batchLotNumber" name="batchLotNumber" placeholder="e.g., BAT-202507-001">
+        </div>
+        <div class="form-group">
+          <label for="referenceMemo">Reference No./Memo (Optional):</label>
+          <input type="text" id="referenceMemo" [(ngModel)]="referenceMemo" name="referenceMemo" placeholder="e.g., Sample Request #123">
+        </div>
+        <!-- Full width textarea for remarks -->
+        <div class="form-group full-width">
+          <label for="remarks">Remarks (Optional):</label>
+          <textarea id="remarks" [(ngModel)]="remarks" name="remarks" rows="3" placeholder="Any additional details or justification..."></textarea>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="action-button secondary-button" (click)="clearForm()">Clear Form</button>
+        <button type="submit" class="action-button primary-button" *ngIf="!editingIssue">Add Issue</button>
+        <button type="button" class="action-button primary-button" (click)="saveEdit()" *ngIf="editingIssue">Save Changes</button>
+        <button type="button" class="action-button secondary-button" (click)="cancelEdit()" *ngIf="editingIssue">Cancel Edit</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Gratis Issue Records Section -->
+  <div class="records-section">
+    <h2>Gratis Issue Records</h2>
+    <div class="table-responsive">
+      <table class="gratis-issue-table">
+        <thead>
+          <tr>
+            <th>Issue No.</th>
+            <th>Issue Date</th>
+            <th>Tea Grade</th>
+            <th>Batch/Lot No.</th> <!-- Keep this header if you uncomment the td below -->
+            <th>Purpose</th>
+            <th>Receiver</th>
+            <th>Quantity (Kg)</th>
+            
+            <th>Remarks</th> <!-- Keep this header if you uncomment the td below -->
+            
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let issue of filteredGratisIssues">
+            <td>{{ issue.id }}</td>
+            <td>{{ formatDate(issue.issueDate) }}</td>
+            <td>{{ issue.teaGrade }}</td>
+            <td>{{ issue.batchLotNumber || 'N/A' }}</td> 
+            <td>{{ issue.purpose }}</td>
+            <td>{{ issue.receiver }}</td>
+            <td>{{ issue.quantityKg | number:'1.2-2' }}</td>
+            
+            <td>{{ issue.remarks || 'N/A' }}</td> 
+            
+            <td class="actions-cell">
+              <button class="action-btn edit-btn" (click)="editIssue(issue)">Edit</button>
+              <button class="action-btn delete-btn" (click)="confirmDelete(issue.id!)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredGratisIssues.length === 0">
+            <td colspan="11" class="no-data">No gratis issue records found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

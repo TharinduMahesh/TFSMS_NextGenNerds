@@ -1,50 +1,54 @@
+<!-- src/app/components/sidebar/sidebar/sidebar.component.html -->
+
+<!-- Sidebar Toggle Button (for mobile/collapsed view - this one is outside the sidebar) -->
 <button class="sidebar-toggle" (click)="sidebarOpen = !sidebarOpen">
   <i class="fas fa-bars"></i>
 </button>
 
 <div class="sidebar" [class.active]="sidebarOpen">
-    <!-- Logo and Title -->
-    <div class="logo-title">
-      <div class="title-indicator"></div>
-      <h2>{{ currentPageTitle }}</h2>
-    </div>
-  
-    <!-- User Info Section -->
-    <div class="user-info">
-      <img src="https://mclaren.bloomreach.io/cdn-cgi/image/width=1024,quality=80,format=webp/delivery/resources/content/gallery/mclaren-racing/formula-1/2025/nsr/f1-75-live-m/web/2025_lando_team_pic_02.jpg"
-      alt="User Image">
-      <p>Tharusha Rayan</p>
-      <p>Admin</p>
-    </div>
-  
-    <!-- Navigation Links -->
-    <ul>
-      <li><a routerLink="/dashboard"><i class="fas fa-tachometer-alt "></i> Dashboard</a></li>
-      <li><a routerLink="/suppliers"><i class="fas fa-truck"></i> Suppliers</a></li>
-      <li><a routerLink="/collector"><i class="fas fa-user-tie"></i> Collector</a></li>
-      <li><a routerLink="/ledger-management"><i class="fas fa-book"></i> Ledger Management</a></li>
-      <li><a routerLink="/green-leaf-collection"><i class="fas fa-leaf"></i> Green Leaf Collection</a></li>
-      <li><a routerLink="/process-management"><i class="fas fa-cogs"></i> Process Management</a></li>
-      <li><a routerLink="/payment"><i class="fas fa-money-bill-alt"></i> Payment</a></li>
-  
-      <!-- Reports Dropdown -->
-      <li class="dropdown">
-        <a class="dropdown-toggle">
-          <i class="fas fa-chart-bar"></i> Reports <i class="fas fa-angle-down"></i>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="/report/tea-packing-and-ledger">Tea Packing and Ledger</a></li>
-          <li><a href="/report/claims-and-returns">Claims and Returns</a></li>
-          <li><a href="/report/sales">Sales</a></li>
-          <li><a href="/report/monthly-nsa">Monthly NSA</a></li>
-        </ul>
-      </li>
-      
-      
-    </ul>
-  
-    <!-- Logout Button -->
-    <button class="logout-button" (click)="logout()">
-      <i class="fas fa-sign-out-alt"></i> Logout
-    </button>
+  <!-- Logo and Title -->
+  <div class="logo-title">
+    <div class="title-indicator"></div>
+    <h2>{{ currentPageTitle }}</h2>
   </div>
+
+  <!-- User Info Section -->
+  <div class="user-info">
+    <img src="https://mclaren.bloomreach.io/cdn-cgi/image/width=1024,quality=80,format=webp/delivery/resources/content/gallery/mclaren-racing/formula-1/2025/nsr/f1-75-live-m/web/2025_lando_team_pic_02.jpg"
+    alt="User Image">
+    <p>Tharusha Rayan</p>
+    <p>Admin</p>
+  </div>
+
+  <!-- Navigation Links -->
+  <ul>
+    <li><a routerLink="/dashboard"><i class="fas fa-tachometer-alt "></i> Dashboard</a></li>
+    <li><a routerLink="/suppliers"><i class="fas fa-truck"></i> Suppliers</a></li>
+    <li><a routerLink="/collector"><i class="fas fa-user-tie"></i> Collector</a></li>
+    <li><a routerLink="/ledger-management"><i class="fas fa-book"></i> Ledger Management</a></li>
+    <li><a routerLink="/green-leaf-collection"><i class="fas fa-leaf"></i> Green Leaf Collection</a></li>
+    <li><a routerLink="/process-management"><i class="fas fa-cogs"></i> Process Management</a></li>
+    <li><a routerLink="/payment"><i class="fas fa-money-bill-alt"></i> Payment</a></li>
+
+
+    <!-- Reports Dropdown -->
+    <li class="dropdown">
+      <a class="dropdown-toggle">
+        <i class="fas fa-chart-bar"></i> Reports <i class="fas fa-angle-down"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a routerLink ="report/green-leaf-collection-report">Green Leaf Collection Report</a></li>
+        <li><a routerLink="/report/claims-and-returns">Claims and Returns</a></li>
+        <li><a routerLink="/report/sales">Sales Reports</a></li>
+        <li><a routerLink="/report/monthly-nsa">NSA Report</a></li>
+      </ul>
+    </li>
+
+
+  </ul>
+
+  <!-- Logout Button -->
+  <button class="logout-button" (click)="logout()">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </button>
+</div>

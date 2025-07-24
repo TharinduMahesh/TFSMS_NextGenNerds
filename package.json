@@ -7,22 +7,28 @@
     "build": "ng build"
   },
   "dependencies": {
-    "@angular/animations": "^17.0.0",
-    "@angular/common": "^17.0.0",
-    "@angular/compiler": "^17.0.0",
-    "@angular/core": "^17.0.0",
-    "@angular/forms": "^17.0.0",
-    "@angular/platform-browser": "^17.0.0",
-    "@angular/platform-browser-dynamic": "^17.0.0",
-    "@angular/router": "^17.0.0",
+    "@angular/animations": "^19.2.14",
+    "@angular/cdk": "^19.2.14",
+    "@angular/common": "^19.2.14",
+    "@angular/compiler": "^19.2.14",
+    "@angular/core": "^19.2.14",
+    "@angular/forms": "^19.2.14",
+    "@angular/material": "^19.2.14",
+    "@angular/platform-browser": "^19.2.14",
+    "@angular/platform-browser-dynamic": "^19.2.14",
+    "@angular/router": "^19.2.14",
+    "chart.js": "^4.5.0",
+    "ng2-charts": "^8.0.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.5.0",
-    "zone.js": "~0.14.2"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^17.0.0",
-    "@angular/cli": "^17.0.0",
-    "@angular/compiler-cli": "^17.0.0",
-    "typescript": "~5.2.2"
+    "@angular-devkit/build-angular": "^19.2.14",
+    "@angular/cli": "^19.2.14",
+    "@angular/compiler-cli": "^19.2.14",
+    "@angular/platform-server": "^19.2.14",
+    "@angular/ssr": "^19.2.14",
+    "typescript": "~5.5"
   }
 }

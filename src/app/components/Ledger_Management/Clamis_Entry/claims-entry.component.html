@@ -1,0 +1,89 @@
+<div class="claims-entry-container">
+  <h1 class="page-title">Claims Entry</h1>
+
+  <div class="form-section">
+    <h2>Claims Entry Form</h2>
+    <form (ngSubmit)="addOrUpdateClaim()">
+      <div class="form-fields-grid">
+        <div class="form-group">
+          <label for="claimType">Claim Type:</label>
+          <select id="claimType" [(ngModel)]="claimType" name="claimType" required>
+            <option value="">Select Claim Type</option>
+            <option value="Quality">Quality</option>
+            <option value="Quantity">Quantity</option>
+            <option value="Delivery">Delivery</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="invoiceNumber">Invoice Number:</label>
+          <input type="text" id="invoiceNumber" [(ngModel)]="invoiceNumber" name="invoiceNumber" placeholder="Invoice Number" required>
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <input type="number" id="quantity" [(ngModel)]="quantity" name="quantity" placeholder="Quantity" required min="0">
+        </div>
+        <div class="form-group">
+          <label for="returnDate">Return Date:</label>
+          <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" required>
+        </div>
+        <!-- NEW: Resolution Type dropdown -->
+        <div class="form-group">
+          <label for="resolutionType">Resolution Type:</label>
+          <select id="resolutionType" [(ngModel)]="resolutionType" name="resolutionType">
+            <option value="">Select Resolution</option>
+            <option *ngFor="let res of resolutionTypes" [value]="res">{{ res }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full-width">
+        <label for="remark">Remark:</label>
+        <textarea id="remark" [(ngModel)]="remark" name="remark" rows="3" placeholder="Remark"></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="action-button secondary-button" type="button" (click)="clearForm()">Clear Form</button>
+        <button class="action-button primary-button" type="submit">
+          {{ editingClaimId ? 'Update Claim' : 'Add Claim' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="records-section">
+    <h2>Claim Records</h2>
+    <div class="table-responsive">
+      <table class="claims-table">
+        <thead>
+          <tr>
+            <th>Claim No.</th>
+            <th>Claim Type</th>
+            <th>Invoice Number</th>
+            <th>Return Date</th>
+            <th>Quantity</th>
+            <th>Remarks</th>
+            <th>Resolution Type</th> <!-- NEW: Column Header -->
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let claim of claimRecords">
+            <td>{{ claim.id }}</td>
+            <td>{{ claim.claimType }}</td>
+            <td>{{ claim.invoiceNumber }}</td>
+            <td>{{ claim.returnDate | date:'yyyy-MM-dd' }}</td>
+            <td>{{ claim.quantity }}</td>
+            <td>{{ claim.remark }}</td>
+            <td>{{ claim.resolutionType || 'N/A' }}</td> <!-- NEW: Data Display -->
+            <td class="actions-cell">
+              <button class="action-btn edit-btn" (click)="editClaim(claim)">Edit</button>
+              <button class="action-btn delete-btn" (click)="confirmDelete(claim.id)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="claimRecords.length === 0">
+            <td colspan="8" class="no-data">No claim records found.</td> <!-- FIX: Adjusted colspan -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

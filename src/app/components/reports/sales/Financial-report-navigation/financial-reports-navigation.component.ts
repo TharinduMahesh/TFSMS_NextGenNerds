@@ -19,11 +19,11 @@ export class FinancialReportsNavigationComponent {
       case 'farmer-loans':
         this.router.navigate(['report/sales/farmer-loan-report']);
         break;
+      case 'sales-report':
+        this.router.navigate(['report/general-sales']);
+        break;
       case 'profit-loss':
         this.router.navigate(['/financial-reports/profit-loss']);
-        break;
-      case 'claims-impact':
-        this.router.navigate(['/financial-reports/claims-impact']);
         break;
       case 'supplier-payments':
         this.router.navigate(['/financial-reports/supplier-payments']);

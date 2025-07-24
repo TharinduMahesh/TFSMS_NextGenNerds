@@ -10,11 +10,10 @@
   },
   "files": [
     "src/main.ts",
-    "src/main.server.ts", // Re-added for previous working state
-    "src/server.ts"      // Re-added for previous working state
+    "src/main.server.ts",
+    "src/server.ts"
   ],
   "include": [
     "src/**/*.d.ts"
   ]
-  // Removed 'exclude' section that was added for SSR separation
 }

@@ -1,0 +1,146 @@
+<div class="incentive-page">
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+  
+  <div *ngIf="loading" class="loading-spinner">
+    Loading...
+  </div>
+  
+  <div class="summary-cards">
+    <div class="card light-blue">
+      <h2>{{ totalIncentives }}</h2>
+      <p>Total Incentives</p>
+    </div>
+    <div class="card light-yellow">
+      <h2>LKR {{ totalQualityBonus | number }}</h2>
+      <p>Total Quality Bonus</p>
+    </div>
+    <div class="card light-green">
+      <h2>LKR {{ totalLoyaltyBonus | number }}</h2>
+      <p>Total Loyalty Bonus</p>
+    </div>
+  </div>
+  
+  <div class="incentive-container">
+    <h3>Supplier Incentives</h3>
+    
+    <div class="filters">
+      <div class="filter-group">
+        <label>Supplier:</label>
+        <select [(ngModel)]="selectedSupplier" (change)="filterIncentives()">
+          <option value="">All Suppliers</option>
+          <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+            {{ supplier.SupplierId }} - {{ supplier.Name }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Filter by Month:</label>
+        <input type="month" [(ngModel)]="selectedMonth" (change)="filterIncentives()" />
+      </div>
+     
+    </div>
+  
+    <div class="manual-entry">
+      <h4>Add New Incentive</h4>
+      <form [formGroup]="incentiveForm" (ngSubmit)="addIncentive()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Supplier:</label>
+            <select formControlName="SupplierId">
+              <option value="">Select Supplier</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+                {{ supplier.SupplierId }} - {{ supplier.Name }}
+              </option>
+            </select>
+            <div *ngIf="incentiveForm.get('SupplierId')?.touched && incentiveForm.get('SupplierId')?.invalid" class="error-message">
+              Supplier is required
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Month:</label>
+            <input type="month" formControlName="month" />
+            <div *ngIf="incentiveForm.get('month')?.touched && incentiveForm.get('month')?.invalid" class="error-message">
+              Month is required
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Quality Bonus (LKR):</label>
+            <input type="number" formControlName="qualityBonus" placeholder="Enter amount" />
+            <div *ngIf="incentiveForm.get('qualityBonus')?.touched && incentiveForm.get('qualityBonus')?.invalid" class="error-message">
+              Valid amount is required
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Loyalty Bonus (LKR):</label>
+            <input type="number" formControlName="loyaltyBonus" placeholder="Enter amount" />
+            <div *ngIf="incentiveForm.get('loyaltyBonus')?.touched && incentiveForm.get('loyaltyBonus')?.invalid" class="error-message">
+              Valid amount is required
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <button type="submit" class="add-btn" [disabled]="loading">
+              {{ loading ? 'Adding...' : 'Add Incentive' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  
+<!-- In incentive.component.html -->
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr>
+        <th>Incentive ID</th>
+        <th>Supplier ID</th>
+        <th>Month</th>
+        <th>Quality Bonus</th>
+        <th>Loyalty Bonus</th>
+        <th>Total Amount</th>
+        <th>Created Date</th>
+        <th>Status</th> <!-- ADD NEW STATUS COLUMN -->
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Update the *ngFor loop -->
+      <tr *ngFor="let incentive of filteredIncentives" [class.used-incentive]="incentive.IsUsed">
+        <td>{{ incentive.IncentiveId }}</td>
+        <td>{{ incentive.SupplierId }}</td>
+        <td>{{ incentive.Month }}</td>
+        <td>LKR {{ incentive.QualityBonus | number }}</td>
+        <td>LKR {{ incentive.LoyaltyBonus | number }}</td>
+        <td>LKR {{ incentive.TotalAmount | number }}</td>
+        <td>{{ incentive.CreatedDate | date:'short' }}</td>
+        <!-- RENDER THE STATUS -->
+        <td>
+          <span class="status" [ngClass]="incentive.IsUsed ? 'status-used' : 'status-available'">
+            {{ incentive.IsUsed ? 'Used' : 'Available' }}
+          </span>
+        </td>
+        <td>
+          <!-- UPDATE THE DELETE BUTTON'S DISABLED LOGIC -->
+          <button 
+            class="delete-btn" 
+            (click)="deleteIncentive(incentive.IncentiveId)"
+            [disabled]="loading || incentive.IsUsed"
+            title="{{ incentive.IsUsed ? 'This incentive has been used and cannot be deleted.' : 'Delete Incentive' }}">
+            🗑️ Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredIncentives.length === 0">
+        <td colspan="9" class="no-data">No incentives found</td> <!-- Update colspan to 9 -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+  </div>
+</div>

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "tea-packing-ledger": {
+    "payments": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/tea-packing-ledger",
+            "outputPath": "dist/payments",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -31,9 +31,9 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "server": "src/main.server.ts", 
-            "outputMode": "server", 
-            "ssr": { 
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
               "entry": "src/server.ts"
             }
           },
@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "tea-packing-ledger:build:production"
+              "buildTarget": "payments:build:production"
             },
             "development": {
-              "buildTarget": "tea-packing-ledger:build:development"
+              "buildTarget": "payments:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -97,11 +97,11 @@
             "scripts": []
           }
         }
-        
       }
     }
   },
   "cli": {
-    "analytics": "aba44b86-d18e-4b4d-baeb-171be82d3cde"
+    "analytics": "3287655e-1ad7-4b23-bd41-2fa12635477c"
   }
 }
+

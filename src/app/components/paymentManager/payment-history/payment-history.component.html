@@ -1,0 +1,46 @@
+<!-- src/app/pages/payment-history/payment-history.component.html -->
+
+<div class="container">
+  <h2>Payment History</h2>
+
+  <div *ngIf="isLoading" class="loading-message">
+    Loading history...
+  </div>
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!isLoading && !error">
+    <div *ngIf="paymentHistory.length === 0" class="no-data-message">
+      No payment history available.
+    </div>
+
+    <div *ngIf="paymentHistory.length > 0">
+      <table class="payment-history-table">
+        <thead>
+          <tr>
+            <th>History ID</th>
+            <th>Payment ID</th>
+            <th>Supplier ID</th>
+            <th>Action</th>
+            <th>Details</th>
+            <th>Action By</th>
+            <th>Action Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Note the use of camelCase properties (e.g., record.historyId) -->
+          <tr *ngFor="let record of paymentHistory">
+            <td>{{ record.HistoryId }}</td>
+            <td>{{ record.PaymentId || 'N/A' }}</td>
+            <td>{{ record.SupplierId }}</td>
+            <td>{{ record.Action }}</td>
+            <td>{{ record.Details }}</td>
+            <td>{{ record.ActionBy }}</td>
+            <td>{{ record.ActionDate | date:'MMM d, y, h:mm a' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,184 @@
+/* src/app/pages/profile/user-profile/user-profile.component.css */
+
+.user-profile-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2.2em;
+  font-weight: 600;
+}
+
+.alert {
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alert.show {
+  opacity: 1;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: inherit;
+  padding: 0 5px;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.profile-form-section {
+  background-color: #f9f9f9;
+  padding: 25px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group input[type="email"],
+.form-group input[type="text"] {
+  width: 100%; /* Changed from calc() to 100% since box-sizing is used */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  box-sizing: border-box; 
+}
+
+.form-group input[readonly] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.form-group input[type="email"]:focus,
+.form-group input[type="text"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end; /* This aligns buttons to the right, which is common */
+  margin-top: 25px;
+}
+
+/* This is your base style for all buttons in this section */
+.form-actions button {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* --- UPDATED/CONFIRMED STYLES --- */
+
+/* Primary button (Update Profile) - Renamed to a class for clarity */
+.btn-primary {
+  background-color: #28a745; /* Your existing green color */
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #218838; /* Your existing darker green */
+  transform: translateY(-2px);
+}
+
+/* --- NEW STYLES FOR THE SECONDARY BUTTON --- */
+
+/* Secondary button (Change Password) */
+.btn-secondary {
+  background-color: #6c757d; /* A standard, complementary gray */
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #5a6268; /* A darker gray for hover */
+  transform: translateY(-2px);
+}
+
+/* --- END OF NEW STYLES --- */
+
+
+/* This is your existing disabled style, it will apply to both buttons now */
+.form-actions button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none; /* No movement when disabled */
+}

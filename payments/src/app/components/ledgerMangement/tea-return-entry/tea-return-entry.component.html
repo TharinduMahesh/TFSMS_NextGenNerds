@@ -1,0 +1,153 @@
+<div class="container">
+  <h2>Tea Returns Entry</h2>
+  
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="teaReturnForm" (ngSubmit)="onSubmit()" class="tea-return-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="season">Season *</label>
+        <input 
+          type="text"
+          id="season"
+          formControlName="season"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('season')"
+          placeholder="Enter season">
+        <div *ngIf="isFieldInvalid('season')" class="invalid-feedback">
+          Season is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="gardenMark">Garden Mark *</label>
+        <input 
+          type="text"
+          id="gardenMark"
+          formControlName="gardenMark"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('gardenMark')"
+          placeholder="Enter garden mark">
+        <div *ngIf="isFieldInvalid('gardenMark')" class="invalid-feedback">
+          Garden Mark is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="invoiceNumber">Invoice Number *</label>
+        <select 
+          id="invoiceNumber"
+          formControlName="invoiceNumber"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('invoiceNumber')">
+          <option value="">Select Invoice</option>
+          <option *ngFor="let invoice of invoices" [value]="invoice.InvoiceNumber">
+            {{ invoice.InvoiceNumber }} - {{ invoice.Season }} - {{ invoice.GardenMark }}
+          </option>
+        </select>
+        <div *ngIf="isFieldInvalid('invoiceNumber')" class="invalid-feedback">
+          Invoice Number is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="returnDate">Return Date *</label>
+        <input 
+          type="date"
+          id="returnDate"
+          formControlName="returnDate"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('returnDate')">
+        <div *ngIf="isFieldInvalid('returnDate')" class="invalid-feedback">
+          Return Date is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="kilosReturned">Kilos Returned *</label>
+        <input 
+          type="number"
+          id="kilosReturned"
+          formControlName="kilosReturned"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('kilosReturned')"
+          placeholder="Enter kilos returned"
+          step="0.01"
+          min="0">
+        <div *ngIf="isFieldInvalid('kilosReturned')" class="invalid-feedback">
+          <span *ngIf="teaReturnForm.get('kilosReturned')?.errors?.['required']">Kilos Returned is required</span>
+          <span *ngIf="teaReturnForm.get('kilosReturned')?.errors?.['min']">Kilos must be greater than 0</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="reason">Reason *</label>
+        <textarea 
+          id="reason"
+          formControlName="reason"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('reason')"
+          placeholder="Enter reason for return"
+          rows="3"></textarea>
+        <div *ngIf="isFieldInvalid('reason')" class="invalid-feedback">
+          Reason is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="clearForm()" class="btn btn-secondary">Clear Form</button>
+      <button type="submit" [disabled]="isLoading" class="btn btn-primary">
+        <span *ngIf="isLoading" class="spinner"></span>
+        {{ isLoading ? 'Adding...' : 'Add Return' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="table-section">
+    <h3>Return Records</h3>
+    <div *ngIf="isLoading && teaReturns.length === 0" class="loading">Loading...</div>
+    
+    <table class="table" *ngIf="!isLoading || teaReturns.length > 0">
+      <thead>
+        <tr>
+          <th>Return No.</th>
+          <th>Season</th>
+          <th>Garden Mark</th>
+          <th>Invoice</th>
+          <th>Return Date</th>
+          <th>Kilos Returned</th>
+          <th>Reason</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let teaReturn of teaReturns;">
+          <td>{{ teaReturn.Id }}</td>
+          <td>{{ teaReturn.Season }}</td>
+          <td>{{ teaReturn.GardenMark }}</td>
+          <td>{{ teaReturn.InvoiceNumber }}</td>
+          <td>{{ teaReturn.ReturnDate | date:'dd/MM/yyyy' }}</td>
+          <td>{{ teaReturn.KilosReturned | number:'1.2-2' }} kg</td>
+          <td>{{ teaReturn.Reason }}</td>
+          <td>
+            <button 
+              type="button" 
+              class="btn btn-danger btn-sm" 
+              (click)="deleteReturn(teaReturn.Id)"
+              title="Delete Return">
+              Delete
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="teaReturns.length === 0 && !isLoading">
+          <td colspan="8" class="no-data">No tea returns found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

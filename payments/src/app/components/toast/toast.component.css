@@ -1,0 +1,75 @@
+/* src/app/shared/components/toast/toast.component.css */
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 300px;
+  max-width: 400px;
+  color: white;
+  animation: slideInRight 0.3s ease-out;
+  border-left: 5px solid rgba(0,0,0,0.2);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toast-icon {
+  font-size: 24px;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.toast-content {
+  flex-grow: 1;
+}
+
+.toast-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.toast-message {
+  font-size: 0.9em;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 24px;
+  opacity: 0.7;
+  cursor: pointer;
+  padding: 0 0 0 15px;
+  line-height: 1;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
+/* Color Themes */
+.toast-success { background-color: #28a745; }
+.toast-error   { background-color: #dc3545; }
+.toast-info    { background-color: #17a2b8; }
+.toast-warning { background-color: #ffc107; color: #333; }

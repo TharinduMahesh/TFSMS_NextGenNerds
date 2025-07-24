@@ -1,0 +1,45 @@
+<div class="financial-management-page">
+  <h2 class="page-title">Financial Management</h2>
+
+  <div class="nav-tabs">
+    <button 
+      class="nav-tab" 
+      [class.active]="activeTab === 'payments'" 
+      (click)="setActiveTab('payments')">
+      Payments
+    </button>
+    <button 
+      class="nav-tab" 
+      [class.active]="activeTab === 'incentives'" 
+      (click)="setActiveTab('incentives')">
+      Incentives
+    </button>
+    <!-- <button 
+      class="nav-tab" 
+      [class.active]="activeTab === 'debts'" 
+      (click)="setActiveTab('debts')">
+      Debts
+    </button>
+    <button 
+      class="nav-tab" 
+      [class.active]="activeTab === 'advances'" 
+      (click)="setActiveTab('advances')">
+      Advances
+    </button> -->
+  </div>
+
+  <div class="tab-content">
+    <div *ngIf="activeTab === 'payments'">
+      <app-payment></app-payment>
+    </div>
+    <div *ngIf="activeTab === 'incentives'">
+      <app-incentive></app-incentive>
+    </div>
+    <!-- <div *ngIf="activeTab === 'debts'">
+      <app-debt></app-debt>
+    </div>
+    <div *ngIf="activeTab === 'advances'">
+      <app-advance></app-advance>
+    </div> -->
+  </div>
+</div>

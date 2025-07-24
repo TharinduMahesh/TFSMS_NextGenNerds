@@ -1,0 +1,284 @@
+/*  NAVBAR STYLES  */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+  position: sticky; 
+  top: 0;
+  z-index: 100; 
+}
+
+/* Logo styling */
+.logo img {
+  height: 70px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 3.5rem; 
+  align-items: center;
+}
+
+/* Standard navigation links */
+.nav-links a:not(.register):not(.sign-in) {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  position: relative; 
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+
+/* Hover and active states for nav links */
+.nav-links a:not(.register):not(.sign-in):hover,
+.nav-links a:not(.register):not(.sign-in).active {
+  transform: scale(1.1);
+  color: #4a9e0f; 
+}
+
+/* Animated underline effect for nav links */
+.nav-links a:not(.register):not(.sign-in):after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #4a9e0f; 
+  box-shadow: 0 2px 4px rgba(74, 158, 15, 0.4); 
+  transition: width 0.3s ease;
+}
+
+.nav-links a:not(.register):not(.sign-in):hover:after,
+.nav-links a:not(.register):not(.sign-in).active:after {
+  width: 100%; 
+}
+
+
+/* Sign in button */
+.sign-in {
+  text-decoration: none;
+  color: #333;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sign-in:hover {
+  color: #4a9e0f; 
+}
+
+/* Register button */
+.register {
+  text-decoration: none;
+  padding: 0.5rem 2rem;
+  background-color: #4a9e0f; 
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 4px 8px rgba(74, 158, 15, 0.3); 
+  transition: all 0.3s ease;
+}
+
+.register:hover {
+  transform: translateY(-2px); 
+  background-color: #3f8a0c;
+  box-shadow: 0 6px 12px rgba(74, 158, 15, 0.5); 
+}
+
+/* ===== MOBILE MENU TOGGLE ===== */
+.hamburger {
+  display: none; 
+  font-size: 2rem;
+  cursor: pointer;
+  color: #4a9e0f; 
+}
+
+/* ================================================ */
+/* === NEW STYLES FOR PROFILE DROPDOWN - START  === */
+/* ================================================ */
+
+/* Container to position the dropdown correctly */
+.profile-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Style for the user icon link */
+.profile-icon {
+  cursor: pointer;
+  font-size: 2rem; /* Make the icon larger */
+  color: #333;
+  transition: color 0.3s ease;
+  padding: 0 15px; /* Adjust padding to fit your design */
+  line-height: 1; /* Helps with vertical alignment */
+}
+
+.profile-icon:hover {
+  color: #4a9e0f; /* Use your theme color for hover */
+}
+
+/* The dropdown menu itself */
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 15px); /* Position it below the icon with some space */
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  z-index: 1000;
+  border: 1px solid #eee;
+  overflow: hidden; /* Ensures child elements conform to border-radius */
+  animation: fadeIn 0.2s ease-out; /* Add a subtle fade-in animation */
+}
+
+/* Header section inside the dropdown */
+.dropdown-header {
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  text-align: center;
+}
+
+.dropdown-header h4 {
+  margin: 0;
+  font-size: 0.9em;
+  color: #6c757d;
+  font-weight: normal;
+}
+
+.user-name-dropdown {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Divider line */
+.profile-dropdown hr {
+  margin: 0;
+  border: none;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Links inside the dropdown */
+.profile-dropdown a {
+ display: block;
+  /* CHANGED: Increased horizontal padding from 15px to 20px */
+  padding: 12px 20px; 
+  color: #333;
+  text-decoration: none;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  text-align: center;
+}
+
+/* Resetting styles inherited from .nav-links a */
+.profile-dropdown a:after {
+  display: none;
+}
+.profile-dropdown a:hover, .profile-dropdown a.active {
+ background-color: #f1f1f1;
+  /* ADDED: Explicitly set color to override the green 'active' style */
+  color: #333; 
+  transform: none; /* No scaling effect inside dropdown */
+}
+
+
+/* Special styling for the logout link */
+.logout-link {
+  color: #dc3545 !important; /* Red color for emphasis, use important to override */
+}
+
+.logout-link:hover {
+  background-color: #f8d7da;
+  color: #721c24 !important; /* Darker red on hover */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================== */
+/* === NEW STYLES FOR PROFILE DROPDOWN - END  === */
+/* ============================================== */
+
+
+/* ===== RESPONSIVE STYLES ===== */
+@media (max-width: 968px) {
+ 
+  .hamburger {
+    display: block;
+  }
+
+  /* Mobile navigation menu */
+  .nav-links {
+    display: none; 
+    flex-direction: column;
+    position: absolute;
+    top: 90px; /* Adjusted to account for taller navbar */
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 99; /* Lower than navbar itself */
+    gap: 1rem; /* Adjust gap for mobile view */
+  }
+
+  /* Show mobile menu  */
+  .nav-links.show {
+    display: flex;
+  }
+  
+  .nav-links a:last-child {
+    border-bottom: none;
+  }
+  
+  /* Adjust register button */
+  .nav-links .register {
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  /* --- NEW: Responsive styles for the profile menu --- */
+  .profile-menu-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-icon {
+    padding: 0.5rem 0;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .profile-dropdown {
+    position: static; /* Let it sit naturally in the flow on mobile */
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    border-top: 1px solid #eee;
+    border-radius: 0;
+    margin-top: 0.5rem;
+  }
+  /* --- End of new responsive styles --- */
+}

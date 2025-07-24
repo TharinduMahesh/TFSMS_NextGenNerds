@@ -1,86 +1,59 @@
-# 🍃 Tea Factory Management System
-(Mobile Application)
+# Payments
 
-A complete mobile-based solution for managing tea factory operations, built using **Flutter 3.29.2**, **ASP.NET Core Web API (.NET 8)**, and **MSSQL**. This application streamlines supplier management, production tracking, weighing operations, payments, reporting, and logistics to support efficient tea factory operations.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
 
----
+## Development server
 
-## 📱 Project Overview
+To start a local development server, run:
 
-The system is designed to support the end-to-end operations of a tea factory, offering modules for:
+```bash
+ng serve
+```
 
-### 1. Supplier Management
-- Register and maintain supplier profiles, including payment methods and contact info.
-- Track green leaf contributions (weight, quality, and deductions).
-- Manage payments, debts, and performance-based incentives.
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-### 2. Production Operations Management
-- Monitor and log tea production stages: withering, firing, and adjustments.
-- Track inter-estate leaf transfers and balance updates.
-- Adjust crop yield records to reflect changes.
+## Code scaffolding
 
-### 3. Weighing Operations
-- Record gross weights, quality assessments, and deductions.
-- Manage sack/container logistics for accurate tracking.
-- Generate weighing reports for suppliers.
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-### 4. Transaction and Payment Processing
-- Record and process green leaf collections and related transactions.
-- Recalculate deductions and incentives, and manage monthly payments.
-- Ensure timely and secure payments to suppliers.
+```bash
+ng generate component component-name
+```
 
-### 5. Reporting and Analytics
-- Generate supplier payment summaries and crop reports.
-- Produce route-based and employee work performance reports.
-- Analyze production efficiency, yield, and incentive data.
-- Support procurement planning with seasonal forecasting.
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-### 6. Logistics and Transport Management
-- Track route-based transport rates and logistics.
-- Monitor sack/container movement between estates and warehouses.
+```bash
+ng generate --help
+```
 
-### 7. User and Role Management
-- Manage user roles (admin, supplier, field agent).
-- Secure login and authentication for data protection.
+## Building
 
----
+To build the project run:
 
-## 🛠️ Tech Stack
+```bash
+ng build
+```
 
-| Technology     | Description                         |
-|----------------|-------------------------------------|
-| Flutter 3.29.2 | Cross-platform mobile UI framework  |
-| .NET 8         | Backend development (Web API)       |
-| ASP.NET Core   | RESTful API architecture            |
-| MSSQL          | Relational database management      |
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
----
+## Running unit tests
 
-## 🚀 Getting Started
+To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
 
-### Prerequisites
-- [Flutter SDK](https://docs.flutter.dev/get-started/install)
-- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-- SQL Server (Local or Cloud)
-- IDEs: Visual Studio (for backend), VS Code or Android Studio (for Flutter)
+```bash
+ng test
+```
 
-### Backend Setup
-1. Clone the repository.
-2. Open the `.NET` backend project in Visual Studio.
-3. Configure your connection string in `appsettings.json`.
-4. Run database migrations (if applicable).
-5. Run the project to start the Web API.
+## Running end-to-end tests
 
-### Flutter Setup
-1. Navigate to the `flutter_app` folder.
-2. Run `flutter pub get` to install dependencies.
-3. Configure the API base URL in your environment/service file.
-4. Run the app using `flutter run`.
+For end-to-end (e2e) testing, run:
 
----
+```bash
+ng e2e
+```
 
-## 📸 Screens
-Figma UI link (https://www.figma.com/design/DWnJEQv2zgP056r6UKCRSX/NextGenNerds?node-id=36-4&p=f&t=SazpzsVaC8tQbpjz-0)
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Additional Resources
 
-
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

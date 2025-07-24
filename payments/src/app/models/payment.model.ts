@@ -1,7 +1,7 @@
 import type { Supplier } from "./supplier.model"
 
 export interface Payment {
-  Status: string
+
   PaymentId: number
   SupplierId: number
   NormalTeaLeafWeight: number
@@ -15,7 +15,7 @@ export interface Payment {
   createdDate?: Date;
   BankAccount?: string
     Supplier?: Supplier
-
+   Status: string
 
   
 }

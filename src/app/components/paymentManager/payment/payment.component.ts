@@ -36,6 +36,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   selectedSupplier = ""
   selectedPaymentMethod = ""
   selectedDateRange = "all"
+  selectedStatus = "";
   customStartDate = ""
   customEndDate = ""
   searchTerm = ""
@@ -267,53 +268,55 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   // Search and filter functionality
   applyFilters(): void {
     if (!Array.isArray(this.payments)) {
-      this.filteredPayments = []
-      return
+        this.filteredPayments = [];
+        return;
     }
 
     this.filteredPayments = this.payments.filter((payment) => {
-      // Search term filter
-      const searchMatch =
-        !this.searchTerm ||
-        payment.PaymentId.toString().includes(this.searchTerm) ||
-        payment.SupplierId.toString().includes(this.searchTerm) ||
-        payment.PaymentMethod.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        payment.NetAmount.toString().includes(this.searchTerm) ||
-        payment.Supplier?.Name?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        payment.Supplier?.BankAccount?.includes(this.searchTerm)
+        // ✨ FIX: Replace the old hardcoded logic with this flexible status filter
+        const statusMatch = !this.selectedStatus || payment.Status === this.selectedStatus;
 
-      // Supplier filter
-      const supplierMatch = !this.selectedSupplier || payment.SupplierId.toString() === this.selectedSupplier
+        // Search term filter (this logic is correct)
+        const searchMatch =
+            !this.searchTerm ||
+            payment.PaymentId.toString().includes(this.searchTerm) ||
+            payment.SupplierId.toString().includes(this.searchTerm) ||
+            payment.PaymentMethod.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+            payment.NetAmount.toString().includes(this.searchTerm) ||
+            payment.Supplier?.Name?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+            payment.Supplier?.BankAccount?.includes(this.searchTerm);
 
-      // Payment method filter
-      const methodMatch = !this.selectedPaymentMethod || payment.PaymentMethod === this.selectedPaymentMethod
+        // Other filters (these are also correct)
+        const supplierMatch = !this.selectedSupplier || payment.SupplierId.toString() === this.selectedSupplier;
+        const methodMatch = !this.selectedPaymentMethod || payment.PaymentMethod === this.selectedPaymentMethod;
+        let dateMatch = true;
+        // ... (your existing date logic is correct and does not need to be changed) ...
+        if (this.selectedDateRange === "custom" && this.customStartDate && this.customEndDate) {
+            const paymentDate = new Date(payment.PaymentDate);
+            const startDate = new Date(this.customStartDate);
+            const endDate = new Date(this.customEndDate);
+            dateMatch = paymentDate >= startDate && paymentDate <= endDate;
+        } else if (this.selectedDateRange === "today") {
+            const today = new Date();
+            const paymentDate = new Date(payment.PaymentDate);
+            dateMatch = paymentDate.toDateString() === today.toDateString();
+        } else if (this.selectedDateRange === "week") {
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const paymentDate = new Date(payment.PaymentDate);
+            dateMatch = paymentDate >= weekAgo;
+        } else if (this.selectedDateRange === "month") {
+            const monthAgo = new Date();
+            monthAgo.setMonth(monthAgo.getMonth() - 1);
+            const paymentDate = new Date(payment.PaymentDate);
+            dateMatch = paymentDate >= monthAgo;
+        }
 
-      // Date range filter
-      let dateMatch = true
-      if (this.selectedDateRange === "custom" && this.customStartDate && this.customEndDate) {
-        const paymentDate = new Date(payment.PaymentDate)
-        const startDate = new Date(this.customStartDate)
-        const endDate = new Date(this.customEndDate)
-        dateMatch = paymentDate >= startDate && paymentDate <= endDate
-      } else if (this.selectedDateRange === "today") {
-        const today = new Date()
-        const paymentDate = new Date(payment.PaymentDate)
-        dateMatch = paymentDate.toDateString() === today.toDateString()
-      } else if (this.selectedDateRange === "week") {
-        const weekAgo = new Date()
-        weekAgo.setDate(weekAgo.getDate() - 7)
-        const paymentDate = new Date(payment.PaymentDate)
-        dateMatch = paymentDate >= weekAgo
-      } else if (this.selectedDateRange === "month") {
-        const monthAgo = new Date()
-        monthAgo.setMonth(monthAgo.getMonth() - 1)
-        const paymentDate = new Date(payment.PaymentDate)
-        dateMatch = paymentDate >= monthAgo
-      }
 
-      return searchMatch && supplierMatch && methodMatch && dateMatch
-    })
-  }
+        // Return true only if ALL conditions are met
+        return statusMatch && searchMatch && supplierMatch && methodMatch && dateMatch;
+    });
+}
 
   onSearchChange(): void {
     this.applyFilters()

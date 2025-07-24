@@ -410,5 +410,18 @@ export class PaymentService {
       }),
     )
   }
+
+  getFinalizedPayments(): Observable<Payment[]> {
+    return this.http.get<Payment[]>(`${this.apiUrl}/finalized`).pipe(
+        catchError((error) => {
+            console.error('Error fetching finalized payments:', error);
+            return of([]);
+        })
+    );
+}
+
+confirmPaymentAsPaid(paymentId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${paymentId}/confirm-paid`, {});
+}
 }
 

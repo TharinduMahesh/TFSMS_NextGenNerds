@@ -1,55 +1,82 @@
-// src/app/pages/payment-history/payment-history.component.ts
-
-import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { PaymentService } from "../../../shared/services/payment.service";
-import { PaymentHistory } from "../../../models/payment-history.model"; // This import is correct and needed
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PaymentService } from '../../../shared/services/payment.service';
+import { Payment } from '../../../models/payment.model';
+import { PaymentHistory } from '../../../models/payment-history.model';
+import { forkJoin } from 'rxjs'; // ✨ Import forkJoin
 
 @Component({
-  selector: "app-payment-history",
+  selector: 'app-payment-history',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: "./payment-history.component.html",
-  styleUrls: ["./payment-history.component.css"],
+  templateUrl: './payment-history.component.html',
+  styleUrls: ['./payment-history.component.css']
 })
 export class PaymentHistoryComponent implements OnInit {
-  
-  // [THE FIX] The variable should be typed as an array of PaymentHistory objects.
-  paymentHistory: PaymentHistory[] = []; // Changed from Payment[] to PaymentHistory[]
-  
+  finalizedPayments: Payment[] = [];
+  paymentHistory: PaymentHistory[] = [];
+
   isLoading = false;
   error: string | null = null;
+  successMessage: string | null = null;
 
   constructor(private paymentService: PaymentService) {}
 
   ngOnInit(): void {
-    this.loadPaymentHistory();
+    // ✨ We will now use a single method to load all data
+    this.loadAllData();
   }
 
-  /**
-   * Loads the audit trail of all payment actions (Create, Update, Delete, Finalize).
-   */
-  loadPaymentHistory(): void {
+  // ✨ This is our new, combined loading method
+  loadAllData(): void {
     this.isLoading = true;
     this.error = null;
 
-    // This service method correctly fetches the history log.
-    this.paymentService.getPaymentHistory().subscribe({
-      next: (data) => {
-        // The data is now correctly assigned to the PaymentHistory[] array.
-        this.paymentHistory = data;
-        this.isLoading = false;
+    // forkJoin runs multiple API calls in parallel and waits for all of them to complete
+    forkJoin({
+      finalized: this.paymentService.getFinalizedPayments(),
+      history: this.paymentService.getPaymentHistory()
+    }).subscribe({
+      next: (results) => {
+        // results will contain { finalized: Payment[], history: PaymentHistory[] }
+        this.finalizedPayments = results.finalized;
+        this.paymentHistory = results.history;
+        this.isLoading = false; // Set to false only when BOTH calls are successful
       },
       error: (err) => {
-        console.error("Error loading payment history:", err);
-        this.error = "Failed to load payment history. Please try again later.";
-        this.isLoading = false;
-      },
+        this.error = 'Failed to load page data. Please try again later.';
+        this.isLoading = false; // Also set to false on error
+        console.error(err);
+      }
     });
   }
 
-  // NOTE: The 'loadCompletedPayments' method from your original file represented a
-  // different way of showing history (by listing completed payments). The method above,
-  // 'loadPaymentHistory', shows the actual audit trail of events, which is more
-  // aligned with the component's name. This version is cleaner and focuses on that one job.
+  confirmPayment(paymentId: number): void {
+    if (!confirm('Are you sure you want to mark this payment as paid? This cannot be undone.')) {
+      return;
+    }
+
+    const payment = this.finalizedPayments.find(p => p.PaymentId === paymentId);
+    if (payment) {
+      payment.isConfirming = true;
+    }
+
+    this.paymentService.confirmPaymentAsPaid(paymentId).subscribe({
+      next: () => {
+        this.successMessage = `Payment ID ${paymentId} has been successfully marked as paid.`;
+        
+        // ✨ After confirming, reload all data for the page
+        this.loadAllData(); 
+        
+        setTimeout(() => (this.successMessage = null), 5000);
+      },
+      error: (err) => {
+        this.error = `Failed to confirm payment ID ${paymentId}.`;
+        if (payment) {
+          payment.isConfirming = false;
+        }
+        console.error(err);
+      },
+    });
+  }
 }

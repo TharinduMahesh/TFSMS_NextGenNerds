@@ -1,43 +1,81 @@
-<!-- src/app/pages/payment-history/payment-history.component.html -->
-
 <div class="container">
-  <h2>Payment History</h2>
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
 
-  <div *ngIf="isLoading" class="loading-message">
-    Loading history...
-  </div>
-  <div *ngIf="error" class="error-message">
-    {{ error }}
-  </div>
+  <div class="section-container">
+    <h2>Payments Awaiting Confirmation</h2>
+    <p class="section-description">These payments have been finalized and are ready to be marked as paid.</p>
 
-  <div *ngIf="!isLoading && !error">
-    <div *ngIf="paymentHistory.length === 0" class="no-data-message">
-      No payment history available.
+    <div *ngIf="isLoading" class="loading-message">Loading payments to confirm...</div>
+
+    <div *ngIf="!isLoading">
+      <div *ngIf="finalizedPayments.length === 0" class="no-data-message">
+        There are no payments awaiting final confirmation.
+      </div>
+      <table *ngIf="finalizedPayments.length > 0" class="payment-table">
+        <thead>
+          <tr>
+            <th>Payment ID</th>
+            <th>Supplier</th>
+            <th>Net Amount</th>
+            <th>Payment Method</th>
+            <th>Finalized Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of finalizedPayments">
+            <td>{{ payment.PaymentId }}</td>
+            <td>{{ payment.Supplier?.Name || 'N/A' }} (ID: {{ payment.SupplierId }})</td>
+            <td>{{ payment.NetAmount | currency:'LKR ' }}</td>
+            <td>{{ payment.PaymentMethod }}</td>
+            <td>{{ payment.PaymentDate | date:'shortDate' }}</td>
+            <td>
+              <button
+                class="confirm-btn"
+                (click)="confirmPayment(payment.PaymentId)"
+                [disabled]="payment.isConfirming"
+              >
+                {{ payment.isConfirming ? 'Confirming...' : 'Confirm as Paid' }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 
-    <div *ngIf="paymentHistory.length > 0">
-      <table class="payment-history-table">
+  <hr class="section-divider" />
+
+  <div class="section-container">
+    <h2>Full Payment History Log</h2>
+    <p class="section-description">This is a permanent record of all actions taken on all payments.</p>
+
+    <div *ngIf="isLoading" class="loading-message">Loading history log...</div>
+
+    <div *ngIf="!isLoading">
+      <div *ngIf="paymentHistory.length === 0" class="no-data-message">
+        No payment history available.
+      </div>
+      <table *ngIf="paymentHistory.length > 0" class="payment-table history-log">
         <thead>
           <tr>
             <th>History ID</th>
             <th>Payment ID</th>
-            <th>Supplier ID</th>
             <th>Action</th>
             <th>Details</th>
-            <th>Action By</th>
             <th>Action Date</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Note the use of camelCase properties (e.g., record.historyId) -->
           <tr *ngFor="let record of paymentHistory">
             <td>{{ record.HistoryId }}</td>
             <td>{{ record.PaymentId || 'N/A' }}</td>
-            <td>{{ record.SupplierId }}</td>
-            <td>{{ record.Action }}</td>
+            <td>
+              <span class="action-tag" [ngClass]="record.Action.toLowerCase()">{{ record.Action }}</span>
+            </td>
             <td>{{ record.Details }}</td>
-            <td>{{ record.ActionBy }}</td>
-            <td>{{ record.ActionDate | date:'MMM d, y, h:mm a' }}</td>
+            <td>{{ record.ActionDate | date:'MMM d, y, h:mm:ss a' }}</td>
           </tr>
         </tbody>
       </table>

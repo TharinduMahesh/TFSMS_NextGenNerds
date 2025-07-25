@@ -1,37 +1,109 @@
-<!-- This is the Modal Wrapper -->
-<!-- THE FIX IS HERE: Changed class.modal-overlay to class="modal-overlay" -->
 <div class="modal-overlay" (click)="onCancel()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button (click)="onCancel()" class="close-btn" title="Close">×</button>
-
-    <!-- Your Existing Component Content -->
-    <div class="page-container">
-      <header class="page-header">
-        @if (collector) {
-          <h1>Edit Collector #{{ collector.collectorId }}</h1>
-        } @else {
-          <h1>Edit Collector</h1>
-        }
-      </header>
-      
+    
+    <!-- Modal Header -->
+    <header class="page-header">
+      @if (collector) {
+        <h1>Edit Collector #{{ collector.collectorId }}</h1>
+      } @else {
+        <h1>Edit Collector</h1>
+      }
+    </header>
+    
+    <!-- This new div will be our scrollable content area -->
+    <div class="modal-body">
       <form [formGroup]="collectorForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-        <div class="form-group">
-          <label for="name">Collector Name</label>
-          <input id="name" formControlName="name" type="text" />
-        </div>
-        <div class="form-group">
-          <label for="contactNumber">Contact Number</label>
-          <input id="contactNumber" formControlName="contactNumber" type="text" />
-        </div>
-        <div class="form-group">
-          <label for="ratePerKm">Rate per Km</label>
-          <input id="ratePerKm" formControlName="ratePerKm" type="number" step="0.01" />
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-          <button type="submit" class="btn-primary" [disabled]="collectorForm.invalid || !collectorForm.dirty">Save Changes</button>
-        </div>
+        
+        <!-- Section 1: Basic Information -->
+        <fieldset class="form-section">
+          <legend>Basic Information</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-name">Collector Name</label>
+              <input id="edit-name" formControlName="name" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="edit-nic">NIC Number</label>
+              <input id="edit-nic" formControlName="collectorNIC" type="text" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Section 2: Contact Information -->
+        <fieldset class="form-section">
+          <legend>Contact Information</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-phone">Phone Number</label>
+              <input id="edit-phone" formControlName="collectorPhoneNum" type="tel" />
+            </div>
+            <div class="form-group">
+              <label for="edit-email">Email Address</label>
+              <input id="edit-email" formControlName="collectorEmail" type="email" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Section 3: Address Details -->
+        <fieldset class="form-section">
+          <legend>Address Details</legend>
+          <div class="form-group">
+            <label for="edit-address1">Address Line 1</label>
+            <input id="edit-address1" formControlName="collectorAddressLine1" type="text" />
+          </div>
+          <div class="form-group">
+            <label for="edit-address2">Address Line 2 (Optional)</label>
+            <input id="edit-address2" formControlName="collectorAddressLine2" type="text" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-city">City</label>
+              <input id="edit-city" formControlName="collectorCity" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="edit-postal">Postal Code (Optional)</label>
+              <input id="edit-postal" formControlName="collectorPostalCode" type="text" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Section 4: Personal Details -->
+        <fieldset class="form-section">
+          <legend>Personal Details</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-gender">Gender</label>
+              <select id="edit-gender" formControlName="collectorGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="edit-dob">Date of Birth</label>
+              <input id="edit-dob" formControlName="collectorDOB" type="date" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Section 5: Financial Details -->
+        <fieldset class="form-section">
+          <legend>Financial Details</legend>
+          <div class="form-group">
+            <label for="edit-rate">Rate per Km (LKR)</label>
+            <input id="edit-rate" formControlName="ratePerKm" type="number" step="0.01" />
+          </div>
+        </fieldset>
+
       </form>
+    </div> <!-- End of modal-body -->
+
+    <!-- Modal Footer -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+      <button type="button" class="btn-primary" (click)="onSubmit()" [disabled]="collectorForm.invalid || !collectorForm.dirty">Save Changes</button>
     </div>
-  </div>
+
+  </div> <!-- End of modal-content -->
 </div>

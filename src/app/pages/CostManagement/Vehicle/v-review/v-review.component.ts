@@ -63,7 +63,7 @@ export class VehicleReviewComponent implements OnInit {
   }
 
   addNewVehicle(): void {
-    this.router.navigate(['/v-create']);
+    this.router.navigate(['transportdashboard/v-create']);
   }
 
   // --- Event Handlers ---

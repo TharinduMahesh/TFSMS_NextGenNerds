@@ -55,51 +55,46 @@
   }
 }
 
-/* --- Professional Table Styling (matched with other review pages) --- */
+.table-wrapper {
+  overflow-x: auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Professional Table Styling --- */
 table {
   width: 100%;
   border-collapse: collapse;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
-  overflow: hidden;
-  font-size: 0.8rem;
+  font-size: 14px; // Standardized font size
+  min-width: 1200px; // Prevents content from wrapping too early
 
   thead tr {
-    background-color: #343a40;
-    color: white;
-    text-align: left;
+    background-color: #343a40;;
+    color: #ffffff;
   }
 
   th, td {
     padding: 1rem 1.25rem;
+    white-space: nowrap; // Prevents text from wrapping
+    text-align: left;
+  }
+  
+  th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
   }
 
   tbody tr {
     border-bottom: 1px solid #dee2e6;
-    transition: background-color 0.2s ease;
-
-    &:nth-of-type(even) {
-      background-color: #f8f9fa;
-    }
-
-    &:last-of-type {
-      border-bottom: 2px solid #388e3c;
-    }
-
-    &:hover {
-      background-color: #e9ecef;
-    }
-  }
-  
-  td[colspan="6"] {
-    text-align: center;
-    font-style: italic;
-    color: #6c757d;
-    padding: 2rem;
+    &:last-of-type { border-bottom: none; }
+    &:hover { background-color: #e9f5ff; }
   }
 }
 
-/* --- Action Buttons in Table (matched with other review pages) --- */
+/* --- Action Buttons in Table --- */
 .actions-cell {
   display: flex;
   gap: 0.5rem;

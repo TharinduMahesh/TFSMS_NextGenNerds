@@ -32,12 +32,16 @@ export class CollectorReviewComponent implements OnInit {
   dataToEdit = signal<CollectorResponse | null>(null);
 
   filteredCollectors = computed(() => {
-    const term = this.searchTerm().toLowerCase();
-    return this.allCollectors().filter(c =>
-      c.name.toLowerCase().includes(term) ||
-      c.collectorId.toString().includes(term)
-    );
-  });
+  const term = this.searchTerm().toLowerCase();
+  if (!term) return this.allCollectors();
+
+  return this.allCollectors().filter(c =>
+    c.name.toLowerCase().includes(term) ||
+    c.collectorId.toString().includes(term) ||
+    (c.collectorNIC && c.collectorNIC.toLowerCase().includes(term)) ||
+    (c.collectorCity && c.collectorCity.toLowerCase().includes(term))
+  );
+});
 
   ngOnInit(): void {
     this.fetchCollectors();
@@ -59,7 +63,7 @@ export class CollectorReviewComponent implements OnInit {
   }
 
   addNewCollector(): void {
-    this.router.navigate(['/c-create']);
+    this.router.navigate(['transportdashboard/c-create']);
   }
 
   onView(collector: CollectorResponse): void {

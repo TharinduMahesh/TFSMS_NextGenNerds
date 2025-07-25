@@ -101,7 +101,10 @@ h3 {
   border-radius: 8px;
 
   input { 
-    flex-grow: 1; // The description input takes all available space
+    flex-grow: 1; 
+    border-radius: 9px;
+    border: 1px solid #ced4da;
+    padding: 0.5rem 1rem;
   }
   
   .btn-remove {

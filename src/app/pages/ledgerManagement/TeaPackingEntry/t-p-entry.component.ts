@@ -66,6 +66,6 @@ export class TeaPackingEntryComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/ledgerManagementdashboard/stock-ledger']); // Navigate back to a dashboard or home page
+    this.router.navigate(['ledgerManagementdashboard/stock-ledger']); // Navigate back to a dashboard or home page
   }
 }

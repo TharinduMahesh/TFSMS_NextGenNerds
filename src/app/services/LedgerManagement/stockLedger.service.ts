@@ -9,7 +9,7 @@ import { CreatePackedTeaPayload, StockLedgerResponse } from '../../models/Ledger
 export class StockLedgerService {
   private http = inject(HttpClient);
   // Ensure the base URL matches the one your Ledger project is running on
-  private apiUrl = 'https://localhost:7132/api/stockledger'; // Example port
+  private apiUrl = 'https://localhost:7263/api/stockledger'; // Example port
 
   // Method for the 'tea-packing-entry' page
   createPackedTeaEntry(payload: CreatePackedTeaPayload): Observable<StockLedgerResponse> {

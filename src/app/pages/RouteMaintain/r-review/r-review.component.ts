@@ -84,7 +84,7 @@ export class RtReviewComponent implements OnInit {
   }
 
   addNewRoute(): void {
-    this.router.navigate(['/r-create']); // Assuming '/r-create' is your page route
+    this.router.navigate(['transportdashboard/r-create']); // Assuming '/r-create' is your page route
   }
 
   onView(route: RtList): void {
@@ -93,7 +93,7 @@ export class RtReviewComponent implements OnInit {
   }
 
   onEdit(route: RtList): void {
-  this.router.navigate(['/r-edit', route.rId]);
+  this.router.navigate(['transportdashboard/r-edit', route.rId]);
 }
 
   onDelete(id?: number): void {

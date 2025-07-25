@@ -1,21 +1,93 @@
 <div class="page-container">
   <header class="page-header">
-    <h1>Create New Collector</h1>
+    <h1>Register New Collector</h1>
   </header>
 
   <form [formGroup]="collectorForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-    <div class="form-group">
-      <label for="name">Collector Name</label>
-      <input id="name" formControlName="name" type="text" />
-    </div>
-    <div class="form-group">
-      <label for="contactNumber">Contact Number (Optional)</label>
-      <input id="contactNumber" formControlName="contactNumber" type="text" />
-    </div>
-    <div class="form-group">
-      <label for="ratePerKm">Rate per Km</label>
-      <input id="ratePerKm" formControlName="ratePerKm" type="number" step="0.01" />
-    </div>
+    
+    <!-- Section 1: Basic Information -->
+    <fieldset class="form-section">
+      <legend>Basic Information</legend>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Collector Name</label>
+          <input id="name" formControlName="name" type="text" placeholder="e.g., Sunil Perera" />
+        </div>
+        <div class="form-group">
+          <label for="collectorNIC">NIC Number</label>
+          <input id="collectorNIC" formControlName="collectorNIC" type="text" placeholder="e.g., 851234567V" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Section 2: Contact Information -->
+    <fieldset class="form-section">
+      <legend>Contact Information</legend>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="collectorPhoneNum">Phone Number</label>
+          <input id="collectorPhoneNum" formControlName="collectorPhoneNum" type="tel" placeholder="e.g., 077-123-4567" />
+        </div>
+        <div class="form-group">
+          <label for="collectorEmail">Email Address</label>
+          <input id="collectorEmail" formControlName="collectorEmail" type="email" placeholder="e.g., sunil.p@example.com" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Section 3: Address Details -->
+    <fieldset class="form-section">
+      <legend>Address Details</legend>
+      <div class="form-group">
+        <label for="collectorAddressLine1">Address Line 1</label>
+        <input id="collectorAddressLine1" formControlName="collectorAddressLine1" type="text" placeholder="e.g., No. 123, Main Street" />
+      </div>
+      <div class="form-group">
+        <label for="collectorAddressLine2">Address Line 2 (Optional)</label>
+        <input id="collectorAddressLine2" formControlName="collectorAddressLine2" type="text" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="collectorCity">City</label>
+          <input id="collectorCity" formControlName="collectorCity" type="text" placeholder="e.g., Kandy" />
+        </div>
+        <div class="form-group">
+          <label for="collectorPostalCode">Postal Code (Optional)</label>
+          <input id="collectorPostalCode" formControlName="collectorPostalCode" type="text" placeholder="e.g., 20000" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Section 4: Personal Details -->
+    <fieldset class="form-section">
+      <legend>Personal Details</legend>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="collectorGender">Gender</label>
+          <select id="collectorGender" formControlName="collectorGender">
+            <option [ngValue]="null" disabled>-- Select Gender --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="collectorDOB">Date of Birth</label>
+          <input id="collectorDOB" formControlName="collectorDOB" type="date" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Section 5: Financial Details -->
+    <fieldset class="form-section">
+      <legend>Financial Details</legend>
+      <div class="form-group">
+        <label for="ratePerKm">Rate per Km (LKR)</label>
+        <input id="ratePerKm" formControlName="ratePerKm" type="number" step="0.01" placeholder="e.g., 3.50" />
+      </div>
+    </fieldset>
+    
+    <!-- Form Actions -->
     <div class="form-actions">
       <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
       <button type="submit" class="btn-primary" [disabled]="collectorForm.invalid">Create Collector</button>

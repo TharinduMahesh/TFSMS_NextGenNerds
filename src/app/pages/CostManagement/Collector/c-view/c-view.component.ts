@@ -5,7 +5,7 @@ import { CollectorResponse } from '../../../../models/Logistic and Transport/Col
 @Component({
   selector: 'app-c-view',
   standalone: true,
-  imports: [CommonModule, DecimalPipe],
+  imports: [CommonModule],
   templateUrl: './c-view.component.html',
   styleUrls: ['./c-view.component.scss']
 })

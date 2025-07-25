@@ -25,7 +25,7 @@ export class VehicleEditComponent implements OnInit, OnChanges {
 
   constructor() {
     this.vehicleForm = this.fb.group({
-      collectorId: [null, Validators.required],
+      collectorId: [{value: null, disabled: true}],
       licensePlate: ['', [Validators.required, Validators.maxLength(50)]],
       volume: [0, [Validators.required, Validators.min(0.1)]],
       model: ['', [Validators.maxLength(100)]],

@@ -3,33 +3,54 @@
   max-width: 900px;
   margin: 2rem auto;
   padding: 2.5rem;
-  background-color: #d3d1d1;
-  border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  background-color: #dcdcdc;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* --- Page Header (Exact match from other create pages) --- */
+/* --- Page Header --- */
 .page-header {
   text-align: center;
   margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid #000;
-
+  
   h1 {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: 600;
     color: #212529;
     margin: 0;
-    letter-spacing: 0.5px;
   }
 }
 
-/* --- Form Styles --- */
+/* --- Main Form Styles --- */
 .form-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.5rem;
+}
+
+// --- NEW STYLES for Form Sections ---
+.form-section {
+  border: 1px solid #dee2e6;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 0; // Reset default margin
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  legend {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #007bff; // A nice accent color
+    padding: 0 0.75rem;
+    margin-left: 0.5rem;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
 
 .form-group {
@@ -39,29 +60,25 @@
   label {
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: #495057;
+    font-size: 14px;
   }
 
-  input {
-    padding: 0.6rem 0.75rem;
-    border: 1px solid #ddd;
+  input,
+  select {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
     border-radius: 6px;
     font-size: 1rem;
-    background-color: #fff;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s;
 
     &:focus {
-      border-color: #2196f3;
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+      border-color: #80bdff;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
-  }
-  
-  .error-message {
-    color: #e53e3e;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-top: 0.5rem;
   }
 }
 
@@ -71,39 +88,29 @@
   justify-content: flex-end;
   gap: 1rem;
   margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #dee2e6;
+}
 
-  .btn-primary {
-    background-color: #388e3c;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.btn-primary, .btn-secondary {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+}
 
-    &:hover:not(:disabled) {
-      background-color: #2e7d32;
-    }
+.btn-primary {
+  background-color: #28a745;
+  color: white;
+  &:hover:not(:disabled) { background-color: #218838; }
+  &:disabled { background-color: #a5d6a7; cursor: not-allowed; }
+}
 
-    &:disabled {
-      background-color: #a5d6a7;
-      cursor: not-allowed;
-    }
-  }
-
-  .btn-secondary {
-    background-color: #ff9800;
-    color: #263238;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #f57c00;
-    }
-  }
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  &:hover { background-color: #5a6268; }
 }

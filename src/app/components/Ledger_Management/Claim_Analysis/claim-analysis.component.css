@@ -1,8 +1,8 @@
 /* General container styling, consistent with claims-analysis */
 .claim-analysis-container {
   padding: 30px;
-  max-width: 1400px; /* Wider for dashboard layout */
-  margin: 30px auto;
+  max-width: 1300px; /* Wider for dashboard layout */
+  margin: 40px 40px auto 300px;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);

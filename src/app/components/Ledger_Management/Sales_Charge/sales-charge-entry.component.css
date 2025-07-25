@@ -1,8 +1,8 @@
 /* General container styling for the Sales Charge Entry Page */
 .claims-entry-container { /* Reusing claims-entry-container for general styling */
   padding: 30px;
-  max-width: 1500px;
-  margin: 30px auto;
+  max-width: 1300px;
+  margin: 40px 40px auto 240px;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);

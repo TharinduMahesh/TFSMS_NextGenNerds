@@ -8,8 +8,9 @@ bootstrapApplication(AppComponent, {
     // Spread the existing providers from your appConfig
     ...appConfig.providers,
     // Add the chart providers here
-    provideCharts(withDefaultRegisterables())
+    provideCharts(withDefaultRegisterables()), provideCharts(withDefaultRegisterables())
   ]
 })
   .catch(err => console.error(err));
               
+

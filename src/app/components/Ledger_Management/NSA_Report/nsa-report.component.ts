@@ -4,6 +4,7 @@ import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common'; // For NgFor, NgIf, DatePipe
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
+import { HeaderComponent } from "../../header/header.component";
 
 import { NsaReportService } from '../../../Services/nsa-report.service'; // NEW: Import the service
 import { NsaEntry } from '../../../models/nsa-entry.interface'; // Import the updated NsaEntry interface
@@ -11,7 +12,7 @@ import { NsaEntry } from '../../../models/nsa-entry.interface'; // Import the up
 @Component({
   selector: 'app-nsa-report', // Renamed selector
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './nsa-report.component.html', // Renamed template file
   styleUrls: ['./nsa-report.component.css'] // Renamed CSS file
 })

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
-
+import { HeaderComponent } from "../../header/header.component";
 
 import { NsaService } from '../../../Services/nsa.service'; 
 import { NsaEntry } from '../../../models/nsa-entry.interface'; 
@@ -39,7 +39,7 @@ interface GroupedNsaData {
 @Component({
   selector: 'app-monthly-nsa',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseChartDirective],
+  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent],
   templateUrl: './monthly-nsa.component.html',
   styleUrls: ['./monthly-nsa.component.css']
 })

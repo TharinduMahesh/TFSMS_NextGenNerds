@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // For NgFor, NgIf, DatePipe
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
+import { HeaderComponent } from "../../header/header.component";
 
 // Temporary interface for frontend development - UPDATED
 interface ReturnEntry {
@@ -17,7 +18,7 @@ interface ReturnEntry {
 @Component({
   selector: 'app-return-entry',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './return-entry.component.html',
   styleUrls: ['./return-entry.component.css']
 })

@@ -1,0 +1,31 @@
+
+  <app-header></app-header>
+
+<div class="page-container">
+  <!-- Navigation -->
+
+  <!-- Success Content -->
+  <div class="success-container">
+    <div class="success-content">
+      <div class="success-icon-container">
+        <img src="https://png.pngtree.com/png-vector/20250124/ourmid/pngtree-3d-green-checkmark-icon-png-image_15324355.png" alt="Success" class="success-icon" />
+      </div>
+      <div class="success-text">
+        <h1>Welcome Back!</h1>
+        <h1 *ngIf="firstName">{{firstName}} {{lastName}}</h1>
+        <div *ngIf="isLoading" class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading your profile...</p>
+        </div>
+        <div *ngIf="error" class="error-message">
+          {{error}}
+        </div>
+        <p>You have been signed in successfully.</p>
+        <a (click)="navigateToDashboard()" class="dashboard-btn">Go to Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+</div>

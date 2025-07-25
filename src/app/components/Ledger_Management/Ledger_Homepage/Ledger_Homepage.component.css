@@ -1,8 +1,8 @@
 /* General container styling for the Ledger Management Homepage */
 .ledger-management-container {
   padding: 2.5rem 1.5rem; /* Adjusted padding for overall spacing */
-  max-width: 1500px; /* Adjusted max-width for a balanced look */
-  margin: 2.5rem auto; /* Center the container with vertical margin */
+  max-width: 1300px; /* Adjusted max-width for a balanced look */
+  margin: 40px 40px auto 240px; /* Center the container with vertical margin */
   background-color: #f8f8f8; /* Very light gray background for the main content area */
   border-radius: 8px; /* Slightly less rounded corners for consistency */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Very subtle shadow for the main container */

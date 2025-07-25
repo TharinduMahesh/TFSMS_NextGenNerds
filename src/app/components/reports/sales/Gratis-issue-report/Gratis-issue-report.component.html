@@ -1,0 +1,143 @@
+<!-- src/app/components/reports/gratis-issue-report/gratis-issue-report.component.html -->
+<app-header></app-header>
+<div class="sales-report-container"> <!-- Reusing sales-report-container for general styling -->
+  <h1 class="report-title">Gratis Issue Report</h1>
+
+  <!-- Filter and Summary KPI Section -->
+  <div class="report-section filter-section">
+    <h2 class="section-heading">Report Filters</h2>
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="applyFilters()" name="startDate">
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="applyFilters()" name="endDate">
+      </div>
+      <div class="form-group">
+        <label for="purposeFilter">Purpose:</label>
+        <input type="text" id="purposeFilter" [(ngModel)]="purposeFilter" (keyup)="applyFilters()" name="purposeFilter" placeholder="e.g., Sample, Donation">
+      </div>
+      <div class="form-group">
+        <label for="teaGradeFilter">Tea Grade:</label>
+        <input type="text" id="teaGradeFilter" [(ngModel)]="teaGradeFilter" (keyup)="applyFilters()" name="teaGradeFilter" placeholder="e.g., BOPF, Green Tea">
+      </div>
+      <div class="form-group">
+        <label for="receiverFilter">Receiver:</label>
+        <input type="text" id="receiverFilter" [(ngModel)]="receiverFilter" (keyup)="applyFilters()" name="receiverFilter" placeholder="e.g., Customer A, QC Lab">
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+        <button class="export-button" (click)="exportToCsv()">Export to CSV</button>
+      </div>
+    </div>
+
+    <div class="kpi-cards-grid">
+      <div class="kpi-card overall-sales"> <!-- Reusing class for styling -->
+        <h3>Total Issues</h3>
+        <p>{{ summary.totalIssues }}</p>
+      </div>
+      <div class="kpi-card total-quantity"> <!-- Reusing class for styling -->
+        <h3>Total Quantity Issued (Kg)</h3>
+        <p>{{ summary.totalQuantityIssued | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card top-grade"> <!-- Reusing class for styling -->
+        <h3>Top Purpose</h3>
+        <p>{{ summary.topPurpose || 'N/A' }}</p>
+      </div>
+      <div class="kpi-card avg-unit-price"> <!-- Reusing class for styling -->
+        <h3>Top Tea Grade Issued</h3>
+        <p>{{ summary.topTeaGrade || 'N/A' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="report-section charts-section">
+    <h2 class="section-heading">Gratis Issue Overview</h2>
+    <div class="charts-grid">
+      <!-- 1. Gratis Issue Quantity Trend (Line Chart) -->
+      <div class="chart-card">
+        <h3>Quantity Issued Trend (Monthly)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="quantityTrendChartData"
+            [options]="quantityTrendChartOptions"
+            [type]="quantityTrendChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 2. Gratis Issues by Purpose (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Issues by Purpose (Count)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="issuesByPurposeChartData"
+            [options]="issuesByPurposeChartOptions"
+            [type]="issuesByPurposeChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 3. Quantity Issued by Tea Grade (Doughnut Chart) -->
+      <div class="chart-card">
+        <h3>Quantity by Tea Grade</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="quantityByTeaGradeChartData"
+            [options]="quantityByTeaGradeChartOptions"
+            [type]="quantityByTeaGradeChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Gratis Issue Records Section -->
+  <div class="records-section">
+    <h2 class="section-heading">Gratis Issue Details</h2>
+    <div class="table-responsive">
+      <table class="sales-report-table"> <!-- Reusing sales-report-table class for consistency -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Issue Date</th>
+            <th>Purpose</th>
+            <th>Receiver</th>
+            <th>Quantity (Kg)</th>
+            <th>Tea Grade</th>
+            <th>Batch/Lot No.</th>
+            <th>Reference No.</th>
+            <th>Remarks</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredGratisIssueRecords">
+            <td>{{ record.id }}</td>
+            <td>{{ formatDate(record.issueDate) }}</td>
+            <td>{{ record.purpose }}</td>
+            <td>{{ record.receiver }}</td>
+            <td>{{ record.quantityKg | number:'1.2-2' }}</td>
+            <td>{{ record.teaGrade }}</td>
+            <td>{{ record.batchLotNumber || 'N/A' }}</td>
+            <td>{{ record.referenceMemo || 'N/A' }}</td>
+            <td>{{ record.remarks || 'N/A' }}</td>
+            <td class="actions-cell">
+              <!-- No direct edit/delete on report page, but can link to entry page -->
+            </td>
+          </tr>
+          <tr *ngIf="filteredGratisIssueRecords.length === 0">
+            <td colspan="10" class="no-data">No gratis issue records found for the selected filters.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

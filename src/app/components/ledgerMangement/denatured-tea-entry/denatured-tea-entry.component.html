@@ -1,0 +1,139 @@
+<app-header></app-header>
+<div class="container">
+  <h2>Denatured Tea Entry</h2>
+  
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="denaturedTeaForm" (ngSubmit)="onSubmit()" class="denatured-tea-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="teaGrade">Tea Grade *</label>
+        <select 
+          id="teaGrade"
+          formControlName="teaGrade"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('teaGrade')">
+          <option value="">Select Tea Grade</option>
+          <option *ngFor="let grade of teaGrades" [value]="grade">{{ grade }}</option>
+        </select>
+        <div *ngIf="isFieldInvalid('teaGrade')" class="invalid-feedback">
+          Tea Grade is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="invoiceNumber">Invoice Number *</label>
+        <select 
+          id="invoiceNumber"
+          formControlName="invoiceNumber"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('invoiceNumber')">
+          <option value="">Select Invoice</option>
+          <option *ngFor="let invoice of invoices" [value]="invoice.InvoiceNumber">
+            {{ invoice.InvoiceNumber }} - {{ invoice.Season }} - {{ invoice.GardenMark }}
+          </option>
+        </select>
+        <div *ngIf="isFieldInvalid('invoiceNumber')" class="invalid-feedback">
+          Invoice Number is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantityKg">Quantity (kg) *</label>
+        <input 
+          type="number"
+          id="quantityKg"
+          formControlName="quantityKg"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('quantityKg')"
+          placeholder="Enter quantity in kg"
+          step="0.01"
+          min="0">
+        <div *ngIf="isFieldInvalid('quantityKg')" class="invalid-feedback">
+          <span *ngIf="denaturedTeaForm.get('quantityKg')?.errors?.['required']">Quantity is required</span>
+          <span *ngIf="denaturedTeaForm.get('quantityKg')?.errors?.['min']">Quantity must be greater than 0</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="date">Date *</label>
+        <input 
+          type="date"
+          id="date"
+          formControlName="date"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('date')">
+        <div *ngIf="isFieldInvalid('date')" class="invalid-feedback">
+          Date is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group full-width">
+        <label for="reason">Reason *</label>
+        <textarea 
+          id="reason"
+          formControlName="reason"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('reason')"
+          placeholder="Enter reason for denatured tea"
+          rows="3"></textarea>
+        <div *ngIf="isFieldInvalid('reason')" class="invalid-feedback">
+          Reason is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="clearForm()" class="btn btn-secondary">Clear Form</button>
+      <button type="submit" [disabled]="isLoading" class="btn btn-primary">
+        <span *ngIf="isLoading" class="spinner"></span>
+        {{ isLoading ? 'Adding...' : 'Add Entry' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="table-section">
+    <h3>Denatured Tea Records</h3>
+    <div *ngIf="isLoading && denaturedTeas.length === 0" class="loading">Loading...</div>
+    
+    <table class="table" *ngIf="!isLoading || denaturedTeas.length > 0">
+      <thead>
+        <tr>
+          <th>Record No.</th>
+          <th>Date</th>
+          <th>Tea Grade</th>
+          <th>Invoice</th>
+          <th>Quantity (kg)</th>
+          <th>Reason</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tea of denaturedTeas; trackBy: trackByFn">
+          <td>{{ tea.Id }}</td>
+          <td>{{ tea.Date | date:'dd/MM/yyyy' }}</td>
+          <td>{{ tea.TeaGrade }}</td>
+          <td>{{ tea.InvoiceNumber }}</td>
+          <td>{{ tea.QuantityKg | number:'1.2-2' }} kg</td>
+          <td>{{ tea.Reason }}</td>
+          <td>
+            <button 
+              type="button" 
+              class="btn btn-danger btn-sm" 
+              (click)="deleteEntry(tea.Id)"
+              title="Delete Entry">
+              Delete
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="denaturedTeas.length === 0 && !isLoading">
+          <td colspan="7" class="no-data">No denatured tea records found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

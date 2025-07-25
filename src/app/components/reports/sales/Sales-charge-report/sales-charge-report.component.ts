@@ -4,6 +4,7 @@ import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common'; // For NgFor, NgIf, DatePipe
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
+import { HeaderComponent } from "../../../../components/header/header.component"; // Import HeaderComponent
 
 // NEW: Import for Charts
 import { BaseChartDirective } from 'ng2-charts';
@@ -23,7 +24,7 @@ interface SalesChargeSummaryKpi {
   selector: 'app-sales-charge-report',
   standalone: true,
   // NEW: Add BaseChartDirective to imports
-  imports: [CommonModule, FormsModule, BaseChartDirective],
+  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent],
   templateUrl: './sales-charge-report.component.html',
   styleUrls: ['./sales-charge-report.component.css']
 })

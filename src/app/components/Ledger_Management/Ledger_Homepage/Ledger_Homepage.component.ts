@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from "../../header/header.component";
 
 interface LedgerSection {
   title: string;
@@ -12,7 +13,7 @@ interface LedgerSection {
   templateUrl: './Ledger_Homepage.component.html',
   styleUrls: ['./Ledger_Homepage.component.css'],
   standalone: true,
-  imports: [RouterModule, CommonModule]
+  imports: [RouterModule, CommonModule,HeaderComponent]
 })
 export class LedgerManagementComponent {
   sections: LedgerSection[] = [

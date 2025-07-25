@@ -3,13 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // For NgFor, NgIf, DatePipe
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
+import { HeaderComponent } from "../../header/header.component";
 import { ClaimEntryService } from '../../../Services/claim-entry.service'; // Import the service
 import { ClaimEntry } from '../../../models/claim-entry.interface'; // Import the interface
 
 @Component({
   selector: 'app-claims-entry',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './claims-entry.component.html',
   styleUrls: ['./claims-entry.component.css']
 })

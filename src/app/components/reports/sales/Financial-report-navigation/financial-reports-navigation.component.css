@@ -1,27 +1,37 @@
+/* Styling for the Financial Reports Navigation Page */
+
+/* Main container for the navigation page */
 .financial-reports-nav {
-  max-width: 1500px;
-  margin: 0 auto;
-  padding: 40px 24px 24px 24px;
-  background: #f9fafb;
-  border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  border: solid;
+  /* FIX: Adjust margin for better overall page spacing, considering sidebar */
+  /* Assuming a main content wrapper that pushes content over from sidebar */
+  max-width: 1200px; /* Adjusted max-width for better fit within typical content areas */
+  margin: 40px 40px auto 240px; /* Center horizontally, with top/bottom margin */
+  padding: 40px; /* Consistent padding inside the container */
+  background: #f9fafb; /* Light background for the main card */
+  border-radius: 18px; /* Prominent rounded corners */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08); /* More prominent shadow for the main card */
+  border: 5px solid #151414; /* Subtle border */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box; /* Include padding/border in width */
 }
 
 .nav-title {
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.2rem; /* Slightly larger title */
   font-weight: 700;
-  color: #22223b;
-  margin-bottom: 36px;
+  color: #2c3e50; /* Darker text for title */
+  margin-bottom: 40px; /* More space below title */
   letter-spacing: -0.5px;
 }
 
+/* Container for the navigation cards (CSS Grid) */
 .nav-cards {
-  display: flex;
-  gap: 50px;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid; /* Use CSS Grid for precise alignment */
+  /* FIX: Responsive grid with auto-fit for consistent columns */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Cards min-width 280px, flexible columns */
+  gap: 25px; /* Consistent gap between grid items */
+  justify-content: center; /* Center cards in the grid */
+  align-items: stretch; /* Ensure cards stretch to fill row height */
 }
 
 .nav-card {
@@ -30,50 +40,116 @@
   gap: 18px;
   background: #fff;
   border-radius: 14px;
-  padding: 24px 32px;
-  min-width: 260px;
+  padding: 24px; /* Adjusted padding for better internal spacing */
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  border: 1px solid #e5e7eb;
+  border: 2px solid #093f03;
   cursor: pointer;
-  transition: box-shadow 0.18s, transform 0.18s;
+  transition: box-shadow 0.18s ease-in-out, transform 0.18s ease-in-out; /* Smooth transition */
+  text-decoration: none; /* Ensure no underline if it's an anchor */
+  color: inherit; /* Inherit text color */
 }
 
 .nav-card:hover {
-  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
-  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12); /* More pronounced shadow on hover */
+  transform: translateY(-5px) scale(1.02); /* Slightly more lift and scale */
 }
 
 .nav-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 52px; /* Slightly larger icon container */
+  height: 52px;
   border-radius: 50%;
   font-size: 1.8rem;
-  background: #e3e8f7;
-  color: #4361ee;
+  background: #e3e8f7; /* Default light blue background */
+  color: #4361ee; /* Default blue icon color */
+  flex-shrink: 0; /* Prevent icon from shrinking */
+}
+.nav-icon i { /* Styling for Font Awesome icon inside nav-icon */
+    font-size: 1.8rem;
 }
 
+
+/* Specific icon colors (using your existing classes) */
 .nav-icon-blue { background: #e3e8f7; color: #4361ee; }
 .nav-icon-green { background: #e6f4ea; color: #3bb273; }
 .nav-icon-yellow { background: #fff8e1; color: #f7b731; }
 .nav-icon-purple { background: #f3e8fd; color: #a259d9; }
 
 .nav-card-title {
-  font-size: 1.3rem;
+  font-size: 1.25rem; /* Slightly smaller for better hierarchy */
   font-weight: 600;
   color: #22223b;
-  margin-bottom: 2px;
+  margin-bottom: 4px; /* More space below title */
 }
 
 .nav-card-desc {
-  font-size: 1.0rem;
+  font-size: 0.9rem; /* Slightly smaller for description */
   color: #6c757d;
-  opacity: 0.88;
+  opacity: 0.9; /* Slightly less opaque */
+  line-height: 1.4; /* Better readability */
 }
 
-@media (max-width: 900px) {
-  .nav-cards { flex-direction: column; gap: 18px; }
-  .nav-card { width: 100%; min-width: unset; justify-content: flex-start; }
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .financial-reports-nav {
+    max-width: 90%; /* Adjust max-width for smaller screens */
+    margin: 30px auto;
+    padding: 30px;
+  }
+  .nav-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+  .nav-cards {
+    gap: 20px;
+  }
+  .nav-card {
+    min-width: 250px;
+    padding: 20px 25px;
+  }
+  .nav-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 1.6rem;
+  }
+  .nav-card-title {
+    font-size: 1.2rem;
+  }
+  .nav-card-desc {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .financial-reports-nav {
+    max-width: 95%;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  .nav-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+  .nav-cards {
+    grid-template-columns: 1fr; /* Stack cards on small screens */
+    gap: 15px;
+  }
+  .nav-card {
+    flex-direction: row; /* Keep icon and text side-by-side */
+    justify-content: flex-start; /* Align content to start */
+    padding: 18px 20px;
+  }
+  .nav-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+  }
+  .nav-card-title {
+    font-size: 1.1rem;
+  }
+  .nav-card-desc {
+    font-size: 0.8rem;
+  }
 }

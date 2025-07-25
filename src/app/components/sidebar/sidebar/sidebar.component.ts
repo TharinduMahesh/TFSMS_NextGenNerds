@@ -14,8 +14,9 @@ interface RouteTitleMap {
 })
 export class SidebarComponent {
   isOpen = false; // For dropdown toggle
+  sidebarOpen = true; // For sidebar toggle
   currentUrl = '';
-  currentPageTitle = ''; // Default title
+  currentPageTitle = '';
 
   routeTitleMap: RouteTitleMap = {
     '/dashboard': 'Dashboard',
@@ -34,10 +35,6 @@ export class SidebarComponent {
     '/report/monthly-nsa': 'Monthly NSA'
   };
 
-  //Responsivity
-  sidebarOpen = false;
-
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -46,7 +43,7 @@ export class SidebarComponent {
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => { //change is made if try to undo IT IS HERE
+    ).subscribe((event: NavigationEnd) => {
       this.currentUrl = event.url;
       this.updatePageTitle(this.currentUrl);
       this.cdRef.detectChanges();
@@ -85,12 +82,6 @@ export class SidebarComponent {
     this.cdRef.detectChanges();
   }
 
-  // navigateTo(route: string) {
-  //   const fullRoute = `/report/${route}`;
-  //   this.router.navigate([fullRoute]);
-  //   this.updatePageTitle(fullRoute);
-  // }
-
   @HostListener('document:click', ['$event'])
   closeDropdown(event: Event) {
     const targetElement = event.target as HTMLElement;
@@ -100,8 +91,13 @@ export class SidebarComponent {
     }
   }
 
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+    this.cdRef.detectChanges();
+  }
+
   logout() {
-    console.log('Logout clicked');
-    //logout logic here
+    // Implement your logout logic here
+    // For example: this.router.navigate(['/login']);
   }
 }

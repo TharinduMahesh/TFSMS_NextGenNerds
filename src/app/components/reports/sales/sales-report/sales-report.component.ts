@@ -4,7 +4,7 @@ import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common'; // For NgFor, NgIf, DatePipe
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
-
+import { HeaderComponent } from "../../../../components/header/header.component";
 import { SalesReportService } from '../../../../Services/sales-report.service'; // Import the new service
 import { SalesEntry } from '../../../../models/sales-entry.interface'; // Import the SalesEntry interface
 
@@ -20,7 +20,7 @@ interface SalesSummaryKpi {
 @Component({
   selector: 'app-sales-report',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './sales-report.component.html',
   styleUrls: ['./sales-report.component.css']
 })

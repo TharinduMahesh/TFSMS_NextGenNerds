@@ -276,7 +276,7 @@
                   <button
                     class="delete-btn"
                     (click)="deletePayment(payment.PaymentId)"
-                    [disabled]="loading || payment.Status === 'Completed'"
+                    [disabled]="loading || payment.Status === 'Completed' "
                     title="Delete Payment"
                   >
                     🗑️ Delete

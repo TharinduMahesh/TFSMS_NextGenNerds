@@ -8,7 +8,7 @@ import { CreateDispatchPayload, DispatchResponse } from '../../models/Ledger Man
 })
 export class DispatchService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7132/api/dispatches'; // Example port
+  private apiUrl = 'https://localhost:7263/api/dispatches'; // Example port
 
   // Method for the 'dispatch-entry' page
   createDispatch(payload: CreateDispatchPayload): Observable<DispatchResponse> {

@@ -55,7 +55,7 @@ export class TripReviewComponent implements OnInit {
   }
 
   goToSchedulePage(): void {
-    this.router.navigate(['/t-sched']);
+    this.router.navigate(['transportedashboard/trip-schedule']);
   }
   
   markAsDeparted(trip: TripResponse): void {
@@ -66,10 +66,6 @@ export class TripReviewComponent implements OnInit {
   markAsArrived(trip: TripResponse): void {
     const payload: UpdateTripStatusPayload = { actualArrival: new Date().toISOString() };
     this.updateTripStatus(trip.tripId, payload, 'arrived');
-  }
-
-  onEdit(trip: TripResponse): void {
-    this.router.navigate(['/t-edit', trip.tripId]); 
   }
 
   onDelete(trip: TripResponse): void {

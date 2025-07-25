@@ -117,13 +117,13 @@ export class RtEditComponent implements OnInit {
     this.routeService.updateRoute(this.currentRouteId, payload).subscribe({
       next: () => {
         alert('Route updated successfully!');
-        this.router.navigate(['/r-review']);
+        this.router.navigate(['transportdashboard/r-review']); // Navigate to the route review page
       },
       error: (err) => alert(`Error: ${err.message}`)
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['/r-review']);
+    this.router.navigate(['transportdashboard/r-review']);
   }
 }

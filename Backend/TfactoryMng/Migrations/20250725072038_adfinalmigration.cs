@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TfactoryMng.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class adfinalmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,15 @@ namespace TfactoryMng.Migrations
                     CollectorId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    ContactNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    CollectorNIC = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CollectorAddressLine1 = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CollectorAddressLine2 = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CollectorCity = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CollectorPostalCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    CollectorGender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    CollectorDOB = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CollectorPhoneNum = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    CollectorEmail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     RatePerKm = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
@@ -56,7 +64,7 @@ namespace TfactoryMng.Migrations
                     VehicleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LicensePlate = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Volume = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Volume = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ConditionNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CollectorId = table.Column<int>(type: "int", nullable: false)

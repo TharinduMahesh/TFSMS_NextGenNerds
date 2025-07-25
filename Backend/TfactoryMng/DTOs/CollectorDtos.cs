@@ -2,29 +2,61 @@
 
 namespace TfactoryMng.DTOs
 {
-    // For creating or updating a collector
     public class CreateUpdateCollectorDto
     {
         [Required, StringLength(150)]
         public string Name { get; set; } = string.Empty;
 
-        [StringLength(20)]
-        public string? ContactNumber { get; set; }
-
         [Required]
         public decimal RatePerKm { get; set; }
+
+        // --- ADD ALL NEW PROPERTIES HERE ---
+        [Required(ErrorMessage = "NIC is required.")]
+        [StringLength(100)]
+        public string CollectorNIC { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(255)]
+        public string CollectorAddressLine1 { get; set; } = string.Empty;
+
+        public string? CollectorAddressLine2 { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string CollectorCity { get; set; } = string.Empty;
+
+        public string? CollectorPostalCode { get; set; }
+        public string? CollectorGender { get; set; }
+        public DateTime? CollectorDOB { get; set; }
+
+        [Required]
+        public string CollectorPhoneNum { get; set; } = string.Empty;
+
+        [Required, EmailAddress]
+        [StringLength(100)]
+        public string CollectorEmail { get; set; } = string.Empty;
     }
 
-    // For viewing a collector's details
     public class CollectorResponseDto
     {
         public int CollectorId { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string? ContactNumber { get; set; }
         public decimal RatePerKm { get; set; }
 
-        // Vehicle details
+        // --- ADD ALL NEW PROPERTIES HERE ---
+        public string CollectorNIC { get; set; } = string.Empty;
+        public string CollectorAddressLine1 { get; set; } = string.Empty;
+        public string? CollectorAddressLine2 { get; set; }
+        public string CollectorCity { get; set; } = string.Empty;
+        public string? CollectorPostalCode { get; set; }
+        public string? CollectorGender { get; set; }
+        public DateTime? CollectorDOB { get; set; }
+        public string? CollectorPhoneNum { get; set; }
+        public string CollectorEmail { get; set; } = string.Empty;
+
+        // Vehicle details are still needed
         public int? VehicleId { get; set; }
         public string? VehicleLicensePlate { get; set; }
+        public double? VehicleVolume { get; set; } // Added volume from previous discussion
     }
 }

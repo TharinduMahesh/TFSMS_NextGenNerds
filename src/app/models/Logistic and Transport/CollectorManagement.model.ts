@@ -1,19 +1,39 @@
-// For VIEWING a list of collectors or a single collector's details.
-// This is used to populate dropdowns or display lists.
+
 export interface CollectorResponse {
   collectorId: number;
   name: string;
-  contactNumber?: string;
   ratePerKm: number;
-  vehicleConditionNotes?: string;
+  
+  // All the new fields for detailed viewing
+  collectorNIC?: string;
+  collectorAddressLine1?: string;
+  collectorAddressLine2?: string;
+  collectorCity?: string;
+  collectorPostalCode?: string;
+  collectorGender?: string;
+  collectorDOB?: string; // Dates are strings in JSON
+  collectorPhoneNum?: string;
+  collectorEmail?: string;
+
+  // Existing vehicle details
   vehicleId?: number;
   vehicleLicensePlate?: string;
   vehicleVolume?: number;
 }
 
 // For CREATING or UPDATING a collector's main details
+// This now includes all the new form fields.
 export interface CreateUpdateCollectorPayload {
   name: string;
-  contactNumber?: string;
   ratePerKm: number;
+  
+  collectorNIC: string;
+  collectorAddressLine1: string;
+  collectorAddressLine2?: string;
+  collectorCity: string;
+  collectorPostalCode?: string;
+  collectorGender?: string;
+  collectorDOB?: string;
+  collectorPhoneNum?: string;
+  collectorEmail: string;
 }

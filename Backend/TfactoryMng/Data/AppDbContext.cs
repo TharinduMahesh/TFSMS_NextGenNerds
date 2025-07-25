@@ -25,7 +25,7 @@ namespace TfactoryMng.Data
                 entity.Property(e => e.rName).IsRequired().HasMaxLength(100);
                 entity.HasIndex(e => e.rName).IsUnique();
 
-                // --- UPDATED RELATIONSHIP ---
+               
                 entity.HasOne(r => r.Collector)
                       .WithMany(c => c.Routes)
                       .HasForeignKey(r => r.CollectorId)
@@ -51,10 +51,9 @@ namespace TfactoryMng.Data
             // Configuration for the YieldList entity
             modelBuilder.Entity<YieldList>(entity =>
             {
-                // Set the primary key
                 entity.HasKey(y => y.yId);
 
-                // Configure the relationship with RtList
+              
                 entity.HasOne(y => y.RtList)          // Each YieldList has one RtList
                       .WithMany()                     // An RtList can have many YieldLists (but we don't need a navigation property on RtList for this)
                       .HasForeignKey(y => y.rId)      // The foreign key is rId
@@ -75,13 +74,11 @@ namespace TfactoryMng.Data
             {
                 entity.HasKey(t => t.TripId);
 
-                // Relationship with RtList
                 entity.HasOne(t => t.Route)
                       .WithMany(r => r.TripRecords)
                       .HasForeignKey(t => t.RouteId)
                       .OnDelete(DeleteBehavior.Cascade); // If a route is deleted, its trip history is also deleted
 
-                // Relationship with Collector
                 entity.HasOne(t => t.Collector)
                       .WithMany(c => c.TripRecords)
                       .HasForeignKey(t => t.CollectorId)
@@ -92,6 +89,8 @@ namespace TfactoryMng.Data
             {
                 entity.HasKey(v => v.VehicleId);
                 entity.HasIndex(v => v.LicensePlate).IsUnique();
+                entity.Property(v => v.Volume).HasColumnType("decimal(18, 3)"); // 18 total digits, 3 for decimal part
+
                 entity.Property(v => v.CollectorId).IsRequired();
             });
         }

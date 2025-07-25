@@ -1,0 +1,183 @@
+<div class="returns-analysis-container">
+  <h1 class="page-title">Returns Analysis</h1>
+
+  <!-- Filter and Summary KPI Section -->
+  <div class="analysis-header-section">
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="applyFilters()" name="startDate">
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="applyFilters()" name="endDate">
+      </div>
+      <div class="form-group">
+        <label for="returnReasonFilter">Return Reason:</label>
+        <select id="returnReasonFilter" [(ngModel)]="returnReasonFilter" (change)="applyFilters()" name="returnReasonFilter">
+          <option value="">All Reasons</option>
+          <option value="Quality Issue - Off-taste">Quality Issue - Off-taste</option>
+          <option value="Excess Stock - Order Mistake">Excess Stock - Order Mistake</option>
+          <option value="Damaged Goods - Packaging Issue">Damaged Goods - Packaging Issue</option>
+          <option value="Quality Issue - Poor Aroma">Quality Issue - Poor Aroma</option>
+          <option value="Customer Return - Unsatisfied">Customer Return - Unsatisfied</option>
+          <option value="Excess Stock - Seasonal Adjustment">Excess Stock - Seasonal Adjustment</option>
+          <option value="Quality Issue - Incorrect Grade">Quality Issue - Incorrect Grade</option>
+          <option value="Logistics Error - Wrong Delivery">Logistics Error - Wrong Delivery</option>
+          <option value="Pest Contamination">Pest Contamination</option>
+          <option value="Packaging Defect">Packaging Defect</option>
+          <!-- Add more reasons as they appear in your data -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="seasonFilter">Season:</label>
+        <select id="seasonFilter" [(ngModel)]="seasonFilter" (change)="applyFilters()" name="seasonFilter">
+          <option value="">All Seasons</option>
+          <!-- FIX: Values must EXACTLY match data from backend -->
+          <option value="Spring 2024">Spring 2024</option>
+          <option value="Autumn 2024">Autumn 2024</option>
+          <option value="Spring 2023">Spring 2023</option>
+          <option value="Autumn 2023">Autumn 2023</option>
+          <!-- Add more seasons as they appear in your data if needed -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="gardenMarkFilter">Garden Mark:</label>
+        <input type="text" id="gardenMarkFilter" [(ngModel)]="gardenMarkFilter" (keyup)="applyFilters()" name="gardenMarkFilter" placeholder="e.g., GLC, ABC Tea">
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+        <button class="export-csv-button" (click)="exportToCsv()">Export to CSV</button>
+      </div>
+    </div>
+
+    <div class="kpi-cards-grid">
+      <div class="kpi-card">
+        <h3>Total Returns</h3>
+        <p>{{ summary.totalReturns }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Total Kilos Returned (Kg)</h3>
+        <p>{{ summary.totalKilosReturned | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Avg. Kilos per Return (Kg)</h3>
+        <p>{{ summary.averageKilosPerReturn | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Top Return Reason</h3>
+        <p>{{ summary.topReturnReason || 'N/A' }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Unique Invoices with Returns</h3>
+        <p>{{ summary.totalUniqueInvoices }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="report-section charts-section">
+    <h2>Returns Overview</h2>
+    <div class="charts-grid">
+      <!-- 1. Return Volume Trend (Line Chart) -->
+      <div class="chart-card">
+        <h3>Return Volume Trend (Monthly)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="lineChartData"
+            [options]="lineChartOptions"
+            [type]="lineChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 2. Returns by Reason (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Returns by Reason</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="reasonBarChartData"
+            [options]="reasonBarChartOptions"
+            [type]="reasonBarChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 3. Quantity Returned by Reason (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Quantity Returned by Reason</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="quantityReasonBarChartData"
+            [options]="quantityReasonBarChartOptions"
+            [type]="quantityReasonBarChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 4. Returns by Garden Mark (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Returns by Garden Mark</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="gardenMarkBarChartData"
+            [options]="gardenMarkBarChartOptions"
+            [type]="gardenMarkBarChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 5. Returns by Season (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Returns by Season</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="seasonBarChartData"
+            [options]="seasonBarChartOptions"
+            [type]="seasonBarChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Records Section -->
+  <div class="records-section">
+    <h2>Returns Details</h2>
+    <div class="table-responsive">
+      <table class="returns-analysis-table">
+        <thead>
+          <tr>
+            <th>Return ID</th>
+            <th>Season</th>
+            <th>Garden Mark</th>
+            <th>Invoice Number</th>
+            <th>Return Date</th>
+            <th>Kilos Returned (Kg)</th>
+            <th>Reason</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredReturns">
+            <td>{{ record.id }}</td>
+            <td>{{ record.season }}</td>
+            <td>{{ record.gardenMark }}</td>
+            <td>{{ record.invoiceNumber }}</td>
+            <td>{{ record.returnDate }}</td>
+            <td>{{ record.kilosReturned | number:'1.2-2' }}</td>
+            <td>{{ record.reason }}</td>
+            <td>{{ record.createdAt }}</td>
+          </tr>
+          <tr *ngIf="filteredReturns.length === 0">
+            <td colspan="8" class="no-data">No return records found for the selected filters.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

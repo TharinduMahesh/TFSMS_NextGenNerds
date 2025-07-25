@@ -1,0 +1,102 @@
+<!-- src/app/components/reports/sales-report/sales-report.component.html -->
+
+<div class="sales-report-container">
+  <h1 class="report-title">Sales Report</h1>
+
+  <!-- Filter and Summary KPI Section -->
+  <div class="report-section filter-section">
+    <h2 class="section-heading">Report Filters</h2>
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="applyFilters()" name="startDate">
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="applyFilters()" name="endDate">
+      </div>
+      <div class="form-group">
+        <label for="customerNameFilter">Customer Name:</label>
+        <input type="text" id="customerNameFilter" [(ngModel)]="customerNameFilter" (keyup)="applyFilters()" name="customerNameFilter" placeholder="e.g., Customer A">
+      </div>
+      <div class="form-group">
+        <label for="teaGradeFilter">Tea Grade:</label>
+        <input type="text" id="teaGradeFilter" [(ngModel)]="teaGradeFilter" (keyup)="applyFilters()" name="teaGradeFilter" placeholder="e.g., BOPF">
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+        <button class="export-button" (click)="exportToCsv()">Export to CSV</button>
+      </div>
+    </div>
+
+    <div class="kpi-cards-grid">
+      <div class="kpi-card overall-sales">
+        <h3>Total Sales Entries</h3>
+        <p>{{ summary.totalSalesEntries }}</p>
+      </div>
+      <div class="kpi-card total-quantity">
+        <h3>Total Quantity Sold (Kg)</h3>
+        <p>{{ summary.totalQuantitySold | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card total-revenue">
+        <h3>Total Revenue (Rs.)</h3>
+        <p>{{ summary.totalRevenue | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card avg-unit-price">
+        <h3>Avg. Unit Price (Rs./Kg)</h3>
+        <p>{{ summary.averageUnitPrice | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card top-grade">
+        <h3>Top Tea Grade Sold</h3>
+        <p>{{ summary.topTeaGrade || 'N/A' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Sales Records Section -->
+  <div class="records-section">
+    <h2 class="section-heading">Sales Details</h2>
+    <div class="table-responsive">
+      <table class="sales-report-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Invoice No.</th>
+            <th>Sale Date</th>
+            <th>Customer Name</th>
+            <th>Tea Grade</th>
+            <th>Quantity (Kg)</th>
+            <th>Unit Price (Rs./Kg)</th>
+            <th>Total Amount (Rs.)</th>
+            <th>Remarks</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredSalesRecords">
+            <td>{{ record.id }}</td>
+            <td>{{ record.invoiceNumber }}</td>
+            <td>{{ formatDate(record.saleDate) }}</td>
+            <td>{{ record.customerName }}</td>
+            <td>{{ record.teaGrade }}</td>
+            <td>{{ record.quantityKg | number:'1.2-2' }}</td>
+            <td>{{ record.unitPriceKg | number:'1.2-2' }}</td>
+            <td>{{ record.totalAmount | number:'1.2-2' }}</td>
+            <td>{{ record.remarks || 'N/A' }}</td>
+            <td class="actions-cell">
+              <!-- Add Edit/Delete buttons here if this report allows direct manipulation -->
+              <!-- For now, this is a report, so direct manipulation might be on an entry page -->
+            </td>
+          </tr>
+          <tr *ngIf="filteredSalesRecords.length === 0">
+            <td colspan="10" class="no-data">No sales records found for the selected filters.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

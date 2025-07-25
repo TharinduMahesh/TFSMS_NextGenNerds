@@ -1,0 +1,283 @@
+/* General container styling for the Gratis Issue Entry Page */
+.gratis-issue-container {
+  padding: 30px;
+  max-width: 1500px; /* Adjust as needed */
+  margin: 30px auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.page-title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 40px;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.form-section, .records-section {
+  background-color: #fdfdfd;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-section h2, .records-section h2 {
+  color: #34495e;
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.form-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px; /* Consistent gap between grid items */
+  margin-bottom: 20px;
+  padding: 0 10px; /* Add horizontal padding to the grid container */
+}
+
+.form-group {
+  margin-bottom: 0; /* Keep 0 as grid gap handles vertical spacing */
+  display: flex; /* Use flexbox for consistent vertical alignment of label/input */
+  flex-direction: column;
+  justify-content: flex-end; /* Pushes content to the bottom of the flex container */
+  padding: 10px; /* Added internal padding for each form group */
+  border: 1px solid transparent; /* Subtle border that can change on focus */
+  border-radius: 8px; /* Rounded corners for form groups */
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1; /* Spans all columns in the grid */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  margin-left: 0; /* Align labels with inputs */
+  color: #555;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; /* Crucial: includes padding and border in width/height */
+  min-height: 44px; /* Consistent min-height for all inputs/selects/textareas */
+}
+
+.form-group textarea {
+  resize: vertical; /* Allow vertical resizing only */
+  min-height: 100px; /* Give textarea a reasonable default height */
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.form-group:focus-within {
+  border-color: #3498db; /* Highlight border on focus */
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1); /* Subtle glow on focus */
+}
+
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding: 0 10px; /* Align buttons with form fields */
+}
+
+.action-button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Softened shadow */
+}
+
+.action-button:hover {
+  transform: translateY(-3px); /* Slightly more pronounced lift */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* More pronounced shadow on hover */
+}
+
+.primary-button {
+  background-color: #28a745; /* Green for Add/Update Entry */
+  color: white;
+}
+.primary-button:hover {
+  background-color: #218838;
+}
+
+.secondary-button {
+  background-color: #6c757d; /* Gray for Clear Form */
+  color: white;
+}
+.secondary-button:hover {
+  background-color: #5a6268;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.gratis-issue-table { /* Specific table class for this page */
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.gratis-issue-table th, .gratis-issue-table td {
+  padding: 15px;
+  border: 1px solid #eee;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.gratis-issue-table th {
+  background-color: #f5f5f5;
+  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.gratis-issue-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.gratis-issue-table tbody tr:hover {
+  background-color: #f0f8ff;
+}
+
+.no-data {
+  text-align: center;
+  font-style: italic;
+  color: #999;
+  padding: 20px;
+}
+
+.exit-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.exit-button {
+  background-color: #f44336; /* Red for Exit */
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.exit-button:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Styles for Edit/Delete Buttons (matching screenshot) */
+.actions-cell {
+  display: flex;
+  gap: 8px; /* Space between buttons */
+  justify-content: center; /* Center buttons in the cell */
+  align-items: center;
+}
+
+.action-btn {
+  padding: 4px 10px; /* FIX: Smaller padding for a more compact look */
+  border: 1px solid #d1d5db; /* FIX: Added a subtle border */
+  border-radius: 5px; /* FIX: Slightly more rounded corners */
+  cursor: pointer;
+  font-size: 0.8rem; /* FIX: Slightly smaller font size */
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* FIX: More subtle shadow */
+}
+
+.edit-btn {
+  background-color: #e5e7eb; /* Light gray */
+  color: #374151; /* Dark gray text */
+}
+
+.edit-btn:hover {
+  background-color: #d1d5db; /* Darker gray on hover */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15); /* Slightly more pronounced shadow on hover */
+}
+
+.delete-btn {
+  background-color: #fee2e2; /* Light red */
+  color: #b91c1c; /* Dark red text */
+  border-color: #fca5a5; /* FIX: Added a subtle red border */
+}
+
+.delete-btn:hover {
+  background-color: #fecaca; /* Darker red on hover */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15); /* Slightly more pronounced shadow on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .gratis-issue-container {
+    padding: 15px;
+    margin: 15px auto;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+
+  .form-section h2, .records-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .form-fields-grid {
+    grid-template-columns: 1fr; /* Stack columns on small screens */
+    gap: 15px;
+  }
+
+  .form-actions {
+    flex-direction: column; /* Stack buttons on small screens */
+    gap: 10px;
+  }
+
+  .action-button {
+    width: 100%; /* Full width buttons */
+    padding: 10px 15px;
+  }
+
+  .actions-cell {
+    flex-direction: column; /* Stack buttons vertically on small screens */
+    gap: 5px;
+  }
+  .action-btn {
+    width: 100%; /* Full width when stacked */
+  }
+}

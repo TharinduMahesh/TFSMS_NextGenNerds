@@ -1,0 +1,67 @@
+
+
+<div class="user-profile-container">
+  <h2>My Profile</h2>
+
+  <!-- Alert Message -->
+  <div *ngIf="showAlert" class="alert" [ngClass]="{'alert-success': alertType === 'success', 'alert-error': alertType === 'error'}">
+    <div class="alert-content">
+      <span>{{ alertMessage }}</span>
+    </div>
+    <button class="alert-close" (click)="closeAlert()">×</button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading profile...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="profile-form-section">
+    <form [formGroup]="userProfileForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" type="email" formControlName="Email" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input id="firstName" type="text" formControlName="FirstName" placeholder="Your First Name">
+        <div *ngIf="userProfileForm.get('FirstName')?.invalid && (userProfileForm.get('FirstName')?.dirty || userProfileForm.get('FirstName')?.touched)" class="error-message">
+          <span *ngIf="userProfileForm.get('FirstName')?.errors?.['required']">First Name is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input id="lastName" type="text" formControlName="LastName" placeholder="Your Last Name">
+        <div *ngIf="userProfileForm.get('LastName')?.invalid && (userProfileForm.get('LastName')?.dirty || userProfileForm.get('LastName')?.touched)" class="error-message">
+          <span *ngIf="userProfileForm.get('LastName')?.errors?.['required']">Last Name is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mobileNo">Mobile No.:</label>
+        <input id="mobileNo" type="text" formControlName="MobileNo" placeholder="+94...">
+        <div *ngIf="userProfileForm.get('MobileNo')?.invalid && (userProfileForm.get('MobileNo')?.dirty || userProfileForm.get('MobileNo')?.touched)" class="error-message">
+          <span *ngIf="userProfileForm.get('MobileNo')?.errors?.['required']">Mobile Number is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <input id="role" type="text" formControlName="Role" readonly>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="userProfileForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Update Profile</span>
+          <span *ngIf="isLoading">Updating...</span>
+        </button>
+
+        <button type="button" class="btn-secondary" (click)="navigateToChangePassword()">
+          Change Password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

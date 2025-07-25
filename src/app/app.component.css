@@ -1,0 +1,183 @@
+/* Updated app.component.css */
+
+/* FIX: Set html and body background to a very light, neutral color */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #F8F8F8; /* Very light gray for the overall page background */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Consistent font */
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    /* FIX: Remove background from app-container, let children define */
+  }
+
+  /* app-sidebar will get its dark background and width from sidebar.component.css */
+  app-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1001; /* Higher than navbar */
+  }
+
+  /* FIX: Redesign top navigation bar to match sidebar's dark theme and align */
+  .top-nav {
+    background-color: #22253B; /* FIX: Dark background to match sidebar */
+    overflow: hidden;
+    position: fixed;
+    /* FIX: Adjust width and left to account for sidebar's actual width (240px) */
+    width: calc(100% - 240px); /* Subtract sidebar's actual width */
+    left: 240px; /* Move it after the sidebar's actual width */
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px; /* Add horizontal padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+    height: 60px;
+    box-sizing: border-box; /* Include padding in height */
+  }
+
+  .nav-content {
+    display: flex;
+    align-items: center;
+    /* FIX: Remove background from nav-content, it's now handled by top-nav */
+    /* background-color: #ffffff; */ /* REMOVED */
+    width: 100%;
+    justify-content: space-between;
+    padding: 0; /* Padding handled by top-nav */
+  }
+
+  /* Center navigation links and improve typography */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0;
+  }
+
+  nav a {
+    color: #E0E0E0; /* FIX: Light text color for dark background */
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    margin: 0 30px;
+    position: relative;
+    padding: 8px 0;
+    transition: color 0.3s;
+    letter-spacing: 0.5px;
+  }
+
+  nav a:hover {
+    color: #007BFF; /* FIX: Accent blue on hover */
+    font-size: larger; /* Keep larger on hover */
+  }
+
+  nav a.active {
+    color: #007BFF; /* FIX: Accent blue for active */
+  }
+
+  nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #007BFF; /* FIX: Accent blue for active indicator */
+  }
+
+  /* Adjust search bar positioning */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .search-bar input {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    width: 200px;
+    background-color: #3B3E5B; /* FIX: Darker background for search input */
+    font-size: 14px;
+    color: #E0E0E0; /* FIX: Light text color for input */
+  }
+  .search-bar input::placeholder { /* FIX: Placeholder color */
+    color: #A0A0A0;
+  }
+
+
+  .search-bar input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* FIX: Blue focus glow */
+  }
+
+  .search-bar button {
+    background: transparent;
+    border: none;
+    color: #A0A0A0; /* FIX: Darker gray for icons */
+    cursor: pointer;
+    margin-left: 10px;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+  }
+
+  .search-bar button:last-child {
+    color: #E0E0E0; /* FIX: Light color for bell icon */
+  }
+
+  /* Adjust main content area to not overlap with navbar and sidebar */
+  .content {
+    margin-left: 240px; /* Push content past fixed sidebar */
+    margin-top: 60px; /* Equal to navbar height */
+    padding: 20px;
+    background-color: #f5f5f5; /* Main content background remains light */
+    width: calc(100% - 240px);
+    overflow-y: auto;
+    min-height: calc(100vh - 60px);
+  }
+
+  /* main-content-wrapper handles spacing from fixed sidebar */
+  .main-content-wrapper {
+    margin-left: 240px; /* Push content past fixed sidebar */
+    width: calc(100% - 240px); /* Fill remaining width */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  /* Responsive adjustments for top-nav and main-content-wrapper */
+  @media (max-width: 768px) {
+    .top-nav {
+      width: 100%;
+      left: 0;
+      padding: 0 15px; /* Adjust padding for mobile */
+    }
+    .main-content-wrapper {
+      margin-left: 0; /* No margin when sidebar is collapsed/hidden */
+      width: 100%;
+    }
+    nav { /* Hide desktop nav links on mobile */
+      display: none;
+    }
+    .search-bar { /* Center search bar on mobile */
+      margin: 0 auto;
+    }
+  }
+
+  .search-bar button:hover{
+    color: #007BFF; /* FIX: Accent blue on hover */
+  }

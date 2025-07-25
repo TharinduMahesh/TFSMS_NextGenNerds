@@ -1,0 +1,287 @@
+/* 
+ * Payment Calculator Styles - Green Theme
+ * This stylesheet defines the appearance of the payment calculator component
+ * with a consistent green color scheme and responsive layout.
+ */
+
+/* ===== MAIN LAYOUT ===== */
+/* Container for the entire calculator with flex layout */
+.calculator-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px; /* Space between form and results */
+  margin-bottom: 32px;
+}
+
+/* ===== CALCULATOR FORM SECTION ===== */
+/* Left side - Input form container */
+.calculator-form {
+  flex: 1 1 350px; /* Flexible width with minimum size */
+  background: #e8f5e9; /* Light green background */
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.08); /* Subtle green shadow */
+  min-width: 320px; /* Ensures minimum usable width */
+  max-width: 420px; /* Prevents excessive stretching */
+}
+
+/* Form section heading */
+.calculator-form h4 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #388e3c; /* Dark green for contrast */
+}
+
+/* Form field container */
+.form-group {
+  margin-bottom: 18px;
+}
+
+/* Form field labels */
+.form-group label {
+  font-weight: 500;
+  color: #388e3c; /* Dark green for readability */
+  margin-bottom: 6px;
+  display: block; /* Ensures label is on its own line */
+}
+
+/* Input fields and dropdown styling */
+input[type="number"], select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #a5d6a7; /* Light green border */
+  border-radius: 6px;
+  font-size: 15px;
+  background: #fff;
+  margin-top: 4px;
+  transition: border-color 0.2s; /* Smooth transition for focus state */
+}
+
+/* Focus state for input fields */
+input[type="number"]:focus, select:focus {
+  border-color: #4caf50; /* Darker green border on focus */
+  outline: none; /* Remove default browser outline */
+}
+
+/* ===== ADJUSTMENT OPTIONS SECTION ===== */
+/* Container for adjustment options with distinct styling */
+.adjustment-options {
+  margin-top: 28px;
+  padding: 18px 14px;
+  background: #c8e6c9; /* Lighter green background */
+  border-radius: 8px;
+  border-left: 4px solid #43a047; /* Accent green border for visual hierarchy */
+}
+
+/* Adjustment section heading */
+.adjustment-options h4 {
+  font-size: 16px;
+  color: #2e7d32; /* Darker green for contrast */
+  margin-bottom: 12px;
+}
+
+/* Group of related options */
+.option-group {
+  margin-bottom: 16px;
+}
+
+/* Container for checkbox and its label */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+/* Indented sub-options that appear when parent option is selected */
+.sub-option {
+  margin-left: 24px; /* Indentation for hierarchy */
+  margin-top: 6px;
+}
+
+/* Container for incentive options */
+.incentives-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Individual incentive option */
+.incentive-item {
+  flex: 1 1 150px; /* Flexible width with minimum size */
+}
+
+/* Helper text for additional information */
+.info-text {
+  color: #43a047;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* ===== FORM ACTIONS ===== */
+/* Container for form action buttons */
+.form-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+}
+
+/* Calculate button styling */
+.calculate-button {
+  background-color: #4caf50; /* Primary green */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s; /* Smooth hover effect */
+}
+
+/* Disabled state for calculate button */
+.calculate-button:disabled {
+  background-color: #a5d6a7; /* Lighter green for disabled state */
+  cursor: not-allowed;
+}
+
+/* Hover state for calculate button */
+.calculate-button:hover:not(:disabled) {
+  background-color: #388e3c; /* Darker green on hover */
+}
+
+/* ===== CALCULATION RESULT SECTION ===== */
+/* Right side - Results container */
+.calculation-result {
+  flex: 1 1 350px; /* Flexible width with minimum size */
+  background: #f1f8e9; /* Very light green background */
+  padding: 28px 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.08); /* Subtle green shadow */
+  min-width: 320px; /* Ensures minimum usable width */
+  max-width: 480px; /* Prevents excessive stretching */
+}
+
+/* Results section main heading */
+.calculation-result h3 {
+  margin-bottom: 18px;
+  color: #388e3c; /* Dark green for contrast */
+  font-size: 22px;
+}
+
+/* Individual result section container */
+.result-section {
+  margin-bottom: 18px;
+}
+
+/* Result section subheading */
+.result-section h4 {
+  color: #43a047;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+/* Row for individual result item */
+.result-item {
+  display: flex;
+  justify-content: space-between; /* Label on left, value on right */
+  padding: 7px 0;
+  border-bottom: 1px solid #b9f6ca; /* Light green separator */
+  font-size: 15px;
+}
+
+/* Highlighted result item for important values */
+.result-item.highlight {
+  font-weight: 600;
+  color: #388e3c; /* Dark green for emphasis */
+  background: #e8f5e9; /* Light green background */
+  border-bottom: 2px solid #a5d6a7; /* Thicker border for emphasis */
+}
+
+/* Final result section with distinct styling */
+.final-result {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 2px solid #a5d6a7; /* Thicker separator for final section */
+}
+
+/* Visual representation of calculation flow */
+.calculation-flow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: #388e3c;
+  margin-bottom: 10px;
+}
+
+/* Arrow symbol in calculation flow */
+.calculation-flow .arrow {
+  color: #43a047;
+  font-weight: bold;
+}
+
+/* Final net amount display */
+.net-amount {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2e7d32; /* Darker green for emphasis */
+  margin-top: 8px;
+}
+
+/* Button to use the calculated result */
+.use-result-btn {
+  background-color: #43a047; /* Green button */
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s; /* Smooth hover effect */
+  margin-top: 18px;
+  display: inline-block; /* Ensures proper sizing */
+}
+
+/* Hover state for use result button */
+.use-result-btn:hover {
+  background-color: #388e3c; /* Darker green on hover */
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+/* Tablet and smaller devices */
+@media (max-width: 900px) {
+  .calculator-content {
+    flex-direction: column; /* Stack form and results vertically */
+    gap: 20px; /* Reduce spacing */
+  }
+  .calculator-form, .calculation-result {
+    max-width: 100%; /* Full width on smaller screens */
+    min-width: 0; /* Allow shrinking below original min-width */
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 600px) {
+  .calculator-form, .calculation-result {
+    padding: 14px 8px; /* Reduce padding */
+    border-radius: 8px; /* Smaller border radius */
+  }
+  .adjustment-options {
+    padding: 10px 6px; /* Reduce padding */
+    border-radius: 6px; /* Smaller border radius */
+  }
+  
+  /* Ensure text doesn't overflow on small screens */
+  .result-item {
+    font-size: 14px;
+  }
+  
+  /* Adjust button size for touch targets */
+  .calculate-button, .use-result-btn {
+    padding: 12px 16px; /* Larger touch target */
+    width: 100%; /* Full width on mobile */
+  }
+}

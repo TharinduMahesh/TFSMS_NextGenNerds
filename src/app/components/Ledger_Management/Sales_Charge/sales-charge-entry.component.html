@@ -1,0 +1,75 @@
+<div class="claims-entry-container"> <!-- Reusing claims-entry-container class for general styling -->
+  <h1 class="page-title">Sales Charge Entry</h1>
+
+  <div class="form-section">
+    <h2>Sales Charge Form</h2>
+    <form (ngSubmit)="addOrUpdateCharge()">
+      <div class="form-fields-grid">
+        <div class="form-group">
+          <label for="saleReference">Sale Reference:</label>
+          <input type="text" id="saleReference" [(ngModel)]="saleReference" name="saleReference" placeholder="e.g., INV-2024-001" required>
+        </div>
+        <div class="form-group">
+          <label for="chargeType">Charge Type:</label>
+          <input type="text" id="chargeType" [(ngModel)]="chargeType" name="chargeType" placeholder="e.g., Commission, Packaging Fee" required>
+        </div>
+        <div class="form-group">
+          <label for="amount">Amount (Rs.):</label>
+          <input type="number" id="amount" [(ngModel)]="amount" name="amount" placeholder="e.g., 1500.00" step="0.01" required min="0">
+        </div>
+        <!-- NEW: Charge Date field -->
+        <div class="form-group">
+          <label for="chargeDate">Charge Date:</label>
+          <input type="date" id="chargeDate" [(ngModel)]="chargeDate" name="chargeDate" required>
+        </div>
+      </div>
+      <!-- NEW: Description textarea (full-width) -->
+      <div class="form-group full-width">
+        <label for="description">Description (Optional):</label>
+        <textarea id="description" [(ngModel)]="description" name="description" rows="3" placeholder="Add any relevant details or notes about the charge."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="action-button secondary-button" type="button" (click)="clearForm()">Clear Form</button>
+        <button class="action-button primary-button" type="submit">
+          {{ editingChargeId ? 'Update Charge' : 'Add Charge' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="records-section">
+    <h2>Sales Charge Records</h2>
+    <div class="table-responsive">
+      <table class="claims-table"> <!-- Reusing claims-table for general styling -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Sale Reference</th>
+            <th>Charge Type</th>
+            <th>Amount (Rs.)</th>
+            <th>Charge Date</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let charge of chargeRecords">
+            <td>{{ charge.id }}</td>
+            <td>{{ charge.saleReference }}</td>
+            <td>{{ charge.chargeType }}</td>
+            <td>{{ charge.amount | number:'1.2-2' }}</td>
+            <td>{{ formatDate(charge.chargeDate) }}</td>
+            <td>{{ charge.description || 'N/A' }}</td>
+            <td class="actions-cell">
+              <button class="action-btn edit-btn" (click)="editCharge(charge)">Edit</button>
+              <button class="action-btn delete-btn" (click)="confirmDelete(charge.id)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="chargeRecords.length === 0">
+            <td colspan="7" class="no-data">No sales charge records found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

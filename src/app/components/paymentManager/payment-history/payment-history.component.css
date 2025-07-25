@@ -1,0 +1,138 @@
+/* --- General Layout & Typography --- */
+.container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.section-container {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.section-divider {
+  border: 0;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 40px 0;
+}
+
+h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.section-description {
+  font-size: 1rem;
+  color: #718096;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+/* --- Messages & Alerts --- */
+.loading-message,
+.no-data-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #718096;
+  background-color: #f7fafc;
+  border-radius: 8px;
+}
+
+.error-message,
+.success-message {
+  padding: 16px;
+  margin-bottom: 24px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.error-message {
+  background-color: #fed7d7;
+  color: #c53030;
+  border: 1px solid #f56565;
+}
+
+.success-message {
+  background-color: #c6f6d5;
+  color: #2f855a;
+  border: 1px solid #68d391;
+}
+
+/* --- Tables --- */
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.payment-table thead th {
+  background-color: #f7fafc;
+  color: #4a5568;
+  font-weight: 600;
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.payment-table tbody td {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #2d3748;
+  vertical-align: middle;
+}
+
+.payment-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.payment-table tbody tr:hover {
+  background-color: #f7fafc;
+}
+
+/* --- Buttons & Actions --- */
+.confirm-btn {
+  background-color: #48bb78;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.confirm-btn:hover {
+  background-color: #38a169;
+}
+
+.confirm-btn:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* --- Action Tags for History Log --- */
+.action-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.action-tag.created { background-color: #4299e1; } /* Blue */
+.action-tag.completed { background-color: #ecc94b; } /* Yellow */
+.action-tag.finalized { background-color: #9f7aea; } /* Purple */
+.action-tag.paid { background-color: #48bb78; } /* Green */
+.action-tag.updated { background-color: #a0aec0; } /* Gray */
+.action-tag.deleted { background-color: #f56565; } /* Red */

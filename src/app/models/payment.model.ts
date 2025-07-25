@@ -16,6 +16,7 @@ export interface Payment {
   BankAccount?: string
     Supplier?: Supplier
    Status: string
+   isConfirming?: boolean;
 
   
 }

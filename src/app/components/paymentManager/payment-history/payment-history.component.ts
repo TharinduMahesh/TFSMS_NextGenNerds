@@ -1,56 +1,75 @@
-// src/app/pages/payment-history/payment-history.component.ts
 
-import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { HeaderComponent } from "../../header/header.component";
-import { PaymentService } from "../../../shared/services/payment.service";
-import { PaymentHistory } from "../../../models/payment-history.model"; // This import is correct and needed
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PaymentService } from '../../../shared/services/payment.service';
+import { Payment } from '../../../models/payment.model';
+import { PaymentHistory } from '../../../models/payment-history.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: "app-payment-history",
+  selector: 'app-payment-history',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
-  templateUrl: "./payment-history.component.html",
-  styleUrls: ["./payment-history.component.css"],
+  imports: [CommonModule],
+  templateUrl: './payment-history.component.html',
+  styleUrls: ['./payment-history.component.css']
 })
 export class PaymentHistoryComponent implements OnInit {
-  
-  // [THE FIX] The variable should be typed as an array of PaymentHistory objects.
-  paymentHistory: PaymentHistory[] = []; // Changed from Payment[] to PaymentHistory[]
-  
+  completedPayments: Payment[] = [];
+  paymentHistory: PaymentHistory[] = [];
   isLoading = false;
   error: string | null = null;
+  successMessage: string | null = null;
 
   constructor(private paymentService: PaymentService) {}
 
   ngOnInit(): void {
-    this.loadPaymentHistory();
+    this.loadAllData();
   }
 
-  /**
-   * Loads the audit trail of all payment actions (Create, Update, Delete, Finalize).
-   */
-  loadPaymentHistory(): void {
+  loadAllData(): void {
     this.isLoading = true;
     this.error = null;
 
-    // This service method correctly fetches the history log.
-    this.paymentService.getPaymentHistory().subscribe({
-      next: (data) => {
-        // The data is now correctly assigned to the PaymentHistory[] array.
-        this.paymentHistory = data;
+    forkJoin({
+      completed: this.paymentService.getCompletedPayments(),
+      history: this.paymentService.getPaymentHistory()
+    }).subscribe({
+      next: (results) => {
+        this.completedPayments = results.completed;
+        this.paymentHistory = results.history;
         this.isLoading = false;
       },
       error: (err) => {
-        console.error("Error loading payment history:", err);
-        this.error = "Failed to load payment history. Please try again later.";
+        this.error = 'Failed to load page data. Please try again later.';
         this.isLoading = false;
-      },
+        console.error(err);
+      }
     });
   }
 
-  // NOTE: The 'loadCompletedPayments' method from your original file represented a
-  // different way of showing history (by listing completed payments). The method above,
-  // 'loadPaymentHistory', shows the actual audit trail of events, which is more
-  // aligned with the component's name. This version is cleaner and focuses on that one job.
+  confirmPayment(paymentId: number): void {
+    if (!confirm('Are you sure you want to mark this payment as paid? This cannot be undone.')) {
+      return;
+    }
+
+    const payment = this.completedPayments.find(p => p.PaymentId === paymentId);
+    if (payment) {
+      payment.isConfirming = true;
+    }
+
+    this.paymentService.confirmPaymentAsPaid(paymentId).subscribe({
+      next: () => {
+        this.successMessage = `Payment ID ${paymentId} has been successfully marked as paid.`;
+        this.loadAllData();
+        setTimeout(() => (this.successMessage = null), 5000);
+      },
+      error: (err) => {
+        this.error = `Failed to confirm payment ID ${paymentId}.`;
+        if (payment) {
+          payment.isConfirming = false;
+        }
+        console.error(err);
+      },
+    });
+  }
 }

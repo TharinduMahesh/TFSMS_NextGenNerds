@@ -62,6 +62,15 @@
             <option value="Bank Transfer">Bank Transfer</option>
           </select>
         </div>
+
+         <div class="filter-group">
+        <label for="statusFilter">Status:</label>
+        <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </div>
         <div class="filter-group">
           <label>Date Range:</label>
           <select [(ngModel)]="selectedDateRange" (change)="onFilterChange()">
@@ -84,9 +93,7 @@
         <div class="filter-group">
           <div class="export-buttons">
             <button class="export-btn" (click)="exportPaymentsData('CSV')">Export CSV</button>
-            <button class="export-btn" (click)="exportPaymentsData('xlsx')">Export Excel</button>
-          </div>
-        </div>
+            <button class="export-btn" (click)="exportPaymentsData('XLSX')">Export Excel</button>        </div>
       </div>
     </div>
 
@@ -252,7 +259,7 @@
               <td>{{ payment.PaymentMethod }}</td>
               <td>{{ payment.PaymentDate | date:'short' }}</td>
                <td>
-          <td>
+      
       <span class="status" [ngClass]="payment.Status === 'Completed' ? 'status-completed' : 'status-pending'">
         {{ payment.Status }}
       </span>
@@ -262,7 +269,7 @@
                   <button
                     class="edit-btn"
                     (click)="editPayment(payment)"
-                    [disabled]="loading"
+                    [disabled]="loading  || payment.Status === 'Completed'"
                     title="Edit Payment"
                   >
                     ✏️ Edit
@@ -270,7 +277,7 @@
                   <button
                     class="delete-btn"
                     (click)="deletePayment(payment.PaymentId)"
-                    [disabled]="loading"
+                    [disabled]="loading || payment.Status === 'Completed' "
                     title="Delete Payment"
                   >
                     🗑️ Delete

@@ -383,14 +383,21 @@ export class PaymentService {
 
   //  Method to get all payment history records
   getPaymentHistory(): Observable<PaymentHistory[]> {
-    return this.http.get<PaymentHistory[]>(`${this.apiUrl}/history`).pipe(
-      catchError((error) => {
-        console.error("Error fetching payment history:", error)
-        return of([]) // Return an empty array on error
-      }),
-    )
-  }
-
+  // ✨ FIX: Add the .pipe(map(...)) part to extract the data from $values
+  return this.http.get<any>(`${this.apiUrl}/history`).pipe(
+    map(response => {
+      // If the response has a $values property, return that. Otherwise, return the response itself.
+      if (response && Array.isArray(response.$values)) {
+        return response.$values;
+      }
+      return response; // Fallback for other formats
+    }),
+    catchError((error) => {
+      console.error("Error fetching payment history:", error);
+      return of([]); // Return an empty array on error
+    })
+  );
+}
   // Method to get history for a specific payment (if needed, currently commented out in your provided code)
   getPaymentHistoryById(paymentId: number): Observable<PaymentHistory[]> {
     return this.http.get<any>(`${this.apiUrl}/${paymentId}/history`).pipe(
@@ -410,5 +417,24 @@ export class PaymentService {
       }),
     )
   }
+
+ getCompletedPayments(): Observable<Payment[]> {
+    return this.http.get<any>(`${this.apiUrl}/completed`).pipe(
+      map(response => {
+        if (response && Array.isArray(response.$values)) {
+          return response.$values;
+        }
+        return response; // Fallback
+      }),
+      catchError((error) => {
+          console.error('Error fetching completed payments:', error);
+          return of([]);
+      })
+    );
+}
+
+confirmPaymentAsPaid(paymentId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${paymentId}/confirm-paid`, {});
+}
 }
 

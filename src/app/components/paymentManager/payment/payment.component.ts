@@ -38,6 +38,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   selectedSupplier = ""
   selectedPaymentMethod = ""
   selectedDateRange = "all"
+  selectedStatus = "";
   customStartDate = ""
   customEndDate = ""
   searchTerm = ""
@@ -269,53 +270,55 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   // Search and filter functionality
   applyFilters(): void {
     if (!Array.isArray(this.payments)) {
-      this.filteredPayments = []
-      return
+        this.filteredPayments = [];
+        return;
     }
 
     this.filteredPayments = this.payments.filter((payment) => {
-      // Search term filter
-      const searchMatch =
-        !this.searchTerm ||
-        payment.PaymentId.toString().includes(this.searchTerm) ||
-        payment.SupplierId.toString().includes(this.searchTerm) ||
-        payment.PaymentMethod.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        payment.NetAmount.toString().includes(this.searchTerm) ||
-        payment.Supplier?.Name?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        payment.Supplier?.BankAccount?.includes(this.searchTerm)
+        // ✨ FIX: Replace the old hardcoded logic with this flexible status filter
+        const statusMatch = !this.selectedStatus || payment.Status === this.selectedStatus;
 
-      // Supplier filter
-      const supplierMatch = !this.selectedSupplier || payment.SupplierId.toString() === this.selectedSupplier
+        // Search term filter (this logic is correct)
+        const searchMatch =
+            !this.searchTerm ||
+            payment.PaymentId.toString().includes(this.searchTerm) ||
+            payment.SupplierId.toString().includes(this.searchTerm) ||
+            payment.PaymentMethod.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+            payment.NetAmount.toString().includes(this.searchTerm) ||
+            payment.Supplier?.Name?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+            payment.Supplier?.BankAccount?.includes(this.searchTerm);
 
-      // Payment method filter
-      const methodMatch = !this.selectedPaymentMethod || payment.PaymentMethod === this.selectedPaymentMethod
+        // Other filters (these are also correct)
+        const supplierMatch = !this.selectedSupplier || payment.SupplierId.toString() === this.selectedSupplier;
+        const methodMatch = !this.selectedPaymentMethod || payment.PaymentMethod === this.selectedPaymentMethod;
+        let dateMatch = true;
+        // ... (your existing date logic is correct and does not need to be changed) ...
+        if (this.selectedDateRange === "custom" && this.customStartDate && this.customEndDate) {
+            const paymentDate = new Date(payment.PaymentDate);
+            const startDate = new Date(this.customStartDate);
+            const endDate = new Date(this.customEndDate);
+            dateMatch = paymentDate >= startDate && paymentDate <= endDate;
+        } else if (this.selectedDateRange === "today") {
+            const today = new Date();
+            const paymentDate = new Date(payment.PaymentDate);
+            dateMatch = paymentDate.toDateString() === today.toDateString();
+        } else if (this.selectedDateRange === "week") {
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const paymentDate = new Date(payment.PaymentDate);
+            dateMatch = paymentDate >= weekAgo;
+        } else if (this.selectedDateRange === "month") {
+            const monthAgo = new Date();
+            monthAgo.setMonth(monthAgo.getMonth() - 1);
+            const paymentDate = new Date(payment.PaymentDate);
+            dateMatch = paymentDate >= monthAgo;
+        }
 
-      // Date range filter
-      let dateMatch = true
-      if (this.selectedDateRange === "custom" && this.customStartDate && this.customEndDate) {
-        const paymentDate = new Date(payment.PaymentDate)
-        const startDate = new Date(this.customStartDate)
-        const endDate = new Date(this.customEndDate)
-        dateMatch = paymentDate >= startDate && paymentDate <= endDate
-      } else if (this.selectedDateRange === "today") {
-        const today = new Date()
-        const paymentDate = new Date(payment.PaymentDate)
-        dateMatch = paymentDate.toDateString() === today.toDateString()
-      } else if (this.selectedDateRange === "week") {
-        const weekAgo = new Date()
-        weekAgo.setDate(weekAgo.getDate() - 7)
-        const paymentDate = new Date(payment.PaymentDate)
-        dateMatch = paymentDate >= weekAgo
-      } else if (this.selectedDateRange === "month") {
-        const monthAgo = new Date()
-        monthAgo.setMonth(monthAgo.getMonth() - 1)
-        const paymentDate = new Date(payment.PaymentDate)
-        dateMatch = paymentDate >= monthAgo
-      }
 
-      return searchMatch && supplierMatch && methodMatch && dateMatch
-    })
-  }
+        // Return true only if ALL conditions are met
+        return statusMatch && searchMatch && supplierMatch && methodMatch && dateMatch;
+    });
+}
 
   onSearchChange(): void {
     this.applyFilters()
@@ -400,39 +403,36 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   }
 
  exportPaymentsData(format: string): void {
-    // Filter for pending payments only for export
-    const pendingPayments = this.filteredPayments.filter(p => p.Status === 'Pending' || !p.Status);
-    
-    if (pendingPayments.length === 0) {
+    if (this.filteredPayments.length === 0) {
       alert("There are no pending payments in the current view to finalize.");
       return;
     }
 
-    if (!confirm(`This will finalize ${pendingPayments.length} pending payment(s) and generate a payment sheet. This action cannot be undone. Are you sure?`)) {
+    // ✨ FIX: Corrected the template literal for the confirmation message.
+    if (!confirm(`This will finalize ${this.filteredPayments.length} pending payment(s) in the current view and generate a payment sheet. This action cannot be undone. Are you sure?`)) {
       return;
     }
 
-    this.loading = true;
+    this.loading = true; // Start loading for the entire operation.
     this.error = null;
 
     this.ExportService.exportPayments(format, this.customStartDate, this.customEndDate).subscribe({
       next: (blob) => {
-        console.log("Payment sheet generated successfully");
-        
+        console.log("Payment sheet generated successfully by the backend.");
+
+        // Download the file immediately.
         const filename = `payments-export-${new Date().toISOString().split('T')[0]}.${format.toLowerCase()}`;
         this.ExportService.downloadFile(blob, filename);
-        
-        // IMPORTANT: Reload payments to see the status changes
-        setTimeout(() => {
-          this.loadPayments();
-          this.loadSummaryMetrics();
-        }, 1000); // Small delay to ensure backend has processed
-        
-        this.loading = false;
+
+        // ✨ FIX: Trigger the data reload. The loading spinner will remain active
+        // until loadPayments() completes, preventing the user from clicking again on stale data.
+        this.loadPayments();
+        this.loadSummaryMetrics();
       },
       error: (err) => {
+        // On error, we must manually turn off the loading spinner.
         this.loading = false;
-        this.error = "Failed to generate payment sheet. No payments were finalized.";
+        this.error = "Failed to generate the payment sheet. No payments were finalized.";
         console.error("Error exporting payments:", err);
       }
     });
@@ -483,15 +483,13 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   // }
 
 loadPayments(): void {
-    this.loading = true;
+    this.loading = true; // This function takes control of the loading state.
     this.error = null;
     this.paymentService.getPayments().subscribe({
       next: (data) => {
-        // Filter for pending payments only
-        const allPayments = this.normalizePaymentData(data);
-        this.payments = allPayments
-        this.applyFilters();
-        this.loading = false;
+        this.payments = this.normalizePaymentData(data);
+        this.applyFilters(); // This is where `this.filteredPayments` is updated.
+        this.loading = false; // Correctly sets loading to false upon completion.
       },
       error: (err) => {
         console.error("Error loading payments:", err);
@@ -500,7 +498,7 @@ loadPayments(): void {
       },
     });
 }
-  
+
 
   loadSuppliers(): void {
     this.supplierService.getActiveSuppliers().subscribe({

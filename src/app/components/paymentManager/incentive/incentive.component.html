@@ -1,4 +1,3 @@
-<app-header></app-header>
 <div class="incentive-page">
   <div *ngIf="error" class="alert alert-danger">
     {{ error }}
@@ -130,7 +129,7 @@
           <button 
             class="delete-btn" 
             (click)="deleteIncentive(incentive.IncentiveId)"
-            [disabled]="loading || incentive.IsUsed"
+            [disabled]="loading || incentive.IsUsed === true"
             title="{{ incentive.IsUsed ? 'This incentive has been used and cannot be deleted.' : 'Delete Incentive' }}">
             🗑️ Delete
           </button>

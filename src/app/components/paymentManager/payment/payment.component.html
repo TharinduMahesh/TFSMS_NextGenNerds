@@ -1,0 +1,300 @@
+<div class="payment-page">
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+  <div *ngIf="loading" class="loading-spinner">
+    Loading...
+  </div>
+  
+  <div class="summary-cards">
+    <div class="card light-blue">
+      <h2>{{ totalPayments }}</h2>
+      <p>Total Payments</p>
+    </div>
+    <div class="card light-yellow">
+      <h2>LKR {{ totalAmount | number }}</h2>
+      <p>Total Amount Paid</p>
+    </div>
+  </div>
+  
+  <div class="payment-methods">
+    <div class="method-card">
+      <h3>Cash</h3>
+      <p>LKR {{ paymentsByCash | number }}</p>
+    </div>
+    <div class="method-card">
+      <h3>Bank Transfer</h3>
+      <p>LKR {{ paymentsByBank | number }}</p>
+    </div>
+  </div>
+  
+  <div class="payment-container">
+    <h3>Supplier Payments</h3>
+    
+    <!-- Search and Filter Section -->
+    <div class="search-filter-section">
+      <div class="search-bar">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+          placeholder="Search by Payment ID, Supplier ID, Method, Amount, or Bank Account..."
+          class="search-input"
+        />
+        <button class="search-btn" (click)="onSearchChange()">🔍</button>
+      </div>
+      <div class="filters">
+        <div class="filter-group">
+          <label>Supplier:</label>
+          <select [(ngModel)]="selectedSupplier" (change)="onFilterChange()">
+            <option value="">All Suppliers</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+              {{ supplier.SupplierId }} - {{ supplier.Name }}
+            </option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Payment Method:</label>
+          <select [(ngModel)]="selectedPaymentMethod" (change)="onFilterChange()">
+            <option value="">All Methods</option>
+            <option value="Cash">Cash</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+          </select>
+        </div>
+
+         <div class="filter-group">
+        <label for="statusFilter">Status:</label>
+        <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </div>
+        <div class="filter-group">
+          <label>Date Range:</label>
+          <select [(ngModel)]="selectedDateRange" (change)="onFilterChange()">
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">Last Week</option>
+            <option value="month">Last Month</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+        <div *ngIf="selectedDateRange === 'custom'" class="filter-group custom-date-range">
+          <label>From:</label>
+          <input type="date" [(ngModel)]="customStartDate" (change)="onFilterChange()" />
+          <label>To:</label>
+          <input type="date" [(ngModel)]="customEndDate" (change)="onFilterChange()" />
+        </div>
+        <div class="filter-group">
+          <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+        </div>
+        <div class="filter-group">
+          <div class="export-buttons">
+            <button class="export-btn" (click)="exportPaymentsData('CSV')">Export CSV</button>
+            <button class="export-btn" (click)="exportPaymentsData('XLSX')">Export Excel</button>        </div>
+      </div>
+    </div>
+
+    <!-- Supplier Details Section -->
+    <div class="supplier-details-section mt-4 p-4 border rounded-lg bg-gray-50" *ngIf="paymentForm.get('SupplierId')?.value">
+      <h4 class="text-lg font-semibold mb-2">Selected Supplier Details</h4>
+      <div class="supplier-info-grid">
+        <div class="info-item">
+          <strong>Bank Account:</strong> 
+          <span>{{ currentSupplierBankAccount || 'Not available' }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Quality Bonus:</strong> 
+          <span>{{ currentIncentiveQualityBonus | currency:'LKR':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Loyalty Bonus:</strong> 
+          <span>{{ currentIncentiveLoyaltyBonus | currency:'LKR':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Total Incentive:</strong> 
+          <span>{{ currentIncentiveTotalAmount | currency:'LKR':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+      <p class="mt-2 text-sm text-gray-600">
+        The 'Incentive Addition' in the form below is automatically set to the current Incentive Balance.
+      </p>
+    </div>
+
+    <div class="manual-entry">
+      <h4>{{ isEditing ? 'Edit Payment' : 'Create New Payment' }}</h4>
+      <form [formGroup]="paymentForm" (ngSubmit)="createPayment()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Supplier:</label>
+            <select formControlName="SupplierId">
+              <option value="">Select Supplier</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
+                {{ supplier.SupplierId }} - {{ supplier.Name }}
+              </option>
+            </select>
+            <div *ngIf="paymentForm.get('SupplierId')?.touched && paymentForm.get('SupplierId')?.invalid" class="error-message">
+              Supplier is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Bank Account:</label>
+            <input type="text" formControlName="BankAccount" placeholder="Auto-loaded from supplier" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Normal Tea Leaf Weight (kg):</label>
+            <input type="number" formControlName="NormalTeaLeafWeight" placeholder="Auto-loaded from supplier" step="0.01" />
+            <div *ngIf="paymentForm.get('NormalTeaLeafWeight')?.touched && paymentForm.get('NormalTeaLeafWeight')?.invalid" class="error-message">
+              Valid weight is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Golden Tip Tea Leaf Weight (kg):</label>
+            <input type="number" formControlName="GoldenTipTeaLeafWeight" placeholder="Auto-loaded from supplier" step="0.01" />
+            <div *ngIf="paymentForm.get('GoldenTipTeaLeafWeight')?.touched && paymentForm.get('GoldenTipTeaLeafWeight')?.invalid" class="error-message">
+              Valid weight is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Rate per kg (LKR):</label>
+            <input type="number" formControlName="Rate" placeholder="Enter rate" step="0.01" />
+            <div *ngIf="paymentForm.get('Rate')?.touched && paymentForm.get('Rate')?.invalid" class="error-message">
+              Valid rate is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Gross Amount (LKR):</label>
+            <input type="number" formControlName="GrossAmount" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Incentive Addition (LKR):</label>
+            <input type="number" formControlName="IncentiveAddition" step="0.01" />
+          </div>
+
+          <div class="form-group">
+            <label>Net Amount (LKR):</label>
+            <input type="number" formControlName="NetAmount" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Payment Method:</label>
+            <select formControlName="PaymentMethod">
+              <option value="Cash">Cash</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+            <div *ngIf="paymentForm.get('PaymentMethod')?.touched && paymentForm.get('PaymentMethod')?.invalid" class="error-message">
+              Payment method is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Payment Date:</label>
+            <input type="date" formControlName="PaymentDate" />
+            <div *ngIf="paymentForm.get('PaymentDate')?.touched && paymentForm.get('PaymentDate')?.invalid" class="error-message">
+              Valid date is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="create-btn" [disabled]="loading">
+              {{ loading ? (isEditing ? 'Updating...' : 'Creating...') : (isEditing ? 'Update Payment' : 'Create Payment') }}
+            </button>
+            <button *ngIf="isEditing" type="button" class="cancel-btn" (click)="cancelEdit()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="results-summary">
+      <p>Showing {{ filteredPayments.length }} of {{ payments.length }} payments</p>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Payment ID</th>
+            <th>Supplier</th>
+            <th>Normal Weight</th>
+            <th>Golden Tip Weight</th>
+            <th>Rate</th>
+            <th>Gross Amount</th>
+            <th>Incentives</th>
+            <th>Net Amount</th>
+            <th>Method</th>
+            <th>Payment Date</th>
+             <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredPayments && filteredPayments.length > 0; else noPayments">
+            <tr *ngFor="let payment of filteredPayments">
+              <td>{{ payment.PaymentId }}</td>
+              <td>
+                <div class="supplier-info">
+                  <div class="supplier-name">{{ payment.Supplier?.Name || 'Unknown' }}</div>
+                  <div class="supplier-id">ID: {{ payment.SupplierId }}</div>
+                  <div class="bank-account" *ngIf="payment.Supplier?.BankAccount">
+                    A/C: {{ payment.Supplier?.BankAccount }}
+                  </div>
+                </div>
+              </td>
+              <td>{{ payment.NormalTeaLeafWeight }} kg</td>
+              <td>{{ payment.GoldenTipTeaLeafWeight }} kg</td>
+              <td>LKR {{ payment.Rate | number }}</td>
+              <td>LKR {{ payment.GrossAmount | number }}</td>
+              <td>LKR {{ (payment.IncentiveAddition || 0) | number }}</td>
+              <td>LKR {{ payment.NetAmount | number }}</td>
+              <td>{{ payment.PaymentMethod }}</td>
+              <td>{{ payment.PaymentDate | date:'short' }}</td>
+               <td>
+      
+      <span class="status" [ngClass]="payment.Status === 'Completed' ? 'status-completed' : 'status-pending'">
+        {{ payment.Status }}
+      </span>
+    </td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    class="edit-btn"
+                    (click)="editPayment(payment)"
+                    [disabled]="loading  || payment.Status === 'Completed'"
+                    title="Edit Payment"
+                  >
+                    ✏️ Edit
+                  </button>
+                  <button
+                    class="delete-btn"
+                    (click)="deletePayment(payment.PaymentId)"
+                    [disabled]="loading || payment.Status === 'Completed' "
+                    title="Delete Payment"
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-template #noPayments>
+            <tr>
+              <td colspan="11" class="no-data">
+                No payments found.
+                <span *ngIf="error" class="error-text">Error: {{ error }}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

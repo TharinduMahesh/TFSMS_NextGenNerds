@@ -1,0 +1,73 @@
+<div class="return-entry-container">
+  <h1 class="page-title">Return Entry</h1>
+
+  <div class="form-section">
+    <h2>Return Entry Form</h2>
+    <div class="form-fields-grid">
+      <div class="form-group">
+        <label for="returnDate">Return Date:</label>
+        <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" required>
+      </div>
+      <div class="form-group">
+        <label for="invoiceNumber">Original Invoice No.:</label>
+        <input type="text" id="invoiceNumber" [(ngModel)]="invoiceNumber" name="invoiceNumber" placeholder="Original Invoice Number" required>
+      </div>
+      <div class="form-group">
+        <label for="productCode">Product Code:</label>
+        <input type="text" id="productCode" [(ngModel)]="productCode" name="productCode" placeholder="Product Code" required>
+      </div>
+      <div class="form-group">
+        <label for="returnedQuantity">Returned Quantity (Kg):</label>
+        <input type="number" id="returnedQuantity" [(ngModel)]="returnedQuantity" name="returnedQuantity" placeholder="Quantity in Kg" required min="0">
+      </div>
+      <div class="form-group full-width"> <label for="reason">Reason for Return:</label>
+        <select id="reason" [(ngModel)]="reason" name="reason" required>
+          <option value="">Select Reason</option>
+          <option value="Damage">Damage</option>
+          <option value="Defect">Defect</option>
+          <option value="Wrong Item">Wrong Item</option>
+          <option value="Excess Delivery">Excess Delivery</option>
+          <option value="Customer Dissatisfaction">Customer Dissatisfaction</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      </div>
+    <div class="form-actions">
+      <button class="action-button secondary-button" (click)="clearForm()">Clear Form</button>
+      <button class="action-button primary-button" (click)="addReturn()">Add Return</button>
+    </div>
+  </div>
+
+  <div class="records-section">
+    <h2>Recent Return Entries</h2>
+    <div class="table-responsive">
+      <table class="return-entry-table">
+        <thead>
+          <tr>
+            <th>Return No.</th>
+            <th>Return Date</th>
+            <th>Invoice No.</th>
+            <th>Product Code</th>
+            <th>Quantity (Kg)</th>
+            <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of recentReturns">
+            <td>{{ record.id }}</td>
+            <td>{{ record.returnDate | date:'yyyy-MM-dd' }}</td>
+            <td>{{ record.invoiceNumber }}</td>
+            <td>{{ record.productCode }}</td>
+            <td>{{ record.returnedQuantity }}</td>
+            <td>{{ record.reason }}</td>
+            </tr>
+          <tr *ngIf="recentReturns.length === 0">
+            <td colspan="6" class="no-data">No recent return entries.</td> </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

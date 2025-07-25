@@ -1,0 +1,152 @@
+<!-- farmer-loan-report.component.html -->
+<div class="loan-container">
+    <h1 class="loan-title">Farmer Loan & Incentive Report</h1>
+  
+    <!-- Summary Section -->
+    <div class="summary">
+      <div class="summary-box total-loan">
+        <h2>{{ formatCurrency(totalLoanAmount) }}</h2>
+        <p>Total Loan Amount</p>
+      </div>
+      <div class="summary-box total-outstanding">
+        <h2>{{ formatCurrency(totalOutstandingBalance) }}</h2>
+        <p>Outstanding Balance</p>
+      </div>
+      <div class="summary-box total-repayments">
+        <h2>{{ formatCurrency(totalRepayments) }}</h2>
+        <p>Total Repayments</p>
+      </div>
+      <div class="summary-box total-incentives">
+        <h2>{{ formatCurrency(totalIncentives) }}</h2>
+        <p>Total Incentives</p>
+      </div>
+    </div>
+  
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <h2 class="filter-section-title">Filter Reports</h2>
+      <div class="filters-container">
+        <div class="filter-item">
+          <label class="filter-label">Farmer ID:</label>
+          <select [(ngModel)]="selectedFarmerId" (change)="filterLoans()">
+            <option value="All Farmers">All Farmers</option>
+            <option *ngFor="let id of farmerIds" [value]="id">{{ id }}</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label class="filter-label">Loan Status:</label>
+          <select [(ngModel)]="selectedLoanStatus" (change)="filterLoans()">
+            <option value="All Statuses">All Statuses</option>
+            <option *ngFor="let status of loanStatuses" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label class="filter-label">Start Date:</label>
+          <input type="date" [(ngModel)]="selectedStartDate" (change)="filterLoans()">
+        </div>
+        <div class="filter-item">
+          <label class="filter-label">End Date:</label>
+          <input type="date" [(ngModel)]="selectedEndDate" (change)="filterLoans()">
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loan Details Section -->
+    <div class="loan-details-section">
+      <h2 class="loan-details-title">Loan Details</h2>
+      <table class="loan-table">
+        <thead>
+          <tr>
+            <th>Farmer ID</th>
+            <th>Farmer Name</th>
+            <th>Loan Amount</th>
+            <th>Loan Date</th>
+            <th>Loan Term (Months)</th>
+            <th>Repayments</th>
+            <th>Outstanding Balance</th>
+            <th>Incentives</th>
+            <th>Loan Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let loan of filteredLoans">
+            <td>{{ loan.farmerId }}</td>
+            <td>{{ loan.farmerName }}</td>
+            <td>{{ formatCurrency(loan.loanAmount) }}</td>
+            <td>{{ formatDate(loan.loanDate) }}</td>
+            <td>{{ loan.loanTerm }}</td>
+            <td>{{ formatCurrency(loan.repayments) }}</td>
+            <td>{{ formatCurrency(loan.outstandingBalance) }}</td>
+            <td>{{ formatCurrency(loan.incentives) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getLoanStatusClass(loan.loanStatus)">
+                {{ loan.loanStatus }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button class="action-btn edit-btn" (click)="editLoan(loan)">Edit</button>
+              <button class="action-btn delete-btn" (click)="confirmDelete(loan.id)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredLoans.length === 0">
+            <td colspan="10" class="no-data">No data available for the selected filters</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Edit Modal -->
+    <div class="modal" *ngIf="showEditModal">
+      <div class="modal-content">
+        <h2>Edit Loan</h2>
+        <form *ngIf="editingLoan" (ngSubmit)="saveEdit()">
+          <div class="form-group">
+            <label>Farmer ID</label>
+            <input type="number" [(ngModel)]="editingLoan.farmerId" name="farmerId">
+          </div>
+          <div class="form-group">
+            <label>Farmer Name</label>
+            <input type="text" [(ngModel)]="editingLoan.farmerName" name="farmerName">
+          </div>
+          <div class="form-group">
+            <label>Loan Amount</label>
+            <input type="number" [(ngModel)]="editingLoan.loanAmount" name="loanAmount">
+          </div>
+          <div class="form-group">
+            <label>Loan Date</label>
+            <input type="date" [(ngModel)]="editingLoan.loanDate" name="loanDate">
+          </div>
+          <div class="form-group">
+            <label>Loan Term (Months)</label>
+            <input type="number" [(ngModel)]="editingLoan.loanTerm" name="loanTerm">
+          </div>
+          <div class="form-group">
+            <label>Repayments</label>
+            <input type="number" [(ngModel)]="editingLoan.repayments" name="repayments">
+          </div>
+          <div class="form-group">
+            <label>Outstanding Balance</label>
+            <input type="number" [(ngModel)]="editingLoan.outstandingBalance" name="outstandingBalance">
+          </div>
+          <div class="form-group">
+            <label>Incentives</label>
+            <input type="number" [(ngModel)]="editingLoan.incentives" name="incentives">
+          </div>
+          <div class="form-group">
+            <label>Loan Status</label>
+            <select [(ngModel)]="editingLoan.loanStatus" name="loanStatus">
+              <option value="Active">Active</option>
+              <option value="Paid Off">Paid Off</option>
+              <option value="Defaulted">Defaulted</option>
+            </select>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+            <button type="submit" class="save-btn">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,171 @@
+<div class="claim-analysis-container">
+  <h1 class="page-title">Claims Analysis</h1>
+
+  <!-- Filter and Summary KPI Section -->
+  <div class="analysis-header-section">
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="applyFilters()" name="startDate">
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="applyFilters()" name="endDate">
+      </div>
+      <div class="form-group">
+        <label for="claimTypeFilter">Claim Type:</label>
+        <select id="claimTypeFilter" [(ngModel)]="claimTypeFilter" (change)="applyFilters()" name="claimTypeFilter">
+          <option value="">All Types</option>
+          <option value="Quality">Quality</option>
+          <option value="Quantity">Quantity</option>
+          <option value="Delivery">Delivery</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <!-- NEW: Resolution Type Filter -->
+      <div class="form-group">
+        <label for="resolutionTypeFilter">Resolution Type:</label>
+        <select id="resolutionTypeFilter" [(ngModel)]="resolutionTypeFilter" (change)="applyFilters()" name="resolutionTypeFilter">
+          <option value="">All Resolutions</option>
+          <option value="Pending">Pending</option>
+          <option value="Approved - Full Credit">Approved - Full Credit</option>
+          <option value="Approved - Partial Refund">Approved - Partial Refund</option>
+          <option value="Approved - Replacement">Approved - Replacement</option>
+          <option value="Approved - Discount">Approved - Discount</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Closed - No Action">Closed - No Action</option>
+          <option value="Escalated">Escalated</option>
+        </select>
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+        <button class="export-csv-button" (click)="exportToCsv()">Export to CSV</button>
+      </div>
+    </div>
+
+    <div class="kpi-cards-grid">
+      <div class="kpi-card">
+        <h3>Total Claims</h3>
+        <p>{{ summary.totalClaims }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Total Quantity Claimed (Kg)</h3>
+        <p>{{ summary.totalQuantityClaimed }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Avg. Quantity per Claim (Kg)</h3>
+        <p>{{ summary.averageQuantityPerClaim | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Top Claim Type</h3>
+        <p>{{ summary.topClaimType || 'N/A' }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Total Adjustments</h3>
+        <p>{{ summary.totalAdjustments }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="report-section charts-section">
+    <h2>Claims Overview</h2>
+    <div class="charts-grid">
+      <!-- 1. Claim Volume Trend (Line Chart) -->
+      <div class="chart-card">
+        <h3>Claim Volume Trend (Monthly)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="lineChartData"
+            [options]="lineChartOptions"
+            [type]="lineChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 2. Claims by Type (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Claims by Type</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="claimTypeBarChartData"
+            [options]="claimTypeBarChartOptions"
+            [type]="claimTypeBarChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 3. Quantity Claimed by Type (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Quantity Claimed by Type</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="quantityBarChartData"
+            [options]="quantityBarChartOptions"
+            [type]="quantityBarChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 4. Adjustments by Type (Doughnut Chart) -->
+      <div class="chart-card">
+        <h3>Adjustments by Type</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="adjustmentDoughnutChartData"
+            [options]="adjustmentDoughnutChartOptions"
+            [type]="adjustmentDoughnutChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Records Section -->
+  <div class="records-section">
+    <h2>Claims Details</h2>
+    <div class="table-responsive">
+      <table class="claims-analysis-table">
+        <thead>
+          <tr>
+            <th>Claim No.</th>
+            <th>Claim Type</th>
+            <th>Invoice Number</th>
+            <th>Return Date</th>
+            <th>Quantity (Kg)</th>
+            <th>Remarks</th>
+            <th>Adjustment Type</th>
+            <th>Adjustment Details</th>
+            <th>Adjustment Date</th>
+            <th>Resolution Type</th> <!-- NEW: Column Header -->
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredClaims">
+            <td>{{ record.claimId }}</td>
+            <td>{{ record.claimType }}</td>
+            <td>{{ record.invoiceNumber }}</td>
+            <td>{{ record.returnDate ? (record.returnDate | date:'yyyy-MM-dd') : 'N/A' }}</td>
+            <td>{{ record.quantity }}</td>
+            <td>{{ record.remark }}</td>
+            <td>{{ record.adjustmentType || 'N/A' }}</td>
+            <td>{{ record.adjustmentDetails || 'N/A' }}</td>
+            <td>{{ record.adjustmentDate ? (record.adjustmentDate | date:'yyyy-MM-dd') : 'N/A' }}</td>
+            <td>{{ record.resolutionType || 'N/A' }}</td> <!-- NEW: Data Display -->
+            <td class="actions-cell">
+              <!-- Actions can be added here if needed for direct claim entry interaction -->
+            </td>
+          </tr>
+          <tr *ngIf="filteredClaims.length === 0">
+            <td colspan="11" class="no-data">No claim records found for the selected filters.</td> <!-- FIX: Adjusted colspan -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

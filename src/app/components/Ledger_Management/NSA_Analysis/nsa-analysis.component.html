@@ -1,0 +1,135 @@
+<!-- src/app/components/Ledger_Management/NSA_Analysis/nsa-analysis.component.html -->
+
+<div class="nsa-analysis-container">
+  <h1 class="page-title">NSA Analysis</h1>
+
+  <!-- Filter and Summary KPI Section -->
+  <div class="analysis-header-section">
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="applyFilters()" name="startDate">
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="applyFilters()" name="endDate">
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+        <button class="export-csv-button" (click)="exportToCsv()">Export to CSV</button>
+      </div>
+    </div>
+
+    <div class="kpi-cards-grid">
+      <div class="kpi-card">
+        <h3>Total NSA Entries</h3>
+        <p>{{ summary.totalNsaEntries }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Overall NSA Value</h3>
+        <p>{{ summary.overallNsaValue | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Total Adjusted Kilos</h3>
+        <p>{{ summary.totalAdjustedKilos | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Total Adjusted Proceeds</h3>
+        <p>{{ summary.totalProceedsImpact | number:'1.2-2' }}</p>
+      </div>
+      <!-- Add more KPI cards as needed, e.g., for Monthly Kilos Sold, Proceeds -->
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="report-section charts-section">
+    <h2>NSA Trends Overview</h2>
+    <div class="charts-grid">
+      <!-- 1. NSA Value Trend (Line Chart) -->
+      <div class="chart-card">
+        <h3>NSA Value Trend (Monthly)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="nsaTrendChartData"
+            [options]="nsaTrendChartOptions"
+            [type]="nsaTrendChartType">
+          </canvas> <!-- FIX: Self-closing tag -->
+        </div>
+      </div>
+
+      <!-- NEW: Adjusted Kilos Trend (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Adjusted Kilos Trend (Monthly)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="adjustedKilosBarChartData"
+            [options]="adjustedKilosBarChartOptions"
+            [type]="adjustedKilosBarChartType">
+          </canvas> <!-- FIX: Self-closing tag -->
+        </div>
+      </div>
+
+      <!-- NEW: Adjusted Proceeds Trend (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Adjusted Proceeds Trend (Monthly)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="adjustedProceedsBarChartData"
+            [options]="adjustedProceedsBarChartOptions"
+            [type]="adjustedProceedsBarChartType">
+          </canvas> <!-- FIX: Self-closing tag -->
+        </div>
+      </div>
+
+      <!-- NEW: NSA Comparison (Bar Chart) - e.g., Current vs Previous Month -->
+      <div class="chart-card">
+        <h3>NSA Period Comparison</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="nsaComparisonBarChartData"
+            [options]="nsaComparisonBarChartOptions"
+            [type]="nsaComparisonBarChartType">
+          </canvas> <!-- FIX: Self-closing tag -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Records Section -->
+  <div class="records-section">
+    <h2>NSA Details</h2>
+    <div class="table-responsive">
+      <table class="nsa-analysis-table">
+        <thead>
+          <tr>
+            <th>Entry No.</th>
+            <th>Entry Date</th>
+            <th>Monthly Kilos Sold</th>
+            <th>Proceeds</th>
+            <th>Adjusted Kilos</th>
+            <th>Adjusted Proceeds</th>
+            <th>NSA Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredNsaRecords">
+            <td>{{ record.id }}</td>
+            <td>{{ formatDate(record.entryDate) }}</td>
+            <td>{{ record.monthlyKilosSold | number:'1.0-0' }}</td>
+            <td>{{ record.proceeds | number:'1.2-2' }}</td>
+            <td>{{ record.adjustedKilos | number:'1.0-0' }}</td>
+            <td>{{ record.adjustedProceeds | number:'1.2-2' }}</td>
+            <td>{{ record.nsaValue | number:'1.2-2' }}</td>
+          </tr>
+          <tr *ngIf="filteredNsaRecords.length === 0">
+            <td colspan="7" class="no-data">No NSA records found for the selected filters.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

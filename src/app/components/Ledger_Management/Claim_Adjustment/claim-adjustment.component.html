@@ -1,0 +1,85 @@
+<div class="claims-adjustment-container">
+  <h1 class="page-title">Claim Adjustment</h1>
+
+  <div class="form-section">
+    <h2>Claim Adjustment Form</h2>
+    <form #adjustmentForm="ngForm" (ngSubmit)="addOrUpdateAdjustment()">
+      <div class="form-fields-grid">
+        <div class="form-group">
+          <label for="claimReference">Claim Reference:</label>
+          <input type="text" id="claimReference" [(ngModel)]="claimReference" name="claimReference" placeholder="Claim Reference (e.g., Invoice No. or Claim ID)" required>
+        </div>
+        <div class="form-group">
+          <label for="adjustmentType">Adjustment Type:</label>
+          <select id="adjustmentType" [(ngModel)]="adjustmentType" name="adjustmentType" required>
+            <option value="">Select Adjustment Type</option>
+            <option value="Full Credit">Full Credit</option>
+            <option value="Partial Refund">Partial Refund</option>
+            <option value="Reshipment">Reshipment</option>
+            <option value="Exchange">Exchange</option>
+            <option value="Discount">Discount</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="adjustmentDate">Adjustment Date:</label>
+          <input type="date" id="adjustmentDate" [(ngModel)]="adjustmentDate" name="adjustmentDate" required>
+        </div>
+        <!-- NEW: Resolution Type dropdown -->
+        <div class="form-group">
+          <label for="resolutionType">Resolution Type:</label>
+          <select id="resolutionType" [(ngModel)]="resolutionType" name="resolutionType">
+            <option value="">Select Resolution</option>
+            <option *ngFor="let res of resolutionTypes" [value]="res">{{ res }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full-width">
+        <label for="adjustmentDetails">Adjustment Details:</label>
+        <textarea id="adjustmentDetails" [(ngModel)]="adjustmentDetails" name="adjustmentDetails" rows="3" placeholder="Detailed explanation of the adjustment" required></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="action-button secondary-button" type="button" (click)="clearForm()">Clear Form</button>
+        <button class="action-button primary-button" type="submit">
+          {{ editingClaimAdjustmentId ? 'Update Adjustment' : 'Add Adjustment' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="records-section">
+    <h2>Adjustment Records</h2>
+    <div class="table-responsive">
+      <table class="claims-adjustment-table">
+        <thead>
+          <tr>
+            <th>Adjustment ID</th>
+            <th>Claim Reference</th>
+            <th>Adjustment Type</th>
+            <th>Adjustment Date</th>
+            <th>Details</th>
+            <th>Resolution Type</th> <!-- NEW: Column Header -->
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let adjustment of adjustmentRecords">
+            <td>{{ adjustment.id }}</td>
+            <td>{{ adjustment.claimReference }}</td>
+            <td>{{ adjustment.adjustmentType }}</td>
+            <td>{{ adjustment.adjustmentDate | date:'yyyy-MM-dd' }}</td>
+            <td>{{ adjustment.adjustmentDetails }}</td>
+            <td>{{ adjustment.resolutionType || 'N/A' }}</td> <!-- NEW: Data Display -->
+            <td class="actions-cell">
+              <button class="action-btn edit-btn" (click)="editAdjustment(adjustment)">Edit</button>
+              <button class="action-btn delete-btn" (click)="confirmDelete(adjustment.id)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="adjustmentRecords.length === 0">
+            <td colspan="7" class="no-data">No adjustment records found.</td> <!-- FIX: Adjusted colspan -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

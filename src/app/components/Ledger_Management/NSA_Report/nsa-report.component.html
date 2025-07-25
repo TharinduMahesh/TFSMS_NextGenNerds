@@ -1,0 +1,62 @@
+<!-- src/app/components/nsa-report/nsa-report.component.html -->
+
+<div class="nsa-report-container">
+  <h1 class="report-title">NSA Monthly Report</h1>
+
+  <!-- Filter Controls Section -->
+  <div class="report-section filter-section">
+    <h2 class="section-heading">Report Filters</h2>
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="loadNsaReport()" name="startDate">
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="loadNsaReport()" name="endDate">
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+        <button class="export-button" (click)="exportToCsv()">Export to CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NSA Report Records Section -->
+  <div class="records-section">
+    <h2 class="section-heading">Monthly NSA Data</h2>
+    <div class="table-responsive">
+      <table class="nsa-report-table">
+        <thead>
+          <tr>
+            <th>Entry No.</th>
+            <th>Entry Date</th>
+            <th>Monthly Kilos Sold</th>
+            <th>Proceeds</th>
+            <th>Adjusted Kilos</th>
+            <th>Adjusted Proceeds</th>
+            <th>NSA Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entry of filteredNsaRecords">
+            <td>{{ entry.id }}</td>
+            <td>{{ formatDate(entry.entryDate) }}</td>
+            <td>{{ entry.monthlyKilosSold | number:'1.0-0' }}</td>
+            <td>{{ entry.proceeds | number:'1.2-2' }}</td>
+            <td>{{ entry.adjustedKilos | number:'1.0-0' }}</td>
+            <td>{{ entry.adjustedProceeds | number:'1.2-2' }}</td>
+            <td>{{ entry.nsaValue | number:'1.2-2' }}</td>
+          </tr>
+          <tr *ngIf="filteredNsaRecords.length === 0">
+            <td colspan="7" class="no-data">No NSA records found for the selected period.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

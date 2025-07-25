@@ -1,0 +1,107 @@
+<div class="transaction-page">
+    <h2 class="page-title">Transaction Management</h2>
+  
+    <div class="summary-cards">
+      <div class="card light-blue">
+        <h2>{{ totalTransactions }}</h2>
+        <p>Total Transactions</p>
+      </div>
+      <div class="card light-yellow">
+        <h2>LKR {{ totalDeposits | number }}</h2>
+        <p>Total Deposits</p>
+      </div>
+      <div class="card light-green">
+        <h2>LKR {{ totalWithdrawals | number }}</h2>
+        <p>Total Withdrawals</p>
+      </div>
+      <div class="card light-orange">
+        <h2>LKR {{ totalTransfers | number }}</h2>
+        <p>Total Transfers</p>
+      </div>
+    </div>
+  
+    <div class="transaction-container">
+      <h3>Transaction Details</h3>
+      
+      <!-- Loading and Error Messages -->
+      <div *ngIf="loading" class="alert alert-info">Loading transactions...</div>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      
+      <div class="filters">
+        <div class="filter-group">
+          <label>Transaction Type:</label>
+          <select [(ngModel)]="selectedType" (change)="filterTransactions()">
+            <option *ngFor="let type of transactionTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Filter by Date:</label>
+          <input type="date" [(ngModel)]="selectedDate" (change)="filterTransactions()" />
+        </div>
+      </div>
+  
+      <div class="manual-entry">
+        <h4>Add New Transaction</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Account ID:</label>
+            <input type="number" [(ngModel)]="newTransaction.AccountId" placeholder="Enter Account ID" />
+          </div>
+          <div class="form-group">
+            <label>Amount:</label>
+            <input type="number" [(ngModel)]="newTransaction.Amount" placeholder="Enter Amount" />
+          </div>
+          <div class="form-group">
+            <label>Transaction Type:</label>
+            <select [(ngModel)]="newTransaction.TransactionType">
+              <option value="">Select Type</option>
+              <option *ngFor="let type of transactionTypes.slice(1)" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Transaction Date:</label>
+            <input type="date" [(ngModel)]="newTransaction.TransactionDate" />
+          </div>
+          <div class="form-group">
+            <label>Description:</label>
+            <input type="text" [(ngModel)]="newTransaction.Description" placeholder="Enter Description" />
+          </div>
+          <div class="form-group">
+            <button (click)="addTransaction()" class="add-btn" [disabled]="loading">Add Transaction</button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>Account ID</th>
+              <th>Amount</th>
+              <th>Transaction Type</th>
+              <th>Transaction Date</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let transaction of filteredTransactions">
+              <td>{{ transaction.TransactionId }}</td>
+              <td>{{ transaction.AccountId }}</td>
+              <td>LKR {{ transaction.Amount | number }}</td>
+              <td>{{ transaction.TransactionType }}</td>
+              <td>{{ transaction.TransactionDate | date:'shortDate' }}</td>
+              <td>{{ transaction.Description }}</td>
+              <td>
+                <button class="download-btn">Download</button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredTransactions.length === 0">
+              <td colspan="7" class="no-data">No transactions found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

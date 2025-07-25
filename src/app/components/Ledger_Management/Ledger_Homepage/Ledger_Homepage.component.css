@@ -1,0 +1,91 @@
+/* General container styling for the Ledger Management Homepage */
+.ledger-management-container {
+  padding: 2.5rem 1.5rem; /* Adjusted padding for overall spacing */
+  max-width: 1500px; /* Adjusted max-width for a balanced look */
+  margin: 2.5rem auto; /* Center the container with vertical margin */
+  background-color: #f8f8f8; /* Very light gray background for the main content area */
+  border-radius: 8px; /* Slightly less rounded corners for consistency */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Very subtle shadow for the main container */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #333; /* Default text color */
+}
+
+/* Styling for each section (e.g., Tea Packing Ledger Update, Claims and Returns) */
+.ledger-section {
+  margin-bottom: 2.5rem; /* Consistent space between sections */
+  background-color: transparent; /* Make section background transparent to show container background */
+  border: none; /* Remove section borders */
+  border-radius: 0; /* Remove section border-radius */
+  padding: 0; /* Remove padding from section itself, content inside will have it */
+  box-shadow: none; /* Remove section shadows */
+}
+
+/* Styling for the <h3> section titles - LEFT ALIGNED, NO BORDER */
+.ledger-section h3 {
+  font-size: 1.2rem; /* Smaller font size for titles, matching image */
+  color: #333; /* Darker text color for titles */
+  margin-bottom: 1.5rem; /* Space below the title */
+  padding-bottom: 0; /* No padding below title */
+  border-bottom: none; /* No border below title */
+  font-weight: 500; /* Medium font weight */
+  text-align: left; /* LEFT ALIGNED */
+}
+
+/* Container for the feature buttons - KEEPING ORIGINAL FLEX LAYOUT */
+.ledger-features {
+  display: flex; /* Original flex display */
+  flex-wrap: wrap; /* Allow items to wrap to next line */
+  gap: 1rem; /* Original gap between buttons */
+  justify-content: flex-start; /* Align buttons to the start (left) */
+}
+
+/* Styling for individual feature buttons (ledger-card) */
+.ledger-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center text horizontally within the card */
+  justify-content: center;
+  text-align: center; /* Ensure text is centered */
+
+  padding: 30px; /* Increased padding to make them thicker */
+  font-size: 1.2rem; /* Slightly larger font size to match thicker box */
+  font-weight: 600; /* Bolder text for prominence */
+  cursor: pointer;
+  min-width: 180px; /* Original min-width */
+  text-decoration: none;
+
+  /* UPDATED CARD AESTHETICS (matching the provided image's KPI cards) */
+  background-color: #d0eee0; /* Light blue background, similar to .total-returns */
+  border: 1px solid #cce5ff; /* A subtle, light blue border */
+  border-radius: 12px; /* Rounded corners matching summary-box */
+  
+  /* Adding a thicker, colored left border for visual pop, similar to your example */
+  border-left: 4px solid #21f36b; /* Thicker blue left border, matching .total-returns */
+  
+  color: #333; /* Darker text color for better contrast */
+  
+  transition: all 0.2s ease-in-out; /* Faster, subtle transition */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow matching summary-box */
+}
+
+.ledger-card:hover {
+  background-color: #d6eaff; /* Slightly darker blue on hover */
+  border-color: #9fcdff; /* Darker border on hover */
+  border-left: 4px solid #1976d2; /* Darker left border on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
+  color: #1a5279; /* Darker text on hover */
+}
+
+/* Responsive adjustments - KEEPING ORIGINAL BEHAVIOR */
+@media (max-width: 700px) {
+  .ledger-features {
+    flex-direction: column; /* Stack buttons on small screens */
+    gap: 0.7rem; /* Original reduced gap */
+  }
+  .ledger-card {
+    width: 100%; /* Make buttons full width on small screens */
+    min-width: unset; /* Remove min-width constraint on small screens */
+    border-left: 4px solid #2196f3; /* Ensure thick left border on small screens */
+  }
+}

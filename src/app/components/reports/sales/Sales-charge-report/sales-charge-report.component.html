@@ -1,0 +1,130 @@
+<!-- src/app/components/reports/sales-charge-report/sales-charge-report.component.html -->
+
+<div class="sales-report-container">
+  <h1 class="report-title">Sales Charges Report</h1>
+
+  <!-- Filter and Summary KPI Section -->
+  <div class="report-section filter-section">
+    <h2 class="section-heading">Report Filters</h2>
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="applyFilters()" name="startDate">
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="applyFilters()" name="endDate">
+      </div>
+      <div class="form-group">
+        <label for="chargeTypeFilter">Charge Type:</label>
+        <input type="text" id="chargeTypeFilter" [(ngModel)]="chargeTypeFilter" (keyup)="applyFilters()" name="chargeTypeFilter" placeholder="e.g., Commission">
+      </div>
+      <div class="form-group">
+        <label for="saleReferenceFilter">Sale Reference:</label>
+        <input type="text" id="saleReferenceFilter" [(ngModel)]="saleReferenceFilter" (keyup)="applyFilters()" name="saleReferenceFilter" placeholder="e.g., INV-2024-001">
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+        <button class="export-button" (click)="exportToCsv()">Export to CSV</button>
+      </div>
+    </div>
+
+    <div class="kpi-cards-grid">
+      <div class="kpi-card overall-sales">
+        <h3>Total Charges</h3>
+        <p>{{ summary.totalCharges }}</p>
+      </div>
+      <div class="kpi-card total-revenue">
+        <h3>Total Amount (Rs.)</h3>
+        <p>{{ summary.totalAmount | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card top-grade">
+        <h3>Top Charge Type</h3>
+        <p>{{ summary.topChargeType || 'N/A' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="report-section charts-section">
+    <h2 class="section-heading">Sales Charges Overview</h2>
+    <div class="charts-grid">
+      <!-- 1. Sales Charge Amount Trend (Line Chart) -->
+      <div class="chart-card">
+        <h3>Charge Amount Trend (Monthly)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="chargeAmountTrendChartData"
+            [options]="chargeAmountTrendChartOptions"
+            [type]="chargeAmountTrendChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 2. Sales Charges by Type (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Charges by Type (Amount)</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="chargesByTypeChartData"
+            [options]="chargesByTypeChartOptions"
+            [type]="chargesByTypeChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 3. Sales Charges Count by Type (Doughnut Chart) -->
+      <div class="chart-card">
+        <h3>Charges Count by Type</h3>
+        <div class="chart-wrapper" style="height:250px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="chargesCountByTypeChartData"
+            [options]="chargesCountByTypeChartOptions"
+            [type]="chargesCountByTypeChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Sales Charges Records Section -->
+  <div class="records-section">
+    <h2 class="section-heading">Sales Charges Details</h2>
+    <div class="table-responsive">
+      <table class="sales-report-table"> <!-- Reusing sales-report-table class -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Sale Reference</th>
+            <th>Charge Type</th>
+            <th>Amount (Rs.)</th>
+            <th>Charge Date</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredSalesChargeRecords">
+            <td>{{ record.id }}</td>
+            <td>{{ record.saleReference }}</td>
+            <td>{{ record.chargeType }}</td>
+            <td>{{ record.amount | number:'1.2-2' }}</td>
+            <td>{{ formatDate(record.chargeDate) }}</td>
+            <td>{{ record.description || 'N/A' }}</td>
+            <td class="actions-cell">
+              <!-- Add Edit/Delete buttons here if this report allows direct manipulation -->
+              <!-- For now, this is a report, so direct manipulation might be on an entry page -->
+            </td>
+          </tr>
+          <tr *ngIf="filteredSalesChargeRecords.length === 0">
+            <td colspan="7" class="no-data">No sales charge records found for the selected filters.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

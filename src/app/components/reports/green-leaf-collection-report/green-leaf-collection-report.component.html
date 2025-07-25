@@ -1,0 +1,239 @@
+<div class="glc-report-container">
+  <h1 class="report-title">Green Leaf Collection Performance Report</h1>
+
+  <!-- Global Filters Section -->
+  <div class="report-section filter-section">
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="reportPeriod">Select Period:</label>
+        <select id="reportPeriod" [(ngModel)]="selectedPeriod" (change)="applyFilters()" name="reportPeriod">
+          <option value="currentMonth">Current Month</option>
+          <option value="last3Months">Last 3 Months</option>
+          <option value="currentQuarter">Current Quarter</option>
+          <option value="currentYear">Current Year</option>
+          <option value="custom">Custom Date Range</option>
+        </select>
+      </div>
+      <div class="form-group" *ngIf="selectedPeriod === 'custom'">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="applyFilters()" name="startDate">
+      </div>
+      <div class="form-group" *ngIf="selectedPeriod === 'custom'">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="applyFilters()" name="endDate">
+      </div>
+      <div class="form-group">
+        <label for="supplierFilter">Supplier ID:</label>
+        <select id="supplierFilter" [(ngModel)]="selectedSupplierId" (change)="applyFilters()" name="supplierFilter">
+          <option [ngValue]="null">All Suppliers</option>
+          <option *ngFor="let supplier of suppliers" [ngValue]="supplier.supplierId">
+            {{ supplier.supplierId }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button class="clear-filters-button" (click)="clearFilters()">Reset Filters</button>
+      </div>
+    </div>
+    <div class="report-meta">
+      <p>Report Period: <strong>{{ displayPeriod }}</strong></p>
+      <p>Generated On: <strong>{{ reportGeneratedDate | date:'yyyy-MM-dd HH:mm' }}</strong></p>
+    </div>
+  </div>
+
+  <!-- Summary KPI Cards Section -->
+  <div class="report-section kpi-section">
+    <div class="kpi-cards-grid">
+      <div class="kpi-card total-collected">
+        <h3>Total Collected (Kg)</h3>
+        <p>{{ summary.totalCollectedKg | number:'1.2-2' }}</p>
+      </div>
+      <div class="kpi-card num-collections">
+        <h3>Number of Collections</h3>
+        <p>{{ summary.numberOfCollections }}</p>
+      </div>
+      <div class="kpi-card diff-percent">
+        <h3>Collections with Diff (%)</h3>
+        <p [class.positive]="summary.collectionsWithDiffPercent === 0" [class.negative]="summary.collectionsWithDiffPercent > 0">
+          {{ summary.collectionsWithDiffPercent | number:'1.2-2' }}%
+        </p>
+      </div>
+      <div class="kpi-card total-loss">
+        <h3>Total Loss (Kg)</h3>
+        <p>{{ summary.totalWeightLossKg | number:'1.2-2' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="report-section charts-section">
+    <div class="charts-grid">
+      <!-- 1. Monthly Collection Trend (Stacked Bar Chart) -->
+      <div class="chart-card">
+        <h3>Monthly Collection Trend (Kg)</h3>
+        <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="monthlyCollectionChartData"
+            [options]="monthlyCollectionChartOptions"
+            [type]="monthlyCollectionChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 2. Collections by Supplier (Top N) (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Top Suppliers by Volume (Kg)</h3>
+        <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="supplierVolumeChartData"
+            [options]="supplierVolumeChartOptions"
+            [type]="supplierVolumeChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 3. Difference Rate Trend (Line Chart) -->
+      <div class="chart-card">
+        <h3>Difference Rate Trend (%)</h3>
+        <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="differenceRateChartData"
+            [options]="differenceRateChartOptions"
+            [type]="differenceRateChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 4. Normal vs. Golden Tip Distribution (Pie Chart) -->
+      <div class="chart-card">
+        <h3>Tea Type Distribution</h3>
+        <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="teaTypeDistributionChartData"
+            [options]="teaTypeDistributionChartOptions"
+            [type]="teaTypeDistributionChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- 5. Weight Difference Breakdown by Supplier (Bar Chart) -->
+      <div class="chart-card">
+        <h3>Weight Differences by Supplier (Kg)</h3>
+        <div class="chart-wrapper" style="height:280px;" *ngIf="isBrowser">
+          <canvas baseChart
+            [data]="weightDifferenceBySupplierChartData"
+            [options]="weightDifferenceBySupplierChartOptions"
+            [type]="weightDifferenceBySupplierChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Data Tables Section -->
+  <div class="report-section table-section">
+    <h3>Collection Summary by Supplier</h3>
+    <div class="table-responsive">
+      <table class="glc-report-table summary-table">
+        <thead>
+          <tr>
+            <th>Supplier ID</th>
+            <th>Total Kilos Collected (Kg)</th>
+            <th>Number of Collections</th>
+            <th>Number of Differences</th>
+            <th>Difference Rate (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let supplierSummary of supplierSummaries">
+            <td>{{ supplierSummary.supplierId }}</td>
+            <td>{{ supplierSummary.totalKilosCollected | number:'1.2-2' }}</td>
+            <td>{{ supplierSummary.numberOfCollections }}</td>
+            <td>{{ supplierSummary.numberOfDifferences }}</td>
+            <td [class.positive]="supplierSummary.differenceRate === 0" [class.negative]="supplierSummary.differenceRate > 0">
+              {{ supplierSummary.differenceRate | number:'1.2-2' }}%
+            </td>
+          </tr>
+          <tr *ngIf="supplierSummaries.length === 0">
+            <td colspan="5" class="no-data">No supplier summary data available for the selected range.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-heading">Raw Green Leaf Collection Log</h3>
+    <div class="table-responsive">
+      <table class="glc-report-table raw-data-table">
+        <thead>
+          <tr>
+            <th>Collection ID</th>
+            <th>Supplier ID</th>
+            <th>Collection Date</th>
+            <th>Initial Normal (Kg)</th>
+            <th>Actual Normal (Kg)</th>
+            <th>Initial Golden Tip (Kg)</th>
+            <th>Actual Golden Tip (Kg)</th>
+            <th>Difference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredCollectionRecords">
+            <td>C{{ record.collectionId | number:'3.0' }}</td>
+            <td>{{ record.supplierId }}</td>
+            <td>{{ record.collectionDate | date:'yyyy-MM-dd' }}</td>
+            <td>{{ record.initialNormalTeaLeafWeight | number:'1.2-2' }}</td>
+            <td>{{ record.normalTeaLeafWeight | number:'1.2-2' }}</td>
+            <td>{{ record.initialGoldenTipTeaLeafWeight | number:'1.2-2' }}</td>
+            <td>{{ record.goldenTipTeaLeafWeight | number:'1.2-2' }}</td>
+            <td>
+              <span [class.difference-yes]="record.hasDifference" [class.difference-no]="!record.hasDifference">
+                {{ record.hasDifference ? 'Yes' : 'No' }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="filteredCollectionRecords.length === 0">
+            <td colspan="8" class="no-data">No raw collection data available for the selected range.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-heading">Detailed Weight Differences Log</h3>
+    <div class="table-responsive">
+      <table class="glc-report-table weight-diff-table">
+        <thead>
+          <tr>
+            <th>Diff ID</th>
+            <th>Collection ID</th>
+            <th>Supplier ID</th>
+            <th>Date Recorded</th>
+            <th>Normal Tea Diff (Kg)</th>
+            <th>Golden Tip Diff (Kg)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let diffRecord of filteredWeightDifferences">
+            <td>D{{ diffRecord.weightDifferenceId | number:'3.0' }}</td>
+            <td>C{{ diffRecord.collectionId | number:'3.0' }}</td>
+            <td>{{ diffRecord.supplierId }}</td>
+            <td>{{ diffRecord.differenceRecordedDate | date:'yyyy-MM-dd' }}</td>
+            <td>{{ diffRecord.normalTeaLeafDifference | number:'1.2-2' }}</td>
+            <td>{{ diffRecord.goldenTipTeaLeafDifference | number:'1.2-2' }}</td>
+          </tr>
+          <tr *ngIf="filteredWeightDifferences.length === 0">
+            <td colspan="6" class="no-data">No weight difference records found for the selected range.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="report-footer">
+    <p>Data as of {{ reportGeneratedDate | date:'yyyy-MM-dd HH:mm' }}</p>
+    <button class="export-button" (click)="exportReport()">Export Report (CSV)</button>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

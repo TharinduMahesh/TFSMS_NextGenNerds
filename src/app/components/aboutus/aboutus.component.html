@@ -1,0 +1,88 @@
+
+
+    <app-header></app-header>
+<div class="page-container">
+    <!-- Navigation -->
+    
+    <!-- About Content -->
+    <div class="about-container">
+      <!-- Hero Section with Factory Image -->
+      <div class="about-hero">
+        <div class="overlay"></div>
+        <div class="hero-content">
+          <h1>About Us</h1>
+        </div>
+      </div>
+      
+      <!-- Main Content Section with Side-by-Side Layout -->
+      <div class="about-content">
+        <!-- Left Side: Vision and Mission -->
+        <div class="vision-mission-container">
+          <div class="vision-circle">
+            <h2>Vision</h2>
+            <p>To be the world largest premium Ceylon tea distributor.</p>
+          </div>
+          
+          <div class="mission-circle">
+            <h2>Mission</h2>
+            <p>To expand ethically through acquiring of more tea factories in different locations while maintaining the quality of the product.</p>
+          </div>
+        </div>
+        
+        <!-- Right Side: Factory Profile -->
+        <div class="factory-profile">
+          <h2>Aruna Tea Factory Profile</h2>
+          
+          <div class="profile-details">
+            <div class="profile-row">
+              <div class="profile-label">Location:</div>
+              <div class="profile-value">{{ factoryProfile.location }}</div>
+            </div>
+            
+            <div class="profile-row">
+              <div class="profile-label">Total Factory Area:</div>
+              <div class="profile-value">{{ factoryProfile.totalArea }}</div>
+            </div>
+            
+            <div class="profile-row">
+              <div class="profile-label">Year started:</div>
+              <div class="profile-value">{{ factoryProfile.yearStarted }}</div>
+            </div>
+            
+            <div class="profile-row">
+              <div class="profile-label">Capacity:</div>
+              <div class="profile-value">{{ factoryProfile.capacity }}</div>
+            </div>
+            
+            <div class="profile-row">
+              <div class="profile-label">Bought leaf (2015):</div>
+              <div class="profile-value">{{ factoryProfile.boughtLeaf }}</div>
+            </div>
+            
+            <div class="profile-row">
+              <div class="profile-label">Production:</div>
+              <div class="profile-value">{{ factoryProfile.production }}</div>
+            </div>
+            
+            <div class="profile-row">
+              <div class="profile-label">Main grades:</div>
+              <div class="profile-value">{{ factoryProfile.mainGrades }}</div>
+            </div>
+            
+            <div class="profile-row">
+              <div class="profile-label">Employment:</div>
+              <div class="profile-value">{{ factoryProfile.employment }}</div>
+            </div>
+            
+            <div class="profile-row">
+              <div class="profile-label">Green leaf suppliers:</div>
+              <div class="profile-value">{{ factoryProfile.suppliers }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <app-footer></app-footer>
+  </div>

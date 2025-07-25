@@ -9,12 +9,12 @@ import { CreateInvoicePayload } from '../../../models/Ledger Management/invoiceS
 import { InvoiceSalesService } from '../../../services/LedgerManagement/invoiceSales.service';
 import { StockLedgerResponse } from '../../../models/Ledger Management/stockLedger.model';
 import { StockLedgerService } from '../../../services/LedgerManagement/stockLedger.service';
-import { ManualIdEntryComponent } from './mannualId-entry/m-id-entry.component';
+// import { ManualIdEntryComponent } from './mannualId-entry/m-id-entry.component';
 
 @Component({
   selector: 'app-invoice-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe , ManualIdEntryComponent],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe ],
   templateUrl: './in-create.component.html',
   styleUrls: ['./in-create.component.scss']
 })

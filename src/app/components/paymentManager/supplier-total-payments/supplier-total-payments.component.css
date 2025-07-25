@@ -3,6 +3,7 @@
   padding: 1.5rem;
   background-color: #f9fafb;
   min-height: 100vh;
+  margin:40px 40px auto 240px; /* Center the container with vertical margin */
 }
 
 /* Title Styles */

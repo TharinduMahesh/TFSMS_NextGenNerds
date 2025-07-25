@@ -249,6 +249,7 @@ export const routes: Routes = [
   { path: 'report/green-leaf-collection-report', component: GreenLeafCollectionReportComponent },
   { path: 'report/general-sales', component: SalesReportComponent }, // FIX: Removed trailing comma
   { path: 'report/sales-charges', component: SalesChargeReportComponent },
+  { path: 'report/gratis-issue-report', component: GratisIssueEntryComponent },
 
   // --- LEDGER MANAGEMENT SECTION ROUTES ---
   {
@@ -259,6 +260,7 @@ export const routes: Routes = [
       { path: 'claim-adjustment', component: ClaimsAdjustmentComponent },
       { path: 'claims-entry', component: ClaimsEntryComponent },
       { path: 'gratis-issue-entry', component: GratisIssueEntryComponent },
+      { path: 'sales-entry', component: SalesEntryComponent },
       { path: 'sales-charge-entry', component: SalesChargeEntryComponent },
       { path: 'nsa-report', component: NsaReportComponent },
       { path: 'claim-analysis', component: ClaimAnalysisComponent },

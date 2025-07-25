@@ -1,6 +1,6 @@
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1300px;
+  margin: 40px 40px auto 240px; /* Center the container with vertical margin */
   padding: 20px;
 }
 

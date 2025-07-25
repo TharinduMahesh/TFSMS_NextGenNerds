@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { forkJoin } from 'rxjs'; // For parallel API calls
+import { HeaderComponent } from "../../header/header.component";
+import { SidebarComponent } from '../../sidebar/sidebar/sidebar.component';
 
 // Import services and interfaces
 import { GreenLeafCollectionService } from '../../../Services/green_leaf_collection.service';
@@ -35,7 +37,7 @@ interface SupplierSummary {
 @Component({
   selector: 'app-green-leaf-collection-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseChartDirective],
+  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent, SidebarComponent],
   templateUrl: './green-leaf-collection-report.component.html',
   styleUrls: ['./green-leaf-collection-report.component.css']
 })

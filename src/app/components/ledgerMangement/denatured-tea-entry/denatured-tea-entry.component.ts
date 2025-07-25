@@ -1,6 +1,7 @@
 import { Component,  OnInit } from "@angular/core"
 import {  FormBuilder,  FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
 import { CommonModule } from "@angular/common"
+import { HeaderComponent } from "../../../components/header/header.component";
 import  { DenaturedTeaService } from "../../../shared/services/denatured-tea.service"
 import  { DenaturedTea } from "../../../models/denatured-tea.model"
 import  { Invoice } from "../../../models/invoice.model"
@@ -8,7 +9,7 @@ import  { Invoice } from "../../../models/invoice.model"
 @Component({
   selector: "app-denatured-tea-entry",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: "./denatured-tea-entry.component.html",
   styleUrl: "./denatured-tea-entry.component.css",
 })

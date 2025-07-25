@@ -2,6 +2,8 @@ import { Component,  OnInit,  OnDestroy } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, Validators } from "@angular/forms"
 import  { Subscription } from "rxjs"
+import { HeaderComponent } from "../../header/header.component";
+
 import  { Incentive } from "../../../models/incentive.model"
 import  { Supplier } from "../../../models/supplier.model"
 import  { IncentiveService } from "../../../shared/services/incentive.service"
@@ -12,7 +14,7 @@ import  { DataRefreshService } from "../../../shared/services/data-refresh.servi
 @Component({
   selector: "app-incentive",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: "./incentive.component.html",
   styleUrls: ["./incentive.component.css"],
 })

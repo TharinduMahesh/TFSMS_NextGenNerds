@@ -3,6 +3,8 @@
 import { Component,  OnInit,  AfterViewInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { HeaderComponent } from "../../header/header.component";
+
 import  { Payment } from "../../../models/payment.model"
 import  { Supplier } from "../../../models/supplier.model"
 import  { PaymentService } from "../../../shared/services/payment.service"
@@ -15,7 +17,7 @@ import  { IncentiveService } from "../../../shared/services/incentive.service"
 @Component({
   selector: "app-payment",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent],
   providers: [PaymentService, SupplierService, GreenLeafService, ExportService, IncentiveService],
   templateUrl: "./payment.component.html",
   styleUrls: ["./payment.component.css"],

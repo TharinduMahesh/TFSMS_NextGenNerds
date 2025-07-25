@@ -1,6 +1,7 @@
 import { Component,  OnInit } from "@angular/core"
 import {  FormBuilder,  FormGroup, Validators, ReactiveFormsModule } from "@angular/forms"
 import { CommonModule } from "@angular/common"
+import { HeaderComponent } from "../../header/header.component";
 import  { TeaReturnService } from "../../../shared/services/tea-return.service"
 import  { TeaReturn } from "../../../models/tea-return.model"
 import  { Invoice } from "../../../models/invoice.model"
@@ -8,7 +9,7 @@ import  { Invoice } from "../../../models/invoice.model"
 @Component({
   selector: "app-tea-return-entry",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: "./tea-return-entry.component.html",
   styleUrl: "./tea-return-entry.component.css",
 })

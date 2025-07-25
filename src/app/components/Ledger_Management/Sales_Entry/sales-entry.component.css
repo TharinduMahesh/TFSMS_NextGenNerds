@@ -1,4 +1,4 @@
-/* General container styling for the Sales Charge Entry Page */
+/* General container styling for the Sales Entry Page */
 .claims-entry-container { /* Reusing claims-entry-container for general styling */
   padding: 30px;
   max-width: 1300px;
@@ -6,7 +6,7 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .page-title {
@@ -204,6 +204,34 @@
   transform: translateY(-1px);
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
+
+/* Exit Button Container */
+.exit-button-container {
+  display: flex;
+  justify-content: flex-end; /* Align to the right */
+  margin-top: 30px;
+}
+
+/* Exit Button Styling (Consistent with other report pages) */
+.exit-button {
+  background-color: #f44336; /* Red background */
+  color: white;
+  padding: 12px 30px; /* Generous padding */
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+.exit-button:hover {
+  background-color: #da190b; /* Darker red on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* More pronounced shadow on hover */
+}
+
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

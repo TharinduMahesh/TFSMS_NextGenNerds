@@ -2,6 +2,7 @@ import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core'; // NEW: 
 import { isPlatformBrowser, CommonModule } from '@angular/common'; // NEW: Added isPlatformBrowser
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
+import { HeaderComponent } from "../../header/header.component";
 
 import { SalesChargeEntryService } from '../../../Services/sales-charge-entry.service';
 import { SalesCharge } from '../../../models/sales-charge.interface'; // Import the interface
@@ -9,7 +10,7 @@ import { SalesCharge } from '../../../models/sales-charge.interface'; // Import 
 @Component({
   selector: 'app-sales-charge-entry',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './sales-charge-entry.component.html',
   styleUrls: ['./sales-charge-entry.component.css']
 })

@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
 import { ClaimAdjustmentService } from '../../../Services/claim-adjustment.service';
 import { ClaimAdjustment } from '../../../models/claim-adjustment.interface'; // Import the interface
+import { HeaderComponent } from "../../header/header.component";
 
 @Component({
   selector: 'app-claims-adjustment',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,HeaderComponent],
   templateUrl: './claim-adjustment.component.html',
   styleUrls: ['./claim-adjustment.component.css']
 })

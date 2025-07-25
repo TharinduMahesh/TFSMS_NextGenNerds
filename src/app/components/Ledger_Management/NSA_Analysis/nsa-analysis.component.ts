@@ -2,6 +2,7 @@ import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HeaderComponent } from "../../header/header.component";
 
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
@@ -21,7 +22,7 @@ interface SummaryKpi {
 @Component({
   selector: 'app-nsa-analysis',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseChartDirective],
+  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent],
   templateUrl: './nsa-analysis.component.html',
   styleUrls: ['./nsa-analysis.component.css']
 })

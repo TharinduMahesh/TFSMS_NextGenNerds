@@ -1,3 +1,4 @@
+<app-header></app-header>
 <div class="financial-reports-nav">
   <h2 class="nav-title">Financial Reports</h2>
   <div class="nav-cards">
@@ -10,7 +11,7 @@
         <div class="nav-card-desc">View and manage farmer loans and incentives</div>
       </div>
     </div>
-    <div class="nav-card" (click)="navigateToReport('profit-loss')">
+    <div class="nav-card" (click)="navigateToReport('sales-report')">
       <div class="nav-icon nav-icon-green">
         <i class="fas fa-chart-line"></i>
       </div>
@@ -19,7 +20,7 @@
         <div class="nav-card-desc">Track Sales data and transactions</div>
       </div>
     </div>
-    <div class="nav-card" (click)="navigateToReport('claims-impact')">
+    <div class="nav-card" (click)="navigateToReport('sales-charges-report')">
       <div class="nav-icon nav-icon-yellow">
         <i class="fas fa-exchange-alt"></i>
       </div>
@@ -28,14 +29,14 @@
         <div class="nav-card-desc">Analyze claims and returns financial data</div>
       </div>
     </div>
-    <div class="nav-card" (click)="navigateToReport('supplier-payments')">
-      <div class="nav-icon nav-icon-purple">
-        <i class="fas fa-truck-moving"></i>
-      </div>
-      <div>
-        <div class="nav-card-title">Supplier Payments</div>
-        <div class="nav-card-desc">Monitor supplier transactions and balances</div>
-      </div>
-    </div>
+    <div class="nav-card" (click)="navigateToReport('gratis-issue-report')"> <!-- This calls 'gratis-issue-report' -->
+  <div class="nav-icon nav-icon-teal">
+    <i class="fas fa-gift"></i>
+  </div>
+  <div>
+    <div class="nav-card-title">Gratis Issue Report</div>
+    <div class="nav-card-desc">Track free tea issues and their impact</div>
+  </div>
+</div>
   </div>
 </div>

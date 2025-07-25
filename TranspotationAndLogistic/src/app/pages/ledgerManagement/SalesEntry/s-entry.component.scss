@@ -105,17 +105,23 @@
   }
 }
 
-// --- Specific, enhanced styling for the charges section ---
+.charges-section {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
 .charges-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #e9ecef;
-  padding-top: 1.5rem;
-  margin-top: 2rem;
   margin-bottom: 1.5rem;
   
-  h3 { margin: 0; }
+  h3 { 
+    margin: 0;
+    font-size: 1.25rem;
+    color: #343a40;
+  }
 
   .btn-add-charge {
     background-color: #e9f5ff;
@@ -146,8 +152,12 @@
     gap: 1rem;
     align-items: center;
 
-    input:first-child { flex: 2; }
-    input:last-of-type { flex: 1; }
+    input:first-child { flex: 2; } 
+    input:last-of-type { flex: 1; } 
+    input {
+      height: 38px; 
+      box-sizing: border-box; 
+    }
 
     .btn-remove {
       background: none;

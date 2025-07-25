@@ -49,13 +49,13 @@ export class VehicleCreateComponent implements OnInit {
     this.vehicleService.createVehicle(payload).subscribe({
       next: () => {
         alert('Vehicle created and assigned successfully!');
-        this.router.navigate(['/v-review']);
+        this.router.navigate(['transportdashboard/v-review']);
       },
       error: (err) => alert(`Error creating vehicle: ${err.message}`)
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['/v-review']);
+    this.router.navigate(['transportdashboard/v-review']);
   }
 }

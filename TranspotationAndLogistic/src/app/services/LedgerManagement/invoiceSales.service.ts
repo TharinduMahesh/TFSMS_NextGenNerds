@@ -8,7 +8,7 @@ import { CreateInvoicePayload, FinalizeSalePayload, InvoiceResponse } from '../.
 })
 export class InvoiceSalesService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7132/api/invoices'; // Example port
+  private apiUrl = 'https://localhost:7263/api/invoices'; // Example port
 
   // Method for the 'invoice-review' page
   getAllInvoices(): Observable<InvoiceResponse[]> {

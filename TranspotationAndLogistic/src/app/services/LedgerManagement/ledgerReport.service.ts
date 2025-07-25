@@ -9,7 +9,7 @@ import { StockLedgerResponse } from '../../models/Ledger Management/stockLedger.
 })
 export class LedgerReportService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7132/api/ledgerreports'; // Example port
+  private apiUrl = 'https://localhost:7263/api/ledgerreports'; // Example port
 
   // Method for the 'sales-register-report' page
   getSalesRegister(startDate: string, endDate: string): Observable<SalesRegisterReport[]> {

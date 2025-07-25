@@ -96,13 +96,13 @@ export class SalesEntryComponent implements OnInit {
     this.invoiceService.finalizeSale(payload).subscribe({
       next: () => {
         alert('Sale finalized and recorded successfully!');
-        this.router.navigate(['/in-review']); // Or your invoice list page
+        this.router.navigate(['ledgerManagementdashboard/invoice-review']); // Or your invoice list page
       },
       error: (err) => alert(`Error finalizing sale: ${err.message}`)
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['/in-review']); // Or your invoice list page
+    this.router.navigate(['ledgerManagementdashboard/invoice-review']); // Or your invoice list page
   }
 }

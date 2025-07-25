@@ -5,7 +5,7 @@
       <h2>Trip Tracking Dashboard</h2>
       <p>View scheduled trips and update their real-time status.</p>
     </div>
-    <!-- Added Search Bar -->
+    
     <input type="text" placeholder="Search by ID or Route..." [value]="searchTerm()"
       (input)="searchTerm.set($any($event.target).value)" />
     <button class="add-btn" (click)="goToSchedulePage()">+ Schedule New Trip</button>

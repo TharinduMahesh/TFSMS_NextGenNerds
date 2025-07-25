@@ -32,7 +32,7 @@ export class LedgerDashboardComponent {
     {
       title: 'Invoice Generation and Dispatch',
       items: [
-        { label: 'INVOICE CREATION', route: '/ledgerManagementdashboard/invoice-create', keywords: ['INVOICE', 'CREATION'] },
+        { label: 'INVOICE CREATION', route: '/ledgerManagementdashboard/m-iid-entry', keywords: ['INVOICE', 'CREATION'] },
         { label: 'INVOICE DETAILS', route: '/ledgerManagementdashboard/invoice-review', keywords: ['DISPATCH', 'REGISTER'] },
         { label: 'DISPATCH DETAILS ENTRY', route: '/ledgerManagementdashboard/dispatch-entry', keywords: ['DISPATCH', 'DETAILS','ENTRY'] },
         

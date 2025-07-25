@@ -12,8 +12,8 @@ using TfactoryMng.Data;
 namespace TfactoryMng.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250722161234_initialCreate")]
-    partial class initialCreate
+    [Migration("20250725072038_adfinalmigration")]
+    partial class adfinalmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,7 +72,42 @@ namespace TfactoryMng.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CollectorId"));
 
-                    b.Property<string>("ContactNumber")
+                    b.Property<string>("CollectorAddressLine1")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CollectorAddressLine2")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CollectorCity")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("CollectorDOB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CollectorEmail")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CollectorGender")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("CollectorNIC")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CollectorPhoneNum")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("CollectorPostalCode")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -177,7 +212,7 @@ namespace TfactoryMng.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Volume")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 3)");
 
                     b.HasKey("VehicleId");
 

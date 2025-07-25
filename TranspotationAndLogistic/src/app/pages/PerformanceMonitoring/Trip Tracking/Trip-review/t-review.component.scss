@@ -214,3 +214,13 @@ tr.is-late > td:first-child {
     font-size: 0.8rem;
   }
 }
+
+.add-btn-small{
+  align-self: flex-start;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600; font-size: 0.9rem;
+  color: #198754; background-color: #d1e7dd;
+  border: none; border-radius: 8px; cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover { background-color: #198754; color: white; }
+}

@@ -26,6 +26,17 @@ import { SalesEntryComponent } from './pages/ledgerManagement/SalesEntry/s-entry
 import { TransportDashboardComponent } from './pages/transpotation and logistic dashboard/tnlDash.component';
 import { PerformanceDashboardComponent } from './pages/Performance Monitoring dashboard/pdashboard.component';
 import { RoutePerformanceAnalysisComponent } from './pages/PerformanceMonitoring/Routes Performance Analysis/r-p-analysis.component';
+import { RtCreateComponent } from './pages/RouteMaintain/r-create/r-create.component';
+import { RtEditComponent } from './pages/RouteMaintain/r-edit/r-edit.component';
+import { RtViewComponent } from './pages/RouteMaintain/r-view/r-view.component';
+import { CollectorCreateComponent } from './pages/CostManagement/Collector/c-create/c-create.component';
+import { CollectorEditComponent } from './pages/CostManagement/Collector/c-edit/c-edit.component';
+import { CollectorViewComponent } from './pages/CostManagement/Collector/c-view/c-view.component';
+import { VehicleCreateComponent } from './pages/CostManagement/Vehicle/v-create/v-create.component';
+import { VehicleEditComponent } from './pages/CostManagement/Vehicle/v-edit/v-edit.component';
+import { VehicleViewComponent } from './pages/CostManagement/Vehicle/v-view/v-view.component';
+import { TripScheduleComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-schedule/t-sched.component';
+import { ManualIdEntryComponent } from './pages/ledgerManagement/InvoiceCreate/mannualId-entry/m-id-entry.component';
 
 export const routes: Routes = [
     {
@@ -74,16 +85,56 @@ export const routes: Routes = [
     component: CollectorReviewComponent
   },
   {
+    path: 'transportdashboard/c-create',
+    component: CollectorCreateComponent
+  },
+  {
+    path: 'transportdashboard/c-edit/:id',
+    component: CollectorEditComponent
+  },
+  {
+    path: 'transportdashboard/c-view',
+    component: CollectorViewComponent
+  },
+  {
     path: 'transportdashboard/r-review',
     component: RtReviewComponent
+  },
+  {
+    path: 'transportdashboard/r-create',
+    component: RtCreateComponent
+  },
+  {
+    path: 'transportdashboard/r-edit/:id',
+    component: RtEditComponent
+  },
+  {
+    path: 'transportdashboard/r-view',
+    component: RtViewComponent
   },
   {
     path: 'transportdashboard/v-review',
     component: VehicleReviewComponent
   },
   {
-    path: 'transportdashboard/t-review',
+    path: 'transportdashboard/v-create',
+    component: VehicleCreateComponent
+  },
+  {
+    path: 'transportdashboard/v-edit/:id',
+    component: VehicleEditComponent
+  },
+  {
+    path: 'transportdashboard/v-view',
+    component: VehicleViewComponent
+  },
+  {
+    path: 'transportdashboard/trip-review',
     component: TripReviewComponent
+  },
+  {
+    path: 'transportedashboard/trip-schedule',
+    component: TripScheduleComponent
   },
   {
     path: 'performancedashboard',
@@ -93,6 +144,7 @@ export const routes: Routes = [
     path: 'performancedashboard/costs-report',
     component: CostReportComponent
   },
+  
   {
     path: 'performancedashboard/collector-report',
     component: CollectorPerformanceReportComponent
@@ -120,5 +172,9 @@ export const routes: Routes = [
   {
     path: 'ledgerManagementdashboard/stock-ledger',
     component: StockLedgerViewComponent
+  },
+  {
+    path: 'ledgerManagementdashboard/m-iid-entry',
+    component: ManualIdEntryComponent
   }
   ];

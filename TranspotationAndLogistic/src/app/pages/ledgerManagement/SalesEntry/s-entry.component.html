@@ -10,11 +10,7 @@
     <div class="error-message-full-page">{{ error() }}</div>
   } 
 
-  <!-- 
-    The logic is now simplified:
-    1. Check if an invoice exists by calling the invoice() computed signal.
-    2. Inside the block, safely access properties using invoice()!
-  -->
+ 
   @else if (invoice()) { 
     <div class="form-layout-grid">
       <!-- Summary Box -->
@@ -44,17 +40,25 @@
         
         <hr/>
         
-        <h3>Sales Charges (Brokerage, VAT, etc.)</h3>
-        <div formArrayName="salesCharges" class="charges-list">
-          @for (chargeGroup of salesCharges.controls; track $index) {
-            <div [formGroupName]="$index" class="charge-item">
-              <input formControlName="chargeType" placeholder="Charge Type (e.g., Brokerage)" />
-              <input formControlName="amount" placeholder="Amount (LKR)" type="number" step="0.01" />
-              <button type="button" (click)="removeCharge($index)" class="btn-remove" title="Remove Charge">×</button>
-            </div>
-          }
-        </div>
-        <button type="button" (click)="addCharge()" class="btn-add-charge">+ Add Charge</button>
+        <!-- NEW, professional structure for the charges section -->
+<div class="charges-section">
+  <div class="charges-section-header">
+    <h3>Sales Charges</h3>
+    <button type="button" (click)="addCharge()" class="btn-add-charge">
+      + Add Charge
+    </button>
+  </div>
+  
+  <div formArrayName="salesCharges" class="charges-list">
+    @for (chargeGroup of salesCharges.controls; track $index) {
+      <div [formGroupName]="$index" class="charge-item">
+        <input formControlName="chargeType" placeholder="Charge Type (e.g., Brokerage)" />
+        <input formControlName="amount" placeholder="Amount (LKR)" type="number" step="0.01" />
+        <button type="button" (click)="removeCharge($index)" class="btn-remove" title="Remove Charge">×</button>
+      </div>
+    }
+  </div>
+</div>
 
         <div class="form-actions">
           <button type="button" class="btn-secondary" (click)="onCancel()">Back to Invoices</button>

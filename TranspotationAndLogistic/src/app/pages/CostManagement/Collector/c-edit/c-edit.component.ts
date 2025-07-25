@@ -11,41 +11,55 @@ import { CollectorResponse, CreateUpdateCollectorPayload } from '../../../../mod
   styleUrls: ['./c-edit.component.scss']
 })
 export class CollectorEditComponent implements OnChanges {
-  // --- Injected Services ---
   private fb = inject(FormBuilder);
 
-  // --- Inputs & Outputs for Modal Behavior ---
   @Input({ required: true }) collector!: CollectorResponse;
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<{ collectorId: number, payload: CreateUpdateCollectorPayload }>();
 
-  // --- Form Properties ---
   collectorForm: FormGroup;
 
   constructor() {
+    // --- UPDATED FormGroup to include all new fields ---
     this.collectorForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(150)]],
-      contactNumber: ['', [Validators.required, Validators.maxLength(10)]],
-      ratePerKm: [0, [Validators.required, Validators.min(0.01)]]
+      ratePerKm: [null, [Validators.required, Validators.min(0.01)]],
+      
+      // New fields from the expanded model
+      collectorNIC: ['', Validators.required],
+      collectorAddressLine1: ['', Validators.required],
+      collectorAddressLine2: [''], 
+      collectorCity: ['', Validators.required],
+      collectorPostalCode: [''], 
+      collectorGender: [null, Validators.required],
+      collectorDOB: [null, Validators.required],
+      collectorPhoneNum: ['', Validators.required],
+      collectorEmail: ['', [Validators.required, Validators.email]]
     });
   }
 
-  // Use ngOnChanges to populate the form when the input data is received
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['collector'] && this.collector) {
+      // patchValue will correctly populate the expanded form
       this.collectorForm.patchValue(this.collector);
     }
   }
 
   onSubmit(): void {
-    if (this.collectorForm.invalid || !this.collector) return;
+    if (this.collectorForm.invalid || !this.collector) {
+      alert('Please fill out all required fields correctly.');
+      this.collectorForm.markAllAsTouched();
+      return;
+    }
 
+    // The form value will now contain all the new fields
     const payload: CreateUpdateCollectorPayload = this.collectorForm.value;
-    // Emit the ID and payload for the parent component to handle the API call
+    
     this.save.emit({ collectorId: this.collector.collectorId, payload });
+    this.close.emit(); // Close the modal on successful submission trigger
   }
 
   onCancel(): void {
-    this.close.emit(); // Emit the close event
+    this.close.emit(); 
   }
 }

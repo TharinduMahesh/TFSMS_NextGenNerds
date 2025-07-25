@@ -5,60 +5,63 @@
   </header>
   
   @if (isLoading()) {
-    <div class="loading-indicator">Loading stock item...</div>
-  } @else if (error()) {
-    <div class="error-message-full-page">{{ error() }}</div>
+    <div class="loading-indicator">Loading...</div>
+  } @else if (isManualEntryMode()) {
+    <!-- 
+      This block handles the manual entry mode. It shows the separate component for finding an item.
+      When the 'find' event is emitted from that child component, it calls the 'loadStockItem' method.
+    -->
+    <app-manual-id-entry (find)="loadStockItem($event)"></app-manual-id-entry>
+
+    <!-- Display any potential errors that occurred during the item lookup -->
+    @if(error()) {
+      <div class="error-message full-width">{{error()}}</div>
+    }
+
+    <div class="actions-center"> <!-- A wrapper for the back button -->
+      <button type="button" class="btn-secondary back-button" (click)="onCancel()">Back to Ledger</button>
+    </div>
+
   } @else {
+    <!-- This block runs if we are NOT in manual entry mode -->
     
-    <div class="form-layout-grid">
-      <!-- Left Side: Summary Box -->
-      <div class="summary-box">
-        <h3>INVOICING FOR</h3>
-        @if (stockItemToInvoice(); as stockItem) {
-          <div class="summary-item">
-            <span class="label">Stock ID</span>
-            <span class="value">#{{ stockItem.stockLedgerEntryId }}</span>
+    <!-- We nest another @if here to safely handle the stock item -->
+    @if (stockItemToInvoice(); as stockItem) {
+      
+      <!-- If a stock item exists, show the main invoice form -->
+      <div class="form-layout-grid">
+        <div class="summary-box">
+          <h3>INVOICING FOR</h3>
+          <div class="summary-item"><span class="label">Stock ID</span><span class="value">#{{ stockItem.stockLedgerEntryId }}</span></div>
+          <div class="summary-item"><span class="label">Garden Mark</span><span class="value">{{ stockItem.gardenMark }}</span></div>
+          <div class="summary-item"><span class="label">Grade</span><span class="value">{{ stockItem.grade }}</span></div>
+          <div class="summary-item"><span class="label">Packing Date</span><span class="value">{{ stockItem.packingDate | date:'longDate' }}</span></div>
+          <div class="summary-item large-value"><span class="label">Weight (kg)</span><span class="value">{{ stockItem.initialWeightKg | number:'1.2-2' }}</span></div>
+        </div>
+
+        <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="form-wrapper">
+          <div class="form-group">
+            <label for="brokerName">Broker Name</label>
+            <input id="brokerName" formControlName="brokerName" type="text" placeholder="e.g., Colombo Tea Brokers" />
           </div>
-          <div class="summary-item">
-            <span class="label">Garden Mark</span>
-            <span class="value">{{ stockItem.gardenMark }}</span>
+          <div class="form-group">
+            <label for="invoiceDate">Invoice Date</label>
+            <input id="invoiceDate" formControlName="invoiceDate" type="date" />
           </div>
-          <div class="summary-item">
-            <span class="label">Grade</span>
-            <span class="value">{{ stockItem.grade }}</span>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="toggleManualEntry()">Find Another Item</button>
+            <button type="submit" class="btn-primary" [disabled]="invoiceForm.invalid">Create Invoice</button>
           </div>
-           <div class="summary-item">
-            <span class="label">Packing Date</span>
-            <span class="value">{{ stockItem.packingDate | date:'longDate' }}</span>
-          </div>
-          <div class="summary-item large-value">
-            <span class="label">Weight (kg)</span>
-            <span class="value">{{ stockItem.initialWeightKg | number:'1.2-2' }}</span>
-          </div>
-        }
+        </form>
       </div>
 
-      <!-- Right Side: Invoice Form -->
-      <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-        <div class="form-group">
-          <label for="brokerName">Broker Name</label>
-          <input id="brokerName" formControlName="brokerName" type="text" placeholder="e.g., Colombo Tea Brokers" />
-           @if (invoiceForm.get('brokerName')?.invalid && invoiceForm.get('brokerName')?.touched) {
-              <div class="error-message">Broker name is required.</div>
-          }
-        </div>
+    } @else {
+      <!-- This block handles the case where the ID from the URL was invalid -->
+      <div class="error-message full-width">
+        <p>{{error() || 'Could not load the requested stock item.'}}</p>
+        <button type="button" class="btn-secondary" (click)="onCancel()">Return to Ledger</button>
+      </div>
+    }
 
-        <div class="form-group">
-          <label for="invoiceDate">Invoice Date</label>
-          <input id="invoiceDate" formControlName="invoiceDate" type="date" />
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" (click)="onCancel()">Back to Ledger</button>
-          <button type="submit" class="btn-primary" [disabled]="invoiceForm.invalid">Create Invoice</button>
-        </div>
-      </form>
-    </div>
-    
-  }
+  } <!-- Closes the primary @else block -->
 </div>

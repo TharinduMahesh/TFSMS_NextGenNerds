@@ -80,11 +80,10 @@ export class TripScheduleComponent implements OnInit {
     this.transportReportService.scheduleTrip(payload).subscribe({
       next: () => {
         alert('Trip scheduled successfully!');
-        this.router.navigate(['/t-review']);
+        this.router.navigate(['transportdashboard/trip-review']);
       },
       error: (err) => {
         alert(`Error scheduling trip: ${err.message}`);
-        // this.isLoading.set(false); 
       }
     });
   }

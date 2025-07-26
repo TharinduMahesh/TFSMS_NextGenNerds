@@ -3,7 +3,6 @@ import 'package:growersignup/sreens/grower/orders/grower_order_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/grower_payment_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/help_center.dart';
 import 'package:growersignup/sreens/grower/home_pages/show_supplier_details.dart';
-import 'package:growersignup/sreens/grower/orders/g_order_selecttion.dart';
 import 'package:growersignup/sreens/grower/home_pages/fertilizer_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/contactus_page.dart';
 
@@ -102,7 +101,6 @@ class _GrowerHomePageState extends State<GrowerHomePage> with TickerProviderStat
             children: [
               Text('Settings page will be implemented here.'),
               SizedBox(height: 10),
-              Text('Current user: ${widget.email}', style: TextStyle(color: textLight, fontSize: 12)),
             ],
           ),
           actions: [

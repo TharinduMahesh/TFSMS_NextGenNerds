@@ -1,39 +1,30 @@
 class Conversation {
   final int conversationId;
   final int growerAccountId;
+  final String growerEmail;
   final int collectorAccountId;
-  final String createdAt;
-
-  // Optional: grower/collector names if API includes them
-  final String? growerName;
-  final String? collectorName;
+  final String collectorEmail;
+  final DateTime createdAt;
 
   Conversation({
     required this.conversationId,
     required this.growerAccountId,
+    required this.growerEmail,
     required this.collectorAccountId,
+    required this.collectorEmail,
     required this.createdAt,
-    this.growerName,
-    this.collectorName,
   });
 
+  // Factory constructor to create a Conversation object from a JSON map.
+  // This is crucial for parsing the API response.
   factory Conversation.fromJson(Map<String, dynamic> json) {
     return Conversation(
-      conversationId: json['conversationId'],
-      growerAccountId: json['growerAccountId'],
-      collectorAccountId: json['collectorAccountId'],
-      createdAt: json['createdAt'],
-      growerName: json['grower']?['growerFirstName'], // optional
-      collectorName: json['collector']?['collectorFirstName'], // optional
+      conversationId: json['conversationId'] as int,
+      growerAccountId: json['growerAccountId'] as int,
+      growerEmail: json['growerEmail'] as String,
+      collectorAccountId: json['collectorAccountId'] as int,
+      collectorEmail: json['collectorEmail'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'conversationId': conversationId,
-      'growerAccountId': growerAccountId,
-      'collectorAccountId': collectorAccountId,
-      'createdAt': createdAt,
-    };
   }
 }

@@ -1,177 +1,319 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:growersignup/models/consersation/conversation_model.dart';
 import 'package:growersignup/models/consersation/message_model.dart';
 import 'package:growersignup/services/conversation/chat_api_service.dart';
-import 'package:signalr_core/signalr_core.dart'; // For real-time updates
+import 'package:intl/intl.dart';
+import 'package:signalr_core/signalr_core.dart';
 
-class ChatDetailScreen extends StatefulWidget {
-  final int conversationId;
-  final String chatPartnerName;
-  final int currentUserId;
+class ChatScreen extends StatefulWidget {
+  final Conversation conversation;
+  final String currentUserEmail;
   final String currentUserType;
 
-  const ChatDetailScreen({
-    super.key,
-    required this.conversationId,
-    required this.chatPartnerName,
-    required this.currentUserId,
+  const ChatScreen({
+    Key? key,
+    required this.conversation,
+    required this.currentUserEmail,
     required this.currentUserType,
-  });
+  }) : super(key: key);
 
   @override
-  State<ChatDetailScreen> createState() => _ChatDetailScreenState();
+  _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatDetailScreenState extends State<ChatDetailScreen> {
-  final ChatApiService _apiService = ChatApiService();
-  final TextEditingController _messageController = TextEditingController();
+class _ChatScreenState extends State<ChatScreen> {
   final List<Message> _messages = [];
   bool _isLoading = true;
-  HubConnection? _hubConnection;
+  String? _error;
+  final TextEditingController _textController = TextEditingController();
+  HubConnection? _signalR;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _loadMessages();
-    _startSignalR();
-  }
-
-  @override
-  void dispose() {
-    _hubConnection?.stop();
-    _messageController.dispose();
-    super.dispose();
+    _initSignalR();
   }
 
   Future<void> _loadMessages() async {
     try {
-      final messages = await _apiService.fetchMessages(widget.conversationId);
       setState(() {
+        _isLoading = true;
+        _error = null;
+      });
+
+      print('Loading messages for conversation: ${widget.conversation.conversationId}');
+      final messages = await ChatApiService.getMessages(widget.conversation.conversationId);
+      
+      setState(() {
+        _messages.clear();
         _messages.addAll(messages);
         _isLoading = false;
       });
+      
+      _scrollToBottom();
     } catch (e) {
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load messages: $e')),
-      );
-    }
-  }
-
-  Future<void> _startSignalR() async {
-    _hubConnection = HubConnectionBuilder()
-        .withUrl("http://localhost:7061/chathub") // Your SignalR hub URL
-        .withAutomaticReconnect()
-        .build();
-
-    _hubConnection?.on("ReceiveMessage", (args) {
-      if (mounted && args != null && args.isNotEmpty) {
-        final message = Message.fromJson({
-           // Assuming your backend sends a full message object on broadcast
-          'messageId': DateTime.now().millisecondsSinceEpoch, // Temp ID
-          'conversationId': args[0],
-          'senderType': args[1],
-          'senderId': args[2],
-          'messageText': args[3],
-          'sentAt': DateTime.now().toIso8601String(),
-        });
-
-        // Only add the message if it belongs to the current open conversation
-        if (message.conversationId == widget.conversationId) {
-          setState(() {
-            _messages.insert(0, message);
-          });
-        }
-      }
-    });
-
-    try {
-      await _hubConnection?.start();
-      print("✅ SignalR Connected for chat.");
-    } catch (e) {
-      print("❌ SignalR connection failed: $e");
-    }
-  }
-
-  Future<void> _sendMessage() async {
-    final text = _messageController.text.trim();
-    if (text.isEmpty) return;
-
-    // Optimistically add to UI
-    final tempMessage = Message(
-      messageId: 0, // Temp
-      conversationId: widget.conversationId,
-      senderType: widget.currentUserType,
-      senderId: widget.currentUserId,
-      messageText: text,
-      sentAt: DateTime.now().toIso8601String(),
-    );
-    setState(() {
-      _messages.insert(0, tempMessage);
-      _messageController.clear();
-    });
-
-    try {
-      // Send to API to save in DB
-      final sentMessage = await _apiService.sendMessage(
-        conversationId: widget.conversationId,
-        senderType: widget.currentUserType,
-        senderId: widget.currentUserId,
-        messageText: text,
-      );
-      // Replace temp message with actual message from server
+      print('Error loading messages: $e');
       setState(() {
-        final index = _messages.indexOf(tempMessage);
-        if (index != -1) {
-          _messages[index] = sentMessage;
+        _error = e.toString();
+        _isLoading = false;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load messages: $e'),
+            backgroundColor: Colors.red,
+            action: SnackBarAction(
+              label: 'Retry',
+              textColor: Colors.white,
+              onPressed: _loadMessages,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _initSignalR() async {
+    try {
+      const serverUrl = "http://localhost:7061";
+      _signalR = HubConnectionBuilder()
+          .withUrl('$serverUrl/chathub')
+          .build();
+
+      _signalR?.onclose((error) {
+        print("SignalR Connection closed: $error");
+      });
+
+      _signalR?.on('ReceiveMessage', (List<Object?>? arguments) {
+        if (arguments != null && arguments.isNotEmpty && arguments[0] != null) {
+          try {
+            final messageData = arguments[0];
+            final newMessage = Message.fromJson(messageData as Map<String, dynamic>);
+            
+            if (mounted) {
+              setState(() {
+                _messages.add(newMessage);
+              });
+              _scrollToBottom();
+            }
+          } catch (e) {
+            print('Error processing received message: $e');
+          }
         }
       });
 
-       // Broadcast via SignalR
-      if (_hubConnection?.state == HubConnectionState.connected) {
-        await _hubConnection?.invoke("SendMessage", args: [
-          widget.conversationId,
-          widget.currentUserType,
-          widget.currentUserId,
-          text,
-        ]);
-      }
+      _signalR?.onreconnecting((error) {
+        print("SignalR reconnecting: $error");
+      });
 
+      _signalR?.onreconnected((connectionId) {
+        print("SignalR reconnected with ID: $connectionId");
+        _signalR?.invoke("JoinConversation", args: [widget.conversation.conversationId.toString()]);
+      });
+
+      await _signalR?.start();
+      print("SignalR connection started");
+      
+      // Join the conversation group after connection starts
+      await _signalR?.invoke("JoinConversation", args: [widget.conversation.conversationId.toString()]);
+      print("Joined conversation: ${widget.conversation.conversationId}");
+      
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to send message'), backgroundColor: Colors.red),
-      );
-      // Remove optimistic message on failure
-      setState(() => _messages.remove(tempMessage));
+      print('SignalR initialization error: $e');
     }
+  }
+
+  void _handleSendPressed() async {
+    if (_textController.text.trim().isEmpty) return;
+
+    final messageText = _textController.text.trim();
+    _textController.clear();
+
+    try {
+      await ChatApiService.sendMessage(
+        conversationId: widget.conversation.conversationId,
+        senderType: widget.currentUserType,
+        senderEmail: widget.currentUserEmail,
+        messageText: messageText,
+      );
+    } catch (e) {
+      print('Error sending message: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to send message: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        // If sending fails, add the text back to the input field
+        _textController.text = messageText;
+      }
+    }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _signalR?.invoke("LeaveConversation", args: [widget.conversation.conversationId.toString()]);
+    _signalR?.stop();
+    _textController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final otherUserEmail = widget.conversation.growerEmail == widget.currentUserEmail
+        ? widget.conversation.collectorEmail
+        : widget.conversation.growerEmail;
+
     return Scaffold(
+      backgroundColor: const Color(0xFFF0FBEF),
       appBar: AppBar(
-        title: Text(widget.chatPartnerName),
-        backgroundColor: Colors.green.shade700,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              otherUserEmail.split('@')[0], // Show username part only
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              'Online', // You can make this dynamic later
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xFF0a4e41),
+        foregroundColor: Colors.white,
+        elevation: 2,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadMessages,
+          ),
+        ],
       ),
       body: Column(
         children: [
           Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    reverse: true, // Shows latest messages at the bottom
-                    padding: const EdgeInsets.all(8.0),
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      final message = _messages[index];
-                      final isMe = message.senderId == widget.currentUserId &&
-                          message.senderType.toLowerCase() == widget.currentUserType.toLowerCase();
-                      return _buildMessageBubble(message, isMe);
-                    },
-                  ),
+            child: _buildMessagesList(),
           ),
-          _buildMessageInput(),
+          _buildMessageComposer(),
         ],
       ),
+    );
+  }
+
+  Widget _buildMessagesList() {
+    if (_isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: Color(0xFF0a4e41)),
+            SizedBox(height: 16),
+            Text('Loading messages...'),
+          ],
+        ),
+      );
+    }
+
+    if (_error != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Colors.red[300],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Failed to load messages',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.red[700],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                _error!,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: _loadMessages,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0a4e41),
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (_messages.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.chat_bubble_outline,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'No messages yet',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Start the conversation by sending a message!',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(16.0),
+      itemCount: _messages.length,
+      itemBuilder: (context, index) {
+        final message = _messages[index];
+        final isMe = message.senderEmail == widget.currentUserEmail;
+        return _buildMessageBubble(message, isMe);
+      },
     );
   }
 
@@ -179,51 +321,102 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: isMe ? Colors.green.shade600 : Colors.grey.shade300,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: isMe ? const Radius.circular(16) : Radius.zero,
-            bottomRight: isMe ? Radius.zero : const Radius.circular(16),
-          ),
+        margin: const EdgeInsets.symmetric(vertical: 4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.8,
         ),
-        child: Text(
-          message.messageText,
-          style: TextStyle(color: isMe ? Colors.white : Colors.black87),
+        decoration: BoxDecoration(
+          color: isMe ? const Color(0xFF0a4e41) : Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20),
+            bottomLeft: isMe ? const Radius.circular(20) : const Radius.circular(4),
+            bottomRight: isMe ? const Radius.circular(4) : const Radius.circular(20),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            Text(
+              message.messageText,
+              style: TextStyle(
+                color: isMe ? Colors.white : Colors.black87,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              DateFormat('hh:mm a').format(message.sentAt.toLocal()),
+              style: TextStyle(
+                color: isMe ? Colors.white70 : Colors.grey[600],
+                fontSize: 11,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildMessageInput() {
+  Widget _buildMessageComposer() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        boxShadow: const [
-          BoxShadow(offset: Offset(0, -1), blurRadius: 2, color: Colors.black12)
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, -2),
+          ),
         ],
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: const InputDecoration(
-                hintText: 'Type a message...',
-                border: InputBorder.none,
+      child: SafeArea(
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(25),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: TextField(
+                  controller: _textController,
+                  textCapitalization: TextCapitalization.sentences,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    hintText: 'Type a message...',
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                    border: InputBorder.none,
+                  ),
+                  onSubmitted: (_) => _handleSendPressed(),
+                ),
               ),
-              onSubmitted: (_) => _sendMessage(),
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.send, color: Colors.green.shade700),
-            onPressed: _sendMessage,
-          ),
-        ],
+            const SizedBox(width: 12),
+            Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFF0a4e41),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.send, color: Colors.white),
+                onPressed: _handleSendPressed,
+                splashRadius: 24,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

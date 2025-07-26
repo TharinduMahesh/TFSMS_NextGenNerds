@@ -18,9 +18,12 @@ import 'package:growersignup/sreens/grower/home_pages/contactus_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/fertilizer_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/grower_harvest.dart';
 import 'package:growersignup/sreens/grower/home_pages/grower_home_page.dart';
+import 'package:growersignup/sreens/grower/login/grower_account_success_pade.dart';
 import 'package:growersignup/sreens/grower/login/grower_bank_detals.dart';
 import 'package:growersignup/sreens/grower/login/grower_create_account.dart';
 import 'package:growersignup/sreens/grower/login/grower_signup.dart';
+import 'package:growersignup/sreens/grower/login/reset_password.dart';
+import 'package:growersignup/sreens/grower/orders/G_peding_orders_details.dart';
 import 'package:growersignup/sreens/grower/orders/g_a_b_c_details.dart';
 import 'package:growersignup/sreens/grower/orders/g_order_selecttion.dart';
 import 'package:growersignup/sreens/grower/orders/g_peding_orders.dart';
@@ -51,7 +54,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
       // home: GrowerHomePage(email: 'Kasun@gmail.com',),
-      home: GrowerOrderDetailsSelectPage(email: 'grower1@example.com') // Replace with actual orderId
+      // home: GrowerSignInSuccessPage(email: 'Kasun@gmail.com',name: 'scs csc',) // Replace with actual orderId
+      home: WelcomePage1(),
     );
   }
 }

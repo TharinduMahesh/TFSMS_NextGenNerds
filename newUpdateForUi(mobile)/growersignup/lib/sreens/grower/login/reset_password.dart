@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/models/grower/show_account_model.dart';
 import 'package:growersignup/services/grower/grower_signup_api.dart';
-import 'package:growersignup/sreens/grower/home_pages/grower_home_page.dart';
-import 'package:growersignup/sreens/grower/login/forgot_password.dart';
-import 'package:growersignup/sreens/grower/login/grower_signup.dart';
+import 'package:growersignup/sreens/grower/login/grower_signin_page.dart';
 
-class GrowerSignInPage extends StatefulWidget {
-  const GrowerSignInPage({super.key});
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({super.key});
 
   @override
-  State<GrowerSignInPage> createState() => _GrowerSignInPageState();
+  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProviderStateMixin {
+class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _tokenController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+  final _confirmPasswordController = TextEditingController();
   final _authService = AuthService();
 
   // State variables
@@ -24,15 +21,17 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
   String _statusMessage = '';
   bool _isError = false;
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+  bool _resetCompleted = false;
 
-  // Animation controllers (matching GrowerSignupPage)
+  // Animation controllers (matching ForgotPasswordPage)
   late AnimationController _animationController;
   late AnimationController _cardAnimationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _slideAnimation;
   late Animation<double> _cardAnimation;
 
-  // Enhanced Color Palette for Tea Project (matching GrowerSignupPage)
+  // Enhanced Color Palette for Tea Project (matching ForgotPasswordPage)
   static const Color primaryGreen = Color(0xFF0a4e41);
   static const Color lightGreen = Color(0xFFF0FBEF);
   static const Color cardBackground = Colors.white;
@@ -80,64 +79,61 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
   void dispose() {
     _animationController.dispose();
     _cardAnimationController.dispose();
-    _emailController.dispose();
+    _tokenController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSignIn() async {
+  Future<void> _handleResetPassword() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
       _statusMessage = '';
     });
 
-    final loginData = LoginData(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-
     try {
-      final loginResponse = await _authService.login(loginData);
-      
+      final resetData = ResetPasswordData(
+        token: _tokenController.text.trim(),
+        password: _passwordController.text.trim(),
+        confirmPassword: _confirmPasswordController.text.trim(),
+      );
+
+      final response = await _authService.resetPassword(resetData);
+
       setState(() {
         _isLoading = false;
-        _statusMessage = 'Sign in successful!';
-        _isError = false;
+        _statusMessage = response;
+        _isError = !response.toLowerCase().contains("successful");
+        if (!_isError) {
+          _resetCompleted = true;
+        }
       });
 
-      // Navigate to home page after a brief delay
-      await Future.delayed(const Duration(milliseconds: 500));
-      
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GrowerHomePage(email: _emailController.text.trim()),
-          ),
-        );
+      if (!_isError) {
+        // Navigate back to login after a delay
+        await Future.delayed(const Duration(seconds: 3));
+        if (mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const GrowerSignInPage()),
+            (Route<dynamic> route) => false,
+          );
+        }
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _statusMessage = e.toString().replaceFirst('Exception: ', '');
+        _statusMessage = 'Failed to reset password. Please try again.';
         _isError = true;
       });
     }
   }
 
-  void _navigateToSignUp() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const GrowerSignupPage()),
-    );
-  }
-
-  void _navigateToForgotPassword() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+  void _navigateToSignIn() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const GrowerSignInPage()),
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -245,14 +241,19 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
             children: [
               _buildHeader(),
               const SizedBox(height: 30),
-              _buildToggleButtons(),
-              const SizedBox(height: 30),
-              _buildSignInForm(),
+              
+              if (!_resetCompleted)
+                _buildResetPasswordForm()
+              else
+                _buildSuccessUI(),
               
               if (_statusMessage.isNotEmpty) ...[
                 const SizedBox(height: 25),
                 _buildStatusMessage(),
               ],
+              
+              const SizedBox(height: 20),
+              _buildBackToSignInButton(),
             ],
           ),
         ),
@@ -267,22 +268,22 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [primaryGreen, darkGreen],
+              colors: [_resetCompleted ? successGreen : primaryGreen, _resetCompleted ? successGreen : darkGreen],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: const Icon(
-            Icons.eco,
+          child: Icon(
+            _resetCompleted ? Icons.check_circle : Icons.lock_reset,
             size: 40,
             color: Colors.white,
           ),
         ),
         const SizedBox(height: 20),
-        const Text(
-          'Welcome Back',
-          style: TextStyle(
+        Text(
+          _resetCompleted ? 'Password Reset!' : 'New Password',
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: textDark,
@@ -290,7 +291,9 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
         ),
         const SizedBox(height: 8),
         Text(
-          'Sign in to your tea grower account',
+          _resetCompleted 
+            ? 'Your password has been successfully reset'
+            : 'Enter token and create your new password',
           style: TextStyle(
             fontSize: 16,
             color: textLight,
@@ -301,90 +304,69 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
     );
   }
 
-  Widget _buildToggleButtons() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(25.0),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [primaryGreen, darkGreen],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.circular(25.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: primaryGreen.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              alignment: Alignment.center,
-              child: const Text(
-                'Sign In',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: _navigateToSignUp,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                    color: textLight,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSignInForm() {
+  Widget _buildResetPasswordForm() {
     return Column(
       children: [
+        // Information Card
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: Colors.blue.withOpacity(0.3)),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.info_outline, color: Colors.blue, size: 24),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Reset Instructions',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Enter the token from your email and create a new secure password.',
+                      style: TextStyle(
+                        color: textLight,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 25),
+        
+        // Token Input Field
         _buildTextField(
-          controller: _emailController,
-          labelText: 'Email Address',
-          prefixIcon: Icons.email_outlined,
-          keyboardType: TextInputType.emailAddress,
+          controller: _tokenController,
+          labelText: 'Password Reset Token',
+          prefixIcon: Icons.vpn_key,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter your email';
-            }
-            if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$").hasMatch(value)) {
-              return 'Please enter a valid email address';
+              return 'Please enter the reset token';
             }
             return null;
           },
         ),
+        
         const SizedBox(height: 20),
+        
+        // New Password Input Field
         _buildTextField(
           controller: _passwordController,
-          labelText: 'Password',
+          labelText: 'New Password',
           prefixIcon: Icons.lock_outline,
           obscureText: !_isPasswordVisible,
           suffixIcon: IconButton(
@@ -396,42 +378,108 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter your password';
+              return 'Please enter a new password';
+            }
+            if (value.length < 6) {
+              return 'Password must be at least 6 characters';
             }
             return null;
           },
         ),
-        const SizedBox(height: 10),
         
-        // Forgot Password Link
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: _navigateToForgotPassword,
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              minimumSize: Size.zero,
+        const SizedBox(height: 20),
+        
+        // Confirm Password Input Field
+        _buildTextField(
+          controller: _confirmPasswordController,
+          labelText: 'Confirm New Password',
+          prefixIcon: Icons.lock_outline,
+          obscureText: !_isConfirmPasswordVisible,
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+              color: textLight,
             ),
-            child: Text(
-              'Forgot password?',
-              style: TextStyle(
-                color: primaryGreen,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            onPressed: () => setState(() => _isConfirmPasswordVisible = !_isConfirmPasswordVisible),
           ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please confirm your password';
+            }
+            if (value != _passwordController.text) {
+              return 'Passwords do not match';
+            }
+            return null;
+          },
         ),
         
-        const SizedBox(height: 25),
+        const SizedBox(height: 30),
         
-        // Sign In Button
+        // Reset Password Button
         _buildActionButton(
-          onPressed: _isLoading ? null : _handleSignIn,
-          text: 'Sign In',
+          onPressed: _isLoading ? null : _handleResetPassword,
+          text: 'Reset Password',
           isLoading: _isLoading,
           backgroundColor: primaryGreen,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSuccessUI() {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: successGreen.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: successGreen.withOpacity(0.3)),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.check_circle_outline, color: successGreen, size: 24),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Password Reset Successful',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Your password has been updated successfully.',
+                      style: TextStyle(
+                        color: textLight,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'You can now sign in with your new password.',
+                      style: TextStyle(
+                        color: textLight,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 30),
+        _buildActionButton(
+          onPressed: _navigateToSignIn,
+          text: 'Continue to Sign In',
+          isLoading: false,
+          backgroundColor: successGreen,
         ),
       ],
     );
@@ -528,6 +576,24 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
                   fontWeight: FontWeight.bold,
                 ),
               ),
+      ),
+    );
+  }
+
+  Widget _buildBackToSignInButton() {
+    return TextButton.icon(
+      onPressed: _navigateToSignIn,
+      icon: Icon(Icons.arrow_back, color: primaryGreen, size: 18),
+      label: Text(
+        'Back to Sign In',
+        style: TextStyle(
+          color: primaryGreen,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
     );
   }

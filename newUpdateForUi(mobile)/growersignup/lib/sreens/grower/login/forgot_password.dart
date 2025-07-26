@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/models/grower/show_account_model.dart';
 import 'package:growersignup/services/grower/grower_signup_api.dart';
-import 'package:growersignup/sreens/grower/home_pages/grower_home_page.dart';
-import 'package:growersignup/sreens/grower/login/forgot_password.dart';
-import 'package:growersignup/sreens/grower/login/grower_signup.dart';
+import 'package:growersignup/sreens/grower/login/reset_password.dart';
+import 'package:growersignup/sreens/grower/login/grower_signin_page.dart';
 
-class GrowerSignInPage extends StatefulWidget {
-  const GrowerSignInPage({super.key});
+class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({super.key});
 
   @override
-  State<GrowerSignInPage> createState() => _GrowerSignInPageState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProviderStateMixin {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  
   final _authService = AuthService();
 
   // State variables
   bool _isLoading = false;
   String _statusMessage = '';
   bool _isError = false;
-  bool _isPasswordVisible = false;
+  bool _tokenSent = false;
 
-  // Animation controllers (matching GrowerSignupPage)
+  // Animation controllers (matching GrowerSignInPage)
   late AnimationController _animationController;
   late AnimationController _cardAnimationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _slideAnimation;
   late Animation<double> _cardAnimation;
 
-  // Enhanced Color Palette for Tea Project (matching GrowerSignupPage)
+  // Enhanced Color Palette for Tea Project (matching GrowerSignInPage)
   static const Color primaryGreen = Color(0xFF0a4e41);
   static const Color lightGreen = Color(0xFFF0FBEF);
   static const Color cardBackground = Colors.white;
@@ -81,63 +77,49 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
     _animationController.dispose();
     _cardAnimationController.dispose();
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSignIn() async {
+  Future<void> _handleRequestReset() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
       _statusMessage = '';
     });
 
-    final loginData = LoginData(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-
     try {
-      final loginResponse = await _authService.login(loginData);
-      
+      final response = await _authService.requestPasswordReset(_emailController.text.trim());
+
       setState(() {
         _isLoading = false;
-        _statusMessage = 'Sign in successful!';
+        _statusMessage = response;
         _isError = false;
+        _tokenSent = true;
       });
 
-      // Navigate to home page after a brief delay
-      await Future.delayed(const Duration(milliseconds: 500));
+      // Navigate to reset password page after a brief delay
+      await Future.delayed(const Duration(milliseconds: 1500));
       
       if (mounted) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => GrowerHomePage(email: _emailController.text.trim()),
-          ),
+          MaterialPageRoute(builder: (context) => const ResetPasswordPage()),
         );
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _statusMessage = e.toString().replaceFirst('Exception: ', '');
+        _statusMessage = 'Failed to send reset token. Please try again.';
         _isError = true;
       });
     }
   }
 
-  void _navigateToSignUp() {
+  void _navigateToSignIn() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const GrowerSignupPage()),
-    );
-  }
-
-  void _navigateToForgotPassword() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+      MaterialPageRoute(builder: (context) => const GrowerSignInPage()),
     );
   }
 
@@ -245,14 +227,19 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
             children: [
               _buildHeader(),
               const SizedBox(height: 30),
-              _buildToggleButtons(),
-              const SizedBox(height: 30),
-              _buildSignInForm(),
+              
+              if (!_tokenSent)
+                _buildForgotPasswordForm()
+              else
+                _buildTokenSentUI(),
               
               if (_statusMessage.isNotEmpty) ...[
                 const SizedBox(height: 25),
                 _buildStatusMessage(),
               ],
+              
+              const SizedBox(height: 20),
+              _buildBackToSignInButton(),
             ],
           ),
         ),
@@ -267,22 +254,22 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [primaryGreen, darkGreen],
+              colors: [Color(0xFF0a4e41), Color(0xFF0a4e41)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(20),
           ),
           child: const Icon(
-            Icons.eco,
+            Icons.lock_reset,
             size: 40,
             color: Colors.white,
           ),
         ),
         const SizedBox(height: 20),
-        const Text(
-          'Welcome Back',
-          style: TextStyle(
+        Text(
+          _tokenSent ? 'Check Your Email' : 'Reset Password',
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: textDark,
@@ -290,7 +277,9 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
         ),
         const SizedBox(height: 8),
         Text(
-          'Sign in to your tea grower account',
+          _tokenSent 
+            ? 'Reset token sent to your email'
+            : 'Enter your email to reset password',
           style: TextStyle(
             fontSize: 16,
             color: textLight,
@@ -301,71 +290,51 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
     );
   }
 
-  Widget _buildToggleButtons() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(25.0),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [primaryGreen, darkGreen],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.circular(25.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: primaryGreen.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              alignment: Alignment.center,
-              child: const Text(
-                'Sign In',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: _navigateToSignUp,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                    color: textLight,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSignInForm() {
+  Widget _buildForgotPasswordForm() {
     return Column(
       children: [
+        // Information Card
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: Colors.blue.withOpacity(0.3)),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.info_outline, color: Colors.blue, size: 24),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Password Reset',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Enter your email address and we\'ll send you a reset token.',
+                      style: TextStyle(
+                        color: textLight,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 25),
+        
+        // Email Input Field
         _buildTextField(
           controller: _emailController,
           labelText: 'Email Address',
@@ -381,57 +350,95 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
             return null;
           },
         ),
-        const SizedBox(height: 20),
-        _buildTextField(
-          controller: _passwordController,
-          labelText: 'Password',
-          prefixIcon: Icons.lock_outline,
-          obscureText: !_isPasswordVisible,
-          suffixIcon: IconButton(
-            icon: Icon(
-              _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-              color: textLight,
-            ),
-            onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your password';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 10),
         
-        // Forgot Password Link
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: _navigateToForgotPassword,
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              minimumSize: Size.zero,
-            ),
-            child: Text(
-              'Forgot password?',
-              style: TextStyle(
-                color: primaryGreen,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ),
+        const SizedBox(height: 30),
         
-        const SizedBox(height: 25),
-        
-        // Sign In Button
+        // Send Reset Token Button
         _buildActionButton(
-          onPressed: _isLoading ? null : _handleSignIn,
-          text: 'Sign In',
+          onPressed: _isLoading ? null : _handleRequestReset,
+          text: 'Send Reset Token',
           isLoading: _isLoading,
-          backgroundColor: primaryGreen,
+          backgroundColor: Color(0xFF0a4e41),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTokenSentUI() {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: successGreen.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: successGreen.withOpacity(0.3)),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.email_outlined, color: successGreen, size: 24),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Reset Token Sent',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      _emailController.text,
+                      style: TextStyle(
+                        color: textLight,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Check your inbox and follow the instructions.',
+                      style: TextStyle(
+                        color: textLight,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 30),
+        _buildActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ResetPasswordPage()),
+            );
+          },
+          text: 'Continue to Reset',
+          isLoading: false,
+          backgroundColor: successGreen,
+        ),
+        const SizedBox(height: 15),
+        TextButton(
+          onPressed: () {
+            setState(() {
+              _tokenSent = false;
+              _statusMessage = '';
+            });
+          },
+          child: Text(
+            'Resend Token',
+            style: TextStyle(
+              color: Colors.orange,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ],
     );
@@ -442,8 +449,6 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
     required String labelText,
     required IconData prefixIcon,
     TextInputType keyboardType = TextInputType.text,
-    bool obscureText = false,
-    Widget? suffixIcon,
     String? Function(String?)? validator,
   }) {
     return Container(
@@ -460,14 +465,12 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
-        obscureText: obscureText,
         validator: validator,
         style: const TextStyle(color: textDark),
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(color: textLight),
           prefixIcon: Icon(prefixIcon, color: primaryGreen),
-          suffixIcon: suffixIcon,
           filled: true,
           fillColor: Colors.grey[50],
           border: OutlineInputBorder(
@@ -528,6 +531,24 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
                   fontWeight: FontWeight.bold,
                 ),
               ),
+      ),
+    );
+  }
+
+  Widget _buildBackToSignInButton() {
+    return TextButton.icon(
+      onPressed: _navigateToSignIn,
+      icon: Icon(Icons.arrow_back, color: primaryGreen, size: 18),
+      label: Text(
+        'Back to Sign In',
+        style: TextStyle(
+          color: primaryGreen,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
     );
   }

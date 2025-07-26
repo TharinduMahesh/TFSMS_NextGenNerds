@@ -1,264 +1,315 @@
 import 'package:flutter/material.dart';
 import 'package:growersignup/sreens/collector/orders/accepted_orders_page.dart';
 import 'package:growersignup/sreens/collector/orders/pending_orders_page.dart';
-
+import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 
 class CollectorOrderSelectPage extends StatefulWidget {
   final String email;
   const CollectorOrderSelectPage({super.key, required this.email});
 
   @override
-  State<CollectorOrderSelectPage> createState() => _CollectorHomePageState();
+  State<CollectorOrderSelectPage> createState() => _CollectorOrderSelectPageState();
 }
 
-class _CollectorHomePageState extends State<CollectorOrderSelectPage> {
+class _CollectorOrderSelectPageState extends State<CollectorOrderSelectPage> {
   int _bottomNavIndex = 0;
 
-  // --- Define Colors (estimated) ---
-  static const Color pageBackgroundColor = Color(0xFFF0FBEF);
-  static const Color titleTextColor = Colors.white;
-  static const Color settingsIconColor = Colors.white;
-  static const Color buttonBackgroundColor = Color(0xFFDDF4DD);
-  static const Color buttonTextColor = Color(0xFF0a4e41);
-  static const Color buttonIconColor = buttonTextColor;
-  static const Color bottomNavBarBackground = Colors.white;
-  static const Color bottomNavBarSelectedColor = buttonTextColor;
-  static const Color bottomNavBarUnselectedColor = Colors.grey;
-  //
+  // Enhanced Color Scheme (matching grower theme)
+  static const Color primaryGreen = Color(0xFF0a4e41);
+  static const Color lightGreen = Color(0xFFF0FBEF);
+  static const Color cardBackground = Colors.white;
+  static const Color textDark = Color(0xFF1A1A1A);
+  static const Color textLight = Color(0xFF666666);
+  static const Color warningOrange = Color(0xFFFF9800);
+  static const Color successGreen = Color(0xFF4CAF50);
 
-  // Navigation
-  void _navigateToHarvest() {
-    print('Requests to accept');
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => PendingOrdersPage(email: widget.email)),
-    );
+  // Navigation Methods
+  void _navigateToOrders() {
+    // Current page - no action needed
   }
 
   void _navigateToPayments() {
-    print('Accepted Orders');
-    Navigator.push(
+    Navigator.pushReplacementNamed(context, '/collector-payments', arguments: widget.email);
+  }
+
+  void _navigateToHome() {
+    Navigator.pushReplacementNamed(context, '/collector-home', arguments: widget.email);
+  }
+
+  void _navigateToMessages() {
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => AcceptedOrdersPage(email: widget.email),
+        builder: (context) => ConversationListScreen(
+          email: widget.email,
+          userType: "Collector",
+        ),
       ),
     );
   }
 
-  void _navigateToSettings() {
-    print('Navigate to Settings Page');
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+  void _navigateToProfile() {
+    Navigator.pushReplacementNamed(context, '/collector-profile', arguments: widget.email);
   }
 
   void _onBottomNavTapped(int index) {
     if (_bottomNavIndex == index) return;
+    
     setState(() => _bottomNavIndex = index);
+    
     switch (index) {
-      case 0:
-        print("Navigate Home (already here)");
-        break;
-      case 1:
-        print("Navigate Notifications");
-        break;
-      case 2:
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => GrowerDetailsPage(email: widget.email),
-        //   ),
-        // );
-        print("Navigate Profile");
-        break;
-
-      case 3:
-        print("Navigate HelpCenter");
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => HelpCenterPage(email: widget.email),
-        //   ),
-        // );
-        break;
+      case 0: _navigateToOrders(); break;
+      case 1: _navigateToPayments(); break;
+      case 2: _navigateToHome(); break;
+      case 3: _navigateToMessages(); break;
+      case 4: _navigateToProfile(); break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      backgroundColor: pageBackgroundColor,
-      extendBodyBehindAppBar: true,
+      backgroundColor: lightGreen,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Order Management',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: primaryGreen,
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
-        automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.settings_outlined,
-              color: settingsIconColor,
-              size: 28,
+          Container(
+            margin: const EdgeInsets.only(right: 15),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(10),
             ),
-            onPressed: _navigateToSettings,
-          ),
-          const SizedBox(width: 10),
-        ],
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          //Background Image
-          Image.asset(
-            'lib/assets/images/tea.png',
-            fit: BoxFit.cover,
-            color: Colors.black.withOpacity(0.35),
-            colorBlendMode: BlendMode.darken,
-          ),
-
-          // Title and Buttons
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.08,
-                vertical: 20,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Title
-                  Column(
-                    children: [
-                      SizedBox(height: kToolbarHeight - 10), // Space for AppBar
-                      const Text(
-                        'Collector\nRequests',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: titleTextColor,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          height: 1.3,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 6.0,
-                              color: Colors.black54,
-                              offset: Offset(1.0, 1.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Bottom section: Buttons
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildNavigationButton(
-                        text: 'Pending Requests',
-                        icon: Icons.arrow_forward_ios,
-                        onTap: _navigateToHarvest,
-                      ),
-                      const SizedBox(height: 20),
-                      _buildNavigationButton(
-                        text: 'Accepted Requests',
-                        icon: Icons.arrow_forward_ios,
-                        onTap: _navigateToPayments,
-                      ),
-                      SizedBox(
-                        height: screenHeight * 0.08 + 56,
-                      ), // Space for FAB and bottom nav (56 is default FAB height)
-                    ],
-                  ),
-                ],
-              ),
+            child: IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.white, size: 22),
+              onPressed: () {
+                // Refresh functionality
+                setState(() {});
+              },
             ),
           ),
         ],
       ),
-      // Position near bottom nav
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: bottomNavBarBackground,
-        selectedItemColor: bottomNavBarSelectedColor,
-        unselectedItemColor: bottomNavBarUnselectedColor,
-        currentIndex: _bottomNavIndex,
-        onTap: _onBottomNavTapped,
-        elevation: 8.0, // Add some elevation
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 11,
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 15),
+            
+            // Pending Orders Card
+            _buildOrderCard(
+              title: 'Pending Requests',
+              subtitle: 'View new tea collection requests from growers',
+              icon: Icons.pending_actions,
+              color: warningOrange,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PendingOrdersPage(email: widget.email),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 20),
+            
+            // Accepted Orders Card
+            _buildOrderCard(
+              title: 'Accepted Requests',
+              subtitle: 'Track your confirmed collection',
+              icon: Icons.check_circle_outline,
+              color: successGreen,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AcceptedOrdersPage(email: widget.email),
+                ),
+              ),
+            ),
+            
+            const Spacer(),
+          ],
         ),
-        unselectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 11,
+      ),
+      
+      // Bottom Navigation Bar
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: cardBackground,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 15,
+              offset: const Offset(0, -5),
+            ),
+          ],
         ),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_outlined),
-            activeIcon: Icon(Icons.notifications),
-            label: 'Notification',
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _bottomNavIndex,
+            selectedItemColor: primaryGreen,
+            unselectedItemColor: textLight,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+            unselectedLabelStyle: const TextStyle(fontSize: 11),
+            onTap: _onBottomNavTapped,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.assignment_outlined),
+                activeIcon: Icon(Icons.assignment),
+                label: 'Orders',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.payment_outlined),
+                activeIcon: Icon(Icons.payment),
+                label: 'Payments',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                activeIcon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.message_outlined),
+                activeIcon: Icon(Icons.message),
+                label: 'Messages',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline),
+                activeIcon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star_outline),
-            activeIcon: Icon(Icons.star),
-            label: 'Help Center',
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  //  navigation buttons
-  Widget _buildNavigationButton({
-    required String text,
+  Widget _buildOrderCard({
+    required String title,
+    required String subtitle,
     required IconData icon,
+    required Color color,
     required VoidCallback onTap,
   }) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: buttonBackgroundColor,
-        foregroundColor: buttonTextColor, // For ripple and icon color
-        minimumSize: const Size(
-          double.infinity,
-          60,
-        ), // Full width, fixed height
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0), // Rounded corners
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        elevation: 3,
+    return Container(
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Row(
-        mainAxisAlignment:
-            MainAxisAlignment.spaceBetween, // Text on left, icon on right
-        children: [
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: buttonTextColor, // Explicitly set text color
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: color, size: 30),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: textDark,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: textLight,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Icon(Icons.arrow_forward_ios, size: 16, color: textLight),
+              ],
             ),
           ),
-          Icon(
-            icon,
-            size: 20,
-            color: buttonIconColor,
-          ), // Explicitly set icon color
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickAction({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: primaryGreen.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: primaryGreen,
+                size: 24,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: textDark,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -5,14 +5,14 @@ import { Router } from '@angular/router';
 import { RtList, CreateUpdateRoutePayload } from '../../../models/Logistic and Transport/RouteMaintain.model';
 import { RouteService } from '../../../Services/LogisticAndTransport/RouteMaintain.service';
 
-
 import { RtViewComponent } from '../r-view/r-view.component';
 import { TnLNavbarComponent } from "../../../components/TnLNavbar/tnlnav.component";
+import { RtEditComponent } from "../r-edit/r-edit.component";
 
 @Component({
-  selector: 'app-r-review', 
+  selector: 'app-r-review',
   standalone: true,
-  imports: [CommonModule, RtViewComponent, TnLNavbarComponent],
+  imports: [CommonModule, RtViewComponent, TnLNavbarComponent, RtEditComponent],
   templateUrl: './r-review.component.html',
   styleUrls: ['./r-review.component.scss']
 })
@@ -30,17 +30,19 @@ export class RtReviewComponent implements OnInit {
 
   // --- Modal State Signals ---
   selectedRoute = signal<RtList | null>(null); // For highlighting a row
-  isViewModalOpen = signal(false);   
+  isViewModalOpen = signal(false);
   routeToView = signal<RtList | null>(null);
+
   isEditModalOpen = signal(false);
-  routeBeingEdited = signal<RtList | null>(null);
-  
+  // *** CORRECTED ***: Renamed 'routeBeingEdited' to 'routeToEdit' for consistency with the template
+  routeToEdit = signal<RtList | null>(null);
+
   // --- Computed Signal for Displaying Data ---
   filteredRoutes = computed(() => {
     const routes = this.allRoutes();
     const term = this.searchTerm().toLowerCase();
     const filter = this.selectedFilter();
-    
+
     return routes.filter(route => {
       const matchesSearch = term === '' ||
         route.rName.toLowerCase().includes(term) ||
@@ -69,7 +71,7 @@ export class RtReviewComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.error.set(err.message);
+        this.error.set(`Failed to load routes: ${err.message}`);
         this.isLoading.set(false);
       }
     });
@@ -78,13 +80,13 @@ export class RtReviewComponent implements OnInit {
   trackById(index: number, item: RtList): number {
     return item.rId;
   }
-  
+
   onSelectRoute(route: RtList): void {
     this.selectedRoute.set(route);
   }
 
   addNewRoute(): void {
-    this.router.navigate(['transportdashboard/r-create']); // Assuming '/r-create' is your page route
+    this.router.navigate(['transportdashboard/r-create']);
   }
 
   onView(route: RtList): void {
@@ -92,9 +94,11 @@ export class RtReviewComponent implements OnInit {
     this.isViewModalOpen.set(true);
   }
 
+  // *** CORRECTED ***: This method now opens the modal instead of navigating
   onEdit(route: RtList): void {
-  this.router.navigate(['transportdashboard/r-edit', route.rId]);
-}
+    this.routeToEdit.set(route);
+    this.isEditModalOpen.set(true);
+  }
 
   onDelete(id?: number): void {
     if (!id) return;
@@ -104,34 +108,35 @@ export class RtReviewComponent implements OnInit {
           this.loadRoutes();
           alert('Route deleted successfully.');
         },
-        error: (err) => alert(`Error: ${err.message}`)
+        error: (err) => alert(`Error deleting route: ${err.message}`)
       });
     }
   }
-  
+
   // --- Event handlers for the Modals ---
 
   closeViewModal(): void {
     this.isViewModalOpen.set(false);
+    this.routeToView.set(null);
   }
 
   closeEditModal(): void {
     this.isEditModalOpen.set(false);
-    this.routeBeingEdited.set(null);
+    this.routeToEdit.set(null);
   }
 
   // This handles the (save) event from the edit component
   handleSave(payload: CreateUpdateRoutePayload): void {
-    const routeToUpdate = this.routeBeingEdited();
+    const routeToUpdate = this.routeToEdit();
     if (!routeToUpdate) return;
-    
+
     this.routeService.updateRoute(routeToUpdate.rId, payload).subscribe({
       next: () => {
         this.loadRoutes();
         this.closeEditModal();
         alert('Route updated successfully!');
       },
-      error: (err) => alert(`Error: ${err.message}`)
+      error: (err) => alert(`Error updating route: ${err.message}`)
     });
   }
 }

@@ -89,6 +89,6 @@ export class TripScheduleComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/t-review']);
+    this.router.navigate(['transportedashboard/trip-review']);
   }
 }

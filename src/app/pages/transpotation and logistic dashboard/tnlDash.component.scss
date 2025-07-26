@@ -1,4 +1,3 @@
-/* --- COLOR PALETTE & DESIGN TOKENS (CSS Variables) --- */
 :host {
   --color-background: #f4f7f6;
   --color-primary-blue: #007bff;
@@ -12,13 +11,12 @@
   --color-text-dark: #212529;
   --color-text-light: #6c757d;
   --color-border: #dee2e6;
-  --color-card-bg: #ffffff; /* White for card backgrounds */
+  --color-card-bg: #ffffff;
   --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
   --shadow-md: 0 5px 15px rgba(0,0,0,0.08);
   --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-/* --- MAIN LAYOUT --- */
 .page-container {
   max-width: 1600px;
   margin: 2rem auto;
@@ -26,7 +24,6 @@
   background-color: var(--color-background);
 }
 
-/* --- MAIN CONTENT AREA --- */
 .dashboard-content {
   width: 100%;
 }
@@ -60,11 +57,8 @@
   }
 }
 
-/* --- KPI CARDS with Enhanced Gradient Styles --- */
 .summary-grid {
   display: grid;
-  // This line creates the responsive grid.
-  // It will have as many columns as can fit, with a minimum width of 220px.
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
 }
@@ -115,7 +109,6 @@
     }
   }
 
-  // Color assignments
   .collectors { background-color: rgba(23, 162, 184, 0.1); svg { color: var(--color-accent-teal); } }
   .vehicles { background-color: rgba(0, 123, 255, 0.1); svg { color: var(--color-primary-blue); } }
   .routes { background-color: rgba(111, 66, 193, 0.1); svg { color: var(--color-accent-purple); } }
@@ -124,7 +117,7 @@
   .completed { background-color: rgba(40, 167, 69, 0.1); svg { color: var(--color-accent-green); } }
 }
 
-/* --- ACTIVITY CARD --- */
+
 .activity-card {
   margin-top: 2.5rem;
   background: var(--color-card-bg);
@@ -181,4 +174,17 @@
 }
 .error-message {
     color: #721c24; background-color: #f8d7da; border-color: #f5c6cb;
+}
+
+
+@media (min-width: 768px) {
+  .summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .summary-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }

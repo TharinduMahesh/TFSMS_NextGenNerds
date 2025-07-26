@@ -1,3 +1,245 @@
+// /* --- Main Page Container --- */
+// .page-container {
+//   max-width: 1600px;
+//   margin: 2rem auto;
+//   padding: 0 1rem;
+// }
+
+// /* --- Professional Filter Bar (matched with other review pages) --- */
+// .top-bar {
+//   display: flex;
+//   align-items: center;
+//   gap: 1rem;
+//   padding: 1rem;
+//   background-color: #f8f9fa;
+//   border-radius: 8px;
+//   margin-bottom: 2rem;
+//   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+//   input[type="text"] {
+//     padding: 0.6rem 1rem;
+//     border: 1px solid #dee2e685;
+//     border-radius: 6px;
+//     font-size: 1rem;
+//     background-color: #dee2e6;
+//     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+//     width: 250px;
+
+//     &:focus {
+//       border-color: #495057;
+//       outline: none;
+//       box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
+//     }
+//     &::placeholder {
+//       color: #adb5bd;
+//     }
+//   }
+
+//   .add-btn {
+//     margin-left: auto;
+//     background-color: #28a745; // Consistent green button
+//     color: white;
+//     padding: 0.6rem 1.2rem;
+//     border: none;
+//     border-radius: 6px;
+//     font-weight: 600;
+//     cursor: pointer;
+//     display: flex;
+//     align-items: center;
+//     gap: 0.5rem;
+//     transition: background-color 0.2s ease;
+
+//     &:hover {
+//       background-color: #2e7d32;
+//     }
+//   }
+// }
+
+// .table-wrapper {
+//   overflow-x: auto;
+//   background-color: #fff;
+//   border-radius: 8px;
+//   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+// }
+
+// /* --- Professional Table Styling --- */
+// table {
+//   width: 100%;
+//   border-collapse: collapse;
+//   font-size: 14px; // Standardized font size
+//   min-width: 1200px; // Prevents content from wrapping too early
+
+//   thead tr {
+//     background-color: #343a40;;
+//     color: #ffffff;
+//   }
+
+//   th, td {
+//     padding: 1rem 1.25rem;
+//     white-space: nowrap; // Prevents text from wrapping
+//     text-align: left;
+//   }
+  
+//   th {
+//     font-weight: 600;
+//     text-transform: uppercase;
+//     font-size: 12px;
+//     letter-spacing: 0.5px;
+//   }
+
+//   tbody tr {
+//     border-bottom: 1px solid #dee2e6;
+//     &:last-of-type { border-bottom: none; }
+//     &:hover { background-color: #e9f5ff; }
+//   }
+// }
+
+// /* --- Action Buttons in Table --- */
+// .actions-cell {
+//   display: flex;
+//   gap: 0.5rem;
+  
+//   .btn-action {
+//     padding: 0.4rem 0.8rem;
+//     border: 1px solid transparent;
+//     border-radius: 5px;
+//     font-weight: 500;
+//     cursor: pointer;
+//     transition: all 0.2s ease;
+//   }
+
+//   .btn-view {
+//     background-color: #e9ecef;
+//     color: #495057;
+//     &:hover { background-color: #ced4da; }
+//   }
+//   .btn-edit {
+//     background-color: #fff3cd;
+//     color: #856404;
+//     &:hover { background-color: #ffeeba; }
+//   }
+//   .btn-delete {
+//     background-color: #f8d7da;
+//     color: #721c24;
+//     &:hover { background-color: #f5c6cb; }
+//   }
+// }
+
+// /* --- Loading/Error States --- */
+// .loading-indicator, .error-message {
+//   text-align: center;
+//   padding: 3rem 1rem;
+//   font-size: 1.2rem;
+//   font-style: italic;
+//   color: #6c757d;
+// }
+// .error-message {
+//   color: #721c24;
+//   font-weight: 500;
+// }
+
+
+// /* --- Responsive Adjustments for Collector Table --- */
+
+// /* 
+//   Targeting small screens (max-width: 768px).
+//   This is where the transformation from a table to a card list happens.
+//   Medium and Large screens will ignore these styles and display the default table.
+// */
+// @media (max-width: 768px) {
+
+//   /* --- Responsive Filter Bar --- */
+//   .top-bar {
+//     flex-direction: column; /* Stack search bar and button vertically */
+//     align-items: stretch;   /* Make both elements full width */
+//     gap: 0.75rem;
+//   }
+
+//   .top-bar input[type="text"] {
+//     width: 100%; /* Ensure search input takes full width */
+//   }
+
+//   .top-bar .add-btn {
+//     margin-left: 0; /* Remove the auto margin */
+//     width: 100%;      /* Make button full width */
+//     justify-content: center; /* Center the icon and text in the button */
+//   }
+
+//   /* --- Table to Card Transformation --- */
+
+//   /* Force the table to not be a table anymore */
+//   table {
+//     border-collapse: separate;
+//     border-spacing: 0 1rem; /* This creates space between the "cards" */
+//     min-width: 100%; /* Allow table to shrink */
+//   }
+
+//   /* Hide the table headers, we will re-create them as labels */
+//   table thead {
+//     display: none;
+//   }
+
+//   /* Each row becomes a block-level card */
+//   table tr {
+//     display: block;
+//     background-color: #fff;
+//     border-radius: 8px;
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+//     border: 1px solid #dee2e6; /* Add a border for definition */
+//     overflow: hidden; /* Ensures child elements respect the border radius */
+//   }
+
+//   /* Each cell becomes a block and is arranged for the label/value pair */
+//   table td {
+//     display: block;
+//     padding: 0.75rem 1rem;
+//     padding-left: 45%; /* Make space for the label on the left */
+//     text-align: right; /* Align the data value to the right */
+//     white-space: normal; /* Allow text to wrap */
+//     position: relative; /* Needed for the ::before pseudo-element */
+//     border-bottom: 1px solid #e9ecef;
+//   }
+  
+//   table td:last-child {
+//       border-bottom: none;
+//   }
+
+//   /* Create the data labels using a pseudo-element */
+//   table td::before {
+//     content: attr(data-label); /* Use the data-label attribute for content */
+//     position: absolute;
+//     left: 1rem;
+//     width: calc(45% - 2rem); /* Control width of the label */
+//     font-weight: 600;
+//     font-size: 13px;
+//     text-align: left;
+//     white-space: nowrap;
+//     color: #343a40;
+//   }
+
+//   /* Align the action buttons to the right and provide more space */
+//   .actions-cell {
+//     padding: 0.75rem 1rem;
+//     display: flex;
+//     justify-content: flex-end; /* Align buttons to the right */
+//     gap: 0.5rem;
+//   }
+
+//   .actions-cell::before {
+//     padding-top: 0.4rem; /* Vertically align the "Actions" label */
+//   }
+  
+//   /* Remove the empty state message border in mobile view */
+//   tbody tr:has(td[colspan="9"]) {
+//     border: none;
+//     box-shadow: none;
+//     background-color: transparent;
+//   }
+// }
+
+
+
+
 /* --- Main Page Container --- */
 .page-container {
   max-width: 1600px;
@@ -5,124 +247,195 @@
   padding: 0 1rem;
 }
 
-/* --- Professional Filter Bar (matched with other review pages) --- */
+/* --- Professional Filter Bar (Mobile-First) --- */
 .top-bar {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column; /* Stack on mobile */
+  align-items: stretch;
+  gap: 0.75rem;
   padding: 1rem;
   background-color: #f8f9fa;
   border-radius: 8px;
   margin-bottom: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #dee2e6;
+}
 
-  input[type="text"] {
-    padding: 0.6rem 1rem;
-    border: 1px solid #dee2e685;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #dee2e6;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    width: 250px;
+.top-bar input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.top-bar input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+.top-bar input[type="text"]::placeholder {
+  color: #6c757d;
+}
 
-    &:focus {
-      border-color: #495057;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
-    }
-    &::placeholder {
-      color: #adb5bd;
-    }
-  }
-
-  .add-btn {
-    margin-left: auto;
-    background-color: #28a745; // Consistent green button
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #2e7d32;
-    }
-  }
+.top-bar .add-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 0.75rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+.top-bar .add-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
 }
 
 .table-wrapper {
-  overflow-x: auto;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* --- Professional Table Styling --- */
+
 table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 14px; // Standardized font size
-  min-width: 1200px; // Prevents content from wrapping too early
-
+  border-collapse: separate;
+  border-spacing: 0 1rem; /* Space between cards */
+  font-size: 14px;
   thead tr {
     background-color: #343a40;;
     color: #ffffff;
   }
-
-  th, td {
-    padding: 1rem 1.25rem;
-    white-space: nowrap; // Prevents text from wrapping
-    text-align: left;
-  }
-  
-  th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid #dee2e6;
-    &:last-of-type { border-bottom: none; }
-    &:hover { background-color: #e9f5ff; }
-  }
 }
 
-/* --- Action Buttons in Table --- */
+table tr {
+  display: block;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+table td {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-align: right;
+  position: relative;
+  border-bottom: 1px dashed #e9ecef;
+  white-space: normal; /* Allow long text to wrap */
+}
+table td:last-child {
+  border-bottom: none;
+}
+
+/* Create labels from data-label attributes */
+table td::before {
+  content: attr(data-label);
+  position: absolute;
+  left: 1rem;
+  font-weight: 600;
+  color: #343a40;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Empty state message on mobile */
+tbody tr:has(td[colspan="6"]) {
+  background-color: transparent;
+  box-shadow: none;
+  border: 1px dashed #dee2e6;
+  padding: 1rem;
+}
+tbody td[colspan="6"] {
+  border: none;
+  text-align: center;
+  padding: 2rem;
+}
+tbody td[colspan="6"]::before {
+  display: none;
+}
+
+/* --- Action Buttons Styling --- */
 .actions-cell {
   display: flex;
+  justify-content: flex-end;
   gap: 0.5rem;
-  
-  .btn-action {
-    padding: 0.4rem 0.8rem;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
+  padding-top: 1rem;
+}
+.actions-cell::before {
+  display: none; /* Hide "Actions" label */
+}
 
-  .btn-view {
-    background-color: #e9ecef;
-    color: #495057;
-    &:hover { background-color: #ced4da; }
+.btn-action {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-view { background-color: #e9ecef; color: #495057; &:hover { background-color: #ced4da; } }
+.btn-edit { background-color: #fff3cd; color: #856404; &:hover { background-color: #ffeeba; } }
+.btn-delete { background-color: #f8d7da; color: #721c24; &:hover { background-color: #f5c6cb; } }
+
+/* --- RESPONSIVE STYLES for Tablet & Desktop (768px and up) --- */
+@media (min-width: 768px) {
+  /* Restore horizontal filter bar */
+  .top-bar {
+    flex-direction: row;
+    align-items: center;
   }
-  .btn-edit {
-    background-color: #fff3cd;
-    color: #856404;
-    &:hover { background-color: #ffeeba; }
+  .top-bar input[type="text"] { width: 300px; }
+  .top-bar .add-btn { margin-left: auto; width: auto; }
+
+  /* Restore traditional table view */
+  .table-wrapper {
+    overflow-x: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
-  .btn-delete {
-    background-color: #f8d7da;
-    color: #721c24;
-    &:hover { background-color: #f5c6cb; }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 14px;
+    border-radius: 8px;
+    overflow: hidden;
   }
+  table thead {
+    display: table-header-group;
+    background-color: #343a40;
+    color: white;
+  }
+  table th, table td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    white-space: nowrap;
+    display: table-cell;
+    border-bottom: 1px solid #dee2e6;
+  }
+  table td::before {
+    display: none; /* Hide mobile labels */
+  }
+  table tr {
+    display: table-row;
+    box-shadow: none;
+    border: none;
+  }
+  table tbody tr:hover {
+    background-color: #e9f5ff;
+  }
+  table tbody tr:last-of-type td {
+    border-bottom: none;
+  }
+  .actions-cell { display: table-cell; }
 }
 
 /* --- Loading/Error States --- */
@@ -137,3 +450,4 @@ table {
   color: #721c24;
   font-weight: 500;
 }
+

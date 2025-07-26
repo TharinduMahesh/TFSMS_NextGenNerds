@@ -7,10 +7,10 @@
     <!-- Your Component's Content Starts Here -->
     <div class="page-container">
     
-      @if (isLoading) {
+      @if (isLoading()) {
         <div class="loading">Loading route data...</div>
-      } @else if (error) {
-        <div class="error">{{ error }}</div>
+      } @else if (error()) {
+        <div class="error">{{ error() }}</div>
       } @else {
         <div class="edit-modal-container">
           <div class="map-preview">

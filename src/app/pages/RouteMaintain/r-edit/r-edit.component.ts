@@ -1,12 +1,8 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-
 import { RouteService } from '../../../Services/LogisticAndTransport/RouteMaintain.service';
-import { CreateUpdateRoutePayload } from '../../../models/Logistic and Transport/RouteMaintain.model';
-import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
+import { CreateUpdateRoutePayload, RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
 import { CollectorService } from '../../../Services/LogisticAndTransport/Collector.service';
 import { CollectorResponse } from '../../../models/Logistic and Transport/CollectorManagement.model';
 
@@ -18,19 +14,21 @@ import { CollectorResponse } from '../../../models/Logistic and Transport/Collec
   styleUrls: ['./r-edit.component.scss']
 })
 export class RtEditComponent implements OnInit {
+  // --- Component Inputs and Outputs ---
+  @Input() routeId: number | null | undefined = null;
+  @Output() save = new EventEmitter<CreateUpdateRoutePayload>();
+  @Output() close = new EventEmitter<void>();
+
   // --- Injected Services ---
   private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private routeService = inject(RouteService);
   private collectorService = inject(CollectorService);
 
   // --- Form and State Properties ---
   routeForm: FormGroup;
-  currentRouteId: number | null = null;
   availableCollectors = signal<CollectorResponse[]>([]);
-  isLoading = true;
-  error: string | null = null;
+  isLoading = signal(true);
+  error = signal<string | null>(null);
 
   constructor() {
     this.routeForm = this.fb.group({
@@ -38,45 +36,46 @@ export class RtEditComponent implements OnInit {
       startLocation: ['', Validators.required],
       endLocation: ['', Validators.required],
       distance: [0, [Validators.required, Validators.min(0)]],
-      collectorId: [null], // We only need to manage collectorId
+      collectorId: [null],
       growerLocations: this.fb.array([])
     });
   }
 
   ngOnInit(): void {
-    // Fetch available collectors for the dropdown
-    this.collectorService.getAllCollectors().subscribe(collectors => this.availableCollectors.set(collectors));
-
-    // Fetch the route data to edit based on the URL parameter
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        const id = params.get('id');
-        if (!id) {
-          this.error = 'Route ID not found in URL.';
-          this.isLoading = false;
-          throw new Error('Route ID is required');
-        }
-        this.currentRouteId = +id;
-        return this.routeService.getById(this.currentRouteId);
-      })
-    ).subscribe({
-      next: (routeData) => {
-        this.populateForm(routeData);
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.error = err.message || 'Failed to load route data.';
-        this.isLoading = false;
-      }
-    });
+    this.loadInitialData();
   }
 
-  // Getter for easy access to the growerLocations in the template
+  private loadInitialData(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    // Fetch available collectors for the dropdown
+    this.collectorService.getAllCollectors().subscribe({
+      next: (collectors) => this.availableCollectors.set(collectors),
+      error: (err) => this.error.set(`Failed to load collectors: ${err.message}`)
+    });
+
+    if (this.routeId) {
+      this.routeService.getById(this.routeId).subscribe({
+        next: (routeData) => {
+          this.populateForm(routeData);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          this.error.set(`Failed to load route data: ${err.message}`);
+          this.isLoading.set(false);
+        }
+      });
+    } else {
+      this.error.set('No Route ID provided.');
+      this.isLoading.set(false);
+    }
+  }
+
   get growerLocations(): FormArray {
     return this.routeForm.get('growerLocations') as FormArray;
   }
 
-  // Fills the form with data fetched from the API
   private populateForm(route: RtList): void {
     this.routeForm.patchValue({
       rName: route.rName,
@@ -94,36 +93,29 @@ export class RtEditComponent implements OnInit {
       }));
     });
   }
-  
-  // Methods to dynamically add/remove grower location fields
+
   addGrowerLocation(): void {
     this.growerLocations.push(this.fb.group({
-        latitude: [null, Validators.required],
-        longitude: [null, Validators.required],
-        description: ['']
+      latitude: [null, Validators.required],
+      longitude: [null, Validators.required],
+      description: ['']
     }));
   }
+
   removeGrowerLocation(index: number): void {
     this.growerLocations.removeAt(index);
   }
 
-  // Handles the form submission
   onSubmit(): void {
-    if (this.routeForm.invalid || this.currentRouteId === null) {
+    if (this.routeForm.invalid) {
       alert('Form is invalid. Please correct the errors.');
       return;
     }
     const payload: CreateUpdateRoutePayload = this.routeForm.value;
-    this.routeService.updateRoute(this.currentRouteId, payload).subscribe({
-      next: () => {
-        alert('Route updated successfully!');
-        this.router.navigate(['transportdashboard/r-review']); // Navigate to the route review page
-      },
-      error: (err) => alert(`Error: ${err.message}`)
-    });
+    this.save.emit(payload);
   }
 
   onCancel(): void {
-    this.router.navigate(['transportdashboard/r-review']);
+    this.close.emit();
   }
 }

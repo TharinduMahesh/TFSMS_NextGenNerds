@@ -1,8 +1,8 @@
-import { Component, OnInit, signal, inject, computed, OnDestroy } from '@angular/core';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs';
 
 // Models and Services
 import { CreateInvoicePayload } from '../../../models/Ledger Management/invoiceSales.model';
@@ -18,7 +18,7 @@ import { ManualIdEntryComponent } from "./mannualId-entry/m-id-entry.component";
   templateUrl: './in-create.component.html',
   styleUrls: ['./in-create.component.scss']
 })
-export class InvoiceCreateComponent implements OnInit, OnDestroy {
+export class InvoiceCreateComponent implements OnInit {
   // --- Injections ---
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -35,11 +35,7 @@ export class InvoiceCreateComponent implements OnInit, OnDestroy {
   stockItemToInvoice = signal<StockLedgerResponse | null>(null);
   isLoading = signal(true);
   error = signal<string | null>(null);
-  isManualEntryMode = signal(false);
-
-  // --- Subscriptions ---
-  private queryParamSubscription?: Subscription;
-  
+  isManualEntryMode = signal(false); 
 
   constructor() {
     this.invoiceForm = this.fb.group({
@@ -50,28 +46,16 @@ export class InvoiceCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Subscribe to query parameter changes to handle navigation from ManualIdEntryComponent
-    this.queryParamSubscription = this.route.queryParams.subscribe(params => {
-      const stockId = params['stockId'];
-      
-      if (stockId) {
-        // If ID is in the URL, fetch data immediately
-        this.isManualEntryMode.set(false);
-        this.loadStockItem(+stockId);
-      } else {
-        // If no ID in URL, switch to manual entry mode
-        this.isManualEntryMode.set(true);
-        this.isLoading.set(false);
-        this.stockItemToInvoice.set(null);
-        this.error.set(null);
-      }
-    });
-  }
+    const stockIdFromUrl = this.route.snapshot.queryParamMap.get('stockId');
 
-  ngOnDestroy(): void {
-    // Clean up subscription
-    if (this.queryParamSubscription) {
-      this.queryParamSubscription.unsubscribe();
+    if (stockIdFromUrl) {
+      // If ID is in the URL, fetch data immediately
+      this.isManualEntryMode.set(false);
+      this.loadStockItem(+stockIdFromUrl);
+    } else {
+      // If no ID in URL, switch to manual entry mode
+      this.isManualEntryMode.set(true);
+      this.isLoading.set(false);
     }
   }
 
@@ -84,7 +68,7 @@ export class InvoiceCreateComponent implements OnInit, OnDestroy {
         if (stockData.status !== 'Unsold') {
              this.error.set(`Stock item #${stockId} is not available (Status: '${stockData.status}'). Only 'Unsold' items can be invoiced.`);
              this.isLoading.set(false);
-             this.stockItemToInvoice.set(null);
+             if (!this.isManualEntryMode()) this.stockItemToInvoice.set(null);
              return;
         }
         this.stockItemToInvoice.set(stockData);
@@ -95,14 +79,20 @@ export class InvoiceCreateComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.error.set(`Failed to load stock item #${stockId}. Please check the ID and try again.`);
         this.isLoading.set(false);
-        this.stockItemToInvoice.set(null);
+        if (!this.isManualEntryMode()) this.stockItemToInvoice.set(null);
       }
     });
   }
 
   toggleManualEntry(): void {
-    // Clear query parameters and navigate to clean URL
-    this.router.navigate(['ledgerManagementdashboard/invoice-create']);
+    this.isManualEntryMode.set(!this.isManualEntryMode());
+    if (this.isManualEntryMode()) {
+      this.stockItemToInvoice.set(null);
+      this.invoiceForm.reset();
+      this.invoiceForm.patchValue({
+        invoiceDate: this.formatDate(new Date())
+      });
+    }
   }
 
   onSubmit(): void {

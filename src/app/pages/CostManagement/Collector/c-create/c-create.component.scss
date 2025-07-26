@@ -1,21 +1,23 @@
-/* --- Main Page Container (Consistent with other create pages) --- */
+
+/* --- Main Form Container --- */
 .page-container {
   max-width: 900px;
   margin: 2rem auto;
-  padding: 2.5rem;
-  background-color: #dcdcdc;
+  padding: 1.5rem; /* Adjusted padding for mobile */
+  background-color: #ffffff; /* White card for the form */
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
 }
 
 /* --- Page Header --- */
 .page-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   
   h1 {
-    font-size: 2.25rem;
-    font-weight: 600;
+    font-size: 1.75rem; /* Adjusted for mobile */
+    font-weight: 700;
     color: #212529;
     margin: 0;
   }
@@ -25,43 +27,44 @@
 .form-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem; /* Increased gap for better section separation */
 }
 
-// --- NEW STYLES for Form Sections ---
+/* --- Form Sections using Fieldset for better semantics --- */
 .form-section {
   border: 1px solid #dee2e6;
   padding: 1.5rem;
   border-radius: 8px;
-  margin: 0; // Reset default margin
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 
   legend {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #007bff; // A nice accent color
-    padding: 0 0.75rem;
-    margin-left: 0.5rem;
+    color: #007bff;
+    padding: 0 0.5rem;
+    margin-left: 0.75rem;
   }
 }
 
+/* --- Form Row (Single Column on Mobile) --- */
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr; /* Default to a single column */
   gap: 1.5rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 
   label {
     font-weight: 600;
-    margin-bottom: 0.5rem;
     color: #495057;
-    font-size: 14px;
+    font-size: 0.9rem; /* Slightly smaller for a cleaner look */
   }
 
   input,
@@ -72,12 +75,14 @@
     font-size: 1rem;
     width: 100%;
     box-sizing: border-box;
-    transition: all 0.2s;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease-in-out;
 
     &:focus {
       border-color: #80bdff;
       outline: 0;
       box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      background-color: #fff;
     }
   }
 }
@@ -85,32 +90,68 @@
 /* --- Form Actions (Buttons) --- */
 .form-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  /* Stacks buttons with the primary one on top */
+  flex-direction: column-reverse; 
+  gap: 0.75rem;
+  margin-top: 1rem;
   padding-top: 1.5rem;
   border-top: 1px solid #dee2e6;
 }
 
 .btn-primary, .btn-secondary {
-  padding: 0.7rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  font-size: 15px;
-  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  width: 100%; /* Full width buttons on mobile */
 }
 
 .btn-primary {
   background-color: #28a745;
   color: white;
-  &:hover:not(:disabled) { background-color: #218838; }
+  &:hover:not(:disabled) { 
+    background-color: #218838; 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+  }
   &:disabled { background-color: #a5d6a7; cursor: not-allowed; }
 }
 
 .btn-secondary {
   background-color: #6c757d;
   color: white;
-  &:hover { background-color: #5a6268; }
+  &:hover { 
+    background-color: #5a6268; 
+    transform: translateY(-2px);
+  }
+}
+
+/* --- RESPONSIVE STYLES for Tablet and Desktop --- */
+@media (min-width: 768px) {
+  .page-container {
+    padding: 2.5rem; /* Restore larger padding */
+  }
+
+  .page-header h1 {
+    font-size: 2.25rem; /* Restore larger font size */
+  }
+
+  /* Expand to two columns */
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Arrange buttons horizontally to the right */
+  .form-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: auto; /* Revert to auto-width */
+  }
 }

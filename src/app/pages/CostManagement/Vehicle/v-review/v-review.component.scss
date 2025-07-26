@@ -5,129 +5,198 @@
   padding: 0 1rem;
 }
 
-/* --- Professional Filter Bar (matched with other review pages) --- */
+/* --- Professional Filter Bar (Mobile-First) --- */
 .top-bar {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column; /* Stack on mobile */
+  align-items: stretch;
+  gap: 0.75rem;
   padding: 1rem;
   background-color: #f8f9fa;
   border-radius: 8px;
   margin-bottom: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-
-  input[type="text"] {
-    padding: 0.6rem 1rem;
-    border: 1px solid #dee2e678;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #dee2e6;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    width: 250px;
-
-    &:focus {
-      border-color: #495057;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
-    }
-    &::placeholder {
-      color: #adb5bd;
-    }
-  }
-
-  .add-btn {
-    margin-left: auto;
-    background-color: #28a745; // Consistent green button
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #2e7d32;
-    }
-  }
+  border: 1px solid #dee2e6;
 }
 
-/* --- Professional Table Styling --- */
+.top-bar input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.top-bar input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+.top-bar input[type="text"]::placeholder {
+  color: #6c757d;
+}
+
+.top-bar .add-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 0.75rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+.top-bar .add-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+}
+
+.table-wrapper {
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+/* --- Mobile "Card" View (Default) --- */
 table {
   width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
-  overflow: hidden;
-  font-size: 0.8rem;
-
+  border-collapse: separate;
+  border-spacing: 0 1rem; /* Space between cards */
+  font-size: 14px;
   thead tr {
-    background-color: #343a40;
-    color: white;
-    text-align: left;
-  }
-
-  th, td {
-    padding: 1rem 1.25rem;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid #dee2e6;
-    transition: background-color 0.2s ease;
-
-    &:nth-of-type(even) {
-      background-color: #f8f9fa;
-    }
-
-    &:last-of-type {
-      border-bottom: 2px solid #388e3c;
-    }
-
-    &:hover {
-      background-color: #e9ecef;
-    }
-  }
-  
-  td[colspan="6"] {
-    text-align: center;
-    font-style: italic;
-    color: #6c757d;
-    padding: 2rem;
+    background-color: #343a40;;
+    color: #ffffff;
   }
 }
 
-/* --- Action Buttons in Table --- */
+table tr {
+  display: block;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+table td {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-align: right;
+  position: relative;
+  border-bottom: 1px dashed #e9ecef;
+}
+table td:last-child {
+  border-bottom: none;
+}
+
+table td::before {
+  content: attr(data-label);
+  position: absolute;
+  left: 1rem;
+  font-weight: 600;
+  color: #343a40;
+  text-align: left;
+}
+
+tbody tr:has(td[colspan="6"]) {
+  background-color: transparent;
+  box-shadow: none;
+  border: 1px dashed #dee2e6;
+  text-align: center;
+  padding: 1rem;
+}
+tbody td[colspan="6"] {
+  border: none;
+  text-align: center;
+  padding: 2rem;
+}
+tbody td[colspan="6"]::before {
+  display: none;
+}
+
+/* --- Action Buttons Styling --- */
 .actions-cell {
   display: flex;
+  justify-content: flex-end;
   gap: 0.5rem;
-  
-  .btn-action {
-    padding: 0.4rem 0.8rem;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
+  padding-top: 1rem;
+}
+.actions-cell::before {
+  display: none;
+}
 
-  .btn-view {
-    background-color: #e9ecef;
-    color: #495057;
-    &:hover { background-color: #ced4da; }
+.btn-action {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-view { background-color: #e9ecef; color: #495057; &:hover { background-color: #ced4da; } }
+.btn-edit { background-color: #fff3cd; color: #856404; &:hover { background-color: #ffeeba; } }
+.btn-delete { background-color: #f8d7da; color: #721c24; &:hover { background-color: #f5c6cb; } }
+
+/* --- RESPONSIVE STYLES for Tablet & Desktop (768px and up) --- */
+@media (min-width: 768px) {
+  .top-bar {
+    flex-direction: row;
+    align-items: center;
   }
-  .btn-edit {
-    background-color: #fff3cd;
-    color: #856404;
-    &:hover { background-color: #ffeeba; }
+  .top-bar input[type="text"] { width: 300px; }
+  .top-bar .add-btn { margin-left: auto; width: auto; }
+
+  .table-wrapper {
+    overflow-x: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
   }
-  .btn-delete {
-    background-color: #f8d7da;
-    color: #721c24;
-    &:hover { background-color: #f5c6cb; }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 14px;
   }
+  table thead {
+    display: table-header-group;
+    text-align: left;
+  }
+  
+  /* --- THIS IS THE KEY CHANGE --- */
+  table th {
+    background-color: #343a40; /* Dark background for header cells */
+    color: #ffffff;             /* White text for header cells */
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+  
+  table th, table td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    white-space: nowrap;
+    display: table-cell;
+    border-bottom: 1px solid #dee2e6;
+  }
+  table td::before {
+    display: none;
+  }
+  table tr {
+    display: table-row;
+    box-shadow: none;
+    border: none;
+    transition: background-color 0.2s ease;
+  }
+  table tbody tr:nth-of-type(even) { background-color: #f8f9fa; }
+  table tbody tr:last-of-type td { border-bottom: none; }
+  table tbody tr:hover { background-color: #e9ecef; }
+
+  .actions-cell { display: table-cell; }
 }
 
 /* --- Loading/Error States --- */

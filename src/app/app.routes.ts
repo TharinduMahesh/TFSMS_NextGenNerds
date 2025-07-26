@@ -155,6 +155,16 @@ import { ChangePasswordComponent } from "./components/user/change-password/chang
 import { ManualIdEntryComponent } from './pages/ledgerManagement/InvoiceCreate/mannualId-entry/m-id-entry.component';
 import { ManualDispatchEntryComponent } from './pages/ledgerManagement/Dispatch Entry/manual-dispatch-entry/menualdis.component';
 import { ManualSalesEntryComponent } from './pages/ledgerManagement/SalesEntry/menualSalesentry/m-s-entry.component';
+import { CollectorCreateComponent } from './pages/CostManagement/Collector/c-create/c-create.component';
+import { CollectorEditComponent } from './pages/CostManagement/Collector/c-edit/c-edit.component';
+import { VehicleCreateComponent } from './pages/CostManagement/Vehicle/v-create/v-create.component';
+import { VehicleViewComponent } from './pages/CostManagement/Vehicle/v-view/v-view.component';
+import { CollectorViewComponent } from './pages/CostManagement/Collector/c-view/c-view.component';
+import { VehicleEditComponent } from './pages/CostManagement/Vehicle/v-edit/v-edit.component';
+import { RtCreateComponent } from './pages/RouteMaintain/r-create/r-create.component';
+import { RtEditComponent } from './pages/RouteMaintain/r-edit/r-edit.component';
+import { RtViewComponent } from './pages/RouteMaintain/r-view/r-view.component';
+import { TripScheduleComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-schedule/t-sched.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -331,10 +341,6 @@ export const routes: Routes = [
     component: VehicleReviewComponent
   },
   {
-    path: 'transportdashboard/t-review',
-    component: TripReviewComponent
-  },
-  {
     path: 'performancedashboard',
     component: PerformanceDashboardComponent
   },
@@ -381,6 +387,50 @@ export const routes: Routes = [
   {
     path: 'ledgerManagementdashboard/m-s-entry',
     component: ManualSalesEntryComponent
+  },
+  {
+    path: 'transportdashboard/c-create',
+    component: CollectorCreateComponent
+  },
+  {
+    path: 'transportdashboard/c-edit/:id',
+    component: CollectorEditComponent
+  },
+  {
+    path: 'transportdashboard/c-view',
+    component: CollectorViewComponent
+  },
+  {
+    path: 'transportdashboard/v-create',
+    component: VehicleCreateComponent
+  },
+  {
+    path: 'transportdashboard/v-edit/:id',
+    component: VehicleEditComponent
+  },
+  {
+    path: 'transportdashboard/v-view',
+    component: VehicleCreateComponent
+  },
+  {
+    path: 'transportdashboard/r-create',
+    component: RtCreateComponent
+  },
+  {
+    path: 'transportdashboard/r-Edit/:id',
+    component: RtEditComponent
+  },
+  {
+    path: 'transportdashboard/r-view',
+    component: RtViewComponent
+  },
+  {
+    path: 'transportedashboard/trip-schedule',
+    component: TripScheduleComponent
+  },
+  {
+    path: 'transportdashboard/trip-review',
+    component: TripReviewComponent
   }
 
 ]

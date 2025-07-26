@@ -7,12 +7,12 @@ import { HeaderComponent } from "../../header/header.component";
 
 import  { Payment } from "../../../models/payment.model"
 import  { Supplier } from "../../../models/supplier.model"
-import  { PaymentService } from "../../../shared/services/payment.service"
-import  { SupplierService } from "../../../shared/services/supplier.service"
-import  { GreenLeafService } from "../../../shared/services/green-leaf.service"
-import  { ExportService } from "../../../shared/services/export.service"
+import  { PaymentService } from "../../../shared/Services/payment.service"
+import  { SupplierService } from "../../../shared/Services/supplier.service"
+import  { GreenLeafService } from "../../../shared/Services/green-leaf.service"
+import  { ExportService } from "../../../shared/Services/export.service"
 import  { PaymentCalculationResult } from "../../../models/payment-calculation.model"
-import  { IncentiveService } from "../../../shared/services/incentive.service"
+import  { IncentiveService } from "../../../shared/Services/incentive.service"
 
 @Component({
   selector: "app-payment",

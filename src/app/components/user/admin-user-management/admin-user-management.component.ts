@@ -1,10 +1,10 @@
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
-import  { AuthService } from "../../../shared/services/auth.service"
+import  { AuthService } from "../../../shared/Services/auth.service"
 import { RouterModule } from "@angular/router"
-import  { ToastService } from "../../../shared/services/toast.service" // Import ToastService
-import { ConfirmationService } from "../../../shared/services/confirmation.service"
+import  { ToastService } from "../../../shared/Services/toast.service" // Import ToastService
+import { ConfirmationService } from "../../../shared/Services/confirmation.service"
 
 
 @Component({

@@ -5,9 +5,9 @@ import { RouterModule } from "@angular/router"
 import { HeaderComponent } from "../../header/header.component"
 import { FooterComponent } from "../../footer/footer.component"
 import {  FormBuilder, Validators } from "@angular/forms"
-import  { AuthService } from "../../../shared/services/auth.service"
+import  { AuthService } from "../../../shared/Services/auth.service"
 import  { Router } from "@angular/router"
-import  { ToastService } from "../../../shared/services/toast.service" // Import ToastService
+import  { ToastService } from "../../../shared/Services/toast.service" // Import ToastService
 
 @Component({
   selector: "app-sign-in",

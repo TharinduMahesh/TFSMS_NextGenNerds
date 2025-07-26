@@ -3,9 +3,9 @@
 // import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, Validators } from "@angular/forms"
 // import  { Advance } from "../../../models/advance.model"
 // import  { Supplier } from "../../../models/supplier.model"
-// import  { AdvanceService } from "../../../shared/services/advance.service"
-// import  { SupplierService } from "../../../shared/services/supplier.service"
-// import  { ExportService } from "../../../shared/services/export.service"
+// import  { AdvanceService } from "../../../shared/Services/advance.service"
+// import  { SupplierService } from "../../../shared/Services/supplier.service"
+// import  { ExportService } from "../../../shared/Services/export.service"
 
 // @Component({
 //   selector: "app-advance",

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject, OnChanges, SimpleChanges, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
+import { CollectorService } from '../../../../Services/LogisticAndTransport/Collector.service';
 import { CreateUpdateVehiclePayload, VehicleResponse } from '../../../../models/Logistic and Transport/VehicleManagement.model';
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 

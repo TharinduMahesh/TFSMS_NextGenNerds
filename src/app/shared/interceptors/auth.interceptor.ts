@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../Services/auth.service';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
 

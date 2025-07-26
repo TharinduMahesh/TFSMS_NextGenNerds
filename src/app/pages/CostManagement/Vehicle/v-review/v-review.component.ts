@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 // Import necessary models and components
 import { VehicleResponse, CreateUpdateVehiclePayload } from '../../../../models/Logistic and Transport/VehicleManagement.model';
-import { VehicleService } from '../../../../services/LogisticAndTransport/Vehicle.service';
+import { VehicleService } from '../../../../Services/LogisticAndTransport/Vehicle.service';
 import { VehicleViewComponent } from '../v-view/v-view.component';
 import { VehicleEditComponent } from '../v-edit/v-edit.component';
 import { TnLNavbarComponent } from "../../../../components/TnLNavbar/tnlnav.component";

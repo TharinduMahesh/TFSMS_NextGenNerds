@@ -4,8 +4,8 @@ import { FormsModule } from "@angular/forms"
 import { HeaderComponent } from "../header/header.component"
 import { FooterComponent } from "../footer/footer.component"
 import { HttpClient } from "@angular/common/http"
-import { AuthService } from "../../shared/services/auth.service"
-import { UserService } from "../../shared/services/user.service"
+import { AuthService } from "../../shared/Services/auth.service"
+import { UserService } from "../../shared/Services/user.service"
 
 @Component({
   selector: "app-contact",

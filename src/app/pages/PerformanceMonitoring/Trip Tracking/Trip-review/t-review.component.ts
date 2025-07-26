@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { TripResponse, UpdateTripStatusPayload } from '../../../../models/Logistic and Transport/TripTracking.model';
-import { TransportReportService } from '../../../../services/LogisticAndTransport/TransportReport.service';
+import { TransportReportService } from '../../../../Services/LogisticAndTransport/TransportReport.service';
 import { TnLNavbarComponent } from '../../../../components/TnLNavbar/tnlnav.component';
 
 @Component({

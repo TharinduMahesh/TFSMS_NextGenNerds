@@ -3,11 +3,11 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
-// Import all necessary services and models
-import { CollectorService } from '../../services/LogisticAndTransport/Collector.service';
-import { VehicleService } from '../../services/LogisticAndTransport/Vehicle.service';
-import { RouteService } from '../../services/LogisticAndTransport/RouteMaintain.service';
-import { TransportReportService } from '../../services/LogisticAndTransport/TransportReport.service';
+// Import all necessary Services and models
+import { CollectorService } from '../../Services/LogisticAndTransport/Collector.service';
+import { VehicleService } from '../../Services/LogisticAndTransport/Vehicle.service';
+import { RouteService } from '../../Services/LogisticAndTransport/RouteMaintain.service';
+import { TransportReportService } from '../../Services/LogisticAndTransport/TransportReport.service';
 import { TripResponse } from '../../models/Logistic and Transport/TripTracking.model';
 import { TnLNavbarComponent } from '../../components/TnLNavbar/tnlnav.component';
 

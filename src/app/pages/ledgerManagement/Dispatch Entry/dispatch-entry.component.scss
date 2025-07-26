@@ -190,3 +190,75 @@
   color: #721c24;
   border-color: #f5c6cb;
 }
+
+/* Error message container with button styling */
+.error-message-full-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  margin: 2rem 0;
+  gap: 1.5rem;
+}
+
+/* Return to Invoice Review button */
+.btn-return-to-review {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 180px;
+  justify-content: center;
+}
+
+.btn-return-to-review:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-return-to-review:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-return-to-review:focus {
+  outline: none;
+  ring: 2px solid #3b82f6;
+  ring-offset: 2px;
+}
+
+/* Optional: Add an icon to the button if you have icon support */
+.btn-return-to-review::before {
+  content: "←";
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .error-message-full-page {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .btn-return-to-review {
+    width: 100%;
+    max-width: 280px;
+  }
+}

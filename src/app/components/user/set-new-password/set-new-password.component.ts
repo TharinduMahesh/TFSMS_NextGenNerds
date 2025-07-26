@@ -2,7 +2,7 @@
 // import { CommonModule } from "@angular/common"
 // import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 // import {  ActivatedRoute,  Router, RouterModule } from "@angular/router"
-// import  { AuthService } from "../../../shared/services/auth.service"
+// import  { AuthService } from "../../../shared/Services/auth.service"
 // import { ConfirmPasswordValidator } from "../../../shared/confirm-password.validator" // Assuming you have this validator
 
 // @Component({
@@ -171,7 +171,7 @@ import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 import {  ActivatedRoute,  Router, RouterModule } from "@angular/router"
-import  { AuthService } from "../../../shared/services/auth.service"
+import  { AuthService } from "../../../shared/Services/auth.service"
 import { ConfirmPasswordValidator } from "../../../shared/confirm-password.validator" // Assuming you have this validator
 
 @Component({

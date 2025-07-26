@@ -4,10 +4,10 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } fr
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 
-import { RouteService } from '../../../services/LogisticAndTransport/RouteMaintain.service';
+import { RouteService } from '../../../Services/LogisticAndTransport/RouteMaintain.service';
 import { CreateUpdateRoutePayload } from '../../../models/Logistic and Transport/RouteMaintain.model';
 import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
-import { CollectorService } from '../../../services/LogisticAndTransport/Collector.service';
+import { CollectorService } from '../../../Services/LogisticAndTransport/Collector.service';
 import { CollectorResponse } from '../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({

@@ -10,9 +10,9 @@ import { RtList } from '../../../../models/Logistic and Transport/RouteMaintain.
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 
 // Services
-import { TransportReportService } from '../../../../services/LogisticAndTransport/TransportReport.service';
-import { RouteService } from '../../../../services/LogisticAndTransport/RouteMaintain.service';
-import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
+import { TransportReportService } from '../../../../Services/LogisticAndTransport/TransportReport.service';
+import { RouteService } from '../../../../Services/LogisticAndTransport/RouteMaintain.service';
+import { CollectorService } from '../../../../Services/LogisticAndTransport/Collector.service';
 
 @Component({
   selector: 'app-trip-schedule',

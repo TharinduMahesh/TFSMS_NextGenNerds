@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { ConfirmationService, ConfirmationState } from '../../shared/services/confirmation.service'; // Adjust path if needed
+import { ConfirmationService, ConfirmationState } from '../../shared/Services/confirmation.service'; // Adjust path if needed
 
 @Component({
   selector: 'app-confirmation-dialog',

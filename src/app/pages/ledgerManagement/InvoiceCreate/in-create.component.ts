@@ -1,24 +1,24 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+import { Component, OnInit, signal, inject, computed, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 // Models and Services
 import { CreateInvoicePayload } from '../../../models/Ledger Management/invoiceSales.model';
-import { InvoiceSalesService } from '../../../services/LedgerManagement/invoiceSales.service';
+import { InvoiceSalesService } from '../../../Services/LedgerManagement/invoiceSales.service';
 import { StockLedgerResponse } from '../../../models/Ledger Management/stockLedger.model';
-import { StockLedgerService } from '../../../services/LedgerManagement/stockLedger.service';
-// import { ManualIdEntryComponent } from './mannualId-entry/m-id-entry.component';
+import { StockLedgerService } from '../../../Services/LedgerManagement/stockLedger.service';
+import { ManualIdEntryComponent } from "./mannualId-entry/m-id-entry.component";
 
 @Component({
   selector: 'app-invoice-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe ],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, ManualIdEntryComponent],
   templateUrl: './in-create.component.html',
   styleUrls: ['./in-create.component.scss']
 })
-export class InvoiceCreateComponent implements OnInit {
+export class InvoiceCreateComponent implements OnInit, OnDestroy {
   // --- Injections ---
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -28,16 +28,18 @@ export class InvoiceCreateComponent implements OnInit {
 
   // --- Forms ---
   invoiceForm: FormGroup;
-  manualIdForm: FormGroup; // For manual ID entry
 
   // --- State Signals ---
-
-   public stockItem = computed(() => this.stockItemToInvoice());
+  public stockItem = computed(() => this.stockItemToInvoice());
    
   stockItemToInvoice = signal<StockLedgerResponse | null>(null);
   isLoading = signal(true);
   error = signal<string | null>(null);
-  isManualEntryMode = signal(false); 
+  isManualEntryMode = signal(false);
+
+  // --- Subscriptions ---
+  private queryParamSubscription?: Subscription;
+  
 
   constructor() {
     this.invoiceForm = this.fb.group({
@@ -45,23 +47,31 @@ export class InvoiceCreateComponent implements OnInit {
       brokerName: ['', [Validators.required, Validators.maxLength(150)]],
       invoiceDate: [this.formatDate(new Date()), Validators.required]
     });
-    
-    this.manualIdForm = this.fb.group({
-      stockId: [null, [Validators.required, Validators.min(1)]]
-    });
   }
 
   ngOnInit(): void {
-    const stockIdFromUrl = this.route.snapshot.queryParamMap.get('stockId');
+    // Subscribe to query parameter changes to handle navigation from ManualIdEntryComponent
+    this.queryParamSubscription = this.route.queryParams.subscribe(params => {
+      const stockId = params['stockId'];
+      
+      if (stockId) {
+        // If ID is in the URL, fetch data immediately
+        this.isManualEntryMode.set(false);
+        this.loadStockItem(+stockId);
+      } else {
+        // If no ID in URL, switch to manual entry mode
+        this.isManualEntryMode.set(true);
+        this.isLoading.set(false);
+        this.stockItemToInvoice.set(null);
+        this.error.set(null);
+      }
+    });
+  }
 
-    if (stockIdFromUrl) {
-      // If ID is in the URL, fetch data immediately
-      this.isManualEntryMode.set(false);
-      this.loadStockItem(+stockIdFromUrl);
-    } else {
-      // If no ID in URL, switch to manual entry mode
-      this.isManualEntryMode.set(true);
-      this.isLoading.set(false);
+  ngOnDestroy(): void {
+    // Clean up subscription
+    if (this.queryParamSubscription) {
+      this.queryParamSubscription.unsubscribe();
     }
   }
 
@@ -74,7 +84,7 @@ export class InvoiceCreateComponent implements OnInit {
         if (stockData.status !== 'Unsold') {
              this.error.set(`Stock item #${stockId} is not available (Status: '${stockData.status}'). Only 'Unsold' items can be invoiced.`);
              this.isLoading.set(false);
-             if (!this.isManualEntryMode()) this.stockItemToInvoice.set(null);
+             this.stockItemToInvoice.set(null);
              return;
         }
         this.stockItemToInvoice.set(stockData);
@@ -85,27 +95,15 @@ export class InvoiceCreateComponent implements OnInit {
       error: (err) => {
         this.error.set(`Failed to load stock item #${stockId}. Please check the ID and try again.`);
         this.isLoading.set(false);
-        if (!this.isManualEntryMode()) this.stockItemToInvoice.set(null);
+        this.stockItemToInvoice.set(null);
       }
     });
   }
-  
-  findStockItem(): void {
-    if (this.manualIdForm.invalid) return;
-    const stockId = this.manualIdForm.value.stockId;
-    this.loadStockItem(stockId);
-  }
+
   toggleManualEntry(): void {
-    this.isManualEntryMode.set(!this.isManualEntryMode());
-    if (this.isManualEntryMode()) {
-      this.stockItemToInvoice.set(null);
-      this.invoiceForm.reset();
-    } else {
-      this.manualIdForm.reset();
-    }
+    // Clear query parameters and navigate to clean URL
+    this.router.navigate(['ledgerManagementdashboard/invoice-create']);
   }
-
-
 
   onSubmit(): void {
     if (this.invoiceForm.invalid) {
@@ -116,14 +114,14 @@ export class InvoiceCreateComponent implements OnInit {
     this.invoiceService.createInvoice(payload).subscribe({
       next: () => {
         alert('Invoice created successfully!');
-        this.router.navigate(['ledgerManagementdashboard/invoice-review']); // Navigate to invoice review page
+        this.router.navigate(['ledgerManagementdashboard/invoice-review']);
       },
       error: (err) => alert(`Error creating invoice: ${err.message}`)
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['ledgerManagementdashboard/stock-ledger']); // Go back to the main stock ledger
+    this.router.navigate(['ledgerManagementdashboard/stock-ledger']);
   }
   
   private formatDate(date: Date): string {

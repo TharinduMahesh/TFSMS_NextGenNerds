@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 // Import the correct model and service
 import { CollectorResponse, CreateUpdateCollectorPayload } from '../../../../models/Logistic and Transport/CollectorManagement.model';
-import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
+import { CollectorService } from '../../../../Services/LogisticAndTransport/Collector.service';
 import { CollectorViewComponent } from '../c-view/c-view.component';
 import { CollectorEditComponent } from '../c-edit/c-edit.component';
 import { TnLNavbarComponent } from '../../../../components/TnLNavbar/tnlnav.component';

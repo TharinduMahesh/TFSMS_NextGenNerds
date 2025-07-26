@@ -8,8 +8,8 @@ import { map } from 'rxjs/operators';
 // --- Note: Ensure component/model/service paths are correct for your project ---
 import { PNavbarComponent } from '../../../components/pnav bar/pnav.component';
 import { CollectorPerformanceReport } from '../../../models/Logistic and Transport/TransportReports.model';
-import { CollectorService } from '../../../services/LogisticAndTransport/Collector.service';
-import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
+import { CollectorService } from '../../../Services/LogisticAndTransport/Collector.service';
+import { TransportReportService } from '../../../Services/LogisticAndTransport/TransportReport.service';
 
 type EnrichedPerformanceReport = CollectorPerformanceReport & { vehicleCondition?: string };
 

@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PaymentService } from '../../../shared/services/payment.service';
+import { PaymentService } from '../../../shared/Services/payment.service';
 import { Payment } from '../../../models/payment.model';
 import { PaymentHistory } from '../../../models/payment-history.model';
 import { forkJoin } from 'rxjs';

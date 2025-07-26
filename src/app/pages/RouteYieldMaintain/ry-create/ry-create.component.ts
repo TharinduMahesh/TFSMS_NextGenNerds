@@ -2,9 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RyService } from '../../../services/LogisticAndTransport/RouteYieldMaintain.service';
+import { RyService } from '../../../Services/LogisticAndTransport/RouteYieldMaintain.service';
 import { YieldPayload } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
-import { RouteService } from '../../../services/LogisticAndTransport/RouteMaintain.service';
+import { RouteService } from '../../../Services/LogisticAndTransport/RouteMaintain.service';
 import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
 import { signal } from '@angular/core';
 

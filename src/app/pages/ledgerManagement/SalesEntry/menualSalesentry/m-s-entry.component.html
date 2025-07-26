@@ -1,0 +1,13 @@
+<div class="manual-entry-container">
+  <h3>Find Invoice to Finalize Sale</h3>
+  <p>Please enter the Invoice ID for the dispatched tea batch you wish to finalize.</p>
+
+  <form [formGroup]="manualIdForm" (ngSubmit)="submitId()" class="manual-id-form">
+    <input
+      formControlName="invoiceId"
+      type="number"
+      placeholder="Enter Invoice ID..."
+    />
+    <button type="submit" [disabled]="manualIdForm.invalid">Find Invoice</button>
+  </form>
+</div>

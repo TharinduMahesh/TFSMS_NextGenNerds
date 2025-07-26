@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VehicleResponse } from '../../../../models/Logistic and Transport/VehicleManagement.model';
-import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
+import { CollectorService } from '../../../../Services/LogisticAndTransport/Collector.service';
 
 @Component({
   selector: 'app-v-view',

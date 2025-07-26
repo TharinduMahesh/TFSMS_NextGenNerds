@@ -3,9 +3,9 @@
 // import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, Validators } from "@angular/forms"
 // import  { Debt } from "../../../models/debt.model"
 // import  { Supplier } from "../../../models/supplier.model"
-// import  { DebtService } from "../../../shared/services/debt.service"
-// import  { SupplierService } from "../../../shared/services/supplier.service"
-// import  { ExportService } from "../../../shared/services/export.service"
+// import  { DebtService } from "../../../shared/Services/debt.service"
+// import  { SupplierService } from "../../../shared/Services/supplier.service"
+// import  { ExportService } from "../../../shared/Services/export.service"
 
 // @Component({
 //   selector: "app-debt",

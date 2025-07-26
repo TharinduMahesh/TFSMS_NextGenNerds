@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 // Required models and service
 import { YieldPayload, YieldResponse } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
-import { RyService } from '../../../services/LogisticAndTransport/RouteYieldMaintain.service';
+import { RyService } from '../../../Services/LogisticAndTransport/RouteYieldMaintain.service';
 
 // Child component used in the template
 import { RyViewComponent } from '../ry-view/ry-view.component';

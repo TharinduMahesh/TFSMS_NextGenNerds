@@ -2,8 +2,8 @@ import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 import { RouterModule,  Router } from "@angular/router" // Import Router
-import  { UserService } from "../../../shared/services/user.service"
-import  { AuthService } from "../../../shared/services/auth.service" // Import AuthService for isLoggedIn check
+import  { UserService } from "../../../shared/Services/user.service"
+import  { AuthService } from "../../../shared/Services/auth.service" // Import AuthService for isLoggedIn check
 
 
 @Component({

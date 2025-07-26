@@ -34,7 +34,7 @@ export class LedgerDashboardComponent {
       items: [
         { label: 'INVOICE CREATION', route: '/ledgerManagementdashboard/m-iid-entry', keywords: ['INVOICE', 'CREATION'] },
         { label: 'INVOICE DETAILS', route: '/ledgerManagementdashboard/invoice-review', keywords: ['DISPATCH', 'REGISTER'] },
-        { label: 'DISPATCH DETAILS ENTRY', route: '/ledgerManagementdashboard/dispatch-entry', keywords: ['DISPATCH', 'DETAILS','ENTRY'] },
+        { label: 'DISPATCH DETAILS ENTRY', route: '/ledgerManagementdashboard/m-dis-entry', keywords: ['DISPATCH', 'DETAILS','ENTRY'] },
         
       ]
     },
@@ -43,7 +43,7 @@ export class LedgerDashboardComponent {
       items: [
         
         // { label: 'SALES CHARGE ENTRY', route: '/ledgerManagementdashboard/sales-entry', keywords: ['sales', 'change', 'entry'] },
-        { label: 'GRATIS ISSUE ENTRY', route: '/gratis-e-entry', keywords: ['sales', 'change', 'entry'] },
+        { label: 'Sales Entry', route: '/ledgerManagementdashboard/m-s-entry', keywords: ['sales', 'change', 'entry'] },
       ]
     },
     {

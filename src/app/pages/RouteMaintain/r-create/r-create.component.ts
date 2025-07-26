@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 
 // Models and Services
 import { CreateUpdateRoutePayload } from '../../../models/Logistic and Transport/RouteMaintain.model';
-import { RouteService } from '../../../services/LogisticAndTransport/RouteMaintain.service';
-import { CollectorService } from '../../../services/LogisticAndTransport/Collector.service';
+import { RouteService } from '../../../Services/LogisticAndTransport/RouteMaintain.service';
+import { CollectorService } from '../../../Services/LogisticAndTransport/Collector.service';
 import { CollectorResponse } from '../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({

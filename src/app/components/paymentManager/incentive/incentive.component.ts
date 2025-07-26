@@ -6,10 +6,10 @@ import { HeaderComponent } from "../../header/header.component";
 
 import  { Incentive } from "../../../models/incentive.model"
 import  { Supplier } from "../../../models/supplier.model"
-import  { IncentiveService } from "../../../shared/services/incentive.service"
-import  { SupplierService } from "../../../shared/services/supplier.service"
-import  { ExportService } from "../../../shared/services/export.service"
-import  { DataRefreshService } from "../../../shared/services/data-refresh.service"
+import  { IncentiveService } from "../../../shared/Services/incentive.service"
+import  { SupplierService } from "../../../shared/Services/supplier.service"
+import  { ExportService } from "../../../shared/Services/export.service"
+import  { DataRefreshService } from "../../../shared/Services/data-refresh.service"
 
 @Component({
   selector: "app-incentive",

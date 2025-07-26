@@ -6,9 +6,8 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { forkJoin } from 'rxjs'; // For parallel API calls
 import { HeaderComponent } from "../../header/header.component";
-import { SidebarComponent } from '../../sidebar/sidebar/sidebar.component';
 
-// Import services and interfaces
+// Import Services and interfaces
 import { GreenLeafCollectionService } from '../../../Services/green_leaf_collection.service';
 import { SupplierService } from '../../../Services/supplier.service';
 import { WeightDifferenceService } from '../../../Services/weight-difference.service'; // NEW: Import WeightDifferenceService
@@ -37,7 +36,7 @@ interface SupplierSummary {
 @Component({
   selector: 'app-green-leaf-collection-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent],
   templateUrl: './green-leaf-collection-report.component.html',
   styleUrls: ['./green-leaf-collection-report.component.css']
 })

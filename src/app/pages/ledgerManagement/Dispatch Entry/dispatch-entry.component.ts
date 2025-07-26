@@ -7,8 +7,8 @@ import { switchMap } from 'rxjs/operators';
 // Models and Services
 import { CreateDispatchPayload } from '../../../models/Ledger Management/dispatch.model';
 import { InvoiceResponse } from '../../../models/Ledger Management/invoiceSales.model';
-import { DispatchService } from '../../../services/LedgerManagement/dispatch.service';
-import { InvoiceSalesService } from '../../../services/LedgerManagement/invoiceSales.service';
+import { DispatchService } from '../../../Services/LedgerManagement/dispatch.service';
+import { InvoiceSalesService } from '../../../Services/LedgerManagement/invoiceSales.service';
 
 @Component({
   selector: 'app-dispatch-entry',
@@ -25,14 +25,14 @@ export class DispatchEntryComponent implements OnInit {
   private invoiceService = inject(InvoiceSalesService);
 
   dispatchForm: FormGroup;
-  
+
   invoiceToDispatch = signal<InvoiceResponse | null>(null);
   isLoading = signal(true);
   error = signal<string | null>(null);
 
   constructor() {
     this.dispatchForm = this.fb.group({
-      invoiceId: [{value: null, disabled: true}, Validators.required],
+      invoiceId: [{ value: null, disabled: true }, Validators.required],
       dispatchDate: [this.formatDate(new Date()), Validators.required],
       vehicleNumber: ['', [Validators.required, Validators.maxLength(50)]],
       driverName: ['', [Validators.required, Validators.maxLength(150)]],
@@ -56,9 +56,9 @@ export class DispatchEntryComponent implements OnInit {
     ).subscribe({
       next: (invoiceData) => {
         if (invoiceData.status !== 'Pending') {
-             this.error.set(`This invoice (Status: ${invoiceData.status}) cannot be dispatched. Only invoices with a 'Pending' status can be dispatched.`);
-             this.isLoading.set(false);
-             return;
+          this.error.set(`This invoice (Status: ${invoiceData.status}) cannot be dispatched. Only invoices with a 'Pending' status can be dispatched.`);
+          this.isLoading.set(false);
+          return;
         }
         this.invoiceToDispatch.set(invoiceData);
         this.dispatchForm.patchValue({ invoiceId: invoiceData.invoiceId });
@@ -70,7 +70,11 @@ export class DispatchEntryComponent implements OnInit {
       }
     });
   }
-  
+
+  returnToInvoiceReview() {
+    this.router.navigate(['ledgerManagementdashboard/invoice-review']);
+  }
+
   private formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
   }
@@ -88,7 +92,7 @@ export class DispatchEntryComponent implements OnInit {
         alert('Dispatch recorded successfully!');
         this.router.navigate(['/ledgerManagementdashboard/invoice-review']); // Navigate to the invoice review page
       },
-      error: (err) => alert(`Error recording dispatch: ${err.message}`)
+      error: (err) => alert('Enter the valid invoice ID to dispatch the invoice: ' + err.message)
     });
   }
 

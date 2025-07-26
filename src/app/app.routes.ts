@@ -151,7 +151,10 @@ import { SetNewPasswordComponent } from "./components/user/set-new-password/set-
 import { UserProfileComponent } from "./components/user/user-profile/user-profile.component"
 import { PaymentHistoryComponent } from "./components/paymentManager/payment-history/payment-history.component"
 import { SupplierTotalPaymentsComponent } from "./components/paymentManager/supplier-total-payments/supplier-total-payments.component"
-import { ChangePasswordComponent } from "./components/user/change-password/change-password.component" // New
+import { ChangePasswordComponent } from "./components/user/change-password/change-password.component" 
+import { ManualIdEntryComponent } from './pages/ledgerManagement/InvoiceCreate/mannualId-entry/m-id-entry.component';
+import { ManualDispatchEntryComponent } from './pages/ledgerManagement/Dispatch Entry/manual-dispatch-entry/menualdis.component';
+import { ManualSalesEntryComponent } from './pages/ledgerManagement/SalesEntry/menualSalesentry/m-s-entry.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -366,6 +369,18 @@ export const routes: Routes = [
   {
     path: 'ledgerManagementdashboard/stock-ledger',
     component: StockLedgerViewComponent
+  },
+  {
+    path: 'ledgerManagementdashboard/m-iid-entry',
+    component: ManualIdEntryComponent
+  },
+  {
+    path: 'ledgerManagementdashboard/m-dis-entry',
+    component: ManualDispatchEntryComponent
+  },
+  {
+    path: 'ledgerManagementdashboard/m-s-entry',
+    component: ManualSalesEntryComponent
   }
 
 ]

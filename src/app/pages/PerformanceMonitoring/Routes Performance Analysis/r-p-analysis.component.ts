@@ -3,10 +3,10 @@ import { CommonModule, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 
-// Import all necessary components, models, and services
+// Import all necessary components, models, and Services
 import { PNavbarComponent } from "../../../components/pnav bar/pnav.component";
 import { RoutePerformanceReport } from '../../../models/Logistic and Transport/TransportReports.model';
-import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
+import { TransportReportService } from '../../../Services/LogisticAndTransport/TransportReport.service';
 
 @Component({
   selector: 'app-route-performance-analysis',

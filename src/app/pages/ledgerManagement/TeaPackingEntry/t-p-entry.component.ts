@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 // Import the correct model and service
 import { CreatePackedTeaPayload } from '../../../models/Ledger Management/stockLedger.model';
-import { StockLedgerService } from '../../../services/LedgerManagement/stockLedger.service';
+import { StockLedgerService } from '../../../Services/LedgerManagement/stockLedger.service';
 
 @Component({
   selector: 'app-tea-packing-entry',

@@ -3,50 +3,51 @@
   <div class="top-bar">
     <input type="text" placeholder="Search by ID, Name, NIC, or City..." 
            [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
+           
+    <button class="c-btn" (click)="addNewCollector()">+ Add New Collector</button>
     <button class="add-btn" (click)="addNewCollector()">+ Add New Collector</button>
   </div>
 
   @if (isLoading()) {
-    <div class="loading-indicator">Loading Collectors...</div>
+    <div class="loading">Loading Collectors...</div>
   } @else if (error()) {
-    <div class="error-message">{{ error() }}</div>
+    <div class="error">{{ error() }}</div>
   } @else {
-    <div class="table-wrapper"> 
-      <table>
-        <thead>
+    <table>
+      <thead>
+        <tr>
+          <th>Collector ID</th>
+          <th>Name</th>
+          <th>NIC</th>
+          <th>City</th>
+          <th>Rate per Km</th>
+          <th>Vehicle</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (collector of filteredCollectors(); track collector.collectorId) {
           <tr>
-            <th>Collector ID</th>
-            <th>Name</th>
-            <th>NIC</th>
-            <th>City</th>
-            <th>Rate per Km</th>
-            <th>Vehicle</th>
-            <th>Actions</th>
+            <td>{{ collector.collectorId }}</td>
+            <td>{{ collector.name }}</td>
+            <td>{{ collector.collectorNIC || 'N/A' }}</td>
+            <td>{{ collector.collectorCity || 'N/A' }}</td>
+            <td>{{ collector.ratePerKm | number:'1.2-2' }}</td>
+            <td>{{ collector.vehicleLicensePlate || 'None' }}</td>
+            <td class="actions-cell">
+              <button (click)="onView(collector)" class="view-btn">View</button>
+              <button (click)="onEdit(collector)" class="edit-btn">Edit</button>
+              <button (click)="onDelete(collector)" class="delete-btn">Delete</button>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          @for (collector of filteredCollectors(); track collector.collectorId) {
-            <tr>
-              <td>{{ collector.collectorId }}</td>
-              <td>{{ collector.name }}</td>
-              <td>{{ collector.collectorNIC || 'N/A' }}</td>
-              <td>{{ collector.collectorCity || 'N/A' }}</td>
-              <td>{{ collector.ratePerKm | number:'1.2-2' }}</td>
-              <td>{{ collector.vehicleLicensePlate || 'None' }}</td>
-              <td class="actions-cell">
-                <button (click)="onView(collector)" class="btn-action btn-view">View</button>
-                <button (click)="onEdit(collector)" class="btn-action btn-edit">Edit</button>
-                <button (click)="onDelete(collector)" class="btn-action btn-delete">Delete</button>
-              </td>
-            </tr>
-          } @empty {
-            <tr><td colspan="9">No collectors found.</td></tr>
-          }
-        </tbody>
-      </table>
-    </div>
+        } @empty {
+          <tr><td colspan="7">No collectors found.</td></tr>
+        }
+      </tbody>
+    </table>
   }
 </div>
+
 @if (isViewModalOpen()) {
   <app-c-view [collector]="dataToView()!" (close)="closeViewModal()"></app-c-view>
 }

@@ -129,7 +129,7 @@
           <button 
             class="delete-btn" 
             (click)="deleteIncentive(incentive.IncentiveId)"
-            [disabled]="loading || incentive.IsUsed === true"
+            [disabled]="loading || incentive.IsUsed "
             title="{{ incentive.IsUsed ? 'This incentive has been used and cannot be deleted.' : 'Delete Incentive' }}">
             🗑️ Delete
           </button>

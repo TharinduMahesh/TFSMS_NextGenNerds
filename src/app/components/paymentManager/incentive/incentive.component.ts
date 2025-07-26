@@ -110,7 +110,7 @@ export class IncentiveComponent implements OnInit, OnDestroy {
         TotalAmount: incentive.TotalAmount || incentive.totalAmount || 0,
         Month: incentive.Month || incentive.month || "",
         CreatedDate: new Date(incentive.CreatedDate || incentive.createdDate || new Date()),
-        IsUsed: incentive.IsUsed !== undefined ? incentive.IsUsed : incentive.isUsed || false,
+        IsUsed: incentive.IsUsed !== undefined ? incentive.IsUsed : incentive.IsUsed || false,
       }
     })
   }

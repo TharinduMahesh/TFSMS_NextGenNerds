@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators 
 import { RouterModule,  Router } from "@angular/router" // Import Router
 import  { UserService } from "../../../shared/services/user.service"
 import  { AuthService } from "../../../shared/services/auth.service" // Import AuthService for isLoggedIn check
+import { ToastService } from "../../../shared/services/toast.service" // Import ToastService for notifications
 
 
 @Component({
@@ -25,7 +26,8 @@ export class UserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router, // Inject Router for navigation
+    private router: Router, 
+    private toastService: ToastService // Inject ToastService for notifications
   ) {
     this.userProfileForm = this.fb.group({
       Email: [{ value: "", disabled: true }, [Validators.required, Validators.email]], // Email is read-only
@@ -62,29 +64,40 @@ export class UserProfileComponent implements OnInit {
     })
   }
 
-  onSubmit(): void {
-    if (this.userProfileForm.valid) {
-      this.isLoading = true
-      // Use getRawValue() to get values from disabled fields as well
-      const { FirstName, LastName, MobileNo } = this.userProfileForm.getRawValue()
-      this.userService.updateUserProfile({ FirstName, LastName, MobileNo }).subscribe({
-        next: (res) => {
-          this.showAlertMessage("Profile updated successfully!", "success")
-          this.isLoading = false
-          // Optionally reload profile to ensure data consistency
-          this.loadUserProfile()
-        },
-        error: (err) => {
-          console.error("Error updating profile:", err)
-          this.showAlertMessage("Failed to update profile. " + (err.error?.message || ""), "error")
-          this.isLoading = false
-        },
-      })
-    } else {
-      this.showAlertMessage("Please fill in all required fields correctly.", "error")
-    }
+ onSubmit(): void {
+  // Mark all fields as touched to show validation errors immediately
+  this.userProfileForm.markAllAsTouched();
+
+  if (this.userProfileForm.invalid) {
+    this.toastService.showError('Invalid Form', 'Please fill in all required fields correctly.');
+    return; // Stop if the form is not valid
   }
 
+  this.isLoading = true;
+
+  // Use getRawValue() to get values from all controls, including disabled ones if needed.
+  const { FirstName, LastName, MobileNo } = this.userProfileForm.getRawValue();
+  
+  this.userService.updateUserProfile({ FirstName, LastName, MobileNo }).subscribe({
+    next: (res) => {
+      // --- SUCCESS CASE ---
+      this.isLoading = false;
+      this.toastService.showSuccess('Success!', 'Your profile has been updated.');
+      
+      // Reloading the profile is good practice to ensure the form and
+      // any other displayed data (like the header) are in sync.
+      this.loadUserProfile();
+    },
+    error: (err) => {
+      // --- ERROR CASE ---
+      this.isLoading = false;
+      
+      // Extract a user-friendly error message from the backend response
+      const errorMessage = err.error?.message || 'An unknown error occurred while updating your profile.';
+      this.toastService.showError('Update Failed', errorMessage);
+    },
+  });
+}
   showAlertMessage(message: string, type: string): void {
     this.alertMessage = message
     this.alertType = type

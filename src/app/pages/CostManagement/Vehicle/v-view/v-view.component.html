@@ -2,35 +2,42 @@
   <div class="modal-overlay" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="close-btn" (click)="closeModal()" aria-label="Close">×</button>
-      <h2 class="modal-title">Vehicle Details</h2>
-
-      <!-- Main Vehicle Details -->
-      <div class="details-summary">
-        <div class="detail-row"><span class="label">Vehicle ID:</span><span class="value">{{ vehicle.vehicleId }}</span></div>
-        <div class="detail-row"><span class="label">License Plate:</span><span class="value">{{ vehicle.licensePlate }}</span></div>
-        <div class="detail-row"><span class="label">Model:</span><span class="value">{{ vehicle.model || 'N/A' }}</span></div>
-        <div class="detail-row"><span class="label">Volume / Capacity:</span><span class="value">{{ vehicle.volume }} m³</span></div>
-      </div>
-
-      <!-- Assigned Collector Section -->
-      <h3 class="list-title">Assigned Collector</h3>
-      <div class="details-summary">
-        <div class="detail-row">
-          <span class="label">Name:</span>
-          <span class="value">{{ assignedCollectorName() }}</span>
+      <div class="summary-card green">
+        <h2 class="modal-title">Vehicle Details</h2>
+        <div class="summary-grid">
+          <div>
+            <span class="label">Vehicle ID:</span>
+            <span class="value">{{ vehicle.vehicleId }}</span>
+          </div>
+          <div>
+            <span class="label">License Plate:</span>
+            <span class="value">{{ vehicle.licensePlate }}</span>
+          </div>
+          <div>
+            <span class="label">Model:</span>
+            <span class="value">{{ vehicle.model || 'N/A' }}</span>
+          </div>
+          <div>
+            <span class="label">Volume:</span>
+            <span class="value">{{ vehicle.volume }} m³</span>
+          </div>
         </div>
-        <div class="detail-row">
-          <span class="label">Collector ID:</span>
-          <span class="value">{{ vehicle.collectorId || 'N/A' }}</span>
-        </div>
-      </div>
-      
-      <!-- Condition Notes Section -->
-      <h3 class="list-title">Condition Notes</h3>
-      <div class="notes-container">
-        <p>{{ vehicle.conditionNotes || 'No notes available.' }}</p>
       </div>
 
+      <div class="details-section green">
+        <h3>Assigned Collector</h3>
+        <div class="details-grid">
+          <span class="label">Name:</span><span class="value">{{ assignedCollectorName() }}</span>
+          <span class="label">Collector ID:</span><span class="value">{{ vehicle.collectorId || 'N/A' }}</span>
+        </div>
+      </div>
+
+      <div class="details-section green">
+        <h3>Condition Notes</h3>
+        <div class="notes-container">
+          <p>{{ vehicle.conditionNotes || 'No notes available.' }}</p>
+        </div>
+      </div>
     </div>
   </div>
 }

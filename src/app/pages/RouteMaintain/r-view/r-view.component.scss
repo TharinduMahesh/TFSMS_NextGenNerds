@@ -5,24 +5,89 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
+  background: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(7px);
   animation: fadeIn 0.2s ease-out;
 }
 
 .modal-content {
-  background: #fff;
-  padding: 2rem 2.5rem;
-  border-radius: 12px;
-  width: 550px;
-  max-width: 90vw;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background: rgba(255,255,255,0.95);
+  padding: 2.2rem 2rem 2rem 2rem;
+  border-radius: 22px;
+  width: 540px;
+  max-width: 96vw;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 48px rgba(255, 152, 0, 0.13), 0 2px 12px rgba(255, 152, 0, 0.08);
+  border: 1.5px solid #ffe0b2;
   position: relative;
-  animation: slideIn 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: slideIn 0.3s ease-out;
+  backdrop-filter: blur(2px);
+}
+.summary-card.orange {
+  background: linear-gradient(135deg, #fff3e0 0%, #f8f9fa 100%);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(255, 152, 0, 0.13), 0 1.5px 8px rgba(255, 152, 0, 0.08);
+  border: 1.5px solid #ffe0b2;
+  padding: 1.7rem 1.3rem 1.2rem 1.3rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary-card .modal-title {
+  color: #ff9800;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem 2.2rem;
+  width: 100%;
+  font-size: 1.05rem;
+}
+
+.details-section.orange {
+  margin-bottom: 1.3rem;
+  background: linear-gradient(135deg, #fff3e0 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 18px 0 rgba(255, 152, 0, 0.10), 0 1.5px 8px rgba(255, 152, 0, 0.08);
+  border: 1.5px solid #ffe0b2;
+  padding: 1.3rem 1.1rem 1rem 1.1rem;
+  backdrop-filter: blur(6px);
+  position: relative;
+  transition: box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.details-section.orange h3 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #ff9800;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 0.8rem;
+  border-bottom: 1.5px solid #ffe0b2;
+  padding-bottom: 0.3rem;
+  background: linear-gradient(90deg, #fff3e0 0%, #f8f9fa 100%);
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 1px 4px rgba(255, 152, 0, 0.04);
+  padding-left: 0.3rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.6rem 1.2rem;
+  font-size: 0.97rem;
 }
 
 .close-btn {

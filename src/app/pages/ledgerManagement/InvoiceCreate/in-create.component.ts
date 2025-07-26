@@ -9,7 +9,7 @@ import { CreateInvoicePayload } from '../../../models/Ledger Management/invoiceS
 import { InvoiceSalesService } from '../../../Services/LedgerManagement/invoiceSales.service';
 import { StockLedgerResponse } from '../../../models/Ledger Management/stockLedger.model';
 import { StockLedgerService } from '../../../Services/LedgerManagement/stockLedger.service';
-import { ManualIdEntryComponent } from "./mannualId-entry/m-id-entry.component";
+import { ManualIdEntryComponent } from './mannualId-entry/m-id-entry.component';
 
 @Component({
   selector: 'app-invoice-create',

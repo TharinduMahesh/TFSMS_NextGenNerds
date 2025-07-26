@@ -1,22 +1,10 @@
 <div class="modal-overlay" (click)="onCancel()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button (click)="onCancel()" class="close-btn" title="Close">×</button>
-    
-    <!-- Modal Header -->
-    <header class="page-header">
-      @if (collector) {
-        <h1>Edit Collector #{{ collector.collectorId }}</h1>
-      } @else {
-        <h1>Edit Collector</h1>
-      }
-    </header>
-    
-    <!-- This new div will be our scrollable content area -->
+    <h2 class="modal-title">Edit Collector</h2>
     <div class="modal-body">
       <form [formGroup]="collectorForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-        
-        <!-- Section 1: Basic Information -->
-        <fieldset class="form-section">
+        <fieldset class="form-section blue">
           <legend>Basic Information</legend>
           <div class="form-row">
             <div class="form-group">
@@ -29,9 +17,7 @@
             </div>
           </div>
         </fieldset>
-
-        <!-- Section 2: Contact Information -->
-        <fieldset class="form-section">
+        <fieldset class="form-section blue">
           <legend>Contact Information</legend>
           <div class="form-row">
             <div class="form-group">
@@ -44,9 +30,7 @@
             </div>
           </div>
         </fieldset>
-
-        <!-- Section 3: Address Details -->
-        <fieldset class="form-section">
+        <fieldset class="form-section blue">
           <legend>Address Details</legend>
           <div class="form-group">
             <label for="edit-address1">Address Line 1</label>
@@ -67,9 +51,7 @@
             </div>
           </div>
         </fieldset>
-
-        <!-- Section 4: Personal Details -->
-        <fieldset class="form-section">
+        <fieldset class="form-section blue">
           <legend>Personal Details</legend>
           <div class="form-row">
             <div class="form-group">
@@ -86,24 +68,18 @@
             </div>
           </div>
         </fieldset>
-
-        <!-- Section 5: Financial Details -->
-        <fieldset class="form-section">
+        <fieldset class="form-section blue">
           <legend>Financial Details</legend>
           <div class="form-group">
             <label for="edit-rate">Rate per Km (LKR)</label>
             <input id="edit-rate" formControlName="ratePerKm" type="number" step="0.01" />
           </div>
         </fieldset>
-
       </form>
-    </div> <!-- End of modal-body -->
-
-    <!-- Modal Footer -->
+    </div>
     <div class="form-actions">
       <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
       <button type="button" class="btn-primary" (click)="onSubmit()" [disabled]="collectorForm.invalid || !collectorForm.dirty">Save Changes</button>
     </div>
-
-  </div> <!-- End of modal-content -->
+  </div>
 </div>

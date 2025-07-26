@@ -8,85 +8,69 @@
 .top-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 1rem;
   padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.top-bar input[type="text"],
-.top-bar select {
-  padding: 0.6rem 1rem;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  font-size: 1rem;
-  background-color: #fff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.top-bar input[type="text"]:focus,
-.top-bar select:focus {
-  border-color: #495057;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
+  background-color: #f9f9f9;
+  border-radius: 10px;
 }
 
 .top-bar input[type="text"] {
-  width: 250px;
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  min-width: 250px;
 }
 
-.top-bar input[type="text"]::placeholder {
-  color: #adb5bd;
+.top-bar .btn-group {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
 }
-
-.top-bar select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding-right: 2.5rem;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 1.5em;
-  cursor: pointer;
-}
-
 .top-bar .add-btn {
-  margin-left: auto;
-  background-color: #28a745;
+  background-color: 	 #28a745;
   color: white;
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
-
 .top-bar .add-btn:hover {
-  background-color: #218838;
+  background-color: #1b9437;;
 }
+
 .top-bar .c-btn {
-  margin-left: auto;
-  background-color: #fd7e14; // Distinct orange for "Collector"
+  background-color: #f59e0b;
   color: white;
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
+}
+.top-bar .c-btn:hover {
+  background-color: #d97706;
 }
 
-
+.top-bar .p-btn {
+  background-color: #6366f1;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.top-bar .p-btn:hover {
+  background-color: #4f46e5;
+}
 
 /* --- Professional Table Styling --- */
 table {

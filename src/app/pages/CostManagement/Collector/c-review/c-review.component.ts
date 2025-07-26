@@ -66,6 +66,16 @@ export class CollectorReviewComponent implements OnInit {
     this.router.navigate(['transportdashboard/c-create']);
   }
 
+  collectorAnalysis(): void {
+    this.router.navigate(['performancedashboard/collector-performance-analysis']);
+    console.log('Collector Analysis button clicked');
+  }
+
+   collectorCost(): void {
+    this.router.navigate(['performancedashboard/cost-analysis']);
+    console.log('Collector Analysis button clicked');
+  }
+
   onView(collector: CollectorResponse): void {
     this.dataToView.set(collector);
     this.isViewModalOpen.set(true);

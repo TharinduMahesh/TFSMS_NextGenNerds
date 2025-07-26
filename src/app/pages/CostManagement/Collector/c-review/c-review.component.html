@@ -1,12 +1,19 @@
 <div class="page-container">
   <app-tnlnavbar></app-tnlnavbar>
-  <div class="top-bar">
-    <input type="text" placeholder="Search by ID, Name, NIC, or City..." 
-           [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
-           
-    <button class="c-btn" (click)="addNewCollector()">+ Add New Collector</button>
+ <div class="top-bar">
+  <input
+    type="text"
+    placeholder="Search by ID, Name, NIC, or City..."
+    [value]="searchTerm()"
+    (input)="searchTerm.set($any($event.target).value)"
+  />
+
+  <div class="btn-group">
+    <button class="c-btn" (click)="collectorCost()">Cost Analysis</button>
+    <button class="p-btn" (click)="collectorAnalysis()">Performance Analysis</button>
     <button class="add-btn" (click)="addNewCollector()">+ Add New Collector</button>
   </div>
+</div>
 
   @if (isLoading()) {
     <div class="loading">Loading Collectors...</div>

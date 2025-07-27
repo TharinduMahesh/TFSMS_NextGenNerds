@@ -38,13 +38,10 @@ export class TransportReportService {
     return this.http.get<TripResponse[]>(this.tripsApiUrl).pipe(catchError(this.handleError));
   }
 
-  // =========================================================
-  //      ↓↓↓  THIS IS THE MISSING METHOD - NOW ADDED  ↓↓↓
-  // =========================================================
+ 
   deleteTrip(tripId: number): Observable<void> {
     return this.http.delete<void>(`${this.tripsApiUrl}/${tripId}`).pipe(catchError(this.handleError));
   }
-  // =========================================================
 
   // --- Reporting Methods ---
 

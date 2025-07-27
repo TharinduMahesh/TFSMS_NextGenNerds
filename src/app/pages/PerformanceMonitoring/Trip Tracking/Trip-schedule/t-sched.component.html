@@ -17,7 +17,7 @@
           <option [ngValue]="null" disabled>-- Choose an Existing Route --</option>
           @for(route of routes(); track route.rId) {
             <option [value]="route.rId">
-              {{ route.rName }} ({{ route.distance }}km, from {{route.startLocation}})
+              {{ route.rName }} ({{ route.distance }}km, from {{ route.startLocationAddress }})
             </option>
           }
         </select>

@@ -1,11 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Import CommonModule
+import { CommonModule, NgIf, DecimalPipe, NgClass } from '@angular/common';
+import { GoogleMapComponent } from '../../google-map/google-map.component';
 import { RtList } from '../../../models/Logistic and Transport/RouteMaintain.model';
 
 @Component({
   selector: 'app-r-view',
   standalone: true,
-  imports: [CommonModule], // Add CommonModule here
+  // Added DecimalPipe for formatting the distance number
+  imports: [CommonModule, GoogleMapComponent, DecimalPipe,],
   templateUrl: './r-view.component.html',
   styleUrls: ['./r-view.component.scss']
 })

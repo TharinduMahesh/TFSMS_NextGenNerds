@@ -6,13 +6,13 @@ import { RtList, CreateUpdateRoutePayload } from '../../../models/Logistic and T
 import { RouteService } from '../../../Services/LogisticAndTransport/RouteMaintain.service';
 
 import { RtViewComponent } from '../r-view/r-view.component';
+import { RtEditComponent } from '../r-edit/r-edit.component';
 import { TnLNavbarComponent } from "../../../components/TnLNavbar/tnlnav.component";
-import { RtEditComponent } from "../r-edit/r-edit.component";
 
 @Component({
-  selector: 'app-r-review',
+  selector: 'app-r-review', 
   standalone: true,
-  imports: [CommonModule, RtViewComponent, TnLNavbarComponent, RtEditComponent],
+  imports: [CommonModule, RtViewComponent, RtEditComponent, TnLNavbarComponent],
   templateUrl: './r-review.component.html',
   styleUrls: ['./r-review.component.scss']
 })
@@ -30,19 +30,17 @@ export class RtReviewComponent implements OnInit {
 
   // --- Modal State Signals ---
   selectedRoute = signal<RtList | null>(null); // For highlighting a row
-  isViewModalOpen = signal(false);
+  isViewModalOpen = signal(false);   
   routeToView = signal<RtList | null>(null);
-
   isEditModalOpen = signal(false);
-  // *** CORRECTED ***: Renamed 'routeBeingEdited' to 'routeToEdit' for consistency with the template
-  routeToEdit = signal<RtList | null>(null);
-
+  routeBeingEdited = signal<RtList | null>(null);
+  
   // --- Computed Signal for Displaying Data ---
   filteredRoutes = computed(() => {
     const routes = this.allRoutes();
     const term = this.searchTerm().toLowerCase();
     const filter = this.selectedFilter();
-
+    
     return routes.filter(route => {
       const matchesSearch = term === '' ||
         route.rName.toLowerCase().includes(term) ||
@@ -71,7 +69,7 @@ export class RtReviewComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.error.set(`Failed to load routes: ${err.message}`);
+        this.error.set(err.message);
         this.isLoading.set(false);
       }
     });
@@ -80,7 +78,7 @@ export class RtReviewComponent implements OnInit {
   trackById(index: number, item: RtList): number {
     return item.rId;
   }
-
+  
   onSelectRoute(route: RtList): void {
     this.selectedRoute.set(route);
   }
@@ -94,10 +92,13 @@ export class RtReviewComponent implements OnInit {
     this.isViewModalOpen.set(true);
   }
 
-  // *** CORRECTED ***: This method now opens the modal instead of navigating
   onEdit(route: RtList): void {
-    this.routeToEdit.set(route);
+    // For modal editing - set the route and open modal
+    this.routeBeingEdited.set(route);
     this.isEditModalOpen.set(true);
+    
+    // If you prefer navigation instead, uncomment the line below and remove the above lines:
+    // this.router.navigate(['transportdashboard/r-edit', route.rId]);
   }
 
   onDelete(id?: number): void {
@@ -108,35 +109,39 @@ export class RtReviewComponent implements OnInit {
           this.loadRoutes();
           alert('Route deleted successfully.');
         },
-        error: (err) => alert(`Error deleting route: ${err.message}`)
+        error: (err) => alert(`Error: ${err.message}`)
       });
     }
   }
-
+  
   // --- Event handlers for the Modals ---
-
   closeViewModal(): void {
     this.isViewModalOpen.set(false);
-    this.routeToView.set(null);
   }
 
   closeEditModal(): void {
     this.isEditModalOpen.set(false);
-    this.routeToEdit.set(null);
+    this.routeBeingEdited.set(null);
   }
 
   // This handles the (save) event from the edit component
   handleSave(payload: CreateUpdateRoutePayload): void {
-    const routeToUpdate = this.routeToEdit();
+    const routeToUpdate = this.routeBeingEdited();
     if (!routeToUpdate) return;
-
+    
     this.routeService.updateRoute(routeToUpdate.rId, payload).subscribe({
       next: () => {
         this.loadRoutes();
         this.closeEditModal();
         alert('Route updated successfully!');
       },
-      error: (err) => alert(`Error updating route: ${err.message}`)
+      error: (err) => alert(`Error: ${err.message}`)
     });
+  }
+
+  // This handles the (save) event from the modal (which doesn't pass payload)
+  handleSaveFromModal(): void {
+    this.loadRoutes(); // Refresh the data
+    this.closeEditModal();
   }
 }

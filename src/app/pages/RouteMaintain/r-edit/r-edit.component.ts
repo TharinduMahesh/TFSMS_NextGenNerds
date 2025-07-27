@@ -1,7 +1,7 @@
 // ==================================================
-// Filename: r-edit.component.ts (Final & Corrected)
+// Filename: r-edit.component.ts (Final & Simplified)
 // ==================================================
-import { Component, OnInit, signal, inject, Input, Output, EventEmitter, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, signal, inject, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -26,27 +26,25 @@ import { GoogleMapComponent, MapSelectionState, MapClickResult } from "../../goo
   templateUrl: './r-edit.component.html',
   styleUrls: ['./r-edit.component.scss']
 })
-export class RtEditComponent implements OnInit, AfterViewInit {
+export class RtEditComponent implements OnInit {
   // --- Component Inputs & Outputs ---
   @Input() routeId: number | null = null;
-  @Output() save = new EventEmitter<void>(); // Changed from saveSuccess to save
-  @Output() saveSuccess = new EventEmitter<void>(); // Keep both for compatibility
+  @Output() saveSuccess = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
 
   // --- Injected Services & Dependencies ---
   private fb = inject(FormBuilder);
   private routeService = inject(RouteService);
   private collectorService = inject(CollectorService);
+  private cdr = inject(ChangeDetectorRef);
 
   // --- View Children & Component State ---
+  // @ViewChild and ngAfterViewInit are no longer needed for passing inputs.
   @ViewChild(GoogleMapComponent) googleMapComp!: GoogleMapComponent;
-  @ViewChild('startLocationInput', { static: true }) startLocationInputRef!: ElementRef<HTMLInputElement>;
-  @ViewChild('endLocationInput', { static: true }) endLocationInputRef!: ElementRef<HTMLInputElement>;
 
   routeForm: FormGroup;
   availableCollectors = signal<CollectorResponse[]>([]);
-  isLoading = signal(true); // Overall loading state
-  isCollectorLoading = signal(false); // Separate collector loading state
+  isLoading = signal(true);
   error = signal<string | null>(null);
   estimatedDuration = signal<string | null>(null);
   mapSelectionState = signal<MapSelectionState>(MapSelectionState.IDLE);
@@ -57,222 +55,126 @@ export class RtEditComponent implements OnInit, AfterViewInit {
       rName: ['', [Validators.required, Validators.maxLength(100)]],
       startLocation: this.fb.group({
         address: ['', Validators.required],
-        latitude: [0],
-        longitude: [0]
+        latitude: [0, Validators.required],
+        longitude: [0, Validators.required]
       }),
       endLocation: this.fb.group({
         address: ['', Validators.required],
-        latitude: [0],
-        longitude: [0]
+        latitude: [0, Validators.required],
+        longitude: [0, Validators.required]
       }),
-      distance: [{ value: null, disabled: true }, [Validators.required, Validators.min(0.1)]],
-      collectorId: [null] // Not required for edit - can be unassigned
+      distance: [null, [Validators.required, Validators.min(0.1)]],
+      collectorId: [null]
     });
   }
 
-  // ===== LIFECYCLE HOOKS =====
   ngOnInit(): void {
-    console.log('RtEditComponent ngOnInit - routeId:', this.routeId);
     if (!this.routeId) {
-      this.error.set('Error: No Route ID was provided to the edit component.');
+      this.error.set('Error: No Route ID was provided.');
       this.isLoading.set(false);
       return;
     }
     this.loadInitialData();
   }
 
-  ngAfterViewInit(): void {
-    console.log('RtEditComponent ngAfterViewInit');
-    if (this.googleMapComp) {
-      this.googleMapComp.startLocationInput = this.startLocationInputRef.nativeElement;
-      this.googleMapComp.endLocationInput = this.endLocationInputRef.nativeElement;
-      console.log('Google Map component configured');
-    }
-    
-    // If still loading after view init, retry data loading
-    setTimeout(() => {
-      if (this.isLoading() && this.routeId) {
-        console.log('Retrying data load after view init delay');
-        this.loadInitialData();
-      }
-    }, 100);
-  }
-
-  // ===== DATA LOADING =====
-  /**
-   * Loads both route data and collectors data simultaneously using forkJoin
-   */
   private loadInitialData(): void {
-    console.log('Loading initial data for routeId:', this.routeId);
-    this.isCollectorLoading.set(true);
     this.isLoading.set(true);
     this.error.set(null);
-    
+
     const routeData$ = this.routeService.getById(this.routeId!);
     const collectors$ = this.collectorService.getAllCollectors();
 
     forkJoin({ route: routeData$, collectors: collectors$ }).pipe(
       catchError(err => {
-        console.error('Failed to load initial data:', err);
-        this.error.set(`Failed to load data: ${err.error?.message || err.message || 'Unknown error occurred'}`);
+        this.error.set(`Failed to load data: ${err.error?.message || 'Unknown error'}`);
         return of(null);
       })
-    ).subscribe({
-      next: (result) => {
-        console.log('Data loaded successfully:', result);
-        if (result) {
-          // Set collectors first
-          this.availableCollectors.set(result.collectors);
-          console.log('Available collectors:', result.collectors);
-          
-          // Then populate the form with route data
-          this.populateForm(result.route);
-          console.log('Form populated with route:', result.route);
-          
-          // Set estimated duration if distance exists
-          if (result.route.distance) {
-            this.estimatedDuration.set(this.calculateEstimatedDuration(result.route.distance));
-          }
+    ).subscribe(result => {
+      if (result) {
+        this.availableCollectors.set(result.collectors);
+        this.populateForm(result.route);
+        if (result.route.distance) {
+           this.estimatedDuration.set(this.calculateEstimatedDuration(result.route.distance));
         }
-      },
-      error: (err) => {
-        console.error('Subscription error:', err);
-        this.error.set(`Failed to load data: ${err.message || 'Unknown error occurred'}`);
-      },
-      complete: () => {
-        // Always set loading states to false
-        console.log('Data loading completed');
-        this.isLoading.set(false);
-        this.isCollectorLoading.set(false);
       }
+      this.isLoading.set(false);
+      this.cdr.detectChanges();
     });
   }
 
-  /**
-   * Populates the form with the loaded route data
-   */
   private populateForm(route: RtList): void {
-    console.log('Populating form with route data:', route);
-    
-    try {
-      this.routeForm.patchValue({
-        rName: route.rName || '',
-        startLocation: {
-          address: route.startLocationAddress || '',
-          latitude: route.startLocationLatitude || 0,
-          longitude: route.startLocationLongitude || 0
-        },
-        endLocation: {
-          address: route.endLocationAddress || '',
-          latitude: route.endLocationLatitude || 0,
-          longitude: route.endLocationLongitude || 0
-        },
-        distance: route.distance || null,
-        collectorId: route.collectorId || null
-      });
-      
-      // Enable the distance field after populating
-      this.routeForm.get('distance')?.enable();
-      
-      // Mark form as pristine after initial population
-      this.routeForm.markAsPristine();
-      
-      console.log('Form populated successfully. Form value:', this.routeForm.value);
-      console.log('Form valid:', this.routeForm.valid);
-    } catch (error) {
-      console.error('Error populating form:', error);
-      this.error.set('Error populating form with route data');
-    }
+    this.routeForm.patchValue({
+      rName: route.rName,
+      startLocation: { address: route.startLocationAddress, latitude: route.startLocationLatitude, longitude: route.startLocationLongitude },
+      endLocation: { address: route.endLocationAddress, latitude: route.endLocationLatitude, longitude: route.endLocationLongitude },
+      distance: route.distance,
+      collectorId: route.collectorId
+    });
+    this.routeForm.markAsPristine();
   }
 
-  /**
-   * Simple duration calculation (same logic as in create component)
-   */
   private calculateEstimatedDuration(distance: number): string {
-    const avgSpeed = 30; // km/h average speed
+    const avgSpeed = 30; // km/h
     const hours = distance / avgSpeed;
     const totalMinutes = Math.round(hours * 60);
-    
-    if (totalMinutes < 60) {
-      return `${totalMinutes} mins`;
-    } else {
-      const h = Math.floor(totalMinutes / 60);
-      const m = totalMinutes % 60;
-      return m > 0 ? `${h}h ${m}m` : `${h}h`;
-    }
+    if (totalMinutes < 60) return `${totalMinutes} mins`;
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    return m > 0 ? `${h}h ${m}m` : `${h}h`;
   }
 
-  // ===== MAP AND UI EVENT HANDLERS =====
-  onMapStateChanged(newState: MapSelectionState): void { 
-    this.mapSelectionState.set(newState); 
+  onMapStateChanged(newState: MapSelectionState): void {
+    this.mapSelectionState.set(newState);
   }
 
   handleDirectionButtonClick(): void {
     if (!this.googleMapComp) return;
-    this.mapSelectionState() === MapSelectionState.IDLE
+    this.mapSelectionState() === MapSelectionState.IDLE || this.mapSelectionState() === MapSelectionState.ROUTE_SHOWN
       ? this.googleMapComp.startDirectionSelection()
       : this.googleMapComp.resetSelection();
   }
 
   onStartLocationSelected(location: MapClickResult): void {
-    this.routeForm.get('startLocation')?.patchValue({ 
-      address: location.address, 
-      latitude: location.lat, 
-      longitude: location.lng 
-    });
+    this.routeForm.get('startLocation')?.patchValue({ address: location.address, latitude: location.lat, longitude: location.lng });
     this.routeForm.markAsDirty();
   }
 
   onEndLocationSelected(location: MapClickResult): void {
-    this.routeForm.get('endLocation')?.patchValue({ 
-      address: location.address, 
-      latitude: location.lat, 
-      longitude: location.lng 
-    });
+    this.routeForm.get('endLocation')?.patchValue({ address: location.address, latitude: location.lat, longitude: location.lng });
     this.routeForm.markAsDirty();
   }
 
   onRouteInfoUpdated(info: { distance: number; duration: string }): void {
-    this.routeForm.patchValue({ distance: parseFloat(info.distance.toFixed(2)) });
-    this.routeForm.get('distance')?.enable();
+    this.routeForm.get('distance')?.setValue(parseFloat(info.distance.toFixed(2)));
     this.estimatedDuration.set(info.duration);
     this.routeForm.markAsDirty();
   }
 
-  // ===== FORM SUBMISSION AND NAVIGATION =====
   onSubmit(): void {
-    // Re-enable distance field before validation
     this.routeForm.get('distance')?.enable();
-    
     if (this.routeForm.invalid) {
       alert('Please fill all required fields correctly.');
       this.routeForm.markAllAsTouched();
       return;
     }
-
     if (!this.routeForm.dirty) {
       alert('No changes have been made to save.');
       return;
     }
-
     if (!this.routeId) {
       alert('Error: No route ID available for update.');
       return;
     }
 
     const payload: CreateUpdateRoutePayload = this.routeForm.getRawValue();
-    console.log("--- SUBMITTING UPDATE PAYLOAD ---", JSON.stringify(payload, null, 2));
-
     this.routeService.updateRoute(this.routeId, payload).subscribe({
       next: (updatedRoute) => {
         alert(`Route "${updatedRoute.rName}" updated successfully!`);
-        this.save.emit(); // Emit to parent component
-        this.saveSuccess.emit(); // Keep for compatibility
+        this.saveSuccess.emit();
         this.onCancel();
       },
       error: (err) => {
-        console.error('Error updating route:', err);
-        alert(`Error updating route: ${err.error?.title || err.message || 'An unknown error occurred.'}`);
+        alert(`Error updating route: ${err.error?.title || 'An unknown error occurred.'}`);
       }
     });
   }

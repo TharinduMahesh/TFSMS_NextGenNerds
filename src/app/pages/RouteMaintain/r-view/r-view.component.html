@@ -1,44 +1,85 @@
-<!-- @if (route) {
+<!-- ================================================== -->
+<!-- Filename: r-view.component.html (Redesigned)     -->
+<!-- ================================================== -->
+@if (route) {
   <div class="modal-overlay" (click)="close.emit()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="close.emit()" aria-label="Close">×</button>
-      <div class="summary-card orange">
-        <h2 class="modal-title">Route Details: {{ route.rName }}</h2>
-        <div class="summary-grid">
-          <div>
-            <span class="label">ID:</span>
-            <span class="value">{{ route.rId }}</span>
-          </div>
-          <div>
-            <span class="label">Start Location:</span>
-            <span class="value">{{ route.startLocation }}</span>
-          </div>
-          <div>
-            <span class="label">End Location:</span>
-            <span class="value">{{ route.endLocation }}</span>
-          </div>
-          <div>
-            <span class="label">Distance:</span>
-            <span class="value">{{ route.distance }} km</span>
-          </div>
-          <div>
-            <span class="label">Collector ID:</span>
-            <span class="value">{{ route.collectorId || 'Not Assigned' }}</span>
+      <button class="close-btn" (click)="close.emit()" title="Close">×</button>
+      
+      <header class="modal-header">
+        <h2 class="modal-title">Route Details</h2>
+      </header>
+
+      <div class="view-flex-layout">
+        <!-- Left Column: Interactive Map -->
+        <div class="view-left">
+          <div class="map-container">
+            <!-- The map component automatically displays the route -->
+            <app-google-map
+              [startLocation]="route.startLocationAddress"
+              [endLocation]="route.endLocationAddress">
+            </app-google-map>
           </div>
         </div>
-      </div>
 
-      <div class="details-section orange">
-        <h3>Grower Locations</h3>
-        <div class="details-grid">
-          @for (location of route.growerLocations; track location.gId) {
-            <span class="label">Description:</span>
-            <span class="value">{{ location.description || 'N/A' }}</span>
-          } @empty {
-            <span class="label">No grower locations assigned to this route.</span>
-          }
+        <!-- Right Column: Structured Details -->
+        <div class="view-right">
+          <!-- Route Info Section -->
+          <div class="details-section">
+            <h3 class="section-title">Route Information</h3>
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="icon">📍</span>
+                <span class="label">Name:</span>
+                <span class="value">{{ route.rName }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="icon">🆔</span>
+                <span class="label">Route ID:</span>
+                <span class="value">{{ route.rId }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="icon">📏</span>
+                <span class="label">Distance:</span>
+                <span class="value">{{ route.distance | number:'1.1-2' }} km</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Location Details Section -->
+          <div class="details-section">
+            <h3 class="section-title">Location Details</h3>
+            <div class="details-grid-full">
+                <div class="detail-item-full">
+                    <span class="icon">🟢</span>
+                    <span class="label">Start:</span>
+                    <span class="value">{{ route.startLocationAddress }}</span>
+                </div>
+                <div class="detail-item-full">
+                    <span class="icon">🔴</span>
+                    <span class="label">End:</span>
+                    <span class="value">{{ route.endLocationAddress }}</span>
+                </div>
+            </div>
+          </div>
+
+          <!-- Collector Info Card -->
+          <div class="collector-card">
+            <h3 class="section-title">Assigned Collector</h3>
+            @if(route.collectorId) {
+              <div class="collector-info">
+                <span class="icon">👤</span>
+                <span class="value">Collector ID: {{ route.collectorId }}</span>
+              </div>
+            } @else {
+              <div class="collector-info-empty">
+                <span class="icon">⚫</span>
+                <span class="value">This route is not currently assigned to a collector.</span>
+              </div>
+            }
+          </div>
         </div>
       </div>
     </div>
   </div>
-} -->
+}

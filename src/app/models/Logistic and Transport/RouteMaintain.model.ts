@@ -14,6 +14,7 @@ export interface RtList {
   endLocationLongitude: number;
   distance: number;
   collectorId?: number | null;
+  collectorName?: string;
   // Note: The 'Collector' navigation property is usually not sent in list views,
   // but can be included if your API does so.
 }

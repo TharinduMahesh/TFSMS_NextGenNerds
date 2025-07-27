@@ -10,7 +10,6 @@ import { RouteService } from '../../Services/LogisticAndTransport/RouteMaintain.
 import { TransportReportService } from '../../Services/LogisticAndTransport/TransportReport.service';
 import { TripResponse } from '../../models/Logistic and Transport/TripTracking.model';
 import { TnLNavbarComponent } from '../../components/TnLNavbar/tnlnav.component';
-
 // A new interface to hold all our summary data
 interface DashboardSummary {
   totalCollectors: number;

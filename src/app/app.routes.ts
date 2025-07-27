@@ -432,7 +432,6 @@ export const routes: Routes = [
     path: 'transportdashboard/trip-review',
     component: TripReviewComponent
   }
-
 ]
 
     

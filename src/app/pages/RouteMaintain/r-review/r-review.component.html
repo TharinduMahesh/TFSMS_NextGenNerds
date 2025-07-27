@@ -1,21 +1,25 @@
+<!-- ================================================== -->
+<!-- Filename: r-review.component.html (Corrected)     -->
+<!-- ================================================== -->
 <div class="route-container">
   <app-tnlnavbar></app-tnlnavbar>
+  
   <div class="top-bar">
     <input type="text" placeholder="Search by ID or Name..." [value]="searchTerm()"
       (input)="searchTerm.set($any($event.target).value)" />
-
+     
     <select [value]="selectedFilter()" (change)="selectedFilter.set($any($event.target).value)">
       <option value="all">All Distances</option>
       <option value="short">Short (< 20km)</option>
       <option value="medium">Medium (20-50km)</option>
       <option value="long">Long (> 50km)</option>
     </select>
-
+     
     <button class="add-route" (click)="addNewRoute()">
       + Add New Route
     </button>
   </div>
-
+   
   @if (isLoading()) {
     <div class="loading">Loading routes...</div>
   } @else if (error()) {
@@ -24,6 +28,7 @@
     <table>
       <thead>
         <tr>
+          <!-- *** ADDED: data-label for mobile view -->
           <th data-label="ID">ID</th>
           <th data-label="Name">Name</th>
           <th data-label="Start Location">Start Location</th>
@@ -36,11 +41,12 @@
       <tbody>
         @for (route of filteredRoutes(); track trackById($index, route)) {
           <tr (click)="onSelectRoute(route)" [class.selected]="selectedRoute()?.rId === route.rId">
+            <!-- *** CORRECTED: Using proper property names -->
             <td data-label="ID">{{ route.rId }}</td>
             <td data-label="Name">{{ route.rName }}</td>
-            <td data-label="Start Location">{{ route.startLocation }}</td>
-            <td data-label="End Location">{{ route.endLocation }}</td>
-            <td data-label="Distance (km)">{{ route.distance }}</td>
+            <td data-label="Start Location">{{ route.startLocationAddress || 'N/A' }}</td>
+            <td data-label="End Location">{{ route.endLocationAddress || 'N/A' }}</td>
+            <td data-label="Distance (km)">{{ route.distance || 'N/A' }}</td>
             <td data-label="Collector ID">{{ route.collectorId || 'N/A' }}</td>
             <td data-label="Actions" class="actions-cell">
               <button class="view-btn" (click)="onView(route); $event.stopPropagation()">View</button>
@@ -56,19 +62,18 @@
       </tbody>
     </table>
   }
-
+   
   <!-- View Modal -->
   @if (isViewModalOpen()) {
     <app-r-view [route]="routeToView()" (close)="closeViewModal()"></app-r-view>
   }
 
-  <!-- Edit Modal -->
+  <!-- Edit Modal - ADDED MISSING MODAL -->
   @if (isEditModalOpen()) {
     <app-r-edit 
       [routeId]="routeToEdit()?.rId" 
-      (save)="handleSave($event)" 
+      (save)="handleEditSave()" 
       (close)="closeEditModal()">
     </app-r-edit>
   }
-
 </div>

@@ -1,76 +1,111 @@
-<!-- This is the Modal Wrapper -->
-<div class="modal-overlay visible">
-  <div class="modal-content visible">
-    <!-- THE FIX IS HERE: Changed onClose() to the existing onCancel() -->
+<!-- ================================================== -->
+<!-- Filename: r-edit.component.html (Corrected Modal) -->
+<!-- ================================================== -->
+<div class="modal-overlay" (click)="onCancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
     <button (click)="onCancel()" class="close-btn" title="Close">×</button>
+    <h2 class="modal-title">Edit Route</h2>
 
-    <!-- Your Component's Content Starts Here -->
-    <div class="page-container">
-    
+    <div class="modal-body">
       @if (isLoading()) {
         <div class="loading">Loading route data...</div>
       } @else if (error()) {
-        <div class="error">{{ error() }}</div>
+        <div class="error-message">{{ error() }}</div>
       } @else {
-        <div class="page-wrapper">
-          <h2 class="modal-title orange">Edit Route</h2>
-          <div class="modal-body">
-            <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-              <fieldset class="form-section orange">
-                <legend>Route Details</legend>
+        <!-- Main content section with the same layout as r-create -->
+        <div class="r-create-flex">
+          <div class="r-create-map">
+            <app-google-map
+              [startLocation]="routeForm.get('startLocation.address')?.value"
+              [endLocation]="routeForm.get('endLocation.address')?.value"
+              (startLocationSelected)="onStartLocationSelected($event)"
+              (endLocationSelected)="onEndLocationSelected($event)"
+              (routeInfoUpdated)="onRouteInfoUpdated($event)"
+              (selectionStateChanged)="onMapStateChanged($event)">
+            </app-google-map>
+          </div>
+
+          <div class="r-create-form">
+            <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="route-form">
+              <div class="form-container">
                 <div class="form-group">
                   <label for="edit-rName">Route Name</label>
-                  <input id="edit-rName" type="text" formControlName="rName" placeholder="e.g., Kandy City Morning Run" />
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="edit-startLocation">Start Location</label>
-                    <input id="edit-startLocation" type="text" formControlName="startLocation" placeholder="e.g., Main Factory" />
-                  </div>
-                  <div class="form-group">
-                    <label for="edit-endLocation">End Location</label>
-                    <input id="edit-endLocation" type="text" formControlName="endLocation" placeholder="e.g., Peradeniya Junction" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="edit-distance">Distance (km)</label>
-                  <input id="edit-distance" type="number" formControlName="distance" placeholder="e.g., 25" />
-                </div>
-              </fieldset>
-              <fieldset class="form-section orange">
-                <legend>Assignment</legend>
-                <div class="form-group">
-                  <label for="edit-collectorId">Assign a Collector (and their Vehicle)</label>
-                  <select id="edit-collectorId" formControlName="collectorId">
-                    <option [ngValue]="null">-- Not Assigned --</option>
-                    @for(collector of availableCollectors(); track collector.collectorId) {
-                      <option [value]="collector.collectorId">
-                        {{ collector.name }} (Vehicle: {{ collector.vehicleLicensePlate || 'N/A' }})
-                      </option>
-                    }
-                  </select>
-                </div>
-              </fieldset>
-              <fieldset class="form-section orange">
-                <legend>Grower Locations (Waypoints)</legend>
-                <div formArrayName="growerLocations" class="grower-list-editable">
-                  @for (locationGroup of growerLocations.controls; track $index) {
-                    <div [formGroupName]="$index" class="grower-item-editable">
-                      <input formControlName="description" placeholder="Enter grower location name or address" />
-                      <button type="button" (click)="removeGrowerLocation($index)" class="btn-remove" title="Remove Location">X</button>
-                    </div>
+                  <input id="edit-rName" type="text" formControlName="rName" placeholder="e.g., Kandy City Morning Run">
+                  @if (routeForm.get('rName')?.invalid && routeForm.get('rName')?.touched) {
+                    <span class="error-message">Route name is required.</span>
                   }
                 </div>
-                <button type="button" (click)="addGrowerLocation()" class="btn-add-location">+ Add Waypoint</button>
-              </fieldset>
-              <div class="form-actions actionbar">
-                <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-                <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Save Changes</button>
+
+                <div class="direction-controls">
+                  @if (mapSelectionState() === MapSelectionState.IDLE) {
+                    <button type="button" class="btn-primary" (click)="handleDirectionButtonClick()">
+                      📍 Change Route from Map
+                    </button>
+                  } @else {
+                    <button type="button" class="btn-secondary" (click)="handleDirectionButtonClick()">
+                      Clear Route & Start Over
+                    </button>
+                  }
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" formGroupName="startLocation">
+                    <label for="edit-startLocation">Start Location</label>
+                    <input #startLocationInput id="edit-startLocation" type="text" formControlName="address" placeholder="Search or use button above">
+                    @if (routeForm.get('startLocation.address')?.invalid && routeForm.get('startLocation.address')?.touched) {
+                      <span class="error-message">Start location is required.</span>
+                    }
+                  </div>
+
+                  <div class="form-group" formGroupName="endLocation">
+                    <label for="edit-endLocation">End Location</label>
+                    <input #endLocationInput id="edit-endLocation" type="text" formControlName="address" placeholder="Search or select on map">
+                    @if (routeForm.get('endLocation.address')?.invalid && routeForm.get('endLocation.address')?.touched) {
+                      <span class="error-message">End location is required.</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-distance">Route Distance (km)</label>
+                  <input id="edit-distance" type="number" formControlName="distance" placeholder="Auto-calculated" readonly>
+                  @if (estimatedDuration()) {
+                    <small class="info-text">Estimated travel time: {{ estimatedDuration() }}</small>
+                  }
+                </div>
+
+                <!-- Collector assignment with loading state -->
+                <div class="form-group">
+                  <label for="edit-collectorId">Assign Collector</label>
+                  @if(isCollectorLoading()) {
+                    <p class="loading-text">Loading collectors...</p>
+                  } @else {
+                    <select id="edit-collectorId" formControlName="collectorId">
+                      <option [ngValue]="null">-- Not Assigned --</option>
+                      @for(collector of availableCollectors(); track collector.collectorId) {
+                        <option [value]="collector.collectorId">
+                          {{ collector.name }} ({{ collector.vehicleLicensePlate || 'No Vehicle' }})
+                        </option>
+                      }
+                    </select>
+                    @if (routeForm.get('collectorId')?.invalid && routeForm.get('collectorId')?.touched) {
+                      <span class="error-message">Please select a collector.</span>
+                    }
+                  }
+                </div>
               </div>
             </form>
           </div>
         </div>
       }
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+      <!-- Button is disabled if the form is invalid OR if no changes have been made -->
+      <button type="button" class="btn-primary" [disabled]="routeForm.invalid || !routeForm.dirty" (click)="onSubmit()">
+        Save Changes
+      </button>
     </div>
   </div>
 </div>

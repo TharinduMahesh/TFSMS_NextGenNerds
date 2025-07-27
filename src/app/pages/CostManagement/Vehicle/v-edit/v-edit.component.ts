@@ -45,12 +45,16 @@ export class VehicleEditComponent implements OnInit, OnChanges {
     }
   }
 
-  onSubmit(): void {
-    if (this.vehicleForm.invalid || !this.vehicle) return;
 
-    const payload: CreateUpdateVehiclePayload = this.vehicleForm.value;
-    this.save.emit({ vehicleId: this.vehicle.vehicleId, payload });
-  }
+  onSubmit(): void {
+  if (this.vehicleForm.invalid || !this.vehicle) return;
+  const payload: CreateUpdateVehiclePayload = {
+    ...this.vehicle, 
+    ...this.vehicleForm.value 
+  };
+
+  this.save.emit({ vehicleId: this.vehicle.vehicleId, payload });
+}
 
   onCancel(): void {
     this.close.emit();

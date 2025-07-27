@@ -1,69 +1,98 @@
+<!-- ================================================== -->
+<!-- Filename: r-create.component.html (Final)        -->
+<!-- ================================================== -->
 <div class="page-wrapper">
   <header class="page-header">
     <h1>Create a New Route</h1>
   </header>
 
-  <div class="page-container">
-    <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="route-form">
-      <div class="form-container">
-        
-        <div class="form-group">
-          <label for="create-rName">Route Name</label>
-          <input id="create-rName" type="text" formControlName="rName" placeholder="e.g., Kandy City Morning Run" />
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="create-startLocation">Start Location</label>
-            <input id="create-startLocation" type="text" formControlName="startLocation" placeholder="e.g., Main Factory" />
-          </div>
-          <div class="form-group">
-            <label for="create-endLocation">End Location</label>
-            <input id="create-endLocation" type="text" formControlName="endLocation" placeholder="e.g., Peradeniya Junction" />
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="create-distance">Distance (km)</label>
-          <input id="create-distance" type="number" formControlName="distance" placeholder="e.g., 25" />
-        </div>
+  <div class="r-create-flex">
+    <div class="r-create-map">
+      <app-google-map
+        [startLocation]="routeForm.get('startLocation.address')?.value"
+        [endLocation]="routeForm.get('endLocation.address')?.value"
+        (startLocationSelected)="onStartLocationSelected($event)"
+        (endLocationSelected)="onEndLocationSelected($event)"
+        (routeInfoUpdated)="onRouteInfoUpdated($event)"
+        (selectionStateChanged)="onMapStateChanged($event)">
+      </app-google-map>
+    </div>
 
-        <div class="form-group">
-          <label for="create-collectorId">Assign a Collector (and their Vehicle)</label>
-          @if(isLoading()) {
-            <p>Loading collectors...</p>
-          } @else {
-            <select id="create-collectorId" formControlName="collectorId">
-              <option [ngValue]="null" disabled>-- Select a Collector --</option>
-              @for(collector of availableCollectors(); track collector.collectorId) {
-                <option [value]="collector.collectorId">
-                  {{ collector.name }} (Vehicle: {{ collector.vehicleLicensePlate || 'N/A' }})
-                </option>
-              }
-            </select>
-          }
-        </div>
-        
-        <hr />
-        
-        <h3>Grower Locations (Waypoints)</h3>
-        <div formArrayName="growerLocations" class="grower-list-editable">
-            @for (locationGroup of growerLocations.controls; track $index) {
-              <div [formGroupName]="$index" class="grower-item-editable">
-                <!-- Simplified to only show the description input -->
-                <input formControlName="description" placeholder="Enter grower location name or address" />
-                <button type="button" (click)="removeGrowerLocation($index)" class="btn-remove" title="Remove Location">X</button>
-              </div>
+    <div class="r-create-form">
+      <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="route-form">
+        <div class="form-container">
+          <div class="form-group">
+            <label for="create-rName">Route Name</label>
+            <input id="create-rName" type="text" formControlName="rName" placeholder="e.g., Kandy City Morning Run">
+            @if (routeForm.get('rName')?.invalid && routeForm.get('rName')?.touched) {
+              <span class="error-message">Route name is required.</span>
             }
-        </div>
-        <button type="button" (click)="addGrowerLocation()" class="btn-add-location">+ Add Waypoint</button>
-        
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-          <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Create Route</button>
-        </div>
+          </div>
 
-      </div>
-    </form>
+          <div class="direction-controls">
+            @if (mapSelectionState() === MapSelectionState.IDLE) {
+              <button type="button" class="btn-primary" (click)="handleDirectionButtonClick()">
+                📍 Get Directions from Map
+              </button>
+            } @else {
+              <button type="button" class="btn-secondary" (click)="handleDirectionButtonClick()">
+                Clear Route & Start Over
+              </button>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" formGroupName="startLocation">
+              <label for="create-startLocation">Start Location</label>
+              <input #startLocationInput id="create-startLocation" type="text" formControlName="address" placeholder="Search or use button above">
+              @if (routeForm.get('startLocation.address')?.invalid && routeForm.get('startLocation.address')?.touched) {
+                <span class="error-message">Start location is required.</span>
+              }
+            </div>
+
+            <div class="form-group" formGroupName="endLocation">
+              <label for="create-endLocation">End Location</label>
+              <input #endLocationInput id="create-endLocation" type="text" formControlName="address" placeholder="Search or select on map">
+              @if (routeForm.get('endLocation.address')?.invalid && routeForm.get('endLocation.address')?.touched) {
+                <span class="error-message">End location is required.</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="create-distance">Route Distance (km)</label>
+            <input id="create-distance" type="number" formControlName="distance" placeholder="Auto-calculated" readonly>
+            @if (estimatedDuration()) {
+              <small class="info-text">Estimated travel time: {{ estimatedDuration() }}</small>
+            }
+          </div>
+
+          <!-- This block correctly handles loading and displaying the collectors -->
+          <div class="form-group">
+            <label for="create-collectorId">Assign Collector</label>
+            @if(isLoading()) {
+              <p class="loading-text">Loading collectors...</p>
+            } @else {
+              <select id="create-collectorId" formControlName="collectorId">
+                <option [ngValue]="null" disabled>-- Select a Collector --</option>
+                @for(collector of availableCollectors(); track collector.collectorId) {
+                  <option [value]="collector.collectorId">
+                    {{ collector.name }} ({{ collector.vehicleLicensePlate || 'No Vehicle' }})
+                  </option>
+                }
+              </select>
+              @if (routeForm.get('collectorId')?.invalid && routeForm.get('collectorId')?.touched) {
+                <span class="error-message">Please select a collector.</span>
+              }
+            }
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+            <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Create Route</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

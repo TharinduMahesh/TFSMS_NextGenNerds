@@ -13,9 +13,11 @@
       <option value="long">Long (> 50km)</option>
     </select>
     
-    <button class="add-route" (click)="addNewRoute()">
-      + Add New Route
-    </button>
+   <div class="btn-group">
+    <button class="c-btn" (click)="collectorCost()">Cost Analysis</button>
+    <button class="p-btn" (click)="collectorAnalysis()">Performance Analysis</button>
+    <button class="add-btn" (click)="addNewRoute()">+ Add New Collector</button>
+  </div>
   </div>
 
   @if (isLoading()) {

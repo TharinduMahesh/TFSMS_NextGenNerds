@@ -1,5 +1,5 @@
 /* ================================================== */
-/* Filename: t-sched.component.scss (Complete & Final)*/
+/* Filename: t-sched.component.scss (FINAL)           */
 /* ================================================== */
 
 // --- Base Page Styles ---
@@ -90,12 +90,6 @@
       outline: 0;
       box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
-  }
-
-  input[readonly] {
-    background-color: #e9ecef;
-    color: #495057;
-    cursor: not-allowed;
   }
 
   .error-message {

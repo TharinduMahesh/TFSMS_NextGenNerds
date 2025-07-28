@@ -1,5 +1,5 @@
 <!-- ================================================== -->
-<!-- Filename: t-sched.component.html (Updated Layout) -->
+<!-- Filename: t-sched.component.html (FINAL)         -->
 <!-- ================================================== -->
 <div class="page-container">
   <header class="page-header">
@@ -37,21 +37,17 @@
           </div>
 
           <div class="form-group">
-            <label for="create-collectorId">Assign Collector</label>
-            @if(isLoading()) {
-              <p class="loading-text">Loading collectors...</p>
-            } @else {
-              <select id="create-collectorId" formControlName="collectorId">
-                <option [ngValue]="null" disabled>Select a Collector</option>
-                @for(collector of availableCollectors(); track collector.collectorId) {
-                  <option [value]="collector.collectorId">
-                    {{ collector.name }} ({{ collector.vehicleLicensePlate || 'No Vehicle' }})
-                  </option>
-                }
-              </select>
-              @if (tripForm.get('collectorId')?.invalid && tripForm.get('collectorId')?.touched) {
-                <span class="error-message">Please select a collector.</span>
+            <label for="collectorId">Assign Collector</label>
+            <select id="collectorId" formControlName="collectorId">
+              <option [ngValue]="null" disabled>-- Choose a Collector --</option>
+              @for(collector of collectors(); track collector.collectorId) {
+                <option [value]="collector.collectorId">
+                  {{ collector.name }} ({{ collector.vehicleLicensePlate || 'No Vehicle' }})
+                </option>
               }
+            </select>
+            @if (tripForm.get('collectorId')?.invalid && tripForm.get('collectorId')?.touched) {
+              <div class="error-message">A collector is required.</div>
             }
           </div>
 
@@ -69,7 +65,7 @@
           <div class="grower-actions">
             @if (!showGrowerLocations()) {
               <button type="button" class="btn-grower" (click)="findGrowers()" [disabled]="growerLoadingState()">
-                @if (growerLoadingState()) {<span> Finding...</span>} @else {<span> Find Growers</span>}
+                @if (growerLoadingState()) {<span>🔄 Finding...</span>} @else {<span>🔍 Find Growers</span>}
               </button>
             } @else {
               <div class="grower-info-panel">
@@ -119,7 +115,7 @@
           <!-- Final form submission actions -->
           <div class="form-actions">
             <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-            <button type="submit" class="btn-primary" [disabled]="tripForm.invalid || !tripForm.get('collectorId')?.value">
+            <button type="submit" class="btn-primary" [disabled]="tripForm.invalid">
               Schedule Trip
             </button>
           </div>

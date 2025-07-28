@@ -87,6 +87,16 @@ export class RtReviewComponent implements OnInit {
     this.router.navigate(['transportdashboard/r-create']);
   }
 
+  collectorAnalysis(): void {
+    this.router.navigate(['performancedashboard/collector-performance-analysis']);
+    console.log('Collector Analysis button clicked');
+  }
+
+   collectorCost(): void {
+    this.router.navigate(['performancedashboard/cost-analysis']);
+    console.log('Collector Analysis button clicked');
+  }
+
   onView(route: RtList): void {
     this.routeToView.set(route);
     this.isViewModalOpen.set(true);

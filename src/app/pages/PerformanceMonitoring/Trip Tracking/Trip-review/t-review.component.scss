@@ -1,11 +1,12 @@
-/* --- Main Page Container --- */
+/* ================================================== */
+/* Filename: t-review.component.scss (FINAL)          */
+/* ================================================== */
 .page-container {
   max-width: 1600px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-/* --- Top Bar for Page Title, Search Bar & 'Add New' Button --- */
 .top-bar {
   display: flex;
   align-items: center;
@@ -44,10 +45,6 @@
   box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
 }
 
-.top-bar input[type="text"]::placeholder {
-  color: #adb5bd;
-}
-
 .top-bar .add-btn {
   background-color: #28a745;
   color: white;
@@ -84,15 +81,12 @@ table {
   tbody tr {
     border-bottom: 1px solid #e9ecef;
     transition: background-color 0.2s ease;
-
     &:nth-of-type(even) {
       background-color: #f8f9fa;
     }
-
     &:last-of-type {
       border-bottom: none;
     }
-
     &:hover {
       background-color: #dee2e6;
     }
@@ -124,6 +118,9 @@ table {
 tr.is-late > td:first-child {
   border-left: 4px solid #dc3545;
 }
+tr.is-complete > td:first-child {
+  border-left: 4px solid #28a745;
+}
 
 .actions-cell {
   display: flex;
@@ -136,6 +133,12 @@ tr.is-late > td:first-child {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+  }
+
+  .btn-view {
+    background-color: #e0e7ff;
+    color: #312e81;
+    &:hover { background-color: #c7d2fe; }
   }
   
   .btn-depart {
@@ -170,7 +173,15 @@ tr.is-late > td:first-child {
   font-weight: 500;
 }
 
-/* Mobile styles (≤480px) */
+.add-btn-small {
+  padding: 0.6rem 1.2rem;
+  font-weight: 600; font-size: 0.9rem;
+  color: #198754; background-color: #d1e7dd;
+  border: none; border-radius: 8px; cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover { background-color: #198754; color: white; }
+}
+
 @media screen and (max-width: 480px) {
   .page-container {
     margin: 1rem auto;
@@ -195,32 +206,15 @@ tr.is-late > td:first-child {
     font-size: 0.9rem;
   }
 
-  table {
-    font-size: 0.7rem;
-  }
-
-  table th,
-  table td {
-    padding: 0.5rem;
-  }
+  table { font-size: 0.7rem; }
+  table th, table td { padding: 0.5rem; }
 
   .actions-cell {
     flex-wrap: wrap;
     gap: 0.3rem;
   }
-
   .actions-cell .btn-action {
     padding: 0.3rem 0.6rem;
     font-size: 0.8rem;
   }
-}
-
-.add-btn-small{
-  align-self: flex-start;
-  padding: 0.6rem 1.2rem;
-  font-weight: 600; font-size: 0.9rem;
-  color: #198754; background-color: #d1e7dd;
-  border: none; border-radius: 8px; cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  &:hover { background-color: #198754; color: white; }
 }

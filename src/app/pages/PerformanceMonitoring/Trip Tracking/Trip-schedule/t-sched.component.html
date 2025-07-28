@@ -37,8 +37,22 @@
           </div>
 
           <div class="form-group">
-            <label for="collectorName">Assigned Collector</label>
-            <input id="collectorName" type="text" [value]="assignedCollectorName()" [readOnly]="true">
+            <label for="create-collectorId">Assign Collector</label>
+            @if(isLoading()) {
+              <p class="loading-text">Loading collectors...</p>
+            } @else {
+              <select id="create-collectorId" formControlName="collectorId">
+                <option [ngValue]="null" disabled>Select a Collector</option>
+                @for(collector of availableCollectors(); track collector.collectorId) {
+                  <option [value]="collector.collectorId">
+                    {{ collector.name }} ({{ collector.vehicleLicensePlate || 'No Vehicle' }})
+                  </option>
+                }
+              </select>
+              @if (tripForm.get('collectorId')?.invalid && tripForm.get('collectorId')?.touched) {
+                <span class="error-message">Please select a collector.</span>
+              }
+            }
           </div>
 
           <div class="form-group">

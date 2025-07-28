@@ -381,6 +381,9 @@ export class TripScheduleComponent implements OnInit {
 
   // --- Form & Data Signals ---
   tripForm: FormGroup;
+  
+  availableCollectors = signal<CollectorResponse[]>([]);
+
   routes = signal<RtList[]>([]);
   collectors = signal<CollectorResponse[]>([]);
   selectedRoute = signal<RtList | null>(null);
@@ -494,11 +497,26 @@ export class TripScheduleComponent implements OnInit {
       alert('The selected route must have an assigned collector.');
       return;
     }
-    // You can now also access the list of added growers via this.addedGrowers()
-    // For now, it's just a UI feature, but you could send this data in the payload.
-    console.log('Growers added to this trip:', this.addedGrowers());
 
-    const payload: ScheduleTripPayload = this.tripForm.getRawValue();
+    // --- THIS IS THE KEY CHANGE ---
+    // 1. Get the base data from the form.
+    const formValue = this.tripForm.getRawValue();
+    
+    // 2. Extract the grower emails from the `addedGrowers` signal.
+    const growerEmails = this.addedGrowers().map(g => g.growerEmail);
+
+    // 3. Construct the final payload object.
+    const payload: ScheduleTripPayload = {
+      routeId: formValue.routeId,
+      collectorId: formValue.collectorId,
+      scheduledDeparture: formValue.scheduledDeparture,
+      scheduledArrival: formValue.scheduledArrival,
+      growerEmails: growerEmails // Add the list of emails
+    };
+
+    console.log('Submitting final payload:', payload);
+
+    // 4. Send the complete payload to the service.
     this.transportReportService.scheduleTrip(payload).subscribe({
       next: () => {
         alert('Trip scheduled successfully!');
@@ -509,6 +527,20 @@ export class TripScheduleComponent implements OnInit {
   }
 
   onCancel(): void { this.router.navigate(['/transportdashboard/trip-review']); }
+
+  private loadCollectors(): void {
+    this.collectorService.getAllCollectors().subscribe({
+      next: (collectors) => {
+        this.availableCollectors.set(collectors);
+      },
+      error: (err) => {
+        console.error('Failed to load collectors:', err);
+        alert('Could not load the list of collectors. Please try again later.');
+      }
+    }).add(() => {
+      this.isLoading.set(false); // This runs on both success and error
+    });
+  }
   
   // --- Grower Finding Logic (unchanged) ---
   findGrowers(): void {

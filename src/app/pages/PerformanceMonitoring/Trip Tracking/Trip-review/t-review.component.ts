@@ -1,3 +1,6 @@
+// ==================================================
+// Filename: trip-review.component.ts (FINAL)
+// ==================================================
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -5,11 +8,12 @@ import { Router } from '@angular/router';
 import { TripResponse, UpdateTripStatusPayload } from '../../../../models/Logistic and Transport/TripTracking.model';
 import { TransportReportService } from '../../../../Services/LogisticAndTransport/TransportReport.service';
 import { TnLNavbarComponent } from '../../../../components/TnLNavbar/tnlnav.component';
+import { TripViewComponent } from '../Trip-view/trip-view.compoent';
 
 @Component({
   selector: 'app-trip-review',
   standalone: true,
-  imports: [CommonModule, TnLNavbarComponent, DatePipe],
+  imports: [CommonModule, TnLNavbarComponent, DatePipe, TripViewComponent], 
   templateUrl: './t-review.component.html',
   styleUrls: ['./t-review.component.scss']
 })
@@ -20,9 +24,11 @@ export class TripReviewComponent implements OnInit {
   allTrips = signal<TripResponse[]>([]);
   isLoading = signal(true);
   error = signal<string | null>(null);
-  searchTerm = signal(''); // Added searchTerm signal
+  searchTerm = signal('');
 
-  // Updated filteredTrips to include search logic
+  isViewModalOpen = signal(false);
+  selectedTripForView = signal<TripResponse | null>(null);
+
   filteredTrips = computed(() => {
     const trips = this.allTrips();
     const term = this.searchTerm().toLowerCase();
@@ -30,7 +36,7 @@ export class TripReviewComponent implements OnInit {
     return trips.filter(trip => 
       term === '' ||
       trip.tripId.toString().includes(term) ||
-      trip.routeName?.toLowerCase().includes(term)||
+      trip.route?.rName?.toLowerCase().includes(term)||
       trip.collectorName?.toLowerCase().includes(term)
     );
   });
@@ -48,7 +54,7 @@ export class TripReviewComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.error.set(err.message);
+        this.error.set('Failed to load trip data. Please try again.');
         this.isLoading.set(false);
       }
     });
@@ -69,10 +75,9 @@ export class TripReviewComponent implements OnInit {
   }
 
   onDelete(trip: TripResponse): void {
-    if (!confirm(`Are you sure you want to delete Trip #${trip.tripId} for route "${trip.routeName}"?`)) {
+    if (!confirm(`Are you sure you want to delete Trip #${trip.tripId} for route "${trip.route?.rName}"?`)) {
       return;
     }
-
     this.transportService.deleteTrip(trip.tripId).subscribe({
       next: () => {
         this.fetchTrips();
@@ -92,5 +97,15 @@ export class TripReviewComponent implements OnInit {
       },
       error: (err) => alert(`Error updating trip: ${err.message}`)
     });
+  }
+
+  onViewTrip(trip: TripResponse): void {
+    this.selectedTripForView.set(trip);
+    this.isViewModalOpen.set(true);
+  }
+
+  onCloseViewModal(): void {
+    this.isViewModalOpen.set(false);
+    this.selectedTripForView.set(null);
   }
 }

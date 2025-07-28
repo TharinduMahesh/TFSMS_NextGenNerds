@@ -29,7 +29,6 @@ export class TransportReportService {
   scheduleTrip(payload: ScheduleTripPayload): Observable<TripResponse> {
     return this.http.post<TripResponse>(`${this.tripsApiUrl}/schedule`, payload).pipe(catchError(this.handleError));
   }
-
   updateTripStatus(tripId: number, payload: UpdateTripStatusPayload): Observable<TripResponse> {
     return this.http.put<TripResponse>(`${this.tripsApiUrl}/${tripId}/status`, payload).pipe(catchError(this.handleError));
   }

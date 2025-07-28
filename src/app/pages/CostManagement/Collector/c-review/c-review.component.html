@@ -11,7 +11,7 @@
   <div class="btn-group">
     <button class="c-btn" (click)="collectorCost()">Cost Analysis</button>
     <button class="p-btn" (click)="collectorAnalysis()">Performance Analysis</button>
-    <button class="add-btn" (click)="addNewCollector()">+ Add New Collector</button>
+    <!-- <button class="add-btn" (click)="addNewCollector()">+ Add New Collector</button> -->
   </div>
 </div>
 
@@ -43,8 +43,8 @@
             <td>{{ collector.vehicleLicensePlate || 'None' }}</td>
             <td class="actions-cell">
               <button (click)="onView(collector)" class="view-btn">View</button>
-              <button (click)="onEdit(collector)" class="edit-btn">Edit</button>
-              <button (click)="onDelete(collector)" class="delete-btn">Delete</button>
+              <!-- <button (click)="onEdit(collector)" class="edit-btn">Edit</button>
+              <button (click)="onDelete(collector)" class="delete-btn">Delete</button> -->
             </td>
           </tr>
         } @empty {

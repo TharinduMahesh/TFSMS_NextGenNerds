@@ -1,6 +1,3 @@
-// ==================================================
-// Filename: r-create.component.ts (Final & Corrected)
-// ==================================================
 import { Component, OnInit, signal, inject, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -55,10 +52,6 @@ export class RtCreateComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // ===== THIS IS THE CRITICAL LIFECYCLE HOOK =====
-  /**
-   * When the component initializes, it immediately calls the function to load collectors.
-   */
   ngOnInit(): void {
     this.loadCollectors();
   }
@@ -94,12 +87,6 @@ export class RtCreateComponent implements OnInit, AfterViewInit {
     this.estimatedDuration.set(info.duration);
   }
 
-  // ===== THIS METHOD FETCHES AND SETS THE COLLECTOR DATA =====
-  /**
-   * Subscribes to the CollectorService to get the list of available collectors.
-   * On success, it populates the 'availableCollectors' signal.
-   * Finally, it sets 'isLoading' to false so the UI can switch from the loading message to the dropdown.
-   */
   private loadCollectors(): void {
     this.collectorService.getAllCollectors().subscribe({
       next: (collectors) => {

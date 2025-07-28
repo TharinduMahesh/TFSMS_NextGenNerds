@@ -1,3 +1,6 @@
+<!-- ================================================== -->
+<!-- Filename: t-review.component.html (FINAL)        -->
+<!-- ================================================== -->
 <div class="page-container">
   <app-tnlnavbar></app-tnlnavbar>
   <div class="top-bar">
@@ -6,7 +9,7 @@
       <p>View scheduled trips and update their real-time status.</p>
     </div>
     
-    <input type="text" placeholder="Search by ID or Route..." [value]="searchTerm()"
+    <input type="text" placeholder="Search by ID, Route, or Collector..." [value]="searchTerm()"
       (input)="searchTerm.set($any($event.target).value)" />
     <button class="add-btn" (click)="goToSchedulePage()">+ Schedule New Trip</button>
   </div>
@@ -31,10 +34,10 @@
         </thead>
         <tbody>
           @for (trip of filteredTrips(); track trip.tripId) {
-            <tr [class.is-late]="!trip.isOnTime && trip.actualDeparture"
-                [class.is-complete]="trip.actualArrival">
+            <tr [class.is-complete]="trip.actualArrival" 
+                [class.is-late]="!trip.isOnTime && trip.actualDeparture">
               <td>#{{ trip.tripId }}</td>
-              <td>{{ trip.routeName }}</td>
+              <td>{{ trip.route?.rName }}</td>
               <td>{{ trip.collectorName }}</td>
               <td>{{ trip.scheduledDeparture | date:'MMM d, h:mm a' }}</td>
               <td>{{ trip.scheduledArrival | date:'MMM d, h:mm a' }}</td>
@@ -48,6 +51,7 @@
                   }
               </td>
               <td class="actions-cell">
+                <button (click)="onViewTrip(trip)" class="btn-action btn-view">View</button>
                 @if(!trip.actualDeparture) {
                   <button (click)="markAsDeparted(trip)" class="btn-action btn-depart">Depart</button>
                 }
@@ -75,3 +79,11 @@
     </div>
   }
 </div>
+
+<!-- Render the modal component when isViewModalOpen is true -->
+@if (isViewModalOpen()) {
+  <app-trip-view
+    [selectedTrip]="selectedTripForView()"
+    (close)="onCloseViewModal()">
+  </app-trip-view>
+}

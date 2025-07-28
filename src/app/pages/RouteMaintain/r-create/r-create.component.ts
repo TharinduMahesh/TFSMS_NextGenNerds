@@ -8,11 +8,12 @@ import { RouteService } from '../../../Services/LogisticAndTransport/RouteMainta
 import { CollectorService } from '../../../Services/LogisticAndTransport/Collector.service';
 import { CollectorResponse } from '../../../models/Logistic and Transport/CollectorManagement.model';
 import { GoogleMapComponent, MapSelectionState, MapClickResult } from "../../google-map/google-map.component";
+import { TnLNavbarComponent } from "../../../components/TnLNavbar/tnlnav.component";
 
 @Component({
   selector: 'app-r-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, GoogleMapComponent],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, GoogleMapComponent, TnLNavbarComponent],
   templateUrl: './r-create.component.html',
   styleUrls: ['./r-create.component.scss']
 })

@@ -1,181 +1,221 @@
 :host {
-  --color-background: #f4f7f6;
-  --color-primary-blue: #007bff;
-  --color-primary-blue-dark: #0056b3;
-  --color-accent-green: #28a745;
-  --color-accent-green-dark: #1e7e34;
-  --color-accent-yellow: #ffc107;
-  --color-accent-orange: #fd7e14;
-  --color-accent-teal: #17a2b8;
-  --color-accent-purple: #6f42c1;
-  --color-text-dark: #212529;
-  --color-text-light: #6c757d;
-  --color-border: #dee2e6;
-  --color-card-bg: #ffffff;
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-  --shadow-md: 0 5px 15px rgba(0,0,0,0.08);
-  --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+  // Define our color palette as CSS variables
+  --c-blue-bg: #e3f2fd;
+  --c-blue-fg: #4caf50;
+  --c-green-bg: #e8f5e9;
+  --c-green-fg: #4caf50;
+  --c-orange-bg: #fff3e0;
+  --c-orange-fg: #ff9800;
+  --c-red-bg: #ffebee;
+  --c-red-fg: #f44336;
+  --c-text-dark: #212529;
+  --c-text-light: #6c757d;
+  --c-bg-main: #f8f9fa;
+  --c-bg-card: #ffffff;
+  --c-border: #e9ecef;
 }
 
+/* Page container is unchanged */
 .page-container {
   max-width: 1600px;
   margin: 2rem auto;
   padding: 0 1rem;
-  background-color: var(--color-background);
+  background-color: var(--c-bg-main);
+  padding-bottom: 3rem;
 }
 
-.dashboard-content {
-  width: 100%;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
+/* Dashboard header is unchanged */
+.dashboard-header {
+  background: linear-gradient(135deg, #5ab85e, #4caf50);
+  color: white;
+  padding: 2.5rem 2rem;
+  margin: 0 0 2.5rem 0;
+  border-radius: 12px;
   
-  h1 { font-size: 2.25rem; color: var(--color-text-dark); margin: 0; }
-  p { font-size: 1.1rem; color: var(--color-text-light); margin-top: 0.25rem; }
+  .header-content {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
   
-  .btn-primary {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    background-color: var(--color-accent-green);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s;
-    
-    &:hover {
-      background-color: var(--color-accent-green-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-    }
+  h1 {
+    font-size: 2.25rem; font-weight: 700;
+    margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  p {
+    font-size: 1.1rem; margin: 0.25rem 0 0; opacity: 0.85;
   }
 }
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
 }
 
+/*
+=========================================
+=== SUMMARY CARD TEXT ALIGNMENT FIX ===
+=========================================
+*/
 .summary-card {
-  background: var(--color-card-bg);
-  padding: 1.5rem;
+  background: var(--c-bg-card);
+  padding: 1.25rem;
   border-radius: 12px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
   display: flex;
-  align-items: center;
+  align-items: center; /* MODIFIED: Was 'center', now 'center' to align icon with text block */
   gap: 1.25rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--c-border);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
   }
+
+  &.theme-blue:hover { border-color: var(--c-blue-fg); }
+  &.theme-green:hover { border-color: var(--c-green-fg); }
+  &.theme-orange:hover { border-color: var(--c-orange-fg); }
   
   .card-icon {
-    flex-shrink: 0;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    svg {
-      width: 24px;
-      height: 24px;
-      stroke-width: 2;
-    }
+    flex-shrink: 0; width: 50px; height: 50px;
+    border-radius: 50%; display: flex;
+    justify-content: center; align-items: center;
+    svg { width: 24px; height: 24px; }
   }
   
   .card-content {
-    .summary-value {
-      display: block;
-      font-size: 2.25rem;
-      font-weight: 700;
-      color: var(--color-text-dark);
-      line-height: 1;
-    }
-    .summary-label {
-      font-size: 0.95rem;
-      color: var(--color-text-light);
-      margin-top: 0.25rem;
-    }
+    /* ADDED: Flexbox to control internal alignment */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .summary-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--c-text-dark);
+    line-height: 1; /* ADDED: Tighter line height for the number */
   }
 
-  .collectors { background-color: rgba(23, 162, 184, 0.1); svg { color: var(--color-accent-teal); } }
-  .vehicles { background-color: rgba(0, 123, 255, 0.1); svg { color: var(--color-primary-blue); } }
-  .routes { background-color: rgba(111, 66, 193, 0.1); svg { color: var(--color-accent-purple); } }
-  .pending { background-color: rgba(255, 193, 7, 0.15); svg { color: #f0ad4e; } }
-  .in-progress { background-color: rgba(253, 126, 20, 0.1); svg { color: var(--color-accent-orange); } }
-  .completed { background-color: rgba(40, 167, 69, 0.1); svg { color: var(--color-accent-green); } }
+  .summary-label {
+    font-size: 0.9rem;
+    color: var(--c-text-light);
+    margin-top: 0.25rem; /* ADDED: Consistent spacing */
+  }
+
+  &.theme-blue .card-icon { background-color: var(--c-blue-bg); svg { color: var(--c-blue-fg); } }
+  &.theme-green .card-icon { background-color: var(--c-green-bg); svg { color: var(--c-green-fg); } }
+  &.theme-orange .card-icon { background-color: var(--c-orange-bg); svg { color: var(--c-orange-fg); } }
 }
+/*
+=========================================
+=== END OF FIX ===
+=========================================
+*/
 
 
 .activity-card {
   margin-top: 2.5rem;
-  background: var(--color-card-bg);
-  padding: 1rem 2rem 2rem 2rem;
+  background: var(--c-bg-card);
+  padding: 1.5rem 2rem 1.5rem 2rem;
   border-radius: 12px;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border: 1px solid var(--c-border);
   
-  h3 { margin: 1rem 0 1.5rem 0; font-size: 1.4rem; color: var(--color-text-dark); }
+  h3 { margin: 0 0 1.5rem 0; font-size: 1.4rem; color: var(--c-text-dark); }
 }
 
 .activity-item {
   display: grid;
-  grid-template-columns: 50px 1fr auto auto;
+  grid-template-columns: 40px 1fr auto auto;
   align-items: center;
   gap: 1.5rem;
   padding: 1rem;
-  border-bottom: 1px solid var(--color-border);
-  &:last-child { border-bottom: none; }
+  border-left: 4px solid;
+  background-color: var(--c-bg-main);
   
-  .activity-icon {
+  &:not(:last-child) { margin-bottom: 1rem; }
+
+  &.theme-green { border-color: var(--c-green-fg); .status-badge { background-color: var(--c-green-fg); color: #fff; } }
+  &.theme-blue { border-color: var(--c-blue-fg); .status-badge { background-color: var(--c-blue-fg); color: #fff; } }
+  &.theme-orange { border-color: var(--c-orange-fg); .status-badge { background-color: var(--c-orange-fg); color: #fff; } }
+  
+  .item-icon {
     width: 40px; height: 40px; border-radius: 50%;
-    background-color: var(--color-background); display: flex;
-    justify-content: center; align-items: center;
-    svg { width: 20px; height: 20px; color: var(--color-text-light); }
+    background-color: var(--c-bg-card);
+    display: flex; justify-content: center; align-items: center;
+    svg { color: var(--c-text-light); }
   }
 
-  .activity-details {
-    display: flex; flex-direction: column;
-    strong { font-weight: 600; color: var(--color-text-dark); }
-    span { color: var(--color-text-light); font-size: 0.9rem; }
+  .item-details {
+    .route-name { font-weight: 600; color: var(--c-text-dark); }
+    .collector-name { color: var(--c-text-light); font-size: 0.9rem; }
   }
 
-  .activity-time {
+  .item-time {
     display: flex; flex-direction: column; text-align: right;
-    span { font-size: 0.85rem; color: var(--color-text-light); }
-    strong { font-weight: 600; }
+    span:first-child { font-size: 0.8rem; color: var(--c-text-light); }
+    span:last-child { font-weight: 600; }
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.75rem; border-radius: 16px;
+    font-weight: 600; font-size: 0.75rem;
+    text-align: center; white-space: nowrap;
   }
 }
 
-.status {
-  padding: 5px 12px; border-radius: 16px; font-weight: 600; font-size: 12px;
-  color: #fff; text-align: center;
-  &.status-completed { background-color: var(--color-accent-green); }
-  &.status-departed { background-color: var(--color-accent-teal); }
-  &.status-pending { background-color: var(--color-accent-yellow); color: var(--color-text-dark); }
+.empty-state, .status-indicator {
+  padding: 3rem; text-align: center; font-style: italic;
+  color: var(--c-text-light); border-radius: 8px;
+  background-color: var(--c-bg-card);
 }
 
-/* --- State Indicators --- */
-.loading-indicator,
-.error-message {
-    padding: 3rem; text-align: center; font-size: 1.1rem;
-    color: #6c757d; background-color: #fff; border-radius: 8px;
-    border: 1px dashed var(--color-border);
-}
-.error-message {
-    color: #721c24; background-color: #f8d7da; border-color: #f5c6cb;
+.status-indicator {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  svg { width: 40px; height: 40px; margin-bottom: 1rem; }
+  &.error { color: var(--c-red-fg); background-color: var(--c-red-bg); }
 }
 
+.loader {
+  border: 4px solid var(--c-border);
+  border-top: 4px solid var(--c-blue-fg);
+  border-radius: 50%; width: 40px; height: 40px;
+  animation: spin 1s linear infinite; margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* --- RESPONSIVENESS RULES (Unchanged) --- */
+
+@media (max-width: 767px) {
+  .activity-item {
+    grid-template-columns: 40px 1fr;
+    grid-template-areas: 
+      "icon details"
+      ".    time"
+      ".    status";
+    gap: 0.5rem 1rem;
+    padding: 0.75rem;
+  }
+
+  .item-icon { grid-area: icon; }
+  .item-details { grid-area: details; }
+  .item-time { grid-area: time; text-align: left; margin-top: 0.5rem; }
+  .item-status { grid-area: status; justify-self: start; margin-top: 0.5rem; }
+
+  .dashboard-header {
+    h1 { font-size: 1.75rem; }
+    p { font-size: 1rem; }
+  }
+
+  .activity-card { padding: 1rem; }
+}
 
 @media (min-width: 768px) {
   .summary-grid {

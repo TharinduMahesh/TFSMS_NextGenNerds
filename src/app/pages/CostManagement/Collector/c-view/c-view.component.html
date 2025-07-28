@@ -1,58 +1,66 @@
 @if (collector) {
   <div class="modal-overlay" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="closeModal()" aria-label="Close">×</button>
-      <h2 class="modal-title">Collector Details</h2>
-      
-      <!-- Section 1: Primary Info -->
-      <div class="details-section">
-        <h3>Primary Information</h3>
-        <div class="details-grid">
-          <span class="label">Collector ID:</span><span class="value">#{{ collector.collectorId }}</span>
-          <span class="label">Full Name:</span><span class="value">{{ collector.name }}</span>
-          <span class="label">NIC Number:</span><span class="value">{{ collector.collectorNIC || 'N/A' }}</span>
-        </div>
+      <button class="close-btn" (click)="closeModal()" aria-label="Close" title="Close">×</button>
+
+      <!-- Header Section -->
+      <div class="modal-header">
+        <h2 class="collector-name">{{ collector.name }}</h2>
+        <p class="collector-id">Collector ID: #{{ collector.collectorId }}</p>
       </div>
 
-      <!-- Section 2: Contact Info -->
-      <div class="details-section">
-        <h3>Contact Details</h3>
-        <div class="details-grid">
-          <span class="label">Phone Number:</span><span class="value">{{ collector.collectorPhoneNum || 'N/A' }}</span>
-          <span class="label">Email Address:</span><span class="value">{{ collector.collectorEmail || 'N/A' }}</span>
+      <!-- Two-Column Body -->
+      <div class="modal-body">
+        <!-- Left Column -->
+        <div class="details-column">
+          <!-- Blue Theme for Contact -->
+          <div class="details-section theme-blue">
+            <h3>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm9.06 9.44L4 6.8V19h16V6.8l-8.06 5.64a1 1 0 0 1-1.12 0ZM5.51 5l6.55 4.58L18.61 5H5.51Z"/></svg>
+              Contact Details
+            </h3>
+            <div class="info-row"><span class="label">Phone</span><span class="value">{{ collector.collectorPhoneNum || 'N/A' }}</span></div>
+            <div class="info-row"><span class="label">Email</span><span class="value">{{ collector.collectorEmail || 'N/A' }}</span></div>
+          </div>
+
+          <!-- Orange Theme for Personal Info -->
+          <div class="details-section theme-orange">
+            <h3>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2H2V4Zm0 4h20v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8Zm5 4a1 1 0 0 0-1 1v2a1 1 0 1 0 2 0v-2a1 1 0 0 0-1-1Zm0-4a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2H7Zm0 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H7Z"/></svg>
+              Personal & Legal
+            </h3>
+            <div class="info-row"><span class="label">NIC Number</span><span class="value">{{ collector.collectorNIC || 'N/A' }}</span></div>
+            <div class="info-row"><span class="label">Gender</span><span class="value">{{ collector.collectorGender || 'N/A' }}</span></div>
+            <div class="info-row"><span class="label">Date of Birth</span><span class="value">{{ collector.collectorDOB | date:'longDate' }}</span></div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="details-column">
+          <!-- Blue Theme for Address -->
+          <div class="details-section theme-blue">
+            <h3>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 21.73a1 1 0 0 1-1.4-1.22L12 18.4l-1.45-1.16a1 1 0 0 1 1.1-1.68l1.44 1.15a1 1 0 0 1 .4 1.28l-1.8 3.94ZM12 2a9 9 0 0 1 6.36 15.36A9 9 0 0 1 12 2Zm0 2a7 7 0 1 0 0 14a7 7 0 0 0 0-14Z"/></svg>
+              Address
+            </h3>
+            <div class="info-row"><span class="label">Address 1</span><span class="value">{{ collector.collectorAddressLine1 || 'N/A' }}</span></div>
+            <div class="info-row"><span class="label">Address 2</span><span class="value">{{ collector.collectorAddressLine2 || '-' }}</span></div>
+            <div class="info-row"><span class="label">City</span><span class="value">{{ collector.collectorCity || 'N/A' }}</span></div>
+            <div class="info-row"><span class="label">Postal Code</span><span class="value">{{ collector.collectorPostalCode || 'N/A' }}</span></div>
+          </div>
+          
+          <!-- Green Theme for Operational Details -->
+          <div class="details-section theme-green">
+            <h3>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8.5 19a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3ZM17.5 19a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3ZM3 17V6a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v4h2.5a1 1 0 0 1 .8.4L21 14h-3v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm1-9h10v6H4V8Z"/></svg>
+              Operational Details
+            </h3>
+            <div class="info-row"><span class="label">Rate per Km</span><span class="value">{{ collector.ratePerKm | number:'1.2-2' }}</span></div>
+            <div class="info-row"><span class="label">Vehicle Plate</span><span class="value">{{ collector.vehicleLicensePlate || 'None' }}</span></div>
+            <div class="info-row"><span class="label">Vehicle Volume</span><span class="value">{{ collector.vehicleVolume ? (collector.vehicleVolume + ' m³') : 'N/A' }}</span></div>
+          </div>
         </div>
       </div>
-
-      <!-- Section 3: Address Info -->
-      <div class="details-section">
-        <h3>Address</h3>
-        <div class="details-grid">
-          <span class="label">Address Line 1:</span><span class="value">{{ collector.collectorAddressLine1 || 'N/A' }}</span>
-          <span class="label">Address Line 2:</span><span class="value">{{ collector.collectorAddressLine2 || '-' }}</span>
-          <span class="label">City:</span><span class="value">{{ collector.collectorCity || 'N/A' }}</span>
-          <span class="label">Postal Code:</span><span class="value">{{ collector.collectorPostalCode || 'N/A' }}</span>
-        </div>
-      </div>
-
-      <!-- Section 4: Personal Info -->
-      <div class="details-section">
-        <h3>Personal Details</h3>
-        <div class="details-grid">
-          <span class="label">Gender:</span><span class="value">{{ collector.collectorGender || 'N/A' }}</span>
-          <span class="label">Date of Birth:</span><span class="value">{{ collector.collectorDOB | date:'longDate' }}</span>
-        </div>
-      </div>
-
-      <!-- Section 5: Financial & Vehicle Info -->
-      <div class="details-section">
-        <h3>Operational Details</h3>
-        <div class="details-grid">
-          <span class="label">Rate per Km:</span><span class="value">{{ collector.ratePerKm | number:'1.2-2' }}</span>
-          <span class="label">Assigned Vehicle:</span><span class="value">{{ collector.vehicleLicensePlate || 'None' }}</span>
-          <span class="label">Vehicle Volume:</span><span class="value">{{ collector.vehicleVolume ? (collector.vehicleVolume + ' m³') : 'N/A' }}</span>
-        </div>
-      </div>
-
     </div>
   </div>
 }

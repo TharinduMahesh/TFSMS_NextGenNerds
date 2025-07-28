@@ -87,14 +87,12 @@ export class RtReviewComponent implements OnInit {
     this.router.navigate(['transportdashboard/r-create']);
   }
 
-  collectorAnalysis(): void {
-    this.router.navigate(['performancedashboard/collector-performance-analysis']);
-    console.log('Collector Analysis button clicked');
+  routeAnalysis(): void {
+    this.router.navigate(['performancedashboard/routes-analysis']);
   }
 
-   collectorCost(): void {
-    this.router.navigate(['performancedashboard/cost-analysis']);
-    console.log('Collector Analysis button clicked');
+   routePerformance(): void {
+    this.router.navigate(['performancedashboard/route-report']);
   }
 
   onView(route: RtList): void {

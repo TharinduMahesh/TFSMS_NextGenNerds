@@ -1,315 +1,200 @@
-/* ================================================== */
-/* Filename: t-sched.component.scss (FINAL)           */
-/* ================================================== */
+:host {
+  // Our established color palette
+  --c-blue-bg: #e3f2fd;
+  --c-blue-fg: #2196f3;
+  --c-green-bg: #e8f5e9;
+  --c-green-fg: #4caf50;
+  --c-red-fg: #f44336;
+  --c-text-dark: #212529;
+  --c-text-light: #6c757d;
+  --c-border: #e9ecef;
+  --c-bg-card: #ffffff;
+}
 
-// --- Base Page Styles ---
 .page-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 2rem auto;
-  padding: 0 2rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 0 1rem;
 }
 
 .page-header {
   text-align: center;
-  margin-bottom: 2rem;
-  h1 { font-size: 1.8rem; font-weight: 700; color: #343a40; }
-  p { font-size: 1rem; color: #6c757d; }
-}
-
-// --- Two-Column Layout ---
-.scheduler-layout {
-  display: flex;
-  gap: 2.5rem;
-}
-
-.map-column {
-  flex: 6;
-  position: sticky;
-  top: 2rem;
-  height: fit-content;
-}
-
-.form-column { flex: 4; }
-
-.map-container {
-  width: 100%;
-  height: 550px;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: #f1f3f5;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid #dee2e6;
-}
-
-.map-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #6c757d;
-  font-size: 1.1rem;
-  span { font-size: 3rem; margin-bottom: 1rem; }
-}
-
-// --- Form Styles ---
-.form-wrapper {
-  background-color: #ffffff;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e9ecef;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 2.5rem;
   
-  label {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #495057;
-    font-size: 14px;
-  }
-
-  input, select {
-    padding: 0.75rem 1rem;
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #f8f9fa;
-    transition: all 0.2s ease-in-out;
-    &:focus {
-      border-color: #80bdff;
-      outline: 0;
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  .header-icon {
+    width: 60px; height: 60px; border-radius: 50%;
+    background-color: var(--c-blue-fg); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem; position: relative;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    .icon-line { width: 28px; height: 3px; background: white; border-radius: 2px; }
+    .icon-dot {
+      position: absolute; width: 10px; height: 10px;
+      background: white; border-radius: 50%;
+      &.start { left: 12px; }
+      &.end { right: 12px; }
     }
   }
 
-  .error-message {
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
+  h1 { font-size: 2.25rem; font-weight: 700; color: var(--c-text-dark); margin: 0; }
+  p { margin-top: 0.5rem; font-size: 1.1rem; color: var(--c-text-light); }
+}
+
+.scheduler-panel {
+  display: grid;
+  grid-template-columns: 6fr 4fr; // 60% map, 40% form
+  gap: 1.5rem;
+  background: var(--c-bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--c-border);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  overflow: hidden;
+  height: 80vh; // Set a fixed height for the panel
+}
+
+@media (max-width: 1024px) {
+  .scheduler-panel {
+    grid-template-columns: 1fr;
+    height: auto; // Let height be automatic on mobile
   }
 }
 
-// --- Grower Actions Styles ---
-.grower-actions {
-  margin-top: 1rem; 
-  padding: 1rem;
+.map-container {
+  padding: 0.5rem;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  app-google-map {
+    width: 100%;
+    flex-grow: 1; // Make map fill the container
+    border-radius: 12px;
+  }
+}
+
+.form-container {
   background-color: #f8f9fa;
-  border: 1px dashed #dee2e6;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.btn-grower {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #28a745;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  span {
-    vertical-align: middle;
-  }
-  &:hover:not(:disabled) {
-    background-color: #218838;
-  }
-  &:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-  }
-}
-
-.grower-info-panel {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  p {
-    margin: 0;
-    font-weight: 500;
-    color: #343a40;
-  }
-}
-
-.btn-secondary-small {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #6c757d;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  &:hover {
-    background-color: #5a6268;
-  }
-}
-
-// --- "Add Grower" Section Styles ---
-.grower-add-section {
-  margin-bottom: 1rem;
-}
-
-.btn-add-grower {
-  width: 100%;
-  padding: 0.7rem 1rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  &:hover {
-    background-color: #0056b3;
-  }
-}
-
-.adding-growers-active {
-  padding: 0.8rem;
-  background-color: #e2f0ff;
-  border: 1px solid #b6d4fe;
-  color: #004085;
-  border-radius: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  p {
-    margin: 0;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-}
-
-.btn-primary-small {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  &:hover {
-    background-color: #0056b3;
-  }
-}
-
-// --- Added Growers List Styles ---
-.added-growers-list {
+  border-left: 1px solid var(--c-border);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.form-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.form-step {
+  &:not(:last-child) {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--c-border);
+  }
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
-  border-top: 1px solid #e9ecef;
-  padding-top: 1rem;
-
-  h5 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #495057;
-    margin: 0 0 0.5rem 0;
-  }
-}
-
-.grower-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #fff;
-  border: 1px solid #e9ecef;
-  border-left: 4px solid #007bff;
-  padding: 0.8rem 1rem;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-
-.grower-card-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.grower-email {
-  font-weight: 600;
-  color: #343a40;
-}
-
-.grower-address {
-  font-size: 0.8rem;
-  color: #6c757d;
-  margin-top: 2px;
-}
-
-.btn-remove-grower {
-  background: #f1f3f5;
-  color: #6c757d;
-  border: 1px solid #dee2e6;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  font-size: 1.2rem;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: all 0.2s ease;
-  &:hover {
-    background-color: #dc3545;
+  margin-bottom: 1.5rem;
+  .step-number {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background-color: var(--c-blue-fg);
     color: white;
-    border-color: #c82333;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--c-text-dark);
+    margin: 0;
   }
 }
 
-// --- Form Actions ---
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e9ecef;
+.form-group {
+  &:not(:last-child) { margin-bottom: 1rem; }
+  label {
+    display: block; font-weight: 500; margin-bottom: 0.5rem;
+    color: var(--c-text-light); font-size: 0.9rem;
+  }
+  input, select {
+    padding: 0.75rem 1rem; border: 1px solid #ced4da;
+    border-radius: 8px; font-size: 1rem; width: 100%;
+    box-sizing: border-box; background-color: var(--c-bg-card);
+    transition: all 0.2s;
+    &:focus {
+      border-color: var(--c-blue-fg); outline: 0;
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+    }
+  }
 }
 
-.btn-primary, .btn-secondary {
-  padding: 0.7rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
+.grower-actions, .grower-add-toggle { margin-bottom: 1rem; }
+.btn-action {
+  width: 100%; padding: 0.7rem 1.3rem; font-weight: 600;
+  font-size: 0.9rem; border-radius: 8px; cursor: pointer;
+  transition: all 0.2s;
+  background-color: var(--c-blue-bg);
+  color: var(--c-blue-fg);
+  border: 1px solid var(--c-blue-fg);
+  &.add { background-color: var(--c-green-bg); color: var(--c-green-fg); border-color: var(--c-green-fg); }
+  &:hover { filter: brightness(0.95); }
+}
+
+.grower-info-panel, .adding-growers-active {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.8rem 1rem; border-radius: 8px;
+  background-color: var(--c-blue-bg);
+  span { font-weight: 500; }
+  .btn-hide, .btn-done {
+    padding: 0.4rem 0.8rem; font-size: 0.8rem; font-weight: 600;
+    border: none; border-radius: 6px; cursor: pointer;
+    background-color: var(--c-bg-card); color: var(--c-text-light);
+  }
+}
+.adding-growers-active { background-color: var(--c-green-bg); .btn-done { background-color: var(--c-green-fg); color: white; }}
+
+.added-growers-list {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  .grower-card {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.5rem 0.75rem; background: var(--c-bg-card);
+    border: 1px solid var(--c-border); border-radius: 6px;
+    .grower-email { font-size: 0.9rem; font-weight: 500; }
+    .btn-remove {
+      background: none; border: none; font-size: 1.5rem;
+      color: var(--c-text-light); cursor: pointer;
+      &:hover { color: var(--c-red-fg); }
+    }
+  }
+}
+
+.form-actions {
+  display: flex; justify-content: flex-end; gap: 1rem;
+  padding: 1.25rem 1.5rem; background-color: white;
+  border-top: 1px solid var(--c-border);
+}
+
+.btn-cancel, .btn-create {
+  padding: 0.7rem 1.5rem; border: none; border-radius: 8px;
+  font-weight: 600; cursor: pointer; font-size: 0.95rem;
   transition: all 0.2s;
 }
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  &:hover:not(:disabled) { background-color: #0056b3; }
-  &:disabled { background-color: #a0cffb; cursor: not-allowed; }
+.btn-cancel {
+  background-color: #e9ecef; color: var(--c-text-light);
+  &:hover { background-color: #dee2e6; color: var(--c-text-dark); }
+}
+.btn-create {
+  background-color: var(--c-green-fg); color: white;
+  &:hover:not(:disabled) { background-color: #43a047; }
+  &:disabled { background-color: #a5d6a7; cursor: not-allowed; opacity: 0.7; }
 }
 
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  &:hover { background-color: #5a6268; }
-}
-
-// --- Responsive ---
-@media (max-width: 1024px) {
-  .scheduler-layout { flex-direction: column; }
-  .map-column {
-    position: static;
-    height: 300px;
-  }
-  .map-container { height: 100%; }
+.status-indicator {
+  // Styles for loading/error
 }

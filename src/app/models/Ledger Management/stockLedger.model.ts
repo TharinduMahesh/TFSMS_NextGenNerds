@@ -1,10 +1,5 @@
-// ==========================================================
-// Models for Tea Packing and viewing the Stock Ledger
-// ==========================================================
 
-// This is the data you SEND to the API to create a new stock entry
-// Matches the CreatePackedTeaDto in your backend
-export interface CreatePackedTeaPayload {
+export interface CreatePackedTeaPayload { 
   grade: string;
   gardenMark: string;
   financialYear: number;

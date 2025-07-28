@@ -1,0 +1,122 @@
+/* All styles that were previously inline will go here */
+
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.4);
+  display: flex; justify-content: center; align-items: center;
+  backdrop-filter: blur(5px);
+  padding: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  background: #f8f9fa; border-radius: 16px;
+  width: 100%; max-width: 900px; max-height: 95vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  animation: slideIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideIn { from { transform: translateY(20px) scale(0.98); } to { transform: translateY(0) scale(1); } }
+
+.close-btn {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(0,0,0,0.05); color: #6c757d;
+  border: none; border-radius: 50%; width: 32px; height: 32px;
+  font-size: 1.5rem; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.2s ease; z-index: 10;
+}
+.close-btn:hover { background: #f44336; color: #fff; transform: rotate(90deg); }
+
+/* --- Modal Header --- */
+.modal-header {
+  text-align: center; padding: 1.5rem;
+  background: linear-gradient(135deg, #e3f2fd, #fafcff);
+  border-bottom: 1px solid #d0e7ff; flex-shrink: 0;
+}
+.header-icon {
+  width: 60px; height: 60px; border-radius: 50%;
+  background-color: #2196f3; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 0.75rem; position: relative;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+.header-icon .icon-line { width: 28px; height: 3px; background: white; border-radius: 2px; }
+.header-icon .icon-dot {
+  position: absolute; width: 10px; height: 10px;
+  background: white; border-radius: 50%;
+}
+.header-icon .icon-dot.start { left: 12px; }
+.header-icon .icon-dot.end { right: 12px; }
+.route-name { font-size: 1.5rem; font-weight: 700; color: #1c3d5a; margin: 0; }
+.trip-id { font-size: 1rem; color: #56789a; margin-top: 0.25rem; }
+
+/* --- Layout & Sections --- */
+.main-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; padding: 1.5rem;
+  overflow-y: auto;
+}
+@media (max-width: 850px) { .main-grid { grid-template-columns: 1fr; } }
+
+.map-container {
+  background: white; border-radius: 12px;
+  border: 1px solid #e9ecef; box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  padding: 0.5rem; min-height: 400px;
+}
+app-google-map { width: 100%; height: 100%; border-radius: 8px; }
+
+.details-container { display: flex; flex-direction: column; gap: 1.5rem; }
+.details-section {
+  border: 1px solid; border-radius: 12px;
+  padding: 1.25rem;
+}
+.details-section h3 {
+  font-size: 1rem; font-weight: 600;
+  margin: 0 0 1rem 0; padding-bottom: 0.75rem;
+  border-bottom: 1px solid;
+}
+.details-section.theme-blue {
+  background-color: #e3f2fd; border-color: #bbdefb;
+}
+.details-section.theme-blue h3 { color: #1e88e5; border-color: #bbdefb; }
+.details-section.theme-green {
+  background-color: #e8f5e9; border-color: #c8e6c9;
+}
+.details-section.theme-green h3 { color: #43a047; border-color: #c8e6c9; }
+
+/* --- Trip Timeline --- */
+.timeline {
+  display: flex; flex-direction: column; gap: 0.75rem;
+}
+.timeline-event {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.5rem; border-radius: 6px;
+}
+.timeline-event.actual { background-color: #e8f5e9; }
+.event-label { font-size: 0.9rem; color: #6c757d; }
+.event-time { font-weight: 600; color: #212529; }
+.timeline-event.actual .event-time { color: #43a047; }
+
+/* --- Stops List --- */
+.stops-list {
+  max-height: 150px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.stop-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.5rem; border-radius: 6px;
+  background: white;
+}
+.stop-order {
+  display: flex; align-items: center; justify-content: center;
+  background-color: #43a047; color: white;
+  font-weight: 700; border-radius: 50%;
+  width: 24px; height: 24px; font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.stop-email { color: #343a40; font-weight: 500; font-size: 0.9rem; }
+.empty-stops { font-style: italic; color: #6c757d; padding: 1rem 0; }

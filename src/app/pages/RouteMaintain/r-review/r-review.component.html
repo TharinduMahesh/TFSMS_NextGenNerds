@@ -2,71 +2,82 @@
   <app-tnlnavbar></app-tnlnavbar>
   
   <div class="top-bar">
-    <input type="text" placeholder="Search by ID or Name..." 
-           [value]="searchTerm()"
-           (input)="searchTerm.set($any($event.target).value)" />
+    <div class="search-wrapper">
+      <input type="text" placeholder="Search by ID or Name..." 
+             [value]="searchTerm()"
+             (input)="searchTerm.set($any($event.target).value)" />
+    </div>
     
-    <select [value]="selectedFilter()" (change)="selectedFilter.set($any($event.target).value)">
-      <option value="all">All Distances</option>
-      <option value="short">Short (< 20km)</option>
-      <option value="medium">Medium (20-50km)</option>
-      <option value="long">Long (> 50km)</option>
-    </select>
-    
-   <div class="btn-group">
-    <button class="c-btn" (click)="collectorCost()">Cost Analysis</button>
-    <button class="p-btn" (click)="collectorAnalysis()">Performance Analysis</button>
-    <button class="add-btn" (click)="addNewRoute()">+ Add New Collector</button>
-  </div>
+    <div class="btn-group">
+      <select [value]="selectedFilter()" (change)="selectedFilter.set($any($event.target).value)">
+        <option value="all">All Distances</option>
+        <option value="short">Short (< 20km)</option>
+        <option value="medium">Medium (20-50km)</option>
+        <option value="long">Long (> 50km)</option>
+      </select>
+      <button class="analysis-btn orange" (click)="routeAnalysis()">Analysis</button>
+      <button class="analysis-btn blue" (click)="routePerformance()">Performance</button>
+      <button class="add-btn" (click)="addNewRoute()">+ Create New Route</button>
+    </div>
   </div>
 
   @if (isLoading()) {
-    <div class="loading">Loading routes...</div>
+    <div class="status-indicator">
+      <div class="loader"></div>
+      Loading routes...
+    </div>
   } @else if (error()) {
-    <div class="error">{{ error() }}</div>
+    <div class="status-indicator error">
+      {{ error() }}
+    </div>
   } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Start Location</th>
-          <th>End Location</th>
-          <th>Distance (km)</th>
-          <th>Collector ID</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (route of filteredRoutes(); track trackById($index, route)) {
-          <tr (click)="onSelectRoute(route)" [class.selected]="selectedRoute()?.rId === route.rId">
-            <td>{{ route.rId }}</td>
-            <td>{{ route.rName }}</td>
-            <td>{{ route.startLocationAddress }}</td>
-            <td>{{ route.endLocationAddress }}</td>
-            <td>{{ route.distance }}</td>
-            <td>{{ route.collectorId || 'N/A' }}</td>
-            <td class="actions-cell">
-              <button class="view-btn" (click)="onView(route); $event.stopPropagation()">View</button>
-              <button class="edit-btn" (click)="onEdit(route); $event.stopPropagation()">Edit</button>
-              <button class="delete-btn" (click)="onDelete(route.rId); $event.stopPropagation()">Delete</button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="7">No routes found matching your criteria.</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    <div class="card-grid">
+      @for (route of filteredRoutes(); track trackById($index, route)) {
+        <div class="route-card" [class.selected]="selectedRoute()?.rId === route.rId">
+          <div class="card-header theme-blue">
+            <h2 class="route-name">{{ route.rName }}</h2>
+            <p class="route-id">Route ID: #{{ route.rId }}</p>
+          </div>
+
+          <div class="card-body">
+            <div class="route-path">
+              <div class="location start">
+                <span class="location-label">Start</span>
+                <p class="location-address">{{ route.startLocationAddress }}</p>
+              </div>
+              <div class="location end">
+                <span class="location-label">End</span>
+                <p class="location-address">{{ route.endLocationAddress }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer theme-green">
+             <div class="detail-item">
+              <span class="label">Total Distance</span>
+              <span class="value distance">{{ route.distance }} km</span>
+            </div>
+             <div class="detail-item">
+              <span class="label">Assigned Collector ID</span>
+              <span class="value">{{ route.collectorId || 'Unassigned' }}</span>
+            </div>
+            <div class="card-actions">
+              <button class="btn-action view-btn" (click)="onView(route); $event.stopPropagation()">View</button>
+              <button class="btn-action edit-btn" (click)="onEdit(route); $event.stopPropagation()">Edit</button>
+              <button class="btn-action delete-btn" (click)="onDelete(route.rId); $event.stopPropagation()">Delete</button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="status-indicator">No routes found matching your criteria.</div>
+      }
+    </div>
   }
 
-  <!-- View Modal -->
+  <!-- Modals remain unchanged and will function as before -->
   @if (isViewModalOpen()) {
     <app-r-view [route]="routeToView()" (close)="closeViewModal()"></app-r-view>
   }
-
-  <!-- Edit Modal - Pass routeId instead of route object -->
   @if (isEditModalOpen()) {
     <app-r-edit [routeId]="routeBeingEdited()?.rId || null" (close)="closeEditModal()" (save)="handleSaveFromModal()"></app-r-edit>
   }

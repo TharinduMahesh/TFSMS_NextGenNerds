@@ -1,319 +1,327 @@
-/* --- Mobile Table to Card Transformation (≤480px) --- */
-@media screen and (max-width: 480px) {
-  .table-wrapper {
-    overflow-x: visible;
-    box-shadow: none;
-    background-color: transparent;
-  }
+/* --- VEHICLE REVIEW PAGE --- */
 
-  table {
-    border-collapse: separate;
-    border-spacing: 0 1rem;
-    font-size: 14px;
-    min-width: 100%;
-  }
-
-  table thead {
-    display: none;
-  }
-
-  table tr {
-    display: block;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e9ecef;
-    overflow: hidden;
-    margin-bottom: 1rem;
-  }
-
-  table td {
-    display: block;
-    padding: 0.75rem 1rem;
-    text-align: right;
-    position: relative;
-    border-bottom: 1px dashed #e9ecef;
-    white-space: normal;
-  }
-
-  table td:last-child {
-    border-bottom: none;
-  }
-
-  table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 1rem;
-    width: calc(45% - 2rem);
-    font-weight: 600;
-    color: #343a40;
-    text-align: left;
-    font-size: 13px;
-  }
-
-  .actions-cell {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    padding: 0.75rem 1rem;
-  }
-
-  .actions-cell button {
-    padding: 0.5rem 0.8rem;
-    font-size: 0.9rem;
-    flex: 1;
-    min-width: 60px;
-    text-align: center;
-  }
-
-  /* --- Mobile Empty State --- */
-  tbody tr:has(td[colspan="6"]) {
-    background-color: transparent;
-    box-shadow: none;
-    border: 1px dashed #dee2e6;
-  }
-
-  tbody td[colspan="6"] {
-    border: none;
-    text-align: center;
-    padding: 2rem 1rem;
-  }
-
-  tbody td[colspan="6"]::before {
-    display: none;
-  }
-
-  /* --- Mobile Loading/Error States --- */
-  .loading-indicator,
-  .error-message {
-    padding: 2rem 1rem;
-    font-size: 1rem;
-  }
+:host {
+  // Define our color palette as CSS variables
+  --c-blue-bg: #e3f2fd;
+  --c-blue-fg: #2196f3;
+  --c-green-bg: #e8f5e9;
+  --c-green-fg: #4caf50;
+  --c-orange-bg: #fff3e0;
+  --c-orange-fg: #ff9800;
+  --c-red-bg: #ffebee;
+  --c-red-fg: #f44336;
+  --c-text-dark: #212529;
+  --c-text-light: #6c757d;
+  --c-bg-main: #f8f9fa;
+  --c-bg-card: #ffffff;
+  --c-border: #e9ecef;
 }
 
-/* Base styles for desktop (>480px) */
 .page-container {
   max-width: 1600px;
   margin: 2rem auto;
   padding: 0 1rem;
+  background-color: var(--c-bg-main); // Keep consistent with dashboard
 }
 
-/* --- Professional Filter Bar --- */
+/* --- Redesigned Top Bar (Consistent with CollectorReview) --- */
 .top-bar {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
-.top-bar input[type="text"] {
-  width: 250px;
-  padding: 0.6rem 1rem;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  font-size: 1rem;
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 280px; /* Adjusted min-width slightly for input */
   background-color: #fff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 0.25rem 0.75rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+
+  svg {
+    width: 20px; height: 20px;
+    color: #adb5bd; margin-right: 0.75rem;
+  }
+
+  input {
+    border: none; outline: none;
+    padding: 0.6rem 0; font-size: 1rem;
+    width: 100%; background: transparent;
+  }
+  
+  &:focus-within {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+  }
 }
 
-.top-bar input[type="text"]:focus {
-  border-color: #495057;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.1);
-}
-
-.top-bar input[type="text"]::placeholder {
-  color: #adb5bd;
-}
-
-.top-bar .add-btn {
-  margin-left: auto;
-  background-color: #28a745;
+.add-btn {
+  display: flex; /* For icon and text alignment */
+  align-items: center;
+  gap: 0.5rem; /* Space between icon and text */
+  background-color: var(--c-green-fg); /* Green theme for add button */
   color: white;
   padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+  &:hover {
+    background-color: #3e8e42; /* Darker green on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+
+  svg { width: 20px; height: 20px; fill: currentColor; }
+}
+
+/* --- Vehicle Card Grid --- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.vehicle-card {
+  background-color: var(--c-bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--c-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+  
+  &.theme-blue {
+    background: linear-gradient(135deg, var(--c-blue-bg), #f1f8ff);
+    border-bottom: 1px solid #d0e7ff;
+  }
+}
+
+.card-icon {
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; background-color: var(--c-blue-fg);
+  
+  svg { width: 24px; height: 24px; fill: currentColor; }
+}
+
+.card-title {
+  h2 {
+    font-size: 1.1rem; font-weight: 700;
+    color: #1c3d5a; margin: 0;
+  }
+  p {
+    font-size: 0.85rem; color: #56789a; margin: 0;
+  }
+}
+
+.card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card-footer {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &.theme-green {
+    background-color: var(--c-green-bg);
+    border-top: 1px solid #d7efd8;
+  }
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .label {
+    font-size: 0.85rem;
+    color: var(--c-text-light);
+  }
+  .value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--c-text-dark);
+  }
+}
+
+/* --- Action Buttons in Card Footer --- */
+.card-actions {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 0.75rem;
+  padding-top: 0.5rem; /* Space from collector info */
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+.btn-action {
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: flex-end;
-  gap: 0.5rem;
-  transition: background-color 0.2s ease;
-}
-
-.top-bar .add-btn:hover {
-  background-color: #218838;
-}
-
-.table-wrapper {
-  overflow-x: auto;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-}
-
-/* --- Professional Table Styling --- */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
-  overflow: hidden;
-  font-size: 0.8rem;
-}
-
-table thead tr {
-  background-color: #343a40;
-  color: white;
-  text-align: left;
-}
-
-table th,
-table td {
-  padding: 1rem;
-}
-
-table tbody tr {
-  border-bottom: 1px solid #dee2e6;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-table tbody tr:nth-of-type(even) {
-  background-color: #f8f9fa;
-}
-
-table tbody tr:last-of-type {
-  border-bottom: 2px solid #28a745;
-}
-
-table tbody tr:hover,
-table tbody tr.selected {
-  background-color: #e9ecef;
-}
-
-table td[colspan="6"] {
-  text-align: center;
-  font-style: italic;
-  color: #6c757d;
-  padding: 2rem;
-}
-
-/* --- Action Buttons in Table --- */
-.actions-cell {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.actions-cell button {
-  padding: 0.4rem 0.8rem;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  font-weight: 500;
-  cursor: pointer;
+  font-size: 0.85rem;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
 }
 
-.actions-cell .btn-view {
-  background-color: #e9ecef;
-  color: #495057;
+.view-btn {
+  background-color: #e9ecef; /* Neutral background */
+  color: #495057; /* Dark text */
+  &:hover { background-color: #ced4da; }
 }
 
-.actions-cell .btn-view:hover {
-  background-color: #ced4da;
+.edit-btn {
+  background-color: var(--c-orange-bg); /* Orange background */
+  color: var(--c-orange-fg); /* Orange text */
+  &:hover { background-color: #ffe0b2; } /* Lighter orange on hover */
 }
 
-.actions-cell .btn-edit {
-  background-color: #fff3cd;
-  color: #856404;
+.delete-btn {
+  background-color: var(--c-red-bg); /* Red background */
+  color: var(--c-red-fg); /* Red text */
+  &:hover { background-color: #ffcdd2; } /* Lighter red on hover */
 }
 
-.actions-cell .btn-edit:hover {
-  background-color: #ffeeba;
-}
-
-.actions-cell .btn-delete {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-.actions-cell .btn-delete:hover {
-  background-color: #f5c6cb;
-}
-
-/* --- Loading/Error States --- */
-.loading-indicator,
-.error-message {
+/* --- Status Indicators (Loading, Error, Empty) --- */
+.status-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
   font-size: 1.2rem;
   font-style: italic;
-  color: #6c757d;
+  color: var(--c-text-light);
+  grid-column: 1 / -1; /* Span full width in grid */
+
+  svg { width: 40px; height: 40px; margin-bottom: 1rem; fill: currentColor; }
+
+  &.error {
+    color: var(--c-red-fg);
+    background-color: var(--c-red-bg);
+    border: 1px dashed var(--c-red-fg);
+  }
 }
 
-.error-message {
-  color: #721c24;
-  font-weight: 500;
+.loader {
+  border: 4px solid var(--c-border);
+  border-top: 4px solid var(--c-blue-fg);
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
 }
 
-/* Mobile styles (≤480px) */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/*
+=========================================================
+=== RESPONSIVENESS RULES (Adapted from Original) ===
+=========================================================
+*/
+
+/* For Tablets and smaller laptops (< 992px) */
+@media screen and (max-width: 992px) {
+  .top-bar {
+    flex-wrap: wrap; /* Allows search and button to wrap if needed */
+  }
+}
+
+/* Mobile styles (≤ 768px - similar to your original table-to-card) */
+@media screen and (max-width: 768px) {
+  .page-container {
+    padding: 0 0.5rem; /* Tighter padding for very small screens */
+  }
+  .card-grid {
+    grid-template-columns: 1fr; /* Stack cards vertically */
+    gap: 1rem;
+  }
+  .add-btn {
+    width: 100%; /* Make add button full width on small screens */
+    justify-content: center; /* Center content of add button */
+  }
+  .search-wrapper {
+    min-width: unset; /* Remove min-width to allow shrinking */
+    width: 100%; /* Take full width */
+  }
+  .top-bar {
+    flex-direction: column; /* Stack items vertically */
+    align-items: stretch; /* Stretch to fill width */
+  }
+
+  .card-actions {
+    justify-content: space-around; /* Distribute buttons */
+    gap: 0.5rem;
+    .btn-action {
+      flex: 1; /* Make buttons grow to fill space */
+      min-width: 80px; /* Ensure they don't get too small */
+      padding: 0.6rem 0.8rem;
+    }
+  }
+
+  .status-indicator {
+    padding: 2rem 0.5rem; /* Smaller padding for status messages */
+    font-size: 1rem;
+  }
+}
+
+
+/* Smaller Mobile styles (≤480px) - further refine layout */
 @media screen and (max-width: 480px) {
   .page-container {
     margin: 1rem auto;
-    padding: 0 0.5rem;
   }
   .top-bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
     padding: 0.8rem;
     margin-bottom: 1rem;
   }
-
-  .top-bar input[type="text"] {
-    width: 100%;
-    padding: 0.5rem;
+  .search-wrapper input {
     font-size: 0.9rem;
+    padding: 0.5rem 0;
   }
-
-  .top-bar .add-btn {
-    margin-left: 0;
+  .add-btn {
+    font-size: 0.9rem;
     padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  table {
-    font-size: 0.7rem;
-  }
-
-  table th,
-  table td {
-    padding: 0.5rem;
-  }
-
-  table td[colspan="6"] {
-    padding: 1rem;
-  }
-
-  .actions-cell {
-    flex-wrap: wrap;
-    gap: 0.3rem;
-  }
-
-  .actions-cell button {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-  }
-
-  .loading-indicator,
-  .error-message {
-    padding: 2rem 0.5rem;
-    font-size: 1rem;
   }
 }

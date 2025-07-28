@@ -6,11 +6,12 @@ import { VehicleService } from '../../../../Services/LogisticAndTransport/Vehicl
 import { CollectorService } from '../../../../Services/LogisticAndTransport/Collector.service';
 import { CreateUpdateVehiclePayload } from '../../../../models/Logistic and Transport/VehicleManagement.model';
 import { CollectorResponse } from '../../../../models/Logistic and Transport/CollectorManagement.model';
+import { TnLNavbarComponent } from "../../../../components/TnLNavbar/tnlnav.component";
 
 @Component({
   selector: 'app-vehicle-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TnLNavbarComponent],
   templateUrl: './v-create.component.html',
   styleUrls: ['./v-create.component.scss']
 })
@@ -29,7 +30,12 @@ export class VehicleCreateComponent implements OnInit {
       licensePlate: ['', [Validators.required, Validators.maxLength(50)]],
       volume: [0, [Validators.required, Validators.min(0.1)]],
       model: ['', [Validators.maxLength(100)]],
-      conditionNotes: ['', [Validators.maxLength(500)]]
+      isClean: [false],
+      hasGoodTires: [false],
+      hasVentilation: [false],
+      isPestFree: [false],
+      hasValidDocs: [false],
+      hasFireExtinguisher: [false]
     });
   }
 
@@ -42,7 +48,7 @@ export class VehicleCreateComponent implements OnInit {
 
   onSubmit(): void {
     if (this.vehicleForm.invalid) {
-      alert('Please fill out all required fields correctly.');
+      alert('Please fill out all required fields and check all condition boxes.');
       return;
     }
     const payload: CreateUpdateVehiclePayload = this.vehicleForm.value;

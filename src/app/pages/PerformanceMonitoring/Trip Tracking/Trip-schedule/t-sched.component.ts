@@ -19,11 +19,12 @@ import { TransportReportService } from '../../../../Services/LogisticAndTranspor
 import { RouteService } from '../../../../Services/LogisticAndTransport/RouteMaintain.service';
 import { CollectorService } from '../../../../Services/LogisticAndTransport/Collector.service';
 import { GrowerService } from '../../../../Services/LogisticAndTransport/Grower.service';
+import { TnLNavbarComponent } from "../../../../components/TnLNavbar/tnlnav.component";
 
 @Component({
   selector: 'app-trip-schedule',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, GoogleMapComponent],
+  imports: [CommonModule, ReactiveFormsModule, GoogleMapComponent, TnLNavbarComponent],
   templateUrl: './t-sched.component.html',
   styleUrls: ['./t-sched.component.scss']
 })

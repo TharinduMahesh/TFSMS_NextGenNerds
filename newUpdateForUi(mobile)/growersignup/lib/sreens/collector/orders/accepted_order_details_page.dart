@@ -4,6 +4,7 @@ import 'package:growersignup/services/collector/order_accepted_api.dart';
 import 'package:growersignup/sreens/collector/orders/c_order_select_page.dart';
 import 'package:growersignup/sreens/collector/home_pages/collector_payment_select_page.dart';
 import 'package:growersignup/sreens/collector/home_pages/collector_home_page.dart';
+import 'package:growersignup/sreens/collector/orders/weighing_page.dart';
 import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 import 'package:growersignup/sreens/collector/home_pages/show_collector_edit_page.dart';
 
@@ -11,20 +12,25 @@ class AcceptedOrderDetailsPage extends StatefulWidget {
   final String email;
   final int orderId;
 
-  const AcceptedOrderDetailsPage({super.key, required this.orderId, required this.email});
+  const AcceptedOrderDetailsPage({
+    super.key,
+    required this.orderId,
+    required this.email,
+  });
 
   @override
-  State<AcceptedOrderDetailsPage> createState() => _AcceptedOrderDetailsPageState();
+  State<AcceptedOrderDetailsPage> createState() =>
+      _AcceptedOrderDetailsPageState();
 }
 
-class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> with TickerProviderStateMixin {
+class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage>
+    with TickerProviderStateMixin {
   late Future<OrderDetails> _detailsFuture;
-  int _bottomNavIndex = 0; // Orders tab
+  int _bottomNavIndex = 0;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  // Enhanced Color Scheme (matching grower theme)
   static const Color primaryGreen = Color(0xFF0a4e41);
   static const Color lightGreen = Color(0xFFF0FBEF);
   static const Color cardBackground = Colors.white;
@@ -37,16 +43,16 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
   void initState() {
     super.initState();
     _detailsFuture = OrderAcceptedApiService.getOrderDetails(widget.orderId);
-    
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    
+
     _animationController.forward();
   }
 
@@ -63,25 +69,30 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
     });
   }
 
-  // Navigation Methods
   void _navigateToOrders() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorOrderSelectPage(email: widget.email)),
+      MaterialPageRoute(
+        builder: (context) => CollectorOrderSelectPage(email: widget.email),
+      ),
     );
   }
 
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorPaymentSelectPage(email: widget.email)),
+      MaterialPageRoute(
+        builder: (context) => CollectorPaymentSelectPage(email: widget.email),
+      ),
     );
   }
 
   void _navigateToHome() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorHomePage(email: widget.email)),
+      MaterialPageRoute(
+        builder: (context) => CollectorHomePage(email: widget.email),
+      ),
     );
   }
 
@@ -100,21 +111,31 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
   void _navigateToProfile() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorDetailsPage(email: widget.email)),
+      MaterialPageRoute(
+        builder: (context) => CollectorDetailsPage(email: widget.email),
+      ),
     );
   }
 
   void _onBottomNavTapped(int index) {
     if (_bottomNavIndex == index) return;
-    
     setState(() => _bottomNavIndex = index);
-    
     switch (index) {
-      case 0: _navigateToOrders(); break;
-      case 1: _navigateToPayments(); break;
-      case 2: _navigateToHome(); break;
-      case 3: _navigateToMessages(); break;
-      case 4: _navigateToProfile(); break;
+      case 0:
+        _navigateToOrders();
+        break;
+      case 1:
+        _navigateToPayments();
+        break;
+      case 2:
+        _navigateToHome();
+        break;
+      case 3:
+        _navigateToMessages();
+        break;
+      case 4:
+        _navigateToProfile();
+        break;
     }
   }
 
@@ -143,11 +164,9 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildLoadingState();
           }
-          
           if (snapshot.hasError) {
             return _buildErrorState(snapshot.error.toString());
           }
-
           final details = snapshot.data!;
           return FadeTransition(
             opacity: _fadeAnimation,
@@ -155,67 +174,119 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
           );
         },
       ),
-      
-      // Bottom Navigation Bar
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: cardBackground,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
+      bottomNavigationBar: _buildBottomNav(),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 15,
+            offset: const Offset(0, -5),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              blurRadius: 15,
-              offset: const Offset(0, -5),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _bottomNavIndex,
+          selectedItemColor: primaryGreen,
+          unselectedItemColor: textLight,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          selectedLabelStyle:
+              const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+          unselectedLabelStyle: const TextStyle(fontSize: 11),
+          onTap: _onBottomNavTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.assignment_outlined),
+              activeIcon: Icon(Icons.assignment),
+              label: 'Orders',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.payment_outlined),
+              activeIcon: Icon(Icons.payment),
+              label: 'Payments',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.message_outlined),
+              activeIcon: Icon(Icons.message),
+              label: 'Messages',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _bottomNavIndex,
-            selectedItemColor: primaryGreen,
-            unselectedItemColor: textLight,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-            unselectedLabelStyle: const TextStyle(fontSize: 11),
-            onTap: _onBottomNavTapped,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.assignment_outlined),
-                activeIcon: Icon(Icons.assignment),
-                label: 'Orders',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.payment_outlined),
-                activeIcon: Icon(Icons.payment),
-                label: 'Payments',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined),
-                activeIcon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.message_outlined),
-                activeIcon: Icon(Icons.message),
-                label: 'Messages',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline),
-                activeIcon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
-          ),
+      ),
+    );
+  }
+
+  Widget _buildOrderDetails(OrderDetails details) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          _buildStatusCard(details),
+          const SizedBox(height: 20),
+          _buildTeaDetailsCard(details),
+          const SizedBox(height: 20),
+          _buildGrowerCard(details),
+          const SizedBox(height: 20),
+          _buildCollectionCard(details),
+          const SizedBox(height: 20),
+          ElevatedButton.icon(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WeighingPage(
+          orderId: widget.orderId,
+          email: widget.email,
+          superLeafWeight: details.superTeaQuantity.toString(),
+          greenLeafWeightFromOrder: details.greenTeaQuantity.toString(),
+
         ),
+      ),
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: primaryGreen,
+    foregroundColor: Colors.white,
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+  ),
+  icon: const Icon(Icons.scale),
+  label: const Text(
+    'Weighing',
+    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  ),
+),
+
+          const SizedBox(height: 100),
+        ],
       ),
     );
   }
@@ -283,7 +354,8 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
                 color: Colors.red.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: const Icon(Icons.error_outline, color: Colors.red, size: 40),
+              child:
+                  const Icon(Icons.error_outline, color: Colors.red, size: 40),
             ),
             const SizedBox(height: 20),
             Text(
@@ -308,7 +380,8 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryGreen,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -316,35 +389,6 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildOrderDetails(OrderDetails details) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          // Collection Status Card
-          _buildStatusCard(details),
-          
-          const SizedBox(height: 20),
-          
-          // Tea Details Card
-          _buildTeaDetailsCard(details),
-          
-          const SizedBox(height: 20),
-          
-          // Grower Information Card
-          _buildGrowerCard(details),
-          
-          const SizedBox(height: 20),
-          
-          // Collection Information Card
-          _buildCollectionCard(details),
-          
-          const SizedBox(height: 100), // Space for navigation
-        ],
       ),
     );
   }
@@ -377,7 +421,8 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.check_circle, color: Colors.white, size: 24),
+                child: const Icon(Icons.check_circle,
+                    color: Colors.white, size: 24),
               ),
               const SizedBox(width: 15),
               const Text(
@@ -467,14 +512,17 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
             ],
           ),
           const SizedBox(height: 20),
-          
-          _buildDetailRow('Super Tea', '${details.superTeaQuantity} kg', Icons.star, successGreen),
+          _buildDetailRow(
+              'Super Tea', '${details.superTeaQuantity} kg', Icons.star, successGreen),
           const SizedBox(height: 15),
-          _buildDetailRow('Green Tea', '${details.greenTeaQuantity} kg', Icons.eco_outlined, primaryGreen),
+          _buildDetailRow(
+              'Green Tea', '${details.greenTeaQuantity} kg', Icons.eco_outlined, primaryGreen),
           const SizedBox(height: 15),
-          _buildDetailRow('Payment Method', details.paymentMethod, Icons.payment, Colors.blue),
+          _buildDetailRow(
+              'Payment Method', details.paymentMethod, Icons.payment, Colors.blue),
           const SizedBox(height: 15),
-          _buildDetailRow('Collection Date', _formatDate(details.placeDate), Icons.calendar_today, Colors.orange),
+          _buildDetailRow(
+              'Collection Date', _formatDate(details.placeDate), Icons.calendar_today, Colors.orange),
         ],
       ),
     );
@@ -519,14 +567,13 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
             ],
           ),
           const SizedBox(height: 20),
-          
           _buildDetailRow('Name', details.growerName, Icons.person_outline, primaryGreen),
           const SizedBox(height: 15),
           _buildDetailRow('NIC Number', details.nic, Icons.credit_card, Colors.orange),
           const SizedBox(height: 15),
           _buildDetailRow('Phone Number', details.phoneNumber, Icons.phone, Colors.green),
           const SizedBox(height: 15),
-          _buildDetailRow('Location', '${details.city}', Icons.location_on, Colors.red),
+          _buildDetailRow('Location', details.city, Icons.location_on, Colors.red),
         ],
       ),
     );
@@ -557,7 +604,8 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
                   color: primaryGreen.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(Icons.local_shipping, color: primaryGreen, size: 20),
+                child:
+                    Icon(Icons.local_shipping, color: primaryGreen, size: 20),
               ),
               const SizedBox(width: 10),
               Text(
@@ -571,18 +619,27 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
             ],
           ),
           const SizedBox(height: 20),
-          
-          _buildDetailRow('Collection Address', '${details.addressLine1}, ${details.addressLine2 ?? ''}, ${details.city}', Icons.location_on_outlined, Colors.blue),
+          _buildDetailRow(
+              'Collection Address',
+              '${details.addressLine1}, ${details.addressLine2 ?? ''}, ${details.city}',
+              Icons.location_on_outlined,
+              Colors.blue),
           const SizedBox(height: 15),
-          _buildDetailRow('Postal Code', details.postalCode ?? 'Not specified', Icons.local_post_office, Colors.purple),
+          _buildDetailRow(
+              'Postal Code',
+              details.postalCode ?? 'Not specified',
+              Icons.local_post_office,
+              Colors.purple),
           const SizedBox(height: 15),
-          _buildDetailRow('Status', 'Ready for Collection', Icons.check_circle_outline, successGreen),
+          _buildDetailRow(
+              'Status', 'Ready for Collection', Icons.check_circle_outline, successGreen),
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(String label, String value, IconData icon, Color iconColor) {
+  Widget _buildDetailRow(
+      String label, String value, IconData icon, Color iconColor) {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
@@ -630,7 +687,6 @@ class _AcceptedOrderDetailsPageState extends State<AcceptedOrderDetailsPage> wit
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
+  String _formatDate(DateTime date) =>
+      '${date.day}/${date.month}/${date.year}';
 }

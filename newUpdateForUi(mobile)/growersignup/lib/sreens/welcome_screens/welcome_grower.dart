@@ -6,7 +6,6 @@ class WelcomeSupplierPage extends StatelessWidget {
   // button press
   final VoidCallback? onStartPressed;
 
-
   const WelcomeSupplierPage({super.key, this.onStartPressed});
 
   @override
@@ -88,28 +87,35 @@ class WelcomeSupplierPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 20.0), 
 
-                // dots
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) { 
-                    return Container(
-                      width: 8.0,
-                      height: 8.0,
-                      margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        // Highlight dot at index 4 for page 5
-                        color: index == 4 ? activeIndicatorColor : inactiveIndicatorColor,
-                      ),
-                    );
-                  }),
-                ),
+                // Page Indicator (matching WelcomePage1 style)
+                _buildPageIndicator(),
+
                  SizedBox(height: screenHeight * 0.05), // Bottom padding
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  // Page Indicator matching WelcomePage1 style
+  Widget _buildPageIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(4, (index) {
+        return Container(
+          width: index == 3 ? 20 : 8, // Page 4 is active (index 3) - This is the final page
+          height: 8,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: index == 3 
+                ? Colors.white 
+                : Colors.white.withOpacity(0.4),
+          ),
+        );
+      }),
     );
   }
 }

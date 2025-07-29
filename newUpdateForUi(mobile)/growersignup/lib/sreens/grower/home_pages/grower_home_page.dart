@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
+import 'package:growersignup/sreens/grower/home_pages/g_payment_select.dart';
+import 'package:growersignup/sreens/grower/home_pages/grower_harvest.dart';
+import 'package:growersignup/sreens/grower/orders/g_order_selecttion.dart';
 import 'package:growersignup/sreens/grower/orders/grower_order_page.dart';
-import 'package:growersignup/sreens/grower/home_pages/grower_payment_page.dart';
-import 'package:growersignup/sreens/grower/home_pages/help_center.dart';
 import 'package:growersignup/sreens/grower/home_pages/show_supplier_details.dart';
 import 'package:growersignup/sreens/grower/home_pages/fertilizer_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/contactus_page.dart';
+import 'package:growersignup/sreens/harvest_overview_page.dart';
 
 class GrowerHomePage extends StatefulWidget {
   final String email;
@@ -49,30 +52,30 @@ class _GrowerHomePageState extends State<GrowerHomePage> with TickerProviderStat
 
   // Navigation Methods
   void _navigateToHarvest() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => GrowerHarvestPage(email: widget.email)),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GrowerOrderDetailsSelectPage(email: widget.email)),
+    );
   }
 
   void _navigateToPayments() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PaymentsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 
   void _navigateToMessages() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => ConversationListScreen(email: widget.email)),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChatListScreen(currentUserEmail: widget.email, currentUserType: 'Grower')),
+    );
   }
 
   void _navigateToProfile() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GrowerDetailsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 
@@ -83,36 +86,6 @@ class _GrowerHomePageState extends State<GrowerHomePage> with TickerProviderStat
     );
   }
 
-  void _navigateToSettings() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Row(
-            children: [
-              Icon(Icons.settings, color: primaryGreen),
-              SizedBox(width: 10),
-              Text('Settings', style: TextStyle(color: primaryGreen)),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Settings page will be implemented here.'),
-              SizedBox(height: 10),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: Text('OK', style: TextStyle(color: primaryGreen)),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   void _onBottomNavTapped(int index) {
     if (_bottomNavIndex == index) return;
@@ -245,39 +218,6 @@ class _GrowerHomePageState extends State<GrowerHomePage> with TickerProviderStat
               ),
             ),
           ),
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 8),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.notifications_outlined, color: Colors.white, size: 22),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('No new notifications'),
-                      backgroundColor: primaryGreen,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(right: 15),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.settings_outlined, color: Colors.white, size: 22),
-                onPressed: _navigateToSettings,
-              ),
-            ),
-          ],
         ),
 
         // Main Content
@@ -292,15 +232,7 @@ class _GrowerHomePageState extends State<GrowerHomePage> with TickerProviderStat
               ),
               
               const SizedBox(height: 25),
-              
-              // Quick Stats Row
-              FadeTransition(
-                opacity: _fadeAnimation,
-                child: _buildQuickStats(),
-              ),
-              
-              const SizedBox(height: 25),
-              
+
               // Quick Actions Section
               FadeTransition(
                 opacity: _fadeAnimation,
@@ -422,32 +354,6 @@ class _GrowerHomePageState extends State<GrowerHomePage> with TickerProviderStat
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildQuickStats() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.eco,
-            title: 'Today\'s Harvest',
-            value: '24.5 kg',
-            color: Colors.green,
-            change: '+12%',
-          ),
-        ),
-        const SizedBox(width: 15),
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.account_balance_wallet,
-            title: 'This Month',
-            value: 'Rs 45,000',
-            color: Colors.blue,
-            change: '+8%',
-          ),
-        ),
-      ],
     );
   }
 
@@ -656,9 +562,8 @@ class _GrowerHomePageState extends State<GrowerHomePage> with TickerProviderStat
   Widget _buildServicesSection() {
     final services = [
       {'icon': Icons.agriculture, 'title': 'Fertilizer\nGuide', 'page': FertilizerPage(email: widget.email)},
-      {'icon': Icons.help_center, 'title': 'Help\nCenter', 'page': HelpCenterPage(email: widget.email)},
       {'icon': Icons.contact_phone, 'title': 'Contact\nUs', 'page': ContactUsPage(email: widget.email)},
-      // {'icon': Icons.list_alt, 'title': 'My\nOrders', 'page': GrowerOrderDetailsSelectPage(email: widget.email)},
+      {'icon': Icons.list_alt, 'title': 'My\nOrders', 'page': GrowerHarvestPage(email: widget.email)},
     ];
 
     return Container(

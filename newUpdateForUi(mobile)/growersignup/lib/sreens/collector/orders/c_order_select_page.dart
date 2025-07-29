@@ -40,9 +40,9 @@ class _CollectorOrderSelectPageState extends State<CollectorOrderSelectPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ConversationListScreen(
-          email: widget.email,
-          userType: "Collector",
+        builder: (context) => ChatListScreen(
+          currentUserEmail: widget.email,
+          currentUserType: "Collector",
         ),
       ),
     );
@@ -105,7 +105,7 @@ class _CollectorOrderSelectPageState extends State<CollectorOrderSelectPage> {
           children: [
             const SizedBox(height: 15),
             
-            // Pending Orders Card
+            // // Pending Orders Card
             _buildOrderCard(
               title: 'Pending Requests',
               subtitle: 'View new tea collection requests from growers',

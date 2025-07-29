@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:growersignup/assets/constants/baseurl.dart';
 import 'package:growersignup/models/grower/grower_bank_details_model.dart';
 import 'package:http/http.dart' as http;
 
 class GrowerBankApi {
-  static const String baseUrl = 'http://localhost:7061/api/GrowerBankDetails';
+  static const String baseUrl = '$cUrl/api/GrowerBankDetails';
 
   // POST new bank detail
   static Future<bool> addBankDetail(GrowerBankDetail detail) async {

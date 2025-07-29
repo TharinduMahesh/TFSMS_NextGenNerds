@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 
+import 'package:growersignup/assets/constants/baseurl.dart';
 import 'package:growersignup/models/grower/grower_order_model.dart';
 import 'package:http/http.dart' as http;
 
 class GrowerOrderApi {
   Future<GrowerOrderModel> getGrowerOrder(GrowerOrderModel growerModel) async {
-    const url = 'http://localhost:7061/api/growerorders'; // Replace with your API URL
+    const url = '$cUrl/api/growerorders'; // Replace with your API URL
 
     try{
       final response = await http.post(

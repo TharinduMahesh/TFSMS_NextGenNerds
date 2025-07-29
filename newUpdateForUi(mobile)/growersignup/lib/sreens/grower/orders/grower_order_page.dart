@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:growersignup/models/grower/grower_order_model.dart';
 import 'package:growersignup/services/grower/grower_order_api.dart';
+import 'package:growersignup/sreens/grower/home_pages/g_payment_select.dart';
 import 'package:growersignup/sreens/grower/orders/grower_order_request_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/grower_home_page.dart';
-import 'package:growersignup/sreens/grower/home_pages/grower_payment_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/show_supplier_details.dart';
 import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 import 'package:intl/intl.dart';
@@ -75,8 +75,8 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> with TickerProviderSt
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now().add(const Duration(days: 1)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 1),
+      firstDate: _selectedDate ?? DateTime.now().add(const Duration(days: 1)),
+      lastDate: DateTime.now().add(const Duration(days: 100)),
       builder: (context, child) {
         return Theme(
           data: ThemeData.light().copyWith(
@@ -197,7 +197,7 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> with TickerProviderSt
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PaymentsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 
@@ -212,9 +212,9 @@ class _GrowerOrderPageState extends State<GrowerOrderPage> with TickerProviderSt
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ConversationListScreen(
-          email: widget.email,
-          userType: "Grower",
+        builder: (context) => ChatListScreen(
+          currentUserEmail: widget.email,
+          currentUserType: "Grower",
         ),
       ),
     );

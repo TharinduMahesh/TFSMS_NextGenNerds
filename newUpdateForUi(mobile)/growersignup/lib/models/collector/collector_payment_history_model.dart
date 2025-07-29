@@ -1,3 +1,5 @@
+// lib/models/collector_payment_history_model.dart
+
 class PaymentHistoryModel {
   final int refNumber;
   final double amount;

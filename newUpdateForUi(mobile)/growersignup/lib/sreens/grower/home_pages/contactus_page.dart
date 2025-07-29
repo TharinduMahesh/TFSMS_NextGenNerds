@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:growersignup/sreens/grower/home_pages/g_payment_select.dart';
+import 'package:growersignup/sreens/grower/orders/g_order_selecttion.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'grower_home_page.dart';
 import 'grower_harvest.dart';
-import 'grower_payment_page.dart';
 import 'show_supplier_details.dart';
 
 class ContactUsPage extends StatefulWidget {
@@ -112,14 +113,14 @@ class _ContactUsPageState extends State<ContactUsPage> with TickerProviderStateM
   void _navigateToHarvest() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => GrowerHarvestPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerOrderDetailsSelectPage(email: widget.email)),
     );
   }
 
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PaymentsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 
@@ -140,7 +141,7 @@ class _ContactUsPageState extends State<ContactUsPage> with TickerProviderStateM
   void _navigateToProfile() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => GrowerDetailsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 

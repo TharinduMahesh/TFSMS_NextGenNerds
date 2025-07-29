@@ -1,44 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/models/collector/collector_payment_detail_model.dart';
-import 'package:growersignup/services/collector/collector_payment_api_service.dart';
+import 'package:growersignup/models/collector/to_payment_models.dart';
+import 'package:growersignup/services/collector/accepted_orders_api.dart';
 import 'package:growersignup/sreens/collector/orders/c_order_select_page.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_payment_select_page.dart';
 import 'package:growersignup/sreens/collector/home_pages/collector_home_page.dart';
 import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 import 'package:growersignup/sreens/collector/home_pages/show_collector_edit_page.dart';
+import 'package:growersignup/sreens/collector/home_pages/accepted_paymnets.dart';
+import 'package:intl/intl.dart'; // For date formatting
 
-class PaymentDetailScreen extends StatefulWidget {
+class AcceptedPaymentDetailScreen extends StatefulWidget {
   final String email;
-  final int refNumber;
+  final int orderId;
 
-  const PaymentDetailScreen({super.key, required this.refNumber, required this.email});
+  const AcceptedPaymentDetailScreen({
+    super.key,
+    required this.orderId,
+    required this.email,
+  });
 
   @override
-  State<PaymentDetailScreen> createState() => _PaymentDetailScreenState();
+  State<AcceptedPaymentDetailScreen> createState() => _AcceptedPaymentDetailScreenState();
 }
 
-class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerProviderStateMixin {
-  late Future<PaymentDetailModel> futureDetail;
-  final api = PaymentApiService();
-  bool isPaying = false;
+class _AcceptedPaymentDetailScreenState extends State<AcceptedPaymentDetailScreen> with TickerProviderStateMixin {
+  late Future<PaymentDetail> _detailsFuture;
   int _bottomNavIndex = 1; // Payments tab
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  // Enhanced Color Scheme
+  final AcceptedPaymentsApiService _apiService = AcceptedPaymentsApiService();
+
+  // Enhanced Color Scheme (matching collector theme)
   static const Color primaryGreen = Color(0xFF0a4e41);
   static const Color lightGreen = Color(0xFFF0FBEF);
   static const Color cardBackground = Colors.white;
   static const Color textDark = Color(0xFF1A1A1A);
   static const Color textLight = Color(0xFF666666);
-  static const Color warningOrange = Color(0xFFFF9800);
   static const Color successGreen = Color(0xFF4CAF50);
+  static const Color accentGreen = Color(0xFFB2E7AE);
 
   @override
   void initState() {
     super.initState();
-    futureDetail = api.getPaymentDetail(widget.refNumber);
+    _detailsFuture = _apiService.getPaymentDetails(widget.orderId);
     
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -58,94 +63,11 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
     super.dispose();
   }
 
-  void _refreshPaymentDetail() {
+  void _refreshPaymentDetails() {
     setState(() {
-      futureDetail = api.getPaymentDetail(widget.refNumber);
+      _detailsFuture = _apiService.getPaymentDetails(widget.orderId);
       _animationController.forward(from: 0);
     });
-  }
-
-  void _markAsPaid() async {
-    // Show confirmation dialog
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Row(
-            children: [
-              Icon(Icons.payment, color: successGreen),
-              const SizedBox(width: 10),
-              Text('Confirm Payment', style: TextStyle(color: successGreen)),
-            ],
-          ),
-          content: Text('Are you sure you want to mark this payment (Ref: ${widget.refNumber}) as paid?'),
-          actions: [
-            TextButton(
-              child: Text('Cancel', style: TextStyle(color: textLight)),
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
-            ElevatedButton(
-              child: const Text('Confirm'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: successGreen,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirmed != true) return;
-
-    setState(() => isPaying = true);
-    try {
-      await api.completePayment(widget.refNumber);
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 10),
-                Text("Payment marked as Paid successfully!"),
-              ],
-            ),
-            backgroundColor: successGreen,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-        
-        Navigator.pop(context); // go back to main screen
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.error, color: Colors.white),
-                const SizedBox(width: 10),
-                Text("Error: $e"),
-              ],
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => isPaying = false);
-      }
-    }
   }
 
   // Navigation Methods
@@ -159,7 +81,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorPaymentSelectPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => AcceptedPaymentsListScreen(email: widget.email)),
     );
   }
 
@@ -174,9 +96,9 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ConversationListScreen(
-          email: widget.email,
-          userType: "Collector",
+        builder: (context) => ChatListScreen(
+          currentUserEmail: widget.email,
+          currentUserType: "Collector",
         ),
       ),
     );
@@ -209,7 +131,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
       backgroundColor: lightGreen,
       appBar: AppBar(
         title: const Text(
-          "Payment Details",
+          'Payment Details',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: primaryGreen,
@@ -218,25 +140,25 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: _refreshPaymentDetail,
+            onPressed: _refreshPaymentDetails,
           ),
         ],
       ),
-      body: FutureBuilder<PaymentDetailModel>(
-        future: futureDetail,
+      body: FutureBuilder<PaymentDetail>(
+        future: _detailsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildLoadingState();
           }
-
+          
           if (snapshot.hasError) {
             return _buildErrorState(snapshot.error.toString());
           }
 
-          final payment = snapshot.data!;
+          final details = snapshot.data!;
           return FadeTransition(
             opacity: _fadeAnimation,
-            child: _buildPaymentDetails(payment),
+            child: _buildPaymentDetails(details),
           );
         },
       ),
@@ -372,7 +294,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
             ),
             const SizedBox(height: 20),
             Text(
-              'Failed to Load Payment',
+              'Error Loading Payment',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -381,47 +303,23 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
             ),
             const SizedBox(height: 10),
             Text(
-              'Unable to load payment details for reference ${widget.refNumber}',
+              error,
               textAlign: TextAlign.center,
               style: TextStyle(color: textLight, fontSize: 14),
             ),
-            const SizedBox(height: 5),
-            Text(
-              'Error: $error',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.red, fontSize: 12),
-            ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: _refreshPaymentDetail,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Retry'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryGreen,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+            ElevatedButton.icon(
+              onPressed: _refreshPaymentDetails,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryGreen,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                OutlinedButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text('Go Back'),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: primaryGreen),
-                    foregroundColor: primaryGreen,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),
@@ -429,30 +327,28 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
     );
   }
 
-  Widget _buildPaymentDetails(PaymentDetailModel payment) {
-    final isPaid = payment.paymentStatus?.toLowerCase() == 'paid';
-    
+  Widget _buildPaymentDetails(PaymentDetail details) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          // Payment Status Card
-          _buildStatusCard(payment, isPaid),
+          // Payment Completed Status Card
+          _buildCompletedStatusCard(details),
           
           const SizedBox(height: 20),
           
-          // Payment Information Card
-          _buildPaymentInfoCard(payment),
+          // Tea Details Card
+          _buildTeaDetailsCard(details),
           
           const SizedBox(height: 20),
           
           // Grower Information Card
-          _buildGrowerInfoCard(payment),
+          _buildGrowerInfoCard(details),
           
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
           
-          // Action Button
-          if (!isPaid) _buildPaymentButton(),
+          // Payment Information Card
+          _buildPaymentInfoCard(details),
           
           const SizedBox(height: 100), // Space for navigation
         ],
@@ -460,21 +356,19 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
     );
   }
 
-  Widget _buildStatusCard(PaymentDetailModel payment, bool isPaid) {
+  Widget _buildCompletedStatusCard(PaymentDetail details) {
     return Container(
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isPaid 
-            ? [successGreen, successGreen.withOpacity(0.8)]
-            : [warningOrange, warningOrange.withOpacity(0.8)],
+          colors: [successGreen, successGreen.withOpacity(0.8)],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: (isPaid ? successGreen : warningOrange).withOpacity(0.3),
+            color: successGreen.withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -490,16 +384,12 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  isPaid ? Icons.check_circle : Icons.pending_actions,
-                  color: Colors.white,
-                  size: 24,
-                ),
+                child: const Icon(Icons.check_circle, color: Colors.white, size: 24),
               ),
               const SizedBox(width: 15),
-              Text(
-                isPaid ? 'Payment Completed' : 'Payment Pending',
-                style: const TextStyle(
+              const Text(
+                'Payment Completed',
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -509,7 +399,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
           ),
           const SizedBox(height: 20),
           Text(
-            'Rs. ${payment.amount.toStringAsFixed(2)}',
+            'LKR ${details.totalAmount.toStringAsFixed(2)}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 36,
@@ -518,7 +408,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
           ),
           const SizedBox(height: 5),
           Text(
-            'Amount ${isPaid ? 'Paid' : 'to Pay'}',
+            'Total Payment Amount',
             style: TextStyle(
               color: Colors.white.withOpacity(0.9),
               fontSize: 14,
@@ -531,13 +421,20 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(
-              'Ref: ${payment.refNumber}',
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.9),
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check, color: Colors.white, size: 16),
+                const SizedBox(width: 5),
+                Text(
+                  'Cash Payment Processed',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -545,7 +442,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
     );
   }
 
-  Widget _buildPaymentInfoCard(PaymentDetailModel payment) {
+  Widget _buildTeaDetailsCard(PaymentDetail details) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -570,11 +467,11 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
                   color: primaryGreen.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(Icons.receipt, color: primaryGreen, size: 20),
+                child: Icon(Icons.eco, color: primaryGreen, size: 20),
               ),
               const SizedBox(width: 10),
               Text(
-                'Payment Information',
+                'Tea Collection Summary',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -585,21 +482,19 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
           ),
           const SizedBox(height: 20),
           
-          _buildDetailRow('Reference Number', payment.refNumber.toString(), Icons.confirmation_number, Colors.blue),
+          _buildDetailRow('Super Tea Quantity', '${details.superTeaQuantity} kg', Icons.star, Colors.amber),
           const SizedBox(height: 15),
-          _buildDetailRow('Amount', 'Rs. ${payment.amount.toStringAsFixed(2)}', Icons.attach_money, successGreen),
+          _buildDetailRow('Green Tea Quantity', '${details.greenTeaQuantity} kg', Icons.eco_outlined, primaryGreen),
           const SizedBox(height: 15),
-          _buildDetailRow('Payment Status', payment.paymentStatus ?? 'Pending', Icons.info, warningOrange),
-          if (payment.paymentDate != null) ...[
-            const SizedBox(height: 15),
-            _buildDetailRow('Payment Date', payment.paymentDate!, Icons.calendar_today, primaryGreen),
-          ],
+          _buildDetailRow('Total Quantity', '${details.superTeaQuantity + details.greenTeaQuantity} kg', Icons.scale, successGreen),
+          const SizedBox(height: 15),
+          _buildDetailRow('Net Payment', 'LKR ${details.totalAmount.toStringAsFixed(2)}', Icons.account_balance_wallet, successGreen),
         ],
       ),
     );
   }
 
-  Widget _buildGrowerInfoCard(PaymentDetailModel payment) {
+  Widget _buildGrowerInfoCard(PaymentDetail details) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -639,19 +534,101 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
           ),
           const SizedBox(height: 20),
           
-          _buildDetailRow('Name', '${payment.firstName} ${payment.lastName}', Icons.person_outline, primaryGreen),
+          _buildDetailRow('Grower Name', details.growerName, Icons.person_outline, primaryGreen),
           const SizedBox(height: 15),
-          _buildDetailRow('NIC', payment.nic ?? 'Not specified', Icons.credit_card, Colors.orange),
+          _buildDetailRow('Phone Number', details.growerPhoneNum, Icons.phone, Colors.blue),
           const SizedBox(height: 15),
-          _buildDetailRow('Phone', payment.phoneNumber ?? 'Not specified', Icons.phone, Colors.green),
-          const SizedBox(height: 15),
-          _buildDetailRow('Address', '${payment.addressLine1}, ${payment.addressLine2}', Icons.location_on, Colors.red),
-          const SizedBox(height: 15),
-          _buildDetailRow('City', payment.city ?? 'Not specified', Icons.location_city, Colors.blue),
-          if (payment.postalCode != null) ...[
+          _buildDetailRow('Address', details.growerAddressLine1, Icons.location_on, Colors.red),
+          if (details.growerAddressLine2 != null && details.growerAddressLine2!.isNotEmpty) ...[
             const SizedBox(height: 15),
-            _buildDetailRow('Postal Code', payment.postalCode!, Icons.local_post_office, Colors.purple),
+            _buildDetailRow('Address Line 2', details.growerAddressLine2!, Icons.location_on_outlined, Colors.red),
           ],
+          const SizedBox(height: 15),
+          _buildDetailRow('City', details.growerCity, Icons.location_city_outlined, Colors.orange),
+          if (details.growerPostalCode != null && details.growerPostalCode!.isNotEmpty) ...[
+            const SizedBox(height: 15),
+            _buildDetailRow('Postal Code', details.growerPostalCode!, Icons.markunread_mailbox, Colors.purple),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaymentInfoCard(PaymentDetail details) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: successGreen.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: successGreen.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.receipt_long, color: successGreen, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Payment Information',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          
+          _buildDetailRow('Order ID', '#${widget.orderId}', Icons.assignment, Colors.blue),
+          const SizedBox(height: 15),
+          _buildDetailRow('Payment Status', 'Completed', Icons.check_circle, successGreen),
+          const SizedBox(height: 15),
+          _buildDetailRow('Payment Method', 'Cash Payment', Icons.money, Colors.green),
+          const SizedBox(height: 15),
+          _buildDetailRow('Processed Date', DateFormat.yMMMd().add_jm().format(DateTime.now()), Icons.access_time, Colors.grey),
+          
+          const SizedBox(height: 20),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: successGreen.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: successGreen.withOpacity(0.3)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.verified, color: successGreen, size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'This payment has been successfully processed and completed.',
+                    style: TextStyle(
+                      color: successGreen,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -663,7 +640,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: accentGreen.withOpacity(0.3)),
       ),
       child: Row(
         children: [
@@ -701,41 +678,6 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerPr
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: isPaying ? null : _markAsPaid,
-        icon: isPaying 
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            )
-          : const Icon(Icons.payment, color: Colors.white),
-        label: Text(
-          isPaying ? 'Processing...' : 'Mark as Paid',
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: successGreen,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 3,
-        ),
       ),
     );
   }

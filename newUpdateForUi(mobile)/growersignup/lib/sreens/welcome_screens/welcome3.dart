@@ -1,12 +1,20 @@
 import 'dart:ui'; // Required for ImageFilter.blur
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:growersignup/assets/constants/contant_colors.dart';
 import 'package:growersignup/sreens/welcome_screens/welcome4.dart';
 
-class WelcomePage3 extends StatelessWidget {
+class WelcomePage3 extends StatefulWidget {
   // button press
   final VoidCallback? onAcceptPressed;
 
+  const WelcomePage3({super.key, this.onAcceptPressed});
+
+  @override
+  State<WelcomePage3> createState() => _WelcomePage3State();
+}
+
+class _WelcomePage3State extends State<WelcomePage3> {
   // terms text
   final String termsText = """
 Registered collectors affiliated with the factory, dealers accredited by the Sri Lanka Tea Board, and recognized tea growers are eligible to register as suppliers.
@@ -18,7 +26,44 @@ To qualify, they must demonstrate the capacity to meet the predefined specificat
   static const double frostedOpacity = 0.35; // Opacity for the frosted effect
   static const double blurSigma = 5.0; // Amount of blur for the frosted effect
 
-  const WelcomePage3({super.key, this.onAcceptPressed});
+  @override
+  void initState() {
+    super.initState();
+    _checkTermsAccepted();
+  }
+
+  // Check if terms are already accepted and skip if true
+  Future<void> _checkTermsAccepted() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool termsAccepted = prefs.getBool('terms_accepted') ?? false;
+    
+    if (termsAccepted && mounted) {
+      // Terms already accepted, skip to next page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const WelcomePage4()),
+      );
+    }
+  }
+
+  // Save terms acceptance status
+  Future<void> _acceptTerms() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('terms_accepted', true);
+    
+    // Call the callback if provided
+    if (widget.onAcceptPressed != null) {
+      widget.onAcceptPressed!();
+    }
+    
+    // Navigate to next page
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const WelcomePage4()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,12 +113,7 @@ To qualify, they must demonstrate the capacity to meet the predefined specificat
 
                   // Accept & Continue Button
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomePage4()));
-                      print('Accept & Continue button tapped!');
-                       
-                       // Add navigation logic here
-                    },
+                    onPressed: _acceptTerms, // Use the new method
                     style: ElevatedButton.styleFrom(
                       backgroundColor: secondaryTextColor,
                       foregroundColor: primaryTextColor,
@@ -93,21 +133,9 @@ To qualify, they must demonstrate the capacity to meet the predefined specificat
                   ),
                   const SizedBox(height: 20.0), // Space below button
 
-                  // dots
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(5, (index) { // Assuming 5 total pages
-                      return Container(
-                        width: 8.0,
-                        height: 8.0,
-                        margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: index == 2 ? activeIndicatorColor : inactiveIndicatorColor,
-                        ),
-                      );
-                    }),
-                  ),
+                  // Page Indicator (matching WelcomePage1 style)
+                  _buildPageIndicator(),
+
                   SizedBox(height: screenHeight * 0.03), // Bottom padding
                 ],
               ),
@@ -118,10 +146,30 @@ To qualify, they must demonstrate the capacity to meet the predefined specificat
     );
   }
 
+  // Page Indicator matching WelcomePage1 style
+  Widget _buildPageIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(4, (index) {
+        return Container(
+          width: index == 1 ? 20 : 8, // Page 3 is active (index 2)
+          height: 8,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: index == 1 
+                ? Colors.white 
+                : Colors.white.withOpacity(0.4),
+          ),
+        );
+      }),
+    );
+  }
+
   // --- Helper Widget for the Frosted Glass Terms Box ---
   Widget _buildFrostedTermsBox(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-     final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return ClipRRect( // Clip the blur effect to the rounded corners
       borderRadius: BorderRadius.circular(20.0),

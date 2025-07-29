@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:growersignup/models/fertilizer_report.dart';
 import 'package:growersignup/models/fertilizer_response.dart';
 import 'package:growersignup/services/fertilizer_api_service.dart';
+import 'package:growersignup/sreens/grower/home_pages/g_payment_select.dart';
+import 'package:growersignup/sreens/grower/orders/g_order_selecttion.dart';
 import 'grower_home_page.dart';
 import 'grower_harvest.dart';
-import 'grower_payment_page.dart';
+
 import '../../conversation_pages/conversation_list_screen.dart';
 import 'show_supplier_details.dart';
 
@@ -79,14 +81,14 @@ class _FertilizerPageState extends State<FertilizerPage> with TickerProviderStat
   void _navigateToHarvest() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => GrowerHarvestPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerOrderDetailsSelectPage(email: widget.email)),
     );
   }
 
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PaymentsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 
@@ -107,7 +109,7 @@ class _FertilizerPageState extends State<FertilizerPage> with TickerProviderStat
   void _navigateToProfile() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => GrowerDetailsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 

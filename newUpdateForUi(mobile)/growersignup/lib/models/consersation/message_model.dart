@@ -1,29 +1,47 @@
 class Message {
   final int messageId;
-  final int conversationId;
+  final int senderId;
+  final int receiverId;
   final String senderType;
-  final String senderEmail;
-  final String messageText;
-  final DateTime sentAt;
+  final String receiverType;
+  final String content;
+  final DateTime timestamp;
+  final bool isRead;
 
   Message({
     required this.messageId,
-    required this.conversationId,
+    required this.senderId,
+    required this.receiverId,
     required this.senderType,
-    required this.senderEmail,
-    required this.messageText,
-    required this.sentAt,
+    required this.receiverType,
+    required this.content,
+    required this.timestamp,
+    required this.isRead,
   });
 
-  // Factory constructor to create a Message object from a JSON map.
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
-      messageId: json['messageId'] as int,
-      conversationId: json['conversationId'] as int,
-      senderType: json['senderType'] as String,
-      senderEmail: json['senderEmail'] as String,
-      messageText: json['messageText'] as String,
-      sentAt: DateTime.parse(json['sentAt'] as String),
+      messageId: json['messageId'] ?? 0,
+      senderId: json['senderId'],
+      receiverId: json['receiverId'],
+      senderType: json['senderType'],
+      receiverType: json['receiverType'],
+      content: json['content'],
+      timestamp: DateTime.parse(json['timestamp']),
+      isRead: json['isRead'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'messageId': 0,
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'senderType': senderType,
+      'receiverType': receiverType,
+      'content': content,
+      'timestamp': timestamp.toIso8601String(),
+      'isRead': isRead,
+    };
   }
 }

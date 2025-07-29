@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:growersignup/assets/constants/baseurl.dart';
 import 'package:growersignup/models/grower/AccpetedOrderDetailsByCDto.dart';
 import 'package:growersignup/models/grower/g_a_by_c_orders_model.dart';
 import 'package:http/http.dart' as http;
 
 class GOrderAcceptedDetailsApiService {
-  static const String baseUrl = 'http://localhost:7061/api/CollectorOrdersStatus';
+  static const String baseUrl = '$cUrl/api/CollectorOrdersStatus';
 
   /// Fetch accepted orders list for a grower
   static Future<List<GAcceptedOrder>> getAcceptedOrders(String email) async {

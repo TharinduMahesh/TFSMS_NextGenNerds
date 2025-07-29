@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:growersignup/assets/constants/baseurl.dart';
 import 'package:growersignup/models/collector/pending_order.dart';
 import 'package:growersignup/models/collector/pending_order_details.dart';
 import 'package:http/http.dart' as http;
 
 class OrderApiService {
-  static const String baseUrl = "http://localhost:7061/api/GrowerOrdersStatus";
+  static const String baseUrl = "$cUrl/api/GrowerOrdersStatus";
 
   // Fetch all pending orders
   static Future<List<PendingOrder>> getPendingOrders() async {

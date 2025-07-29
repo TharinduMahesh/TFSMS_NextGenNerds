@@ -45,6 +45,9 @@ dependencies:
   signalr_core: ^1.1.2
   provider: ^6.1.5
   shared_preferences: ^2.5.3
+  flutter_secure_storage: ^9.2.4
+  flutter_map: ^8.1.1
+  latlong2: ^0.9.1
 
 
 dev_dependencies:

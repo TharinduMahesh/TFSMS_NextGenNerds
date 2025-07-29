@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:growersignup/sreens/grower/home_pages/g_payment_select.dart';
 import 'package:growersignup/sreens/grower/orders/g_accepted_by_c.dart';
 import 'package:growersignup/sreens/grower/orders/g_peding_orders.dart';
 import '../home_pages/grower_home_page.dart';
 import '../home_pages/grower_harvest.dart';
-import '../home_pages/grower_payment_page.dart';
 import '../../conversation_pages/conversation_list_screen.dart';
 import '../home_pages/show_supplier_details.dart';
 
@@ -38,7 +38,7 @@ class _GrowerOrderDetailsSelectPageState extends State<GrowerOrderDetailsSelectP
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PaymentsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 

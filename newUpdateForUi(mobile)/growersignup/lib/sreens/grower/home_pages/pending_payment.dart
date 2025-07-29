@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/models/collector/collector_payment_history_model.dart';
-import 'package:growersignup/services/collector/collector_history_payment_api_service.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_paid_details_page.dart';
-import 'package:growersignup/sreens/collector/orders/c_order_select_page.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_payment_select_page.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_home_page.dart';
+import 'package:flutter/services.dart';
+import 'package:growersignup/models/grower/pending_payments.dart';
+import 'package:growersignup/services/grower/pending_payments_api.dart';
+import 'package:growersignup/sreens/grower/home_pages/pending_payments.dart';
+import 'package:growersignup/sreens/grower/home_pages/grower_home_page.dart';
 import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
-import 'package:growersignup/sreens/collector/home_pages/show_collector_edit_page.dart';
+import 'package:growersignup/sreens/grower/home_pages/show_supplier_details.dart';
 
-class PaymentHistoryPage extends StatefulWidget {
+class PaymentsListScreen extends StatefulWidget {
   final String email;
-  const PaymentHistoryPage({super.key, required this.email});
+
+  const PaymentsListScreen({super.key, required this.email});
 
   @override
-  State<PaymentHistoryPage> createState() => _PaymentHistoryPageState();
+  State<PaymentsListScreen> createState() => _PaymentsListScreenState();
 }
 
-class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProviderStateMixin {
-  late Future<List<PaymentHistoryModel>> _paymentsFuture;
+class _PaymentsListScreenState extends State<PaymentsListScreen> 
+    with TickerProviderStateMixin {
+  late Future<List<PaymentDto>> _paymentsFuture;
   int _bottomNavIndex = 1; // Payments tab
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  final api = PaymentHistoryApiService();
+  final PaymentApiService _apiService = PaymentApiService();
 
-  // Enhanced Color Scheme (matching ToPayScreen theme)
+  // Enhanced Color Scheme (matching PendingPaymentsScreen)
   static const Color primaryGreen = Color(0xFF0a4e41);
   static const Color lightGreen = Color(0xFFF0FBEF);
   static const Color cardBackground = Colors.white;
   static const Color textDark = Color(0xFF1A1A1A);
   static const Color textLight = Color(0xFF666666);
-  static const Color successGreen = Color(0xFF4CAF50);
+  static const Color warningOrange = Color(0xFFFF9800);
 
   @override
   void initState() {
     super.initState();
-    _paymentsFuture = api.getPaidPayments(widget.email);
+    _paymentsFuture = _apiService.getPendingCashPayments(widget.email);
     
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -58,30 +59,25 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
 
   void _refreshPayments() {
     setState(() {
-      _paymentsFuture = api.getPaidPayments(widget.email);
+      _paymentsFuture = _apiService.getPendingCashPayments(widget.email);
       _animationController.forward(from: 0);
     });
+    HapticFeedback.lightImpact();
   }
 
   // Navigation Methods
-  void _navigateToOrders() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => CollectorOrderSelectPage(email: widget.email)),
-    );
+  void _navigateToHarvest() {
+    // Navigate to harvest page
   }
 
   void _navigateToPayments() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => CollectorPaymentSelectPage(email: widget.email)),
-    );
+    // Current page - no action needed
   }
 
   void _navigateToHome() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorHomePage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerHomePage(email: widget.email)),
     );
   }
 
@@ -89,9 +85,9 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ConversationListScreen(
-          email: widget.email,
-          userType: "Collector",
+        builder: (context) => ChatListScreen(
+          currentUserEmail: widget.email,
+          currentUserType: "Grower",
         ),
       ),
     );
@@ -100,7 +96,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
   void _navigateToProfile() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorDetailsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerDetailsPage(email: widget.email)),
     );
   }
 
@@ -110,7 +106,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
     setState(() => _bottomNavIndex = index);
     
     switch (index) {
-      case 0: _navigateToOrders(); break;
+      case 0: _navigateToHarvest(); break;
       case 1: _navigateToPayments(); break;
       case 2: _navigateToHome(); break;
       case 3: _navigateToMessages(); break;
@@ -124,7 +120,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
       backgroundColor: lightGreen,
       appBar: AppBar(
         title: const Text(
-          'Payment History',
+          'Pending Payments',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -143,11 +139,12 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
             child: IconButton(
               icon: const Icon(Icons.refresh, color: Colors.white, size: 22),
               onPressed: _refreshPayments,
+              tooltip: 'Refresh',
             ),
           ),
         ],
       ),
-      body: FutureBuilder<List<PaymentHistoryModel>>(
+      body: FutureBuilder<List<PaymentDto>>(
         future: _paymentsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -171,7 +168,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
         },
       ),
       
-      // Bottom Navigation Bar
+      // Bottom Navigation Bar (matching PendingPaymentsScreen)
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: cardBackground,
@@ -204,9 +201,9 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
             onTap: _onBottomNavTapped,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.assignment_outlined),
-                activeIcon: Icon(Icons.assignment),
-                label: 'Orders',
+                icon: Icon(Icons.eco_outlined),
+                activeIcon: Icon(Icons.eco),
+                label: 'Harvest',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.payment_outlined),
@@ -260,7 +257,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
             ),
             const SizedBox(height: 20),
             Text(
-              'Loading payment history...',
+              'Loading pending payments...',
               style: TextStyle(
                 color: textLight,
                 fontSize: 16,
@@ -298,11 +295,11 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
                 color: Colors.red.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: const Icon(Icons.error_outline, color: Colors.red, size: 40),
+              child: Icon(Icons.error_outline, color: Colors.red, size: 40),
             ),
             const SizedBox(height: 20),
             Text(
-              'Error Loading History',
+              'Error Loading Payments',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -311,7 +308,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
             ),
             const SizedBox(height: 10),
             Text(
-              'Unable to load payment history information',
+              'Unable to load pending payment information',
               textAlign: TextAlign.center,
               style: TextStyle(color: textLight, fontSize: 14),
             ),
@@ -357,14 +354,14 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.1),
+                color: warningOrange.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: Icon(Icons.history, color: Colors.grey, size: 50),
+              child: Icon(Icons.payment, color: warningOrange, size: 50),
             ),
             const SizedBox(height: 20),
             Text(
-              'No Payment History',
+              'No Pending Payments',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -373,7 +370,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
             ),
             const SizedBox(height: 10),
             Text(
-              'No completed payments found. Payment history will appear here once payments are made.',
+              'You have no pending payments at the moment.',
               textAlign: TextAlign.center,
               style: TextStyle(color: textLight, fontSize: 14),
             ),
@@ -397,90 +394,25 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
     );
   }
 
-  Widget _buildPaymentsList(List<PaymentHistoryModel> payments) {
-    final totalAmount = payments.fold(0.0, (sum, item) => sum + item.amount);
-    
+  Widget _buildPaymentsList(List<PaymentDto> payments) {
     return Column(
       children: [
-        // Total Amount Card
-        Container(
-          margin: const EdgeInsets.all(20),
-          padding: const EdgeInsets.all(25),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [successGreen, successGreen.withOpacity(0.8)],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: successGreen.withOpacity(0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.account_balance_wallet, color: Colors.white, size: 24),
-                  ),
-                  const SizedBox(width: 15),
-                  const Text(
-                    'Total Amount Paid',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Rs. ${totalAmount.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                '${payments.length} completed payment${payments.length > 1 ? 's' : ''}',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ),
-        
         // Header Section
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.all(20),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: successGreen.withOpacity(0.1),
+                  color: warningOrange.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(Icons.history, color: successGreen, size: 20),
+                child: Icon(Icons.payment, color: warningOrange, size: 20),
               ),
               const SizedBox(width: 10),
               Text(
-                'Payment History',
+                '${payments.length} Pending Payment${payments.length > 1 ? 's' : ''}',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -491,29 +423,32 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
           ),
         ),
         
-        const SizedBox(height: 15),
-        
         // Payments List
         Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: payments.length,
-            itemBuilder: (context, index) {
-              final payment = payments[index];
-              return _buildPaymentCard(payment, index);
-            },
+          child: RefreshIndicator(
+            onRefresh: () async => _refreshPayments(),
+            color: primaryGreen,
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: payments.length,
+              itemBuilder: (context, index) {
+                final payment = payments[index];
+                return _buildPaymentCard(payment, index);
+              },
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildPaymentCard(PaymentHistoryModel payment, int index) {
+  Widget _buildPaymentCard(PaymentDto payment, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
         color: cardBackground,
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: warningOrange.withOpacity(0.2)),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -526,18 +461,21 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
-          onTap: () {
-            Navigator.push(
+          onTap: () async {
+            HapticFeedback.lightImpact();
+            final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => PaymentDetailPage(
-                  refNumber: payment.refNumber,
-                  email: widget.email,
+                builder: (context) => PendingPaymentDetailScreen(
+                  growerOrderId: payment.growerOrderId,
+                  grossPayment: payment.grossPayment.toString(),
                 ),
               ),
-            ).then((_) {
-              _refreshPayments(); // Refresh after return
-            });
+            );
+            // If the payment was processed on the detail screen, refresh this list
+            if (result == true) {
+              _refreshPayments();
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -548,10 +486,10 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: successGreen.withOpacity(0.1),
+                        color: warningOrange.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.check_circle, color: successGreen, size: 24),
+                      child: Icon(Icons.account_balance_wallet, color: warningOrange, size: 24),
                     ),
                     const SizedBox(width: 15),
                     Expanded(
@@ -559,7 +497,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Ref: ${payment.refNumber}',
+                            '${payment.collectorFirstName} ${payment.collectorLastName}',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -569,10 +507,10 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
                           const SizedBox(height: 5),
                           Row(
                             children: [
-                              Icon(Icons.person, size: 14, color: textLight),
+                              Icon(Icons.receipt_long, size: 14, color: textLight),
                               const SizedBox(width: 4),
                               Text(
-                                payment.growerName,
+                                'Order #${payment.growerOrderId}',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: textLight,
@@ -589,14 +527,14 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: successGreen.withOpacity(0.1),
+                            color: Colors.green.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: successGreen.withOpacity(0.3)),
+                            border: Border.all(color: Colors.green.withOpacity(0.3)),
                           ),
                           child: Text(
-                            'Rs. ${payment.amount.toStringAsFixed(2)}',
+                            'LKR ${payment.grossPayment.toStringAsFixed(2)}',
                             style: TextStyle(
-                              color: successGreen,
+                              color: Colors.green,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             ),
@@ -617,10 +555,10 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 16, color: textLight),
+                      Icon(Icons.location_on_outlined, size: 16, color: textLight),
                       const SizedBox(width: 8),
                       Text(
-                        payment.paymentDate?.toLocal().toString().split(' ')[0] ?? "Not specified",
+                        payment.collectorCity,
                         style: TextStyle(
                           fontSize: 13,
                           color: textLight,
@@ -630,16 +568,40 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> with TickerProv
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: successGreen.withOpacity(0.1),
+                          color: warningOrange.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'PAID',
+                          'PENDING',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: successGreen,
+                            color: warningOrange,
                           ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: warningOrange.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.touch_app, color: warningOrange, size: 16),
+                      const SizedBox(width: 5),
+                      Text(
+                        'Tap to process payment',
+                        style: TextStyle(
+                          color: warningOrange,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],

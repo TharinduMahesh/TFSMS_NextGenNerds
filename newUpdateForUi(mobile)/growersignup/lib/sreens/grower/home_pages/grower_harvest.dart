@@ -2,9 +2,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:growersignup/models/grower/grower_harvest_model.dart';
 import 'package:growersignup/services/grower/grower_harwest_api.dart';
+import 'package:growersignup/sreens/grower/home_pages/g_payment_select.dart';
 import 'package:growersignup/sreens/grower/orders/grower_order_page.dart';
 import 'package:growersignup/sreens/grower/home_pages/grower_home_page.dart';
-import 'package:growersignup/sreens/grower/home_pages/grower_payment_page.dart';
 import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 import 'package:growersignup/sreens/grower/home_pages/show_supplier_details.dart';
 
@@ -20,7 +20,8 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
   GrowerHarvestSummary? _harvestSummary;
   bool _isLoading = true;
   String _errorMessage = '';
-  int _bottomNavIndex = 0; // Set to 0 since this is the Harvest page
+  int _bottomNavIndex = 0;
+  String _selectedTimePeriod = 'This Week';
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -38,6 +39,19 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
   static const Color superTeaColor = Color(0xFF0a4e41);
   static const Color normalTeaColor = Color(0xFFB2E7AE);
   static const Color gaugeBackgroundColor = Color(0xFFE8F5E8);
+
+  // Time period options
+  final List<String> _timePeriods = [
+    'This Week',
+    'Last Week',
+    'This Month',
+    'Last Month',
+    'Last 3 Months',
+    'This Year',
+    'Next Week',
+    'Next Month',
+    'Next 3 Months',
+  ];
 
   @override
   void initState() {
@@ -67,7 +81,10 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
   Future<void> _fetchHarvestSummary() async {
     try {
       final apiService = ApiService();
-      final summary = await apiService.fetchHarvestSummary(widget.email);
+      final summary = await apiService.fetchHarvestSummaryByPeriod(
+        widget.email, 
+        _selectedTimePeriod
+      );
       setState(() {
         _harvestSummary = summary;
         _isLoading = false;
@@ -81,6 +98,15 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
     }
   }
 
+  void _onTimePeriodChanged(String period) {
+    setState(() {
+      _selectedTimePeriod = period;
+      _isLoading = true;
+    });
+    _animationController.reset();
+    _fetchHarvestSummary();
+  }
+
   // Navigation Methods
   void _navigateToHome() {
     Navigator.pushReplacement(
@@ -92,7 +118,7 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PaymentsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 
@@ -106,7 +132,7 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
   void _navigateToProfile() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => GrowerDetailsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => GrowerPaymentDetailsSelectPage(email: widget.email)),
     );
   }
 
@@ -123,20 +149,11 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
     setState(() => _bottomNavIndex = index);
     
     switch (index) {
-      case 0: // Harvest (current page)
-        break;
-      case 1: // Payments
-        _navigateToPayments();
-        break;
-      case 2: // Home
-        _navigateToHome();
-        break;
-      case 3: // Messages
-        _navigateToMessages();
-        break;
-      case 4: // Profile
-        _navigateToProfile();
-        break;
+      case 0: break;
+      case 1: _navigateToPayments(); break;
+      case 2: _navigateToHome(); break;
+      case 3: _navigateToMessages(); break;
+      case 4: _navigateToProfile(); break;
     }
   }
 
@@ -148,7 +165,7 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
         slivers: [
           // Custom App Bar
           SliverAppBar(
-            expandedHeight: 160,
+            expandedHeight: 200,
             floating: false,
             pinned: true,
             backgroundColor: primaryGreen,
@@ -193,7 +210,10 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
                             ),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 15),
+                        // Time Period Selector
+                        _buildTimePeriodSelector(),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
@@ -240,31 +260,6 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
         ],
       ),
       
-      // Floating Action Button
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: primaryGreen.withOpacity(0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: FloatingActionButton.extended(
-          onPressed: _navigateToAddOrder,
-          backgroundColor: primaryGreen,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          icon: const Icon(Icons.add, size: 24),
-          label: const Text(
-            'New Order',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       
       // Bottom Navigation Bar
       bottomNavigationBar: Container(
@@ -330,6 +325,53 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
     );
   }
 
+  Widget _buildTimePeriodSelector() {
+    return Container(
+      height: 40,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _timePeriods.length,
+        itemBuilder: (context, index) {
+          final period = _timePeriods[index];
+          final isSelected = period == _selectedTimePeriod;
+          
+          return Container(
+            margin: const EdgeInsets.only(right: 10),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: () => _onTimePeriodChanged(period),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected 
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isSelected 
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Text(
+                    period,
+                    style: TextStyle(
+                      color: isSelected ? primaryGreen : Colors.white,
+                      fontSize: 12,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildLoadingState() {
     return Container(
       height: 400,
@@ -357,12 +399,13 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Loading your harvest data...',
+                  'Loading harvest data for $_selectedTimePeriod...',
                   style: TextStyle(
                     color: textLight,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -411,7 +454,7 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
           ),
           const SizedBox(height: 10),
           Text(
-            _errorMessage,
+            'No harvest data available for $_selectedTimePeriod',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: textLight,
@@ -449,6 +492,11 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
     
     return Column(
       children: [
+        // Period Summary Header
+        _buildPeriodSummaryHeader(),
+        
+        const SizedBox(height: 20),
+        
         // Summary Cards
         _buildSummarySection(),
         
@@ -457,7 +505,100 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
         // Tea Quality Distribution
         _buildQualityDistribution(totalHarvest, superTea, normalTea),
         
+        const SizedBox(height: 30),
+        
+        // Harvest Timeline (if orders exist)
+        if (_harvestSummary!.orders.isNotEmpty)
+          _buildHarvestTimeline(),
+        
         const SizedBox(height: 100), // Space for FAB and bottom nav
+      ],
+    );
+  }
+
+  Widget _buildPeriodSummaryHeader() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [primaryGreen.withOpacity(0.1), accentGreen.withOpacity(0.1)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: primaryGreen.withOpacity(0.2)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: primaryGreen.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.calendar_today, color: primaryGreen, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Harvest Summary for $_selectedTimePeriod',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildQuickStat(
+                'Orders',
+                '${_harvestSummary!.orders.length}',
+                Icons.receipt_long,
+                primaryGreen,
+              ),
+              Container(
+                width: 1,
+                height: 40,
+                color: primaryGreen.withOpacity(0.2),
+              ),
+              _buildQuickStat(
+                'Total Harvest',
+                '${_harvestSummary!.totalHarvest.toStringAsFixed(1)} kg',
+                Icons.eco,
+                successGreen,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickStat(String label, String value, IconData icon, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(height: 5),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: textDark,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: textLight,
+          ),
+        ),
       ],
     );
   }
@@ -467,7 +608,7 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Harvest Overview',
+          'Harvest Breakdown',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -476,58 +617,56 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
         ),
         const SizedBox(height: 15),
         Row(
-            children: [
-              Expanded(
+          children: [
+            Expanded(
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                color: cardBackground,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                  ),
-                ],
+                  color: cardBackground,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: primaryGreen.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(Icons.eco, color: primaryGreen, size: 24),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                  'Total Harvest',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: textDark,
-                  ),
-                  textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                  '${_harvestSummary!.totalHarvest.toStringAsFixed(1)} Kg',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: primaryGreen,
-                  ),
-                  textAlign: TextAlign.center,
-                  ),
-                ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: primaryGreen.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.eco, color: primaryGreen, size: 24),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Total Harvest',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: textDark,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${_harvestSummary!.totalHarvest.toStringAsFixed(1)} Kg',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: primaryGreen,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               ),
-              ),
-            const SizedBox(width: 15),
-            
+            ),
           ],
         ),
         const SizedBox(height: 15),
@@ -603,6 +742,49 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
   }
 
   Widget _buildQualityDistribution(double totalHarvest, double superTea, double normalTea) {
+    if (totalHarvest == 0) {
+      return Container(
+        padding: const EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          color: cardBackground,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Icon(Icons.pie_chart, color: textLight, size: 24),
+                const SizedBox(width: 10),
+                Text(
+                  'Tea Quality Distribution',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: textDark,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'No harvest data available for this period',
+              style: TextStyle(
+                color: textLight,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final normalPercentage = normalTea / totalHarvest;
     final superPercentage = superTea / totalHarvest;
     final gaugeSize = MediaQuery.of(context).size.width * 0.7;
@@ -717,32 +899,87 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
     );
   }
 
-  Widget _buildActivityItem({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required String time,
-    required Color iconColor,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
+  Widget _buildHarvestTimeline() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.timeline, color: primaryGreen, size: 24),
+              const SizedBox(width: 10),
+              Text(
+                'Recent Harvest Activity',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          ...(_harvestSummary!.orders.take(5).map((order) => _buildTimelineItem(order))),
+          if (_harvestSummary!.orders.length > 5)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Text(
+                'and ${_harvestSummary!.orders.length - 5} more orders...',
+                style: TextStyle(
+                  color: textLight,
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimelineItem(dynamic order) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: lightGreen.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border(
+          left: BorderSide(
+            width: 4,
+            color: primaryGreen,
+          ),
+        ),
+      ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              color: primaryGreen.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(6),
             ),
-            child: Icon(icon, color: iconColor, size: 18),
+            child: Icon(Icons.eco, color: primaryGreen, size: 16),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  'Order #${order.growerOrderId ?? 'N/A'}',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -751,7 +988,7 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  subtitle,
+                  'Super: ${order.superTeaQuantity ?? 0}kg, Green: ${order.greenTeaQuantity ?? 0}kg',
                   style: TextStyle(
                     fontSize: 12,
                     color: textLight,
@@ -761,10 +998,11 @@ class _GrowerHarvestPageState extends State<GrowerHarvestPage> with TickerProvid
             ),
           ),
           Text(
-            time,
+            '${((order.superTeaQuantity ?? 0) + (order.greenTeaQuantity ?? 0)).toStringAsFixed(1)}kg',
             style: TextStyle(
-              fontSize: 10,
-              color: textLight,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: primaryGreen,
             ),
           ),
         ],

@@ -17,7 +17,7 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   
-  final _authService = AuthService();
+  final _authService = GrowerAuthService();
 
   // State variables
   bool _isLoading = false;
@@ -93,7 +93,7 @@ class _GrowerSignInPageState extends State<GrowerSignInPage> with TickerProvider
       _statusMessage = '';
     });
 
-    final loginData = LoginData(
+    final loginData = GLoginData(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );

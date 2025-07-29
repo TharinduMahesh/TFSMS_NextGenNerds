@@ -3,7 +3,6 @@ import 'package:growersignup/models/collector/pending_order.dart';
 import 'package:growersignup/services/collector/order_status_api_service.dart';
 import 'package:growersignup/sreens/collector/orders/order_details_page.dart';
 import 'package:growersignup/sreens/collector/orders/c_order_select_page.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_payment_select_page.dart';
 import 'package:growersignup/sreens/collector/home_pages/collector_home_page.dart';
 import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 import 'package:growersignup/sreens/collector/home_pages/show_collector_edit_page.dart';
@@ -72,7 +71,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> with TickerProvid
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorPaymentSelectPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => CollectorDetailsPage(email: widget.email)),
     );
   }
 
@@ -87,9 +86,9 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> with TickerProvid
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ConversationListScreen(
-          email: widget.email,
-          userType: "Collector",
+        builder: (context) => ChatListScreen(
+          currentUserEmail: widget.email,
+          currentUserType: "Collector",
         ),
       ),
     );

@@ -1,46 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/models/collector/collector_payment_detail_model.dart';
-import 'package:growersignup/services/collector/collector_history_payment_api_service.dart';
+import 'package:growersignup/models/collector/to_payment_models.dart';
+import 'package:growersignup/services/collector/to_payment_api_service.dart';
 import 'package:growersignup/sreens/collector/orders/c_order_select_page.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_payment_select_page.dart';
 import 'package:growersignup/sreens/collector/home_pages/collector_home_page.dart';
 import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 import 'package:growersignup/sreens/collector/home_pages/show_collector_edit_page.dart';
+import 'package:growersignup/sreens/collector/home_pages/to_pay_sreen.dart';
 
-class PaymentDetailPage extends StatefulWidget {
-  final String email;
-  final int refNumber;
+class PaymentDetailScreen extends StatefulWidget {
+  final int orderId;
+  final int paymentId;
 
-  const PaymentDetailPage({
+  const PaymentDetailScreen({
     super.key,
-    required this.refNumber,
-    required this.email,
+    required this.orderId,
+    required this.paymentId,
   });
 
   @override
-  State<PaymentDetailPage> createState() => _PaymentDetailPageState();
+  State<PaymentDetailScreen> createState() => _PaymentDetailScreenState();
 }
 
-class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProviderStateMixin {
-  late Future<PaymentDetailModel> _futureDetail;
-  final api = PaymentHistoryApiService();
+class _PaymentDetailScreenState extends State<PaymentDetailScreen> with TickerProviderStateMixin {
+  late Future<PaymentDetail> _detailsFuture;
   int _bottomNavIndex = 1; // Payments tab
+  bool _isAccepting = false;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  // Enhanced Color Scheme (matching PaymentDetailScreen)
+  final PaymentApiService _apiService = PaymentApiService();
+
+  // Enhanced Color Scheme (matching collector theme)
   static const Color primaryGreen = Color(0xFF0a4e41);
   static const Color lightGreen = Color(0xFFF0FBEF);
   static const Color cardBackground = Colors.white;
   static const Color textDark = Color(0xFF1A1A1A);
   static const Color textLight = Color(0xFF666666);
+  static const Color warningOrange = Color(0xFFFF9800);
   static const Color successGreen = Color(0xFF4CAF50);
+  static const Color accentGreen = Color(0xFFB2E7AE);
 
   @override
   void initState() {
     super.initState();
-    _futureDetail = api.getPaymentDetail(widget.refNumber, widget.email);
+    _detailsFuture = _apiService.getPaymentDetails(widget.orderId);
     
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -60,51 +64,102 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
     super.dispose();
   }
 
-  void _refreshPaymentDetail() {
+  void _refreshPaymentDetails() {
     setState(() {
-      _futureDetail = api.getPaymentDetail(widget.refNumber, widget.email);
+      _detailsFuture = _apiService.getPaymentDetails(widget.orderId);
       _animationController.forward(from: 0);
     });
+  }
+
+  void _acceptPayment() async {
+    setState(() {
+      _isAccepting = true;
+    });
+
+    try {
+      await _apiService.acceptPayment(widget.paymentId);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 10),
+                Text('Payment accepted successfully!'),
+              ],
+            ),
+            backgroundColor: successGreen,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        
+        Navigator.pop(context, true); // Return true to signal payment was processed
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error, color: Colors.white),
+                const SizedBox(width: 10),
+                Text('Error accepting payment: $e'),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+      setState(() {
+        _isAccepting = false;
+      });
+    }
   }
 
   // Navigation Methods
   void _navigateToOrders() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorOrderSelectPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => CollectorOrderSelectPage(email: '')),
     );
   }
 
   void _navigateToPayments() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorPaymentSelectPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => PendingPaymentsScreen(email: '')),
     );
   }
 
   void _navigateToHome() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorHomePage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => CollectorHomePage(email: '')),
     );
   }
 
   void _navigateToMessages() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ConversationListScreen(
-          email: widget.email,
-          userType: "Collector",
-        ),
-      ),
-    );
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ChatListScreen(
+    //       currentUserEmail: email,
+    //       currentUserType: "Collector",
+    //     ),
+    //   ),
+    // );
   }
 
   void _navigateToProfile() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CollectorDetailsPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => CollectorDetailsPage(email: '')),
     );
   }
 
@@ -137,29 +192,25 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: _refreshPaymentDetail,
+            onPressed: _refreshPaymentDetails,
           ),
         ],
       ),
-      body: FutureBuilder<PaymentDetailModel>(
-        future: _futureDetail,
+      body: FutureBuilder<PaymentDetail>(
+        future: _detailsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildLoadingState();
           }
-
+          
           if (snapshot.hasError) {
             return _buildErrorState(snapshot.error.toString());
           }
 
-          if (!snapshot.hasData) {
-            return _buildNoDataState();
-          }
-
-          final payment = snapshot.data!;
+          final details = snapshot.data!;
           return FadeTransition(
             opacity: _fadeAnimation,
-            child: _buildPaymentDetails(payment),
+            child: _buildPaymentDetails(details),
           );
         },
       ),
@@ -295,7 +346,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
             ),
             const SizedBox(height: 20),
             Text(
-              'Failed to Load Payment',
+              'Error Loading Payment',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -304,99 +355,13 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
             ),
             const SizedBox(height: 10),
             Text(
-              'Unable to load payment details for reference ${widget.refNumber}',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: textLight, fontSize: 14),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              'Error: $error',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.red, fontSize: 12),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: _refreshPaymentDetail,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Retry'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryGreen,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text('Go Back'),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: primaryGreen),
-                    foregroundColor: primaryGreen,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNoDataState() {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.all(30),
-        decoration: BoxDecoration(
-          color: cardBackground,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Icon(Icons.inbox, color: Colors.grey, size: 50),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'No Payment Data',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: textDark,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'No payment data found for reference ${widget.refNumber}',
+              error,
               textAlign: TextAlign.center,
               style: TextStyle(color: textLight, fontSize: 14),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
-              onPressed: _refreshPaymentDetail,
+              onPressed: _refreshPaymentDetails,
               icon: const Icon(Icons.refresh),
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
@@ -414,23 +379,28 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
     );
   }
 
-  Widget _buildPaymentDetails(PaymentDetailModel payment) {
+  Widget _buildPaymentDetails(PaymentDetail details) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          // Payment Status Card (Always shows as completed for history)
-          _buildStatusCard(payment),
+          // Payment Status Card
+          _buildStatusCard(details),
           
           const SizedBox(height: 20),
           
-          // Payment Information Card
-          _buildPaymentInfoCard(payment),
+          // Tea Details Card
+          _buildTeaDetailsCard(details),
           
           const SizedBox(height: 20),
           
           // Grower Information Card
-          _buildGrowerInfoCard(payment),
+          _buildGrowerInfoCard(details),
+          
+          const SizedBox(height: 30),
+          
+          // Action Buttons
+          _buildActionButtons(details),
           
           const SizedBox(height: 100), // Space for navigation
         ],
@@ -438,7 +408,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
     );
   }
 
-  Widget _buildStatusCard(PaymentDetailModel payment) {
+  Widget _buildStatusCard(PaymentDetail details) {
     return Container(
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
@@ -466,11 +436,11 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.check_circle, color: Colors.white, size: 24),
+                child: const Icon(Icons.account_balance_wallet, color: Colors.white, size: 24),
               ),
               const SizedBox(width: 15),
               const Text(
-                'Payment Completed',
+                'Payment Pending',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -481,7 +451,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
           ),
           const SizedBox(height: 20),
           Text(
-            'Rs. ${payment.amount.toStringAsFixed(2)}',
+            'LKR ${details.totalAmount.toStringAsFixed(2)}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 36,
@@ -490,7 +460,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
           ),
           const SizedBox(height: 5),
           Text(
-            'Amount Paid',
+            'Total Payment Amount',
             style: TextStyle(
               color: Colors.white.withOpacity(0.9),
               fontSize: 14,
@@ -504,11 +474,11 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Ref: ${payment.refNumber}',
+              'Awaiting Cash Payment',
               style: TextStyle(
                 color: Colors.white.withOpacity(0.9),
                 fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -517,7 +487,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
     );
   }
 
-  Widget _buildPaymentInfoCard(PaymentDetailModel payment) {
+  Widget _buildTeaDetailsCard(PaymentDetail details) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -542,11 +512,11 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
                   color: primaryGreen.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(Icons.receipt, color: primaryGreen, size: 20),
+                child: Icon(Icons.eco, color: primaryGreen, size: 20),
               ),
               const SizedBox(width: 10),
               Text(
-                'Payment Information',
+                'Tea Collection Summary',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -557,21 +527,19 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
           ),
           const SizedBox(height: 20),
           
-          _buildDetailRow('Reference Number', payment.refNumber.toString(), Icons.confirmation_number, Colors.blue),
+          _buildDetailRow('Super Tea Quantity', '${details.superTeaQuantity} kg', Icons.star, warningOrange),
           const SizedBox(height: 15),
-          _buildDetailRow('Amount', 'Rs. ${payment.amount.toStringAsFixed(2)}', Icons.attach_money, successGreen),
+          _buildDetailRow('Green Tea Quantity', '${details.greenTeaQuantity} kg', Icons.eco_outlined, primaryGreen),
           const SizedBox(height: 15),
-          _buildDetailRow('Payment Status', 'Completed', Icons.check_circle, successGreen),
-          if (payment.paymentDate != null) ...[
-            const SizedBox(height: 15),
-            _buildDetailRow('Payment Date', payment.paymentDate!, Icons.calendar_today, primaryGreen),
-          ],
+          _buildDetailRow('Total Quantity', '${details.superTeaQuantity + details.greenTeaQuantity} kg', Icons.scale, successGreen),
+          const SizedBox(height: 15),
+          _buildDetailRow('Net Payment', 'LKR ${details.totalAmount.toStringAsFixed(2)}', Icons.account_balance_wallet, Colors.green),
         ],
       ),
     );
   }
 
-  Widget _buildGrowerInfoCard(PaymentDetailModel payment) {
+  Widget _buildGrowerInfoCard(PaymentDetail details) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -611,19 +579,13 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
           ),
           const SizedBox(height: 20),
           
-          _buildDetailRow('Name', '${payment.firstName ?? ''} ${payment.lastName ?? ''}', Icons.person_outline, primaryGreen),
+          _buildDetailRow('Grower Name', details.growerName, Icons.person_outline, primaryGreen),
           const SizedBox(height: 15),
-          _buildDetailRow('NIC', payment.nic ?? 'Not specified', Icons.credit_card, Colors.orange),
+          _buildDetailRow('Phone Number', details.growerPhoneNum, Icons.phone, Colors.blue),
           const SizedBox(height: 15),
-          _buildDetailRow('Phone', payment.phoneNumber ?? 'Not specified', Icons.phone, Colors.green),
+          _buildDetailRow('Address', '${details.growerAddressLine1}', Icons.location_on, Colors.red),
           const SizedBox(height: 15),
-          _buildDetailRow('Address', '${payment.addressLine1 ?? ''}, ${payment.addressLine2 ?? ''}', Icons.location_on, Colors.red),
-          const SizedBox(height: 15),
-          _buildDetailRow('City', payment.city ?? 'Not specified', Icons.location_city, Colors.blue),
-          if (payment.postalCode != null) ...[
-            const SizedBox(height: 15),
-            _buildDetailRow('Postal Code', payment.postalCode!, Icons.local_post_office, Colors.purple),
-          ],
+          _buildDetailRow('City', details.growerCity, Icons.location_city_outlined, Colors.orange),
         ],
       ),
     );
@@ -635,7 +597,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: accentGreen.withOpacity(0.3)),
       ),
       child: Row(
         children: [
@@ -662,7 +624,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  value.isNotEmpty ? value : 'Not specified',
+                  value,
                   style: TextStyle(
                     fontSize: 14,
                     color: textDark,
@@ -674,6 +636,116 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> with TickerProvid
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionButtons(PaymentDetail details) {
+    return Column(
+      children: [
+        // Accept Payment Button
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: _isAccepting ? null : () => _showAcceptDialog(details),
+            icon: _isAccepting 
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : const Icon(Icons.check_circle, color: Colors.white),
+            label: Text(
+              _isAccepting ? 'Processing Payment...' : 'Accept Payment',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: successGreen,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 3,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showAcceptDialog(PaymentDetail details) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Row(
+            children: [
+              Icon(Icons.account_balance_wallet, color: successGreen),
+              const SizedBox(width: 10),
+              Text('Confirm Payment', style: TextStyle(color: successGreen)),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Are you sure you want to accept this payment?'),
+              const SizedBox(height: 15),
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: successGreen.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Grower:', style: TextStyle(fontWeight: FontWeight.w500)),
+                        Text(details.growerName),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Amount:', style: TextStyle(fontWeight: FontWeight.w500)),
+                        Text('LKR ${details.totalAmount.toStringAsFixed(2)}', 
+                             style: TextStyle(fontWeight: FontWeight.bold, color: successGreen)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel', style: TextStyle(color: textLight)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            ElevatedButton(
+              child: const Text('Confirm Payment'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: successGreen,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _acceptPayment();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

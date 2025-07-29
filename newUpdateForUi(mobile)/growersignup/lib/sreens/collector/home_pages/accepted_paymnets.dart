@@ -1,43 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/models/collector/to_pay_model.dart';
-import 'package:growersignup/services/collector/collector_payment_api_service.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_payment_detail_screen.dart';
+import 'package:growersignup/models/collector/accepted_payments_models.dart';
+import 'package:growersignup/services/collector/accepted_orders_api.dart';
+import 'package:growersignup/sreens/collector/home_pages/accepted_details.dart';
 import 'package:growersignup/sreens/collector/orders/c_order_select_page.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_payment_select_page.dart';
 import 'package:growersignup/sreens/collector/home_pages/collector_home_page.dart';
 import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 import 'package:growersignup/sreens/collector/home_pages/show_collector_edit_page.dart';
+import 'package:intl/intl.dart'; // For date formatting
 
-class ToPayScreen extends StatefulWidget {
-  final String email;
-  const ToPayScreen({super.key, required this.email});
+class AcceptedPaymentsListScreen extends StatefulWidget {
+  final String email; // Email of the collector to fetch payments for
+  const AcceptedPaymentsListScreen({super.key, required this.email});
 
   @override
-  State<ToPayScreen> createState() => _ToPayScreenState();
+  State<AcceptedPaymentsListScreen> createState() => _AcceptedPaymentsListScreenState();
 }
 
-class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin {
-  late Future<List<ToPayModel>> _paymentsFuture;
+class _AcceptedPaymentsListScreenState extends State<AcceptedPaymentsListScreen> with TickerProviderStateMixin {
+  late Future<List<AcceptedPayment>> _acceptedPaymentsFuture;
   int _bottomNavIndex = 1; // Payments tab
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  final api = PaymentApiService();
+  final AcceptedPaymentsApiService _apiService = AcceptedPaymentsApiService();
+  late final String _collectorEmail;
 
-  // Enhanced Color Scheme (matching grower theme)
+  // Enhanced Color Scheme (matching collector theme)
   static const Color primaryGreen = Color(0xFF0a4e41);
   static const Color lightGreen = Color(0xFFF0FBEF);
   static const Color cardBackground = Colors.white;
   static const Color textDark = Color(0xFF1A1A1A);
   static const Color textLight = Color(0xFF666666);
-  static const Color warningOrange = Color(0xFFFF9800);
   static const Color successGreen = Color(0xFF4CAF50);
 
   @override
   void initState() {
     super.initState();
-    _paymentsFuture = api.getPendingPayments();
+    _collectorEmail = widget.email;
+    _acceptedPaymentsFuture = _apiService.getPaidCashPayments(_collectorEmail);
     
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -57,9 +58,9 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
     super.dispose();
   }
 
-  void _refreshPayments() {
+  void _refreshAcceptedPayments() {
     setState(() {
-      _paymentsFuture = api.getPendingPayments();
+      _acceptedPaymentsFuture = _apiService.getPaidCashPayments(_collectorEmail);
       _animationController.forward(from: 0);
     });
   }
@@ -73,10 +74,7 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
   }
 
   void _navigateToPayments() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => CollectorPaymentSelectPage(email: widget.email)),
-    );
+    // Current page - no action needed
   }
 
   void _navigateToHome() {
@@ -90,9 +88,9 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ConversationListScreen(
-          email: widget.email,
-          userType: "Collector",
+        builder: (context) => ChatListScreen(
+          currentUserEmail: widget.email,
+          currentUserType: "Collector",
         ),
       ),
     );
@@ -125,7 +123,7 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
       backgroundColor: lightGreen,
       appBar: AppBar(
         title: const Text(
-          'Pending Payments',
+          'Payment History',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -143,13 +141,13 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
             ),
             child: IconButton(
               icon: const Icon(Icons.refresh, color: Colors.white, size: 22),
-              onPressed: _refreshPayments,
+              onPressed: _refreshAcceptedPayments,
             ),
           ),
         ],
       ),
-      body: FutureBuilder<List<ToPayModel>>(
-        future: _paymentsFuture,
+      body: FutureBuilder<List<AcceptedPayment>>(
+        future: _acceptedPaymentsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildLoadingState();
@@ -261,7 +259,7 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
             ),
             const SizedBox(height: 20),
             Text(
-              'Loading pending payments...',
+              'Loading payment history...',
               style: TextStyle(
                 color: textLight,
                 fontSize: 16,
@@ -299,11 +297,11 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
                 color: Colors.red.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: const Icon(Icons.error_outline, color: Colors.red, size: 40),
+              child: Icon(Icons.error_outline, color: Colors.red, size: 40),
             ),
             const SizedBox(height: 20),
             Text(
-              'Error Loading Payments',
+              'Error Loading Payment History',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -312,13 +310,13 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
             ),
             const SizedBox(height: 10),
             Text(
-              'Unable to load pending payment information',
+              'Unable to load payment history information',
               textAlign: TextAlign.center,
               style: TextStyle(color: textLight, fontSize: 14),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
-              onPressed: _refreshPayments,
+              onPressed: _refreshAcceptedPayments,
               icon: const Icon(Icons.refresh),
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
@@ -361,11 +359,11 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
                 color: successGreen.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: Icon(Icons.check_circle_outline, color: successGreen, size: 50),
+              child: Icon(Icons.payment_outlined, color: successGreen, size: 50),
             ),
             const SizedBox(height: 20),
             Text(
-              'No Pending Payments',
+              'No Payment History',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -374,13 +372,13 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
             ),
             const SizedBox(height: 10),
             Text(
-              'All payments have been completed. No pending payments at the moment.',
+              'You have no accepted payments in your history yet.',
               textAlign: TextAlign.center,
               style: TextStyle(color: textLight, fontSize: 14),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
-              onPressed: _refreshPayments,
+              onPressed: _refreshAcceptedPayments,
               icon: const Icon(Icons.refresh),
               label: const Text('Refresh'),
               style: ElevatedButton.styleFrom(
@@ -398,90 +396,25 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
     );
   }
 
-  Widget _buildPaymentsList(List<ToPayModel> payments) {
-    final totalAmount = payments.fold(0.0, (sum, item) => sum + item.amount);
-    
+  Widget _buildPaymentsList(List<AcceptedPayment> payments) {
     return Column(
       children: [
-        // Total Amount Card
-        Container(
-          margin: const EdgeInsets.all(20),
-          padding: const EdgeInsets.all(25),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [warningOrange, warningOrange.withOpacity(0.8)],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: warningOrange.withOpacity(0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.account_balance_wallet, color: Colors.white, size: 24),
-                  ),
-                  const SizedBox(width: 15),
-                  const Text(
-                    'Total Amount to Pay',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Rs. ${totalAmount.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                '${payments.length} pending payment${payments.length > 1 ? 's' : ''}',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ),
-        
         // Header Section
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.all(20),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: warningOrange.withOpacity(0.1),
+                  color: successGreen.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(Icons.pending_actions, color: warningOrange, size: 20),
+                child: Icon(Icons.check_circle, color: successGreen, size: 20),
               ),
               const SizedBox(width: 10),
               Text(
-                'Pending Payments',
+                '${payments.length} Completed Payment${payments.length > 1 ? 's' : ''}',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -492,29 +425,32 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
           ),
         ),
         
-        const SizedBox(height: 15),
-        
         // Payments List
         Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: payments.length,
-            itemBuilder: (context, index) {
-              final payment = payments[index];
-              return _buildPaymentCard(payment, index);
-            },
+          child: RefreshIndicator(
+            onRefresh: () async => _refreshAcceptedPayments(),
+            color: primaryGreen,
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: payments.length,
+              itemBuilder: (context, index) {
+                final payment = payments[index];
+                return _buildPaymentCard(payment, index);
+              },
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildPaymentCard(ToPayModel payment, int index) {
+  Widget _buildPaymentCard(AcceptedPayment payment, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
         color: cardBackground,
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: successGreen.withOpacity(0.2)),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -531,14 +467,12 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => PaymentDetailScreen(
-                  refNumber: payment.refNumber,
+                builder: (context) => AcceptedPaymentDetailScreen(
                   email: widget.email,
+                  orderId: payment.growerOrderId,
                 ),
               ),
-            ).then((_) {
-              _refreshPayments(); // Refresh after return
-            });
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -549,10 +483,10 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: warningOrange.withOpacity(0.1),
+                        color: successGreen.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.receipt, color: warningOrange, size: 24),
+                      child: Icon(Icons.check_circle, color: successGreen, size: 24),
                     ),
                     const SizedBox(width: 15),
                     Expanded(
@@ -560,7 +494,7 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Ref: ${payment.refNumber}',
+                            payment.growerName,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -570,10 +504,10 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
                           const SizedBox(height: 5),
                           Row(
                             children: [
-                              Icon(Icons.person, size: 14, color: textLight),
+                              Icon(Icons.receipt_long, size: 14, color: textLight),
                               const SizedBox(width: 4),
                               Text(
-                                payment.growerName ?? '',
+                                'Order #${payment.growerOrderId}',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: textLight,
@@ -590,14 +524,14 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: warningOrange.withOpacity(0.1),
+                            color: successGreen.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: warningOrange.withOpacity(0.3)),
+                            border: Border.all(color: successGreen.withOpacity(0.3)),
                           ),
                           child: Text(
-                            'Rs. ${payment.amount.toStringAsFixed(2)}',
+                            'LKR ${payment.netPayment.toStringAsFixed(2)}',
                             style: TextStyle(
-                              color: warningOrange,
+                              color: successGreen,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             ),
@@ -618,10 +552,10 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.location_on_outlined, size: 16, color: textLight),
+                      Icon(Icons.calendar_today, size: 16, color: textLight),
                       const SizedBox(width: 8),
                       Text(
-                        payment.growerCity ?? '',
+                        'Paid on ${DateFormat.yMMMd().format(payment.paymentDate)}',
                         style: TextStyle(
                           fontSize: 13,
                           color: textLight,
@@ -631,16 +565,40 @@ class _ToPayScreenState extends State<ToPayScreen> with TickerProviderStateMixin
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: warningOrange.withOpacity(0.1),
+                          color: successGreen.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'TO PAY',
+                          'COMPLETED',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: warningOrange,
+                            color: successGreen,
                           ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: successGreen.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.visibility, color: successGreen, size: 16),
+                      const SizedBox(width: 5),
+                      Text(
+                        'Tap to view details',
+                        style: TextStyle(
+                          color: successGreen,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],

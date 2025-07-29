@@ -14,7 +14,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
   final _tokenController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _authService = AuthService();
+  final _authService = GrowerAuthService();
 
   // State variables
   bool _isLoading = false;
@@ -94,7 +94,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
     });
 
     try {
-      final resetData = ResetPasswordData(
+      final resetData = GResetPasswordData(
         token: _tokenController.text.trim(),
         password: _passwordController.text.trim(),
         confirmPassword: _confirmPasswordController.text.trim(),

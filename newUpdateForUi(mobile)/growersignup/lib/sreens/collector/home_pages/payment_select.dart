@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_payment_history_page.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_to_pay_screen.dart';
-import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
+import 'package:growersignup/sreens/collector/home_pages/accepted_paymnets.dart';
+import 'package:growersignup/sreens/collector/home_pages/collector_home_page.dart';
+import 'package:growersignup/sreens/collector/home_pages/show_collector_edit_page.dart';
+import 'package:growersignup/sreens/collector/home_pages/to_pay_sreen.dart';
+import 'package:growersignup/sreens/collector/orders/c_order_select_page.dart';
+import 'package:growersignup/sreens/grower/orders/g_accepted_by_c.dart';
+import 'package:growersignup/sreens/grower/orders/g_peding_orders.dart';
+import '../../grower/home_pages/grower_home_page.dart';
+import '../../grower/home_pages/grower_harvest.dart';
 
-class CollectorPaymentSelectPage extends StatefulWidget {
+import '../../conversation_pages/conversation_list_screen.dart';
+import '../../grower/home_pages/show_supplier_details.dart';
+
+class PaymentSelect extends StatefulWidget {
   final String email;
-  const CollectorPaymentSelectPage({super.key, required this.email});
+  const PaymentSelect({super.key, required this.email});
 
   @override
-  State<CollectorPaymentSelectPage> createState() => _CollectorPaymentSelectPageState();
+  State<PaymentSelect> createState() => _PaymentSelectPageState();
 }
 
-class _CollectorPaymentSelectPageState extends State<CollectorPaymentSelectPage> {
-  int _bottomNavIndex = 1; // Payments tab
+class _PaymentSelectPageState extends State<PaymentSelect> {
+  int _bottomNavIndex = 2;
 
-  // Enhanced Color Scheme (matching grower theme)
+  // Enhanced Color Scheme
   static const Color primaryGreen = Color(0xFF0a4e41);
   static const Color lightGreen = Color(0xFFF0FBEF);
   static const Color cardBackground = Colors.white;
@@ -24,32 +33,39 @@ class _CollectorPaymentSelectPageState extends State<CollectorPaymentSelectPage>
   static const Color successGreen = Color(0xFF4CAF50);
 
   // Navigation Methods
-  void _navigateToOrders() {
-    Navigator.pushReplacementNamed(context, '/collector-orders', arguments: widget.email);
-  }
-
-  void _navigateToPayments() {
-    // Current page - no action needed
-  }
-
-  void _navigateToHome() {
-    Navigator.pushReplacementNamed(context, '/collector-home', arguments: widget.email);
-  }
-
-  void _navigateToMessages() {
+  void _navigateToHarvest() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => ConversationListScreen(
-          email: widget.email,
-          userType: "Collector",
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => CollectorOrderSelectPage(email: widget.email)),
     );
   }
 
+  void _navigateToPayments() {
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => PaymentsPage(email: widget.email)),
+    // );
+  }
+
+  void _navigateToHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => CollectorHomePage(email: widget.email)),
+    );
+  }
+
+  void _navigateToMessages() {
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => ConversationListScreen(email: widget.email)),
+    // );
+  }
+
   void _navigateToProfile() {
-    Navigator.pushReplacementNamed(context, '/collector-profile', arguments: widget.email);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => CollectorDetailsPage(email: widget.email)),
+    );
   }
 
   void _onBottomNavTapped(int index) {
@@ -58,7 +74,7 @@ class _CollectorPaymentSelectPageState extends State<CollectorPaymentSelectPage>
     setState(() => _bottomNavIndex = index);
     
     switch (index) {
-      case 0: _navigateToOrders(); break;
+      case 0: _navigateToHarvest(); break;
       case 1: _navigateToPayments(); break;
       case 2: _navigateToHome(); break;
       case 3: _navigateToMessages(); break;
@@ -71,71 +87,40 @@ class _CollectorPaymentSelectPageState extends State<CollectorPaymentSelectPage>
     return Scaffold(
       backgroundColor: lightGreen,
       appBar: AppBar(
-        title: const Text(
-          'Payment Management',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: const Text('Paymen Management', style: TextStyle(color: Colors.white)),
         backgroundColor: primaryGreen,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 15),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.white, size: 22),
-              onPressed: () {
-                // Refresh functionality
-                setState(() {});
-              },
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 15),
-            
-            // To Pay Card
-            _buildPaymentCard(
-              title: 'To Pay',
-              subtitle: 'View pending payments to growers',
-              icon: Icons.payment_outlined,
+            // Pending Orders Card
+            _buildOrderCard(
+              title: 'Pending Payments',
+              subtitle: 'View incoming order requests',
+              icon: Icons.pending_actions,
               color: warningOrange,
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => ToPayScreen(email: widget.email),
-                ),
+                MaterialPageRoute(builder: (context) => PendingPaymentsScreen(email: widget.email)),
               ),
             ),
             
             const SizedBox(height: 20),
             
-            // Payment History Card
-            _buildPaymentCard(
-              title: 'Payment History',
-              subtitle: 'Track your completed payments',
-              icon: Icons.history,
+            // Accepted Orders Card
+            _buildOrderCard(
+              title: 'Paid Payments',
+              subtitle: 'Track your accepted orders',
+              icon: Icons.check_circle_outline,
               color: successGreen,
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => PaymentHistoryPage(email: widget.email),
-                ),
+                MaterialPageRoute(builder: (context) => AcceptedPaymentsListScreen(email: widget.email)),
               ),
             ),
-            
-            const Spacer(),
           ],
         ),
       ),
@@ -173,9 +158,9 @@ class _CollectorPaymentSelectPageState extends State<CollectorPaymentSelectPage>
             onTap: _onBottomNavTapped,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.assignment_outlined),
-                activeIcon: Icon(Icons.assignment),
-                label: 'Orders',
+                icon: Icon(Icons.eco_outlined),
+                activeIcon: Icon(Icons.eco),
+                label: 'Harvest',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.payment_outlined),
@@ -204,7 +189,7 @@ class _CollectorPaymentSelectPageState extends State<CollectorPaymentSelectPage>
     );
   }
 
-  Widget _buildPaymentCard({
+  Widget _buildOrderCard({
     required String title,
     required String subtitle,
     required IconData icon,
@@ -264,7 +249,6 @@ class _CollectorPaymentSelectPageState extends State<CollectorPaymentSelectPage>
                     ],
                   ),
                 ),
-                const SizedBox(width: 10),
                 Icon(Icons.arrow_forward_ios, size: 16, color: textLight),
               ],
             ),

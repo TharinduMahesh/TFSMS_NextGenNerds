@@ -48,7 +48,6 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage>
   final List<String> _genderOptions = [
     'Male',
     'Female',
-    'Other',
     'Prefer not to say',
   ];
   final List<String> _paymentOptions = ['Bank', 'Cash'];
@@ -219,28 +218,6 @@ class _GrowerCreateAccountPageState extends State<GrowerCreateAccountPage>
                   elevation: 0,
                   floating: true,
                   pinned: false,
-                  leading: IconButton(
-                    icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: cardBackground.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios,
-                        color: primaryGreen,
-                        size: 20,
-                      ),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
                   centerTitle: true,
                 ),
 

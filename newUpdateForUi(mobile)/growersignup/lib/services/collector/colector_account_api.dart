@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:growersignup/assets/constants/baseurl.dart';
 import 'package:growersignup/models/collector/collector_account.dart';
 import 'package:http/http.dart' as http;
 
 class CollectorApi {
-  static const String baseUrl = 'http://localhost:7061/api/CollectorAccounts';
+  static const String baseUrl = '$cUrl/api/CollectorAccounts';
 
   static Future<bool> postCollectorAccount(CollectorAccount collector) async {
     final url = Uri.parse(baseUrl);

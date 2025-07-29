@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart'; // Required for kDebugMode
+import 'package:growersignup/assets/constants/baseurl.dart';
 import 'package:http/http.dart' as http;
 
 class GrowerForgotPasswordApi {
   // Use http://10.0.2.2 for Android Emulator or your computer's IP for a physical device.
   // Using localhost is correct for a web app running on the same machine.
-  static const String baseUrl = 'http://localhost:7061/api/GrowerAuth';
+  static const String baseUrl = '$cUrl/api/GrowerAuth';
 
   static Future<String> sendResetEmail(String email) async {
     final url = Uri.parse('$baseUrl/forgot-password');

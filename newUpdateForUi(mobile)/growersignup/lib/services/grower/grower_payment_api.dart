@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:growersignup/assets/constants/baseurl.dart';
 import 'package:http/http.dart' as http;
 import '../../models/grower/grower_payment_model.dart';
 
 class GrowerPaymentApi {
-  static const String baseUrl = 'http://localhost:7061/api/Payments';
+  static const String baseUrl = '$cUrl/api/Payments';
 
   static Future<PaymentResponse?> getPaymentsByEmail(String email) async {
     final url = Uri.parse('$baseUrl/$email');

@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:growersignup/assets/constants/baseurl.dart';
 import 'package:growersignup/models/collector/show_collector_model.dart';
 import 'package:http/http.dart' as http;
 
 class CollectorApiService {
-  final String baseUrl = 'http://localhost:7061/api/ShowCollectorAccount';
+  final String baseUrl = '$cUrl/api/ShowCollectorAccount';
 
   // 🔍 Get collector details by email
   Future<CollectorCreateAccount?> fetchCollectorByEmail(String email) async {

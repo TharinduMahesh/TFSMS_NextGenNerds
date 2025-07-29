@@ -13,7 +13,7 @@ class ForgotPasswordPage extends StatefulWidget {
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _authService = AuthService();
+  final _authService = GrowerAuthService();
 
   // State variables
   bool _isLoading = false;

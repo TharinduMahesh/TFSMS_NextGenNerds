@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:growersignup/sreens/collector/home_pages/collector_payment_select_page.dart';
 import 'package:growersignup/sreens/collector/home_pages/contact_uss.dart';
+import 'package:growersignup/sreens/collector/home_pages/payment_select.dart';
 import 'package:growersignup/sreens/collector/home_pages/show_collector_edit_page.dart';
+import 'package:growersignup/sreens/collector/home_pages/to_pay_sreen.dart';
 import 'package:growersignup/sreens/collector/orders/c_order_select_page.dart';
+import 'package:growersignup/sreens/conversation_pages/conversation_list_screen.dart';
 
 class CollectorHomePage extends StatefulWidget {
   final String email;
@@ -56,15 +58,15 @@ class _CollectorHomePageState extends State<CollectorHomePage> with TickerProvid
   void _navigateToPayments() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CollectorPaymentSelectPage(email: widget.email)),
+      MaterialPageRoute(builder: (context) => PaymentSelect(email: widget.email)),
     );
   }
 
   void _navigateToMessages() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => ConversationListScreen(email: widget.email)),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChatListScreen(currentUserEmail: widget.email, currentUserType: 'Collector')),
+    );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Messages feature coming soon!'),
@@ -79,38 +81,6 @@ class _CollectorHomePageState extends State<CollectorHomePage> with TickerProvid
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => CollectorDetailsPage(email: widget.email)),
-    );
-  }
-
-  void _navigateToSettings() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Row(
-            children: [
-              Icon(Icons.settings, color: primaryGreen),
-              SizedBox(width: 10),
-              Text('Settings', style: TextStyle(color: primaryGreen)),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Settings page will be implemented here.'),
-              SizedBox(height: 10),
-              Text('Current user: ${widget.email}', style: TextStyle(color: textLight, fontSize: 12)),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: Text('OK', style: TextStyle(color: primaryGreen)),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -245,39 +215,6 @@ class _CollectorHomePageState extends State<CollectorHomePage> with TickerProvid
                 ),
               ),
             ),
-            actions: [
-              Container(
-                margin: const EdgeInsets.only(right: 8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.notifications_outlined, color: Colors.white, size: 22),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('No new notifications'),
-                        backgroundColor: primaryGreen,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 15),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.settings_outlined, color: Colors.white, size: 22),
-                  onPressed: _navigateToSettings,
-                ),
-              ),
-            ],
           ),
 
           // Main Content
@@ -289,14 +226,6 @@ class _CollectorHomePageState extends State<CollectorHomePage> with TickerProvid
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: _buildWelcomeCard(),
-                ),
-                
-                const SizedBox(height: 25),
-                
-                // Quick Stats Row
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: _buildQuickStats(),
                 ),
                 
                 const SizedBox(height: 25),
@@ -393,32 +322,6 @@ class _CollectorHomePageState extends State<CollectorHomePage> with TickerProvid
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildQuickStats() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.local_shipping,
-            title: 'Today\'s Collections',
-            value: '156 kg',
-            color: Colors.green,
-            change: '+15%',
-          ),
-        ),
-        const SizedBox(width: 15),
-        Expanded(
-          child: _buildStatCard(
-            icon: Icons.account_balance_wallet,
-            title: 'This Month',
-            value: 'Rs 85,000',
-            color: Colors.blue,
-            change: '+22%',
-          ),
-        ),
-      ],
     );
   }
 

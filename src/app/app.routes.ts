@@ -130,6 +130,7 @@ import { RoutePerformanceAnalysisComponent } from './pages/PerformanceMonitoring
 
 
 
+
 // import type { Routes } from "@angular/router"
 import { SignInComponent } from "./components/user/sign-in/sign-in.component"
 // import { SignUpComponent } from "./components/user/sign-up/sign-up.component"
@@ -151,7 +152,6 @@ import { SetNewPasswordComponent } from "./components/user/set-new-password/set-
 import { UserProfileComponent } from "./components/user/user-profile/user-profile.component"
 import { PaymentHistoryComponent } from "./components/paymentManager/payment-history/payment-history.component"
 import { SupplierTotalPaymentsComponent } from "./components/paymentManager/supplier-total-payments/supplier-total-payments.component"
-<<<<<<< HEAD
 import { ChangePasswordComponent } from "./components/user/change-password/change-password.component" 
 import { ManualIdEntryComponent } from './pages/ledgerManagement/InvoiceCreate/mannualId-entry/m-id-entry.component';
 import { ManualDispatchEntryComponent } from './pages/ledgerManagement/Dispatch Entry/manual-dispatch-entry/menualdis.component';
@@ -166,10 +166,7 @@ import { RtCreateComponent } from './pages/RouteMaintain/r-create/r-create.compo
 import { RtEditComponent } from './pages/RouteMaintain/r-edit/r-edit.component';
 import { RtViewComponent } from './pages/RouteMaintain/r-view/r-view.component';
 import { TripScheduleComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-schedule/t-sched.component';
-=======
-import { ChangePasswordComponent } from "./components/user/change-password/change-password.component" // New
 import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
->>>>>>> main
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },

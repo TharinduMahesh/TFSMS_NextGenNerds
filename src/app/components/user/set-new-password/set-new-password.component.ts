@@ -1,27 +1,18 @@
-<<<<<<< HEAD
 // import { Component,  OnInit } from "@angular/core"
 // import { CommonModule } from "@angular/common"
 // import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 // import {  ActivatedRoute,  Router, RouterModule } from "@angular/router"
 // import  { AuthService } from "../../../shared/Services/auth.service"
 // import { ConfirmPasswordValidator } from "../../../shared/confirm-password.validator" // Assuming you have this validator
-=======
->>>>>>> main
 
 
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 import {  ActivatedRoute,  Router, RouterModule } from "@angular/router"
-<<<<<<< HEAD
-import  { AuthService } from "../../../shared/Services/auth.service"
-import { ConfirmPasswordValidator } from "../../../shared/confirm-password.validator" // Assuming you have this validator
-
-=======
 import  { AuthService } from "../../../shared/services/auth.service"
 import { ConfirmPasswordValidator } from "../../../shared/confirm-password.validator" 
 import { ToastService } from "../../../shared/services/toast.service"
->>>>>>> main
 @Component({
   selector: "app-set-new-password",
   standalone: true,

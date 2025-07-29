@@ -1,91 +1,185 @@
 /* General container styling for the Ledger Management Homepage */
 .ledger-management-container {
-  padding: 2.5rem 1.5rem; /* Adjusted padding for overall spacing */
-  max-width: 1300px; /* Adjusted max-width for a balanced look */
-  margin: 40px 40px auto 240px; /* Center the container with vertical margin */
-  background-color: #f8f8f8; /* Very light gray background for the main content area */
-  border-radius: 8px; /* Slightly less rounded corners for consistency */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Very subtle shadow for the main container */
+  padding: 2.5rem 1.5rem;
+  max-width: 1300px;
+  /* Dynamic margin based on sidebar width using CSS variables */
+  margin-left: calc(var(--sidebar-width) + 1rem);
+  margin-top: calc(var(--header-height) + 1rem);
+  margin-right: 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  color: #333; /* Default text color */
+  color: #333;
+  min-height: calc(100vh - var(--header-height) - 2rem);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Styling for each section (e.g., Tea Packing Ledger Update, Claims and Returns) */
 .ledger-section {
-  margin-bottom: 2.5rem; /* Consistent space between sections */
-  background-color: transparent; /* Make section background transparent to show container background */
-  border: none; /* Remove section borders */
-  border-radius: 0; /* Remove section border-radius */
-  padding: 0; /* Remove padding from section itself, content inside will have it */
-  box-shadow: none; /* Remove section shadows */
+  margin-bottom: 2.5rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 /* Styling for the <h3> section titles - LEFT ALIGNED, NO BORDER */
 .ledger-section h3 {
-  font-size: 1.2rem; /* Smaller font size for titles, matching image */
-  color: #333; /* Darker text color for titles */
-  margin-bottom: 1.5rem; /* Space below the title */
-  padding-bottom: 0; /* No padding below title */
-  border-bottom: none; /* No border below title */
-  font-weight: 500; /* Medium font weight */
-  text-align: left; /* LEFT ALIGNED */
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0;
+  border-bottom: none;
+  font-weight: 500;
+  text-align: left;
 }
 
 /* Container for the feature buttons - KEEPING ORIGINAL FLEX LAYOUT */
 .ledger-features {
-  display: flex; /* Original flex display */
-  flex-wrap: wrap; /* Allow items to wrap to next line */
-  gap: 1rem; /* Original gap between buttons */
-  justify-content: flex-start; /* Align buttons to the start (left) */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
 }
 
 /* Styling for individual feature buttons (ledger-card) */
 .ledger-card {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center text horizontally within the card */
+  align-items: center;
   justify-content: center;
-  text-align: center; /* Ensure text is centered */
-
-  padding: 30px; /* Increased padding to make them thicker */
-  font-size: 1.2rem; /* Slightly larger font size to match thicker box */
-  font-weight: 600; /* Bolder text for prominence */
+  text-align: center;
+  padding: 30px;
+  font-size: 1.2rem;
+  font-weight: 600;
   cursor: pointer;
-  min-width: 180px; /* Original min-width */
+  min-width: 180px;
   text-decoration: none;
-
-  /* UPDATED CARD AESTHETICS (matching the provided image's KPI cards) */
-  background-color: #d0eee0; /* Light blue background, similar to .total-returns */
-  border: 1px solid #cce5ff; /* A subtle, light blue border */
-  border-radius: 12px; /* Rounded corners matching summary-box */
-  
-  /* Adding a thicker, colored left border for visual pop, similar to your example */
-  border-left: 4px solid #21f36b; /* Thicker blue left border, matching .total-returns */
-  
-  color: #333; /* Darker text color for better contrast */
-  
-  transition: all 0.2s ease-in-out; /* Faster, subtle transition */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow matching summary-box */
+  background-color: #d0eee0;
+  border: 1px solid #cce5ff;
+  border-radius: 12px;
+  border-left: 4px solid #21f36b;
+  color: #333;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .ledger-card:hover {
-  background-color: #d6eaff; /* Slightly darker blue on hover */
-  border-color: #9fcdff; /* Darker border on hover */
-  border-left: 4px solid #1976d2; /* Darker left border on hover */
-  transform: translateY(-2px); /* Subtle lift effect */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
-  color: #1a5279; /* Darker text on hover */
+  background-color: #d6eaff;
+  border-color: #9fcdff;
+  border-left: 4px solid #1976d2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  color: #1a5279;
 }
 
-/* Responsive adjustments - KEEPING ORIGINAL BEHAVIOR */
-@media (max-width: 700px) {
+/* Responsive adjustments for different screen sizes */
+
+/* Large screens (1400px+) */
+@media (min-width: 1400px) {
+  .ledger-management-container {
+    margin-left: calc(300px + 1rem); /* Matches large sidebar width */
+  }
+}
+
+/* Desktop (1200px - 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .ledger-management-container {
+    margin-left: calc(260px + 1rem); /* Matches medium sidebar width */
+  }
+}
+
+/* Tablet and smaller desktop (901px - 1199px) */
+@media (max-width: 1199px) and (min-width: 901px) {
+  .ledger-management-container {
+    margin-left: calc(260px + 1rem); /* Matches tablet sidebar width */
+  }
+}
+
+/* Mobile and tablet (900px and below) - Sidebar is hidden */
+@media (max-width: 900px) {
+  .ledger-management-container {
+    margin-left: 1rem; /* No sidebar margin on mobile */
+    margin-right: 1rem;
+    margin-top: calc(var(--header-height) + 1rem);
+    width: calc(100% - 2rem);
+    padding: 2rem 1.25rem;
+  }
+  
   .ledger-features {
-    flex-direction: column; /* Stack buttons on small screens */
-    gap: 0.7rem; /* Original reduced gap */
+    flex-direction: column;
+    gap: 0.7rem;
   }
+  
   .ledger-card {
-    width: 100%; /* Make buttons full width on small screens */
-    min-width: unset; /* Remove min-width constraint on small screens */
-    border-left: 4px solid #2196f3; /* Ensure thick left border on small screens */
+    width: 100%;
+    min-width: unset;
+    border-left: 4px solid #2196f3;
+    padding: 25px;
+    font-size: 1.1rem;
   }
+}
+
+/* Small mobile (640px and below) */
+@media (max-width: 640px) {
+  .ledger-management-container {
+    padding: 1.5rem 1rem;
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+    width: calc(100% - 1.5rem);
+  }
+  
+  .ledger-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .ledger-card {
+    padding: 20px;
+    font-size: 1rem;
+  }
+}
+
+/* Very small mobile (480px and below) */
+@media (max-width: 480px) {
+  .ledger-management-container {
+    padding: 1.25rem 0.75rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    width: calc(100% - 1rem);
+  }
+  
+  .ledger-features {
+    gap: 0.5rem;
+  }
+  
+  .ledger-card {
+    padding: 18px;
+    font-size: 0.95rem;
+  }
+}
+
+/* When sidebar is toggled on mobile (if you have a toggle state) */
+.sidebar-open .ledger-management-container {
+  @media (max-width: 900px) {
+    margin-left: 1rem; /* Keep same margin even when sidebar is open on mobile */
+  }
+}
+
+/* Ensure proper transitions for smooth responsive behavior */
+.ledger-management-container,
+.ledger-features,
+.ledger-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Additional utility class for when you need to adjust based on sidebar state */
+.content-with-sidebar {
+  margin-left: calc(var(--sidebar-width) + 1rem);
+}
+
+.content-without-sidebar {
+  margin-left: 1rem;
 }

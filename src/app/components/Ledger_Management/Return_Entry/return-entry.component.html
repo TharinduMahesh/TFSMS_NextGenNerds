@@ -1,74 +1,90 @@
+<!-- src/app/components/Ledger_Management/Return_Entry/return-entry.component.html -->
 <app-header></app-header>
-<div class="return-entry-container">
-  <h1 class="page-title">Return Entry</h1>
+<app-sidebar></app-sidebar>
+<div class="claims-entry-container"> <!-- Reusing claims-entry-container for general styling -->
+  <h1 class="page-title">Returns Entry</h1>
 
   <div class="form-section">
-    <h2>Return Entry Form</h2>
-    <div class="form-fields-grid">
-      <div class="form-group">
-        <label for="returnDate">Return Date:</label>
-        <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" required>
+    <h2>Returns Entry Form</h2>
+    <form (ngSubmit)="addOrUpdateEntry()">
+      <div class="form-fields-grid">
+        <div class="form-group">
+          <label for="invoiceNumber">Invoice Number:</label>
+          <input type="text" id="invoiceNumber" [(ngModel)]="invoiceNumber" name="invoiceNumber" placeholder="e.g., INV-2024-001" required>
+        </div>
+        <div class="form-group">
+          <label for="kilosReturned">Kilos Returned:</label>
+          <input type="number" id="kilosReturned" [(ngModel)]="kilosReturned" name="kilosReturned" placeholder="e.g., 50.00" step="0.01" required min="0">
+        </div>
+        <!-- FIX: Reason dropdown -->
+        <div class="form-group">
+          <label for="reason">Reason for Return:</label>
+          <select id="reason" [(ngModel)]="reason" name="reason" required>
+            <option value="" disabled>Select Reason</option>
+            <option *ngFor="let r of returnReasons" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="returnDate">Return Date:</label>
+          <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" required>
+        </div>
+        <div class="form-group">
+          <label for="season">Season:</label>
+          <input type="text" id="season" [(ngModel)]="season" name="season" placeholder="e.g., Y1, Y2" required>
+        </div>
+        <div class="form-group">
+          <label for="gardenMark">Garden Mark:</label>
+          <input type="text" id="gardenMark" [(ngModel)]="gardenMark" name="gardenMark" placeholder="e.g., CE1, CE2" required>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="invoiceNumber">Original Invoice No.:</label>
-        <input type="text" id="invoiceNumber" [(ngModel)]="invoiceNumber" name="invoiceNumber" placeholder="Original Invoice Number" required>
+      <div class="form-actions">
+        <button class="action-button secondary-button" type="button" (click)="clearForm()">Clear Form</button>
+        <button class="action-button primary-button" type="submit">
+          {{ editingEntryId ? 'Update Return' : 'Add Return' }}
+        </button>
       </div>
-      <div class="form-group">
-        <label for="productCode">Product Code:</label>
-        <input type="text" id="productCode" [(ngModel)]="productCode" name="productCode" placeholder="Product Code" required>
-      </div>
-      <div class="form-group">
-        <label for="returnedQuantity">Returned Quantity (Kg):</label>
-        <input type="number" id="returnedQuantity" [(ngModel)]="returnedQuantity" name="returnedQuantity" placeholder="Quantity in Kg" required min="0">
-      </div>
-      <div class="form-group full-width"> <label for="reason">Reason for Return:</label>
-        <select id="reason" [(ngModel)]="reason" name="reason" required>
-          <option value="">Select Reason</option>
-          <option value="Damage">Damage</option>
-          <option value="Defect">Defect</option>
-          <option value="Wrong Item">Wrong Item</option>
-          <option value="Excess Delivery">Excess Delivery</option>
-          <option value="Customer Dissatisfaction">Customer Dissatisfaction</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      </div>
-    <div class="form-actions">
-      <button class="action-button secondary-button" (click)="clearForm()">Clear Form</button>
-      <button class="action-button primary-button" (click)="addReturn()">Add Return</button>
-    </div>
+    </form>
   </div>
 
   <div class="records-section">
-    <h2>Recent Return Entries</h2>
+    <h2>Return Records</h2>
     <div class="table-responsive">
-      <table class="return-entry-table">
+      <table class="claims-table"> <!-- Reusing claims-table for general styling -->
         <thead>
           <tr>
-            <th>Return No.</th>
-            <th>Return Date</th>
+            <th>ID</th>
             <th>Invoice No.</th>
-            <th>Product Code</th>
-            <th>Quantity (Kg)</th>
+            <th>Kilos Returned</th>
             <th>Reason</th>
-            </tr>
+            <th>Return Date</th>
+            <th>Season</th>
+            <th>Garden Mark</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let record of recentReturns">
-            <td>{{ record.id }}</td>
-            <td>{{ record.returnDate | date:'yyyy-MM-dd' }}</td>
-            <td>{{ record.invoiceNumber }}</td>
-            <td>{{ record.productCode }}</td>
-            <td>{{ record.returnedQuantity }}</td>
-            <td>{{ record.reason }}</td>
-            </tr>
-          <tr *ngIf="recentReturns.length === 0">
-            <td colspan="6" class="no-data">No recent return entries.</td> </tr>
+          <tr *ngFor="let entry of returnRecords">
+            <td>{{ entry.id }}</td>
+            <td>{{ entry.invoiceNumber }}</td>
+            <td>{{ entry.kilosReturned | number:'1.2-2' }}</td>
+            <td>{{ entry.reason }}</td>
+            <td>{{ formatDate(entry.returnDate) }}</td>
+            <td>{{ entry.season }}</td>
+            <td>{{ entry.gardenMark }}</td>
+            <td class="actions-cell">
+              <button class="action-btn edit-btn" (click)="editEntry(entry)">Edit</button>
+              <button class="action-btn delete-btn" (click)="confirmDelete(entry.id)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="returnRecords.length === 0">
+            <td colspan="8" class="no-data">No return records found.</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
+
   <div class="exit-button-container">
-    <button class="exit-button" (click)="exitPage()">Exit</button>
+    <button class="exit-button" (click)="exitPage()">Exit</button> <!-- FIX: Exit button styling -->
   </div>
 </div>

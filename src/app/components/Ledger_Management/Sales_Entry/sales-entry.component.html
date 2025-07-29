@@ -1,5 +1,5 @@
 <!-- src/app/components/Ledger_Management/Sales_Entry/sales-entry/sales-entry.component.html -->
-<app-header></app-header>
+
 <div class="claims-entry-container"> <!-- Reusing claims-entry-container class for general styling -->
   <h1 class="page-title">Sales Entry</h1>
 
@@ -40,10 +40,11 @@
           <input type="number" id="totalAmount" [(ngModel)]="totalAmount" name="totalAmount" placeholder="Calculated automatically" readonly>
         </div>
       </div>
-      <div class="form-group full-width">
+      <!-- DEFINITIVE FIX: Removed Remarks textarea -->
+      <!-- <div class="form-group full-width">
         <label for="remarks">Remarks (Optional):</label>
         <textarea id="remarks" [(ngModel)]="remarks" name="remarks" rows="3" placeholder="Any additional remarks about the sale."></textarea>
-      </div>
+      </div> -->
       <div class="form-actions">
         <button class="action-button secondary-button" type="button" (click)="clearForm()">Clear Form</button>
         <button class="action-button primary-button" type="submit">
@@ -67,7 +68,8 @@
             <th>Quantity (Kg)</th>
             <th>Unit Price (Rs./Kg)</th>
             <th>Total Amount (Rs.)</th>
-            <th>Remarks</th>
+            <!-- DEFINITIVE FIX: Removed Remarks column header -->
+            <!-- <th>Remarks</th> -->
             <th>Actions</th>
           </tr>
         </thead>
@@ -81,14 +83,15 @@
             <td>{{ entry.quantityKg | number:'1.2-2' }}</td>
             <td>{{ entry.unitPriceKg | number:'1.2-2' }}</td>
             <td>{{ entry.totalAmount | number:'1.2-2' }}</td>
-            <td>{{ entry.remarks || 'N/A' }}</td>
+            <!-- DEFINITIVE FIX: Removed Remarks data cell -->
+            <!-- <td>{{ entry.remarks || 'N/A' }}</td> -->
             <td class="actions-cell">
               <button class="action-btn edit-btn" (click)="editEntry(entry)">Edit</button>
               <button class="action-btn delete-btn" (click)="confirmDelete(entry.id)">Delete</button>
             </td>
           </tr>
           <tr *ngIf="salesRecords.length === 0">
-            <td colspan="10" class="no-data">No sales records found.</td>
+            <td colspan="9" class="no-data">No sales records found.</td> <!-- FIX: Adjusted colspan -->
           </tr>
         </tbody>
       </table>
@@ -96,6 +99,6 @@
   </div>
 
   <div class="exit-button-container">
-    <button class="exit-button" (click)="exitPage()">Exit</button> <!-- FIX: Exit button styling -->
+    <button class="exit-button" (click)="exitPage()">Exit</button>
   </div>
 </div>

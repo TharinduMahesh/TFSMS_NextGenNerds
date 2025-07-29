@@ -1,0 +1,106 @@
+<!-- src/app/components/Ledger_Management/Invoice_Register/invoice-register.component.html -->
+
+<div class="claims-entry-container"> <!-- Reusing general container class for consistent styling -->
+  <h1 class="page-title">Invoice Register</h1>
+
+  <div class="form-section">
+    <h2>Review Invoices</h2>
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="invoiceNumberFilter">Invoice Number:</label>
+        <input type="text" id="invoiceNumberFilter" [(ngModel)]="invoiceNumberFilter" (keyup.enter)="loadInvoiceRecords()" name="invoiceNumberFilter" placeholder="Search by Invoice #">
+      </div>
+      <div class="form-group">
+        <label for="brokerNameFilter">Broker Name:</label>
+        <input type="text" id="brokerNameFilter" [(ngModel)]="brokerNameFilter" (keyup.enter)="applyFilters()" name="brokerNameFilter" placeholder="Search by Broker">
+      </div>
+      <div class="form-group">
+        <label for="statusFilter">Status:</label>
+        <select id="statusFilter" [(ngModel)]="statusFilter" (change)="loadInvoiceRecords()" name="statusFilter">
+          <option value="">All Statuses</option>
+          <option *ngFor="let status of invoiceStatuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="startDateFilter">Start Date:</label>
+        <input type="date" id="startDateFilter" [(ngModel)]="startDateFilter" (change)="loadInvoiceRecords()" name="startDateFilter">
+      </div>
+      <div class="form-group">
+        <label for="endDateFilter">End Date:</label>
+        <input type="date" id="endDateFilter" [(ngModel)]="endDateFilter" (change)="loadInvoiceRecords()" name="endDateFilter">
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="records-section">
+    <h2>Invoice Entries</h2>
+    <div class="table-responsive">
+      <table class="claims-table"> <!-- Reusing general table styling -->
+        <thead>
+          <tr>
+            <th>Invoice ID</th>
+            <th>Invoice Number</th>
+            <th>Date</th>
+            <th>Broker Name</th>
+            <th>Tea Details</th>
+            <th>Weight (Kg)</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredInvoiceRecords">
+            <td>{{ record.invoiceId }}</td>
+            <td>{{ record.invoiceNumber }}</td>
+            <td>{{ formatDate(record.invoiceDate) }}</td>
+            <td>{{ record.brokerName }}</td>
+            <td>
+              <!-- FIX: Use *ngIf with local variable 'stockEntry' and 'packedTea' for clarity -->
+              <ng-container *ngIf="record.stockLedgerEntry as stockEntry; else noTeaDetailsCell">
+                <ng-container *ngIf="stockEntry.packedTea as packedTea">
+                  {{ packedTea.gardenMark }} - {{ packedTea.grade }}
+                </ng-container>
+              </ng-container>
+            </td>
+            <td>
+              <!-- FIX: Use *ngIf with local variable 'stockEntry' -->
+              <ng-container *ngIf="record.stockLedgerEntry as stockEntry; else noWeightCell">
+                {{ stockEntry.currentWeightKg | number:'1.2-2' }}
+              </ng-container>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'status-pending': record.status === 'Pending',
+                'status-invoiced': record.status === 'Invoiced',
+                'status-dispatched': record.status === 'Dispatched',
+                'status-paid': record.status === 'Paid'
+              }">
+                {{ record.status }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button *ngIf="record.status === 'Pending'" class="action-btn primary-button" (click)="navigateToDispatchCreation(record.invoiceId)">Record Dispatch</button>
+              <button *ngIf="record.status === 'Dispatched'" class="action-btn secondary-button" (click)="navigateToFinalizeSale(record.invoiceId)">Finalize Sale</button>
+              <button *ngIf="record.status === 'Paid'" class="action-btn edit-btn" (click)="viewInvoiceDetails(record.invoiceId)">View</button>
+              <button *ngIf="record.status === 'Invoiced'" class="action-btn secondary-button" disabled>Invoiced</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredInvoiceRecords.length === 0">
+            <td colspan="8" class="no-data">No invoice records found for the selected filters.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>
+
+<!-- FIX: Define ng-templates OUTSIDE the <td>, at the same level as the *ngFor loop or higher -->
+<ng-template #noTeaDetailsCell>N/A</ng-template>
+<ng-template #noWeightCell>N/A</ng-template>

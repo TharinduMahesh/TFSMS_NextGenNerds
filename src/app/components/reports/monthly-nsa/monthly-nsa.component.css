@@ -1,8 +1,9 @@
 /* General container for the entire report page */
 .nsa-report-container {
   padding: 40px;
-  max-width: 1300px; /* Wider for reports */
-  margin: 40px 40px auto 240px;
+  max-width: 1500px; /* Wider for reports */
+  margin: 40px auto;
+  margin-left: 300px; /* Fixed margin-left to prevent sidebar overlap */
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1); /* Prominent shadow for a report feel */
@@ -72,6 +73,7 @@
   font-size: 1rem;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
   transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; /* Ensure proper sizing */
 }
 
 .form-group select:focus,
@@ -195,7 +197,6 @@
 /* Charts Section */
 .charts-grid {
   display: grid;
-  /* FIX: Adjusted minmax to ensure 2 charts per row on wider screens */
   grid-template-columns: repeat(auto-fit, minmax(550px, 1fr)); /* Force 2 columns */
   gap: 25px;
   margin-top: 20px;
@@ -328,7 +329,23 @@
 }
 
 /* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .nsa-report-container {
+    margin-left: 90px; /* Collapsed sidebar */
+  }
+  
+  .charts-grid {
+    grid-template-columns: 1fr; /* Stack charts on medium screens */
+  }
+}
+
 @media (max-width: 992px) {
+  .nsa-report-container {
+    padding: 20px;
+    margin: 20px auto;
+    margin-left: 20px; /* Reset margin on smaller screens */
+  }
+  
   .report-title {
     font-size: 2.2rem;
   }
@@ -341,9 +358,10 @@
 }
 
 @media (max-width: 768px) {
-  .report-container {
+  .nsa-report-container {
     padding: 20px;
     margin: 20px auto;
+    margin-left: 15px; /* Mobile margin */
   }
   .report-title {
     font-size: 1.8rem;
@@ -380,5 +398,9 @@
   }
   .exit-button-container {
     justify-content: center; /* Center exit button on small screens */
+  }
+  .exit-button {
+    width: 100%; /* Full width on mobile */
+    padding: 12px 15px;
   }
 }

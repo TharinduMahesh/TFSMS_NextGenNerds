@@ -1,12 +1,13 @@
 /* General container styling, consistent with claims-analysis */
 .claim-analysis-container {
   padding: 30px;
-  max-width: 1300px; /* Wider for dashboard layout */
-  margin: 40px 40px auto 300px;
+  max-width: 1500px; /* Wider for dashboard layout */
+  margin: 40px auto;
+  margin-left: 300px; /* Add left margin to account for sidebar width */
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .page-title {
@@ -123,7 +124,6 @@
   transform: translateY(-1px);
 }
 
-
 .kpi-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -199,7 +199,6 @@
   position: relative;
 }
 
-
 /* Detailed Records Section */
 .records-section {
   background-color: #fdfdfd;
@@ -257,6 +256,7 @@
   padding: 20px;
 }
 
+/* Exit button styling */
 .exit-button-container {
   display: flex;
   justify-content: flex-end;
@@ -283,10 +283,17 @@
 }
 
 /* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .claim-analysis-container {
+    margin-left: 90px; /* Collapsed sidebar */
+  }
+}
+
 @media (max-width: 992px) {
-  .claims-analysis-container {
+  .claim-analysis-container {
     padding: 15px;
     margin: 15px auto;
+    margin-left: 15px; /* Reset margin on mobile */
   }
   .page-title {
     font-size: 1.8rem;
@@ -319,12 +326,17 @@
   .exit-button-container {
     justify-content: center; /* Center exit button on small screens */
   }
+  .exit-button {
+    width: 100%; /* Full width on mobile */
+    padding: 12px 15px;
+  }
 }
 
 @media (max-width: 768px) {
-  .claims-analysis-container {
+  .claim-analysis-container {
     padding: 15px;
     margin: 15px auto;
+    margin-left: 15px; /* Reset margin on mobile */
   }
   .page-title {
     font-size: 1.8rem;
@@ -352,5 +364,8 @@
   }
   .action-btn {
     width: 100%;
+  }
+  .charts-grid {
+    grid-template-columns: 1fr; /* Single column on mobile */
   }
 }

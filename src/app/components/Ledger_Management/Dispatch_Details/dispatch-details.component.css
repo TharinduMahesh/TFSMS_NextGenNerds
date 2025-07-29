@@ -1,0 +1,204 @@
+/* General container styling for the Dispatch Details Page */
+.claims-entry-container { /* Reusing claims-entry-container for general styling */
+  padding: 30px;
+  max-width: 1000px; /* Adjust max-width for this page's content */
+  margin: 30px auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.page-title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 40px;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.form-section {
+  background-color: #fdfdfd;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-section h2 {
+  color: #34495e;
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.form-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 20px;
+  padding: 0 10px; /* Add horizontal padding to the grid */
+}
+
+.form-group {
+  margin-bottom: 0; /* Managed by grid gap */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1; /* Spans all columns in the grid */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  margin-left: 0;
+  color: #555;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  min-height: 44px;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* Specific styling for display-only groups (like Invoice #, Weight etc.) */
+.form-group.display-group {
+  background-color: #e3f2fd; /* Light blue background */
+  border: 1px solid #bbdefb;
+  border-radius: 8px;
+  padding: 15px;
+  justify-content: center;
+}
+.form-group.display-group label {
+  color: #2196f3; /* Blue text for label */
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+.form-group.display-group p {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1976d2; /* Darker blue text for value */
+  margin: 0;
+}
+
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding: 0 10px;
+}
+
+.action-button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.primary-button { /* For "Record Dispatch" */
+  background-color: #ff9800; /* Orange */
+  color: white;
+}
+.primary-button:hover {
+  background-color: #fb8c00;
+}
+
+.secondary-button { /* For "Back to Invoices" */
+  background-color: #6c757d; /* Gray */
+  color: white;
+}
+.secondary-button:hover {
+  background-color: #5a6268;
+}
+
+/* Exit Button Container (consistent with other pages) */
+.exit-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.exit-button {
+  background-color: #f44336; /* Red for Exit */
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.exit-button:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .claims-entry-container {
+    padding: 15px;
+    margin: 15px auto;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+
+  .form-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .form-fields-grid {
+    grid-template-columns: 1fr; /* Stack columns on small screens */
+    gap: 15px;
+  }
+
+  .form-actions {
+    flex-direction: column; /* Stack buttons on small screens */
+    gap: 10px;
+  }
+
+  .action-button, .secondary-button, .primary-button, .exit-button {
+    width: 100%; /* Full width buttons */
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+}

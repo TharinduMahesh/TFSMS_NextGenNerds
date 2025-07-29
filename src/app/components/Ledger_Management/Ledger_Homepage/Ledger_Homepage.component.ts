@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../../header/header.component";
+import { SidebarComponent } from '../../sidebar/sidebar/sidebar.component';
 
 interface LedgerSection {
   title: string;
@@ -13,38 +14,23 @@ interface LedgerSection {
   templateUrl: './Ledger_Homepage.component.html',
   styleUrls: ['./Ledger_Homepage.component.css'],
   standalone: true,
-  imports: [RouterModule, CommonModule,HeaderComponent]
+  imports: [RouterModule, CommonModule, HeaderComponent, SidebarComponent]
 })
 export class LedgerManagementComponent {
   sections: LedgerSection[] = [
     {
-      title: 'Tea Packing and Ledger Update',
+      title: 'Tea Packing and Stock Management',
       features: [
-        { label: 'TEA PACKING', route: 'tea-packing' },
+        { label: 'TEA PACKING ENTRY', route: 'tea-packing-entry' }, // FIX: Changed route to 'tea-packing-entry'
         { label: 'STOCK LEDGER', route: 'stock-ledger' }
       ]
     },
     {
       title: 'Invoice Generation and Dispatch',
       features: [
-        { label: 'INVOICE CREATION', route: 'invoice-creation' },
+        { label: 'INVOICE REGISTER', route: 'invoice-register' },
         { label: 'DISPATCH DETAILS ENTRY', route: 'dispatch-details' },
-        { label: 'DISPATCH REGISTER', route: 'dispatch-register' }
-      ]
-    },
-    {
-      title: 'Claims and Returns',
-      features: [
-        { label: 'CLAIMS ENTRY', route: 'claims-entry' },
-        { label: 'CLAIM APPROVAL', route: 'claim-approval' },
-        { label: 'CLAIM REGISTER', route: 'claim-register' }
-      ]
-    },
-    {
-      title: 'Denatured Tea Handling',
-      features: [
-        { label: 'DENATURED TEA ENTRY', route: 'denatured-tea-entry' },
-        { label: 'DENATURED TEA REPORT', route: 'denatured-tea-report' }
+        { label: 'FINALIZE SALE', route: 'finalize-sale' }
       ]
     },
     {
@@ -56,19 +42,19 @@ export class LedgerManagementComponent {
       ]
     },
     {
-      title: 'Monthly NSA',
+      title: 'Claims and Returns Handling',
       features: [
-        { label: 'NSA ENTRY', route: 'nsa-entry' },
-        { label: 'NSA TRENDS', route: 'nsa-analysis' }
+        { label: 'CLAIMS ENTRY', route: 'claims-entry' },
+        { label: 'CLAIM ADJUSTMENT', route: 'claim-adjustment' },
+        { label: 'RETURN ENTRY', route: 'return-entry' }
       ]
     },
     {
-      title: 'Tea Returns and Claims Handling',
+      title: 'Reporting & Analysis',
       features: [
-        { label: 'RETURN ENTRY', route: 'return-entry' },
-        { label: 'RETURN ANALYSIS', route: 'returns-analysis' },
-        { label: 'CLAIM ADJUSTMENT', route: 'claim-adjustment' },
-        { label: 'CLAIM ANALYSIS', route: 'claim-analysis' }
+        { label: 'NSA ANALYSIS', route: 'nsa-analysis' },
+        { label: 'CLAIMS ANALYSIS', route: 'claim-analysis' },
+        { label: 'RETURNS ANALYSIS', route: 'returns-analysis' }
       ]
     }
   ];

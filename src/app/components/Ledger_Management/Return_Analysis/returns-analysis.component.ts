@@ -3,6 +3,7 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from "../../header/header.component";
+import { SidebarComponent } from '../../sidebar/sidebar/sidebar.component';
 
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
@@ -21,7 +22,7 @@ interface SummaryKpi {
 @Component({
   selector: 'app-returns-analysis',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent],
+  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent, SidebarComponent],
   templateUrl: './returns-analysis.component.html',
   styleUrls: ['./returns-analysis.component.css']
 })

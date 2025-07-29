@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from "../../header/header.component";
+import { SidebarComponent } from '../../sidebar/sidebar/sidebar.component';
 
 import { GratisIssueService } from '../../../Services/gratis-issue.service';
 import { GratisIssue } from '../../../models/gratis-issue.interface';
@@ -12,7 +13,7 @@ import { GratisIssue } from '../../../models/gratis-issue.interface';
 @Component({
   selector: 'app-gratis-issue-entry',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent, SidebarComponent],
   templateUrl: './gratis-issue-entry.component.html',
   styleUrls: ['./gratis-issue-entry.component.css']
 })

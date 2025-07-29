@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../../../header/header.component"; // Assuming this path is correct
+import { SidebarComponent } from '../../../sidebar/sidebar/sidebar.component'; // Assuming this path is correct
 
 @Component({
   selector: 'app-financial-reports-navigation',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, SidebarComponent],
   templateUrl: './financial-reports-navigation.component.html',
   styleUrls: ['./financial-reports-navigation.component.css']
 })
@@ -26,9 +27,9 @@ export class FinancialReportsNavigationComponent {
         break;
       case 'sales-charges-report': // NEW CASE: For Sales Charges Report
         this.router.navigate(['report/sales-charges']); // FIX: Correct path for Sales Charges Report
-        break;
+        break;  
       case 'gratis-issue-report': // FIX: Added case for Gratis Issue Report
-        this.router.navigate(['report/gratis-issues']); // Correct path from app-routing.module.ts
+        this.router.navigate(['report/gratis-issue-report']); // Correct path from app-routing.module.ts
         break;
       // case 'profit-loss':
       //   // This path might need to be adjusted based on your actual Profit & Loss component route

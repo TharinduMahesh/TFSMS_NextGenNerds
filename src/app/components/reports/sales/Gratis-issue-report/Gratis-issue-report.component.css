@@ -2,11 +2,12 @@
 .sales-report-container { /* Reusing sales-report-container for general styling */
   padding: 40px;
   max-width: 1500px; /* Wider for reports */
-  margin: 40px 40px auto 240px;
+  margin: 40px auto; /* Center horizontally, with top/bottom margin */
+  margin-left: 320px; /* Add left margin to account for sidebar width */
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1); /* Prominent shadow for a report feel */
-  font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: #333;
 }
 
@@ -127,7 +128,6 @@
   transform: translateY(-1px);
 }
 
-
 /* KPI Cards - Consistent with other report pages */
 .kpi-cards-grid {
   display: grid;
@@ -176,7 +176,6 @@
   background-color: #fff3e0; /* Light orange */
   border-left-color: #ff9800; /* Orange */
 }
-
 
 /* Charts Section - Consistent with other report pages */
 .charts-section {
@@ -301,10 +300,21 @@
 }
 
 /* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .sales-report-container {
+    margin-left: 110px; /* Collapsed sidebar */
+  }
+  
+  .charts-grid {
+    grid-template-columns: 1fr; /* Stack charts on medium screens */
+  }
+}
+
 @media (max-width: 992px) {
   .sales-report-container { /* Adjusted from .report-container */
     padding: 20px;
     margin: 20px auto;
+    margin-left: 20px; /* Reset margin on smaller screens */
   }
   .report-title {
     font-size: 2.2rem;
@@ -323,6 +333,7 @@
   .sales-report-container {
     padding: 15px;
     margin: 15px auto;
+    margin-left: 15px; /* Mobile margin */
   }
   .report-title {
     font-size: 1.8rem;
@@ -359,5 +370,9 @@
   }
   .exit-button-container {
     justify-content: center;
+  }
+  .exit-button {
+    width: 100%; /* Full width on mobile */
+    padding: 12px 15px;
   }
 }

@@ -71,10 +71,10 @@
               <div class="info-display">Loading collectors...</div>
             } @else {
               <select id="create-collectorId" formControlName="collectorId">
-                <option [ngValue]="null" disabled>-- Select a Collector --</option>
+                <option [ngValue]="null" disabled>Select a Collector</option>
                 @for(collector of availableCollectors(); track collector.collectorId) {
                   <option [value]="collector.collectorId">
-                    {{ collector.name }} ({{ collector.vehicleLicensePlate || 'No Vehicle' }})
+                    {{ collector.name }} ({{ collector.vehicleVolume  || 'No Vehicle' }})m³
                   </option>
                 }
               </select>

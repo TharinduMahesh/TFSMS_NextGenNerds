@@ -1,161 +1,256 @@
-// Base page layout and typography
-.page-container {
- max-width: 1600px;
-  margin: 2rem auto;
-  padding: 0rem 1rem;
-  background-color: #f8f9fa; // A very light grey background for the whole page
+/* --- CSS Variables and Base Styles --- */
+:host {
+  --c-primary: #007bff;
+  --c-primary-dark: #005eb8;
+  --c-green: #28a745;
+  --c-red: #dc3545;
+  --c-bg-page: #f8f9fa;
+  --c-bg-card: #ffffff;
+  --c-border: #e9ecef;
+  --c-text-header: #212529;
+  --c-text-body: #495057;
+  --c-text-label: #6c757d;
+  --shadow-sm: 0 4px 6px rgba(0,0,0,0.04);
+  --shadow-md: 0 6px 15px rgba(0,0,0,0.07);
 }
 
-// --- NEW, INTEGRATED CONTROLS HEADER ---
-.page-controls {
+.page-container {
+  max-width: 1800px;
+  margin: 1rem auto;
+  padding: 0 1.5rem;
+}
+
+/* --- Page Header & Controls --- */
+.page-header {
+  background: var(--c-bg-card);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; // Allows stacking on small screens
+  flex-wrap: wrap;
   gap: 1.5rem;
-  background-color: #ffffff;
-  padding: 1.25rem 2rem;
-  border-radius: 14px;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.08);
-  margin-bottom: 2rem;
 }
-
+.header-content h1 {
+  font-size: 1.75rem;
+  color: var(--c-text-header);
+  margin: 0 0 0.25rem 0;
+}
+.header-content p {
+  color: var(--c-text-label);
+  margin: 0;
+}
 .controls-form {
   display: flex;
   align-items: flex-end;
   gap: 1rem;
-  flex-wrap: wrap;
 }
-
 .form-group {
   display: flex;
   flex-direction: column;
-  label { font-weight: 600; margin-bottom: 0.5rem; color: #495057; font-size: 13px; }
-  input[type="date"] {
-    padding: 0.6rem 0.8rem; border: 1px solid #ced4da;
-    border-radius: 8px; font-size: 15px;
-  }
+}
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--c-text-body);
+  font-size: 14px;
+}
+.form-group input[type="date"] {
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: var(--c-bg-page);
+  transition: all 0.2s ease;
+}
+.form-group input[type="date"]:focus {
+  border-color: var(--c-primary);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+.btn-primary {
+  padding: 0.7rem 1.5rem;
+  background-color: var(--c-primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--c-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+.btn-primary:disabled {
+  background-color: #a0cffb;
+  cursor: not-allowed;
 }
 
-.form-actions .btn-primary {
-  padding: 0.65rem 1.5rem;
-  background-color: #0d6efd;
-  color: white; border: none; border-radius: 8px;
-  font-weight: 600; font-size: 15px; cursor: pointer;
-  transition: all 0.2s ease; display: flex; align-items: center;
-  &:hover:not(:disabled) {
-    background-color: #0056b3; transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-  }
-  &:disabled { background-color: #a0cffb; cursor: not-allowed; opacity: 0.7; }
-}
-.loader {
-  width: 16px; height: 16px; border: 2px solid #FFF; border-bottom-color: transparent;
-  border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; margin-right: 8px;
-}
-@keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-
-// KPI Summary Cards
-.summary-cards {
+/* --- KPI Summary Grid --- */
+.summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
-
-.card {
-  background: #ffffff;
+.kpi-card {
+  background: var(--c-bg-card);
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  border-left: 5px solid #007bff; // Default blue border
-
-  .card-title {
-    font-size: 1rem;
-    color: #6c757d;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  
-  .card-value {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #343a40;
-    &.small-text { font-size: 1.5rem; font-weight: 600; }
-  }
-
-  &.highlight-green { border-color: #28a745; }
-  &.highlight-red { border-color: #dc3545; }
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--c-border);
 }
+.kpi-card .card-label {
+  color: var(--c-text-label);
+  font-weight: 500;
+  font-size: 1rem;
+}
+.kpi-card .card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--c-text-header);
+  margin-top: 0.5rem;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kpi-card .card-value.highlight-green { color: var(--c-green); }
+.kpi-card .card-value.highlight-red { color: var(--c-red); }
 
-// Two-column layout for chart and insights
-// This is the current two-column layout
+/* --- Main Content Grid (Chart & Insights) --- */
 .main-content-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1.5rem;
   align-items: flex-start;
-  
-  // RESPONSIVE FIX: On screens smaller than 1200px, stack the columns
-  @media (max-width: 1200px) {
+}
+.content-card {
+  background: var(--c-bg-card);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--c-border);
+  display: flex;
+  flex-direction: column;
+}
+.content-card .card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--c-border);
+}
+.content-card .card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.content-card .card-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+.chart-card {
+  height: 500px;
+}
+.chart-card ngx-charts-bar-vertical {
+  height: 100% !important;
+  width: 100% !important;
+  display: block;
+  fill: var(--c-text-body); /* For axis labels */
+}
+
+/* --- Insights Panel --- */
+.insights-card .insight-item:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+.insight-title {
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  border-bottom: 2px solid;
+}
+.insight-title.efficient {
+  color: var(--c-green);
+  border-color: var(--c-green);
+}
+.insight-title.needs-review {
+  color: var(--c-red);
+  border-color: var(--c-red);
+}
+.insight-item p {
+  margin: 0;
+  color: var(--c-text-body);
+  line-height: 1.6;
+}
+.insight-item p strong {
+  color: var(--c-text-header);
+}
+
+/* --- Loading, Empty, and Error States --- */
+.loading-indicator, .error-message, .empty-state {
+  padding: 4rem 2rem;
+  text-align: center;
+  background-color: var(--c-bg-card);
+  border-radius: 16px;
+  border: 1px dashed #dcdfe2;
+}
+.loading-indicator p, .error-message p, .empty-state p {
+  font-size: 1.1rem;
+  color: var(--c-text-label);
+  margin: 0;
+}
+.empty-state h3, .error-message h3 {
+  color: var(--c-text-header);
+  margin: 0 0 0.5rem 0;
+}
+.error-message h3 {
+  color: var(--c-red);
+}
+
+/* --- Spinners & Loaders --- */
+.loader {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.spinner-large {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--c-border);
+  border-top-color: var(--c-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1200px) {
+  .main-content-grid {
     grid-template-columns: 1fr;
   }
 }
-// Chart container styling
-.chart-container {
-  padding: 2rem 1.5rem;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.07);
-  height: 450px; // The container must have a defined height
-  display: flex;        // Make the container a flexbox
-  flex-direction: column; // Arrange items vertically (for title + chart)
-  
-  // Target the chart component itself
-  ngx-charts-bar-vertical {
-    flex-grow: 1; // This is the magic: tells the chart to fill all available space
-    width: 100%;  // Ensure it takes the full width of the flex container
-    display: block;
-    fill: #495057; // This sets the color for the axis labels
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .controls-form {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  .btn-primary {
+    justify-content: center;
   }
 }
-
-// Insights panel styling
-.insights-panel {
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
-  
-  h3 {
-    margin-top: 0; font-size: 1.25rem;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 0.75rem; margin-bottom: 1.25rem;
-  }
-
-  .insight-item {
-    margin-bottom: 1.5rem;
-    .insight-label {
-      font-size: 0.75rem; font-weight: 700; padding: 4px 10px;
-      border-radius: 12px; color: #fff; text-transform: uppercase;
-      &.highlight-efficient { background-color: #28a745; }
-      &.highlight-cost { background-color: #dc3545; }
-    }
-    
-    p {
-      margin-top: 0.75rem; font-size: 0.95rem; line-height: 1.6;
-      color: #495057; strong { color: #000; }
-    }
-  }
-}
-
-// Standard loading, error, and empty states
-.loading-indicator,
-.error-message,
-.empty-state {
-  padding: 3rem; text-align: center; font-size: 1.1rem;
-  font-weight: 500; color: #6c757d;
-  background-color: #fff; border-radius: 8px; border: 1px dashed #dcdfe2;
-}
-.error-message { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }

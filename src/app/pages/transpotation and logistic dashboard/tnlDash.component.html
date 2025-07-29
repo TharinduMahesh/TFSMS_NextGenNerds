@@ -1,3 +1,6 @@
+
+
+
 <div class="page-container">
   <app-tnlnavbar></app-tnlnavbar>
 
@@ -41,7 +44,7 @@
           </div>
            <!-- Card with Blue Theme -->
           <div class="summary-card theme-blue">
-            <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17l4-4 4 4l-4 4-4-4Zm14-4l-4-4-4 4 4 4 4-4Z"/></svg></div>
+            <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17l4-4 4 4-4 4-4-4Zm14-4l-4-4-4 4 4 4 4-4Z"/></svg></div>
             <div class="card-content">
               <span class="summary-value">{{ summary.totalRoutes }}</span>
               <span class="summary-label">Configured Routes</span>
@@ -94,11 +97,16 @@
                     <span>{{ trip.scheduledDeparture | date:'MMM d, h:mm a' }}</span>
                   </div>
                   <div class="item-status">
-                    <span class="status-badge">
+                    <!-- MODIFICATION START: Added dynamic class bindings -->
+                    <span class="status-badge"
+                          [class.completed]="trip.actualArrival"
+                          [class.in-progress]="trip.actualDeparture && !trip.actualArrival"
+                          [class.pending]="!trip.actualDeparture">
                       @if(trip.actualArrival) { Completed }
                       @else if (trip.actualDeparture) { In Progress }
                       @else { Pending }
                     </span>
+                    <!-- MODIFICATION END -->
                   </div>
                 </div>
               }

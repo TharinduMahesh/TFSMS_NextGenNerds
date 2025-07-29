@@ -177,7 +177,6 @@
   background-color: var(--c-bg-card);
   h3 { font-size: 1.5rem; color: var(--c-text-dark); margin: 0 0 0.5rem; }
   p { color: var(--c-text-light); margin: 0 0 1.5rem; }
-  .add-btn { /* Style from header */ }
 }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 

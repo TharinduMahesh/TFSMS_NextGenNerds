@@ -1,7 +1,10 @@
+
+
 :host {
-  // Define our color palette as CSS variables
+  /* Define our color palette as CSS variables */
   --c-blue-bg: #e3f2fd;
-  --c-blue-fg: #4caf50;
+  /* MODIFICATION: Corrected blue color from green to an actual blue */
+  --c-blue-fg: #1976D2;
   --c-green-bg: #e8f5e9;
   --c-green-fg: #4caf50;
   --c-orange-bg: #fff3e0;
@@ -52,18 +55,13 @@
   gap: 1.5rem;
 }
 
-/*
-=========================================
-=== SUMMARY CARD TEXT ALIGNMENT FIX ===
-=========================================
-*/
 .summary-card {
   background: var(--c-bg-card);
   padding: 1.25rem;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.05);
   display: flex;
-  align-items: center; /* MODIFIED: Was 'center', now 'center' to align icon with text block */
+  align-items: center;
   gap: 1.25rem;
   border: 1px solid var(--c-border);
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
@@ -85,7 +83,6 @@
   }
   
   .card-content {
-    /* ADDED: Flexbox to control internal alignment */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -95,25 +92,19 @@
     font-size: 2rem;
     font-weight: 700;
     color: var(--c-text-dark);
-    line-height: 1; /* ADDED: Tighter line height for the number */
+    line-height: 1;
   }
 
   .summary-label {
     font-size: 0.9rem;
     color: var(--c-text-light);
-    margin-top: 0.25rem; /* ADDED: Consistent spacing */
+    margin-top: 0.25rem;
   }
 
   &.theme-blue .card-icon { background-color: var(--c-blue-bg); svg { color: var(--c-blue-fg); } }
   &.theme-green .card-icon { background-color: var(--c-green-bg); svg { color: var(--c-green-fg); } }
   &.theme-orange .card-icon { background-color: var(--c-orange-bg); svg { color: var(--c-orange-fg); } }
 }
-/*
-=========================================
-=== END OF FIX ===
-=========================================
-*/
-
 
 .activity-card {
   margin-top: 2.5rem;
@@ -137,9 +128,10 @@
   
   &:not(:last-child) { margin-bottom: 1rem; }
 
-  &.theme-green { border-color: var(--c-green-fg); .status-badge { background-color: var(--c-green-fg); color: #fff; } }
-  &.theme-blue { border-color: var(--c-blue-fg); .status-badge { background-color: var(--c-blue-fg); color: #fff; } }
-  &.theme-orange { border-color: var(--c-orange-fg); .status-badge { background-color: var(--c-orange-fg); color: #fff; } }
+  /* MODIFICATION: Removed badge styling from these theme rules */
+  &.theme-green { border-color: var(--c-green-fg); }
+  &.theme-blue { border-color: var(--c-blue-fg); }
+  &.theme-orange { border-color: var(--c-orange-fg); }
   
   .item-icon {
     width: 40px; height: 40px; border-radius: 50%;
@@ -158,12 +150,30 @@
     span:first-child { font-size: 0.8rem; color: var(--c-text-light); }
     span:last-child { font-weight: 600; }
   }
+}
 
-  .status-badge {
-    padding: 0.25rem 0.75rem; border-radius: 16px;
-    font-weight: 600; font-size: 0.75rem;
-    text-align: center; white-space: nowrap;
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-align: center;
+  white-space: nowrap;
+
+  /* MODIFICATION START: Added specific styles for each status */
+  &.completed {
+    background-color: var(--c-green-fg);
+    color: #fff;
   }
+  &.in-progress {
+    background-color: var(--c-blue-fg);
+    color: #fff;
+  }
+  &.pending {
+    background-color: var(--c-orange-bg);
+    color: var(--c-orange-fg);
+  }
+  /* MODIFICATION END */
 }
 
 .empty-state, .status-indicator {
@@ -190,9 +200,7 @@
   100% { transform: rotate(360deg); }
 }
 
-
 /* --- RESPONSIVENESS RULES (Unchanged) --- */
-
 @media (max-width: 767px) {
   .activity-item {
     grid-template-columns: 40px 1fr;

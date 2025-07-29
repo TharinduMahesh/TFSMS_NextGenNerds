@@ -1,7 +1,14 @@
 <div class="page-container">
   <app-pnavbar></app-pnavbar>
 
-  <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="form-wrapper report-form">
+  <!-- 1. Page Header -->
+  <header class="page-header">
+    <h1>Route Performance Report</h1>
+    <p>Select a date range to analyze key performance and cost metrics for each route.</p>
+  </header>
+
+  <!-- 2. Report Controls Form -->
+  <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="report-controls">
     <div class="form-row">
       <div class="form-group">
         <label for="startDate">Start Date</label>
@@ -15,57 +22,79 @@
     <div class="form-actions">
       <button type="submit" class="btn-primary" [disabled]="isLoading()">
         @if(isLoading()){
-        <span>Generating...</span>
+          <span class="spinner"></span>
+          <span>Generating...</span>
         } @else {
-        <span>Generate Report</span>
+          <span>Generate Report</span>
         }
       </button>
     </div>
   </form>
 
-  <div class="report-results">
-    @if (isLoading()) {
-    <div class="loading-indicator">Fetching report data...</div>
+  <!-- 3. Report Results -->
+  <main class="report-results">
+    @if (isLoading() && !reportData()) {
+      <div class="loading-indicator">
+        <div class="spinner-large"></div>
+        <p>Fetching report data...</p>
+      </div>
     } @else if(error()) {
-    <div class="error-message">{{ error() }}</div>
-    } @else if(reportData() && reportData()!.length > 0) {
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Route Name</th>
-            <th>Total Trips</th>
-            <th>Avg. Duration (Hours)</th>
-            <th>On-Time Dept. %</th>
-            <th>Total Cost</th>
-            <th>Cost per Km</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for(item of reportData(); track item.routeId) {
-          <tr>
-            <td>{{ item.routeName }} (ID: {{ item.routeId }})</td>
-            <td>{{ item.totalTrips }}</td>
-            <td>{{ item.averageTripDurationHours | number:'1.1-2' }}</td>
-            <td>
-              <span class="percentage-badge" [class.high-performance]="item.onTimeDeparturePercentage >= 90"
-                [class.good-performance]="item.onTimeDeparturePercentage >= 75 && item.onTimeDeparturePercentage < 90"
-                [class.average-performance]="item.onTimeDeparturePercentage >= 50 && item.onTimeDeparturePercentage < 75"
-                [class.low-performance]="item.onTimeDeparturePercentage < 50">
-                {{ item.onTimeDeparturePercentage | number:'1.1-1' }}%
-              </span>
-            </td>
-            <td>{{ item.totalCost | currency:'LKR ' }}</td>
-            <td>{{ item.costPerKm | currency:'LKR ' }}</td>
-          </tr>
+      <div class="error-message">
+        <h3>Report Generation Failed</h3>
+        <p>{{ error() }}</p>
+      </div>
+    } @else if(reportData()) {
+      <div class="results-card">
+        <div class="card-header">
+          <h3>Route Analysis Data</h3>
+          <!-- MODIFICATION: Button now calls exportToCsv and only shows when there is data -->
+          @if(reportData()!.length > 0) {
+            <button class="btn-secondary" (click)="exportToCsv()">Export</button>
           }
-        </tbody>
-      </table>
-    </div>
-    } @else if (reportData()) {
-    <div class="empty-state">
-      <p>No completed trip data found for the selected date range.</p>
-    </div>
+        </div>
+        <div class="card-body">
+          @if(reportData()!.length > 0) {
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Route Name</th>
+                    <th>Total Trips</th>
+                    <th>Avg. Duration (Hours)</th>
+                    <th>On-Time Dept. %</th>
+                    <th>Total Cost</th>
+                    <th>Cost per Km</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for(item of reportData(); track item.routeId) {
+                  <tr [class.low-performance]="item.onTimeDeparturePercentage < 50"
+                    [class.average-performance]="item.onTimeDeparturePercentage >= 50 && item.onTimeDeparturePercentage < 75"
+                    [class.good-performance]="item.onTimeDeparturePercentage >= 75 && item.onTimeDeparturePercentage < 90"
+                    [class.high-performance]="item.onTimeDeparturePercentage >= 90">
+                    <td>{{ item.routeName }} (ID: {{ item.routeId }})</td>
+                    <td>{{ item.totalTrips }}</td>
+                    <td>{{ item.averageTripDurationHours | number:'1.1-2' }}</td>
+                    <td>
+                      <span class="percentage-badge">
+                        {{ item.onTimeDeparturePercentage | number:'1.1-1' }}%
+                      </span>
+                    </td>
+                    <td>{{ item.totalCost | currency:'LKR ' }}</td>
+                    <td>{{ item.costPerKm | currency:'LKR ' }}</td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="empty-state">
+              <h3>No Data Available</h3>
+              <p>No completed trip data was found for the selected date range.</p>
+            </div>
+          }
+        </div>
+      </div>
     }
-  </div>
+  </main>
 </div>

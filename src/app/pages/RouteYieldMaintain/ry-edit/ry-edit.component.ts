@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RyService } from '../../../services/LogisticAndTransport/RouteYieldMaintain.service';
+import { RyService } from '../../../Services/LogisticAndTransport/RouteYieldMaintain.service';
 import { YieldPayload, YieldResponse } from '../../../models/Logistic and Transport/RouteYeildMaintain.model';
 
 @Component({

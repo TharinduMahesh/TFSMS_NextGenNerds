@@ -8,7 +8,12 @@
   @if (isLoading()) {
     <div class="loading-indicator">Loading Invoice Details...</div>
   } @else if (error()) {
-    <div class="error-message-full-page">{{ error() }}</div>
+    <div class="error-message-full-page">
+      {{ error() }}
+      <button type="button" class="btn-return-to-review" (click)="returnToInvoiceReview()">
+        Return to Invoice Review
+      </button>
+    </div>
   } @else {
 
     @if (invoiceToDispatch(); as invoice) {
@@ -85,7 +90,12 @@
 
     } @else {
       <!-- This block handles the case where there is no error but no invoice was found -->
-      <div class="error-message-full-page">Could not load invoice data. Please return to the invoice register and try again.</div>
+      <div class="error-message-full-page">
+        Could not load invoice data. Please return to the invoice register and try again.
+        <button type="button" class="btn-return-to-review" (click)="returnToInvoiceReview()">
+          Return to Invoice Review
+        </button>
+      </div>
     }
   } 
 </div>

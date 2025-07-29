@@ -1,8 +1,8 @@
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { RouterModule,  Router } from "@angular/router" // Import Router
-import  { AuthService } from "../../shared/services/auth.service"
-import  { UserService } from "../../shared/services/user.service"
+import  { AuthService } from "../../shared/Services/auth.service"
+import  { UserService } from "../../shared/Services/user.service"
 import  { ElementRef, HostListener } from "@angular/core"
 
 @Component({

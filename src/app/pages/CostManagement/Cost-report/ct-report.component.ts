@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 
 // Models and Services
 import { CollectorCostReport } from '../../../models/Logistic and Transport/TransportReports.model';
-import { TransportReportService } from '../../../services/LogisticAndTransport/TransportReport.service';
+import { TransportReportService } from '../../../Services/LogisticAndTransport/TransportReport.service';
 import { PNavbarComponent } from "../../../components/pnav bar/pnav.component";
 
 @Component({

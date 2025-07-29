@@ -2,50 +2,86 @@
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button (click)="onCancel()" class="close-btn" title="Close">×</button>
 
-    <!-- The Component's Content Starts Here -->
-    <div class="page-container">
-      <header class="page-header">
-        @if (vehicle) {
-          <h1>Edit Vehicle #{{ vehicle.vehicleId }}</h1>
-        } @else {
-          <h1>Edit Vehicle</h1>
-        }
-      </header>
-
-      <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-        <div class="form-group">
-          <label for="collectorId">Assign to Collector</label>
-          <select id="collectorId" formControlName="collectorId">
-            <option [ngValue]="null" disabled>-- Select a Collector --</option>
-            @for(collector of collectors(); track collector.collectorId) {
-              <option [value]="collector.collectorId">
-                  {{ collector.name }} (Current vehicle: {{collector.vehicleLicensePlate || 'None'}})
-              </option>
-            }
-          </select>
-          <small class="form-text">Note: Re-assigning a vehicle to a collector who already has one will fail.</small>
-        </div>
-        <div class="form-group">
-          <label for="licensePlate">License Plate</label>
-          <input id="licensePlate" formControlName="licensePlate" type="text" />
-        </div>
-        <div class="form-group">
-          <label for="volume">Vehicle Volume / Capacity (m³)</label>
-          <input id="volume" formControlName="volume" type="number" step="0.1" />
-        </div>
-        <div class="form-group">
-          <label for="model">Model</label>
-          <input id="model" formControlName="model" type="text" />
-        </div>
-        <div class="form-group">
-          <label for="conditionNotes">Condition Notes</label>
-          <input id="conditionNotes" formControlName="conditionNotes" rows="1">
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-          <button type="submit" class="btn-primary" [disabled]="vehicleForm.invalid || !vehicleForm.dirty">Save Changes</button>
-        </div>
-      </form>
+    <!-- New Modal Header -->
+    <div class="modal-header">
+      <h2>Edit Vehicle</h2>
+      <p>Update the details for plate: {{ vehicle.licensePlate }}</p>
     </div>
+
+    <!-- Main Form Body -->
+    <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" class="form-wrapper">
+      <div class="modal-body">
+        <!-- Left Column -->
+        <div class="details-column">
+          <!-- Blue theme for core details -->
+          <fieldset class="details-section theme-blue">
+            <legend>Vehicle Details</legend>
+            <div class="form-group">
+              <label for="licensePlate">License Plate</label>
+              <input id="licensePlate" formControlName="licensePlate" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="model">Model</label>
+              <input id="model" formControlName="model" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="volume">Volume / Capacity (m³)</label>
+              <input id="volume" formControlName="volume" type="number" step="0.1" />
+            </div>
+          </fieldset>
+          
+          <fieldset class="details-section theme-blue">
+            <legend>Assignment</legend>
+            <div class="form-group">
+              <label for="collectorId">Assigned Collector</label>
+              <input id="collectorId" [value]="vehicle.collectorName || 'N/A'" readonly>
+              <small>Collector assignment cannot be changed during an edit.</small>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Right Column -->
+        <div class="details-column">
+          <!-- Green theme for condition checklist -->
+          <fieldset class="details-section theme-green">
+            <legend>Condition Checklist</legend>
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="isClean">
+                <span class="custom-checkbox"></span> Clean and suitable for tea
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="hasGoodTires">
+                <span class="custom-checkbox"></span> Good tires, brakes, lights
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="hasVentilation">
+                <span class="custom-checkbox"></span> Ventilated cargo area
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="isPestFree">
+                <span class="custom-checkbox"></span> No moisture or pests
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="hasValidDocs">
+                <span class="custom-checkbox"></span> Valid documents
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" formControlName="hasFireExtinguisher">
+                <span class="custom-checkbox"></span> Has fire extinguisher
+              </label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <!-- Form Footer -->
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn-save" [disabled]="vehicleForm.invalid || !vehicleForm.dirty">
+          Save Changes
+        </button>
+      </div>
+    </form>
   </div>
 </div>

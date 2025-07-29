@@ -7,11 +7,11 @@
 // import  { Incentive } from "../../../models/incentive.model"
 // import  { PaymentCalculationResult } from "../../../models/payment-calculation.model"
 // import { PaymentCalculationRequest } from "../../../models/payment-calculation.model" 
-// import  { SupplierService } from "../../../shared/services/supplier.service"
-// import  { GreenLeafService } from "../../../shared/services/green-leaf.service"
-// import  { AdvanceService } from "../../../shared/services/advance.service"
-// import  { DebtService } from "../../../shared/services/debt.service"
-// import  { IncentiveService } from "../../../shared/services/incentive.service"
+// import  { SupplierService } from "../../../shared/Services/supplier.service"
+// import  { GreenLeafService } from "../../../shared/Services/green-leaf.service"
+// import  { AdvanceService } from "../../../shared/Services/advance.service"
+// import  { DebtService } from "../../../shared/Services/debt.service"
+// import  { IncentiveService } from "../../../shared/Services/incentive.service"
 
 // @Component({
 //   selector: "app-payment-calculator",

@@ -7,7 +7,7 @@ import { ChartConfiguration, ChartType } from 'chart.js';
 import { forkJoin } from 'rxjs';
 import { HeaderComponent } from "../../header/header.component";
 
-// Import services and interfaces for Claims
+// Import Services and interfaces for Claims
 import { ClaimEntryService } from '../../../Services/claim-entry.service';
 import { ClaimAdjustmentService } from '../../../Services/claim-adjustment.service';
 import { ClaimEntry } from '../../../models/claim-entry.interface';

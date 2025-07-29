@@ -4,9 +4,9 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } fr
 import { Router, ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 
-// Import necessary models and services
+// Import necessary models and Services
 import { FinalizeSalePayload, InvoiceResponse } from '../../../models/Ledger Management/invoiceSales.model';
-import { InvoiceSalesService } from '../../../services/LedgerManagement/invoiceSales.service';
+import { InvoiceSalesService } from '../../../Services/LedgerManagement/invoiceSales.service';
 
 @Component({
   selector: 'app-sales-entry',

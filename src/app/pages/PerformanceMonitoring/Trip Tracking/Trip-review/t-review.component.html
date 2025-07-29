@@ -1,77 +1,83 @@
 <div class="page-container">
   <app-tnlnavbar></app-tnlnavbar>
-  <div class="top-bar">
-    <div class="page-title">
-      <h2>Trip Tracking Dashboard</h2>
+  
+  <!-- Redesigned Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Trip Timeline</h1>
       <p>View scheduled trips and update their real-time status.</p>
     </div>
-    
-    <input type="text" placeholder="Search by ID or Route..." [value]="searchTerm()"
-      (input)="searchTerm.set($any($event.target).value)" />
-    <button class="add-btn" (click)="goToSchedulePage()">+ Schedule New Trip</button>
+    <div class="header-actions">
+      <input type="text" placeholder="Search by ID, Route, or Collector..." [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)" />
+      <button class="add-btn" (click)="goToSchedulePage()">+ Schedule New Trip</button>
+    </div>
   </div>
 
   @if (isLoading()) {
-    <div class="loading-indicator">Loading Trip Records...</div>
+    <div class="status-indicator"><div class="loader"></div>Loading Trip Records...</div>
   } @else if (error()) {
-    <div class="error-message">{{ error() }}</div>
+    <div class="status-indicator error">{{ error() }}</div>
   } @else {
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Trip ID</th>
-            <th>Route</th>
-            <th>Collector</th>
-            <th>Scheduled Departure</th>
-            <th>Scheduled Arrival</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (trip of filteredTrips(); track trip.tripId) {
-            <tr [class.is-late]="!trip.isOnTime && trip.actualDeparture"
-                [class.is-complete]="trip.actualArrival">
-              <td>#{{ trip.tripId }}</td>
-              <td>{{ trip.routeName }}</td>
-              <td>{{ trip.collectorName }}</td>
-              <td>{{ trip.scheduledDeparture | date:'MMM d, h:mm a' }}</td>
-              <td>{{ trip.scheduledArrival | date:'MMM d, h:mm a' }}</td>
-              <td class="status-cell">
-                  @if(trip.actualArrival) {
-                      <span class="status status-completed">Completed</span>
-                  } @else if(trip.actualDeparture) {
-                      <span class="status status-departed">In Progress</span>
-                  } @else {
-                      <span class="status status-pending">Pending</span>
-                  }
-              </td>
-              <td class="actions-cell">
+    <div class="timeline-container">
+      @for (trip of filteredTrips(); track trip.tripId) {
+        <div class="timeline-item" 
+             [class.theme-green]="trip.actualArrival"
+             [class.theme-blue]="trip.actualDeparture && !trip.actualArrival"
+             [class.theme-orange]="!trip.actualDeparture">
+
+          <div class="timeline-content">
+            <div class="content-header">
+              <div class="trip-info">
+                <h3 class="route-name">{{ trip.route?.rName }}</h3>
+                <span class="collector-name">to {{ trip.collectorName }}</span>
+              </div>
+              <div class="status-badge">
+                @if(trip.actualArrival) { Completed }
+                @else if(trip.actualDeparture) { In Progress }
+                @else { Pending }
+              </div>
+            </div>
+
+            <div class="content-body">
+              <div class="time-info">
+                <span class="label">Scheduled Departure</span>
+                <span class="time">{{ trip.scheduledDeparture | date:'MMM d, h:mm a' }}</span>
+              </div>
+              <div class="time-info">
+                <span class="label">Scheduled Arrival</span>
+                <span class="time">{{ trip.scheduledArrival | date:'MMM d, h:mm a' }}</span>
+              </div>
+            </div>
+
+            <div class="content-footer">
+              <div class="actions">
+                <button (click)="onViewTrip(trip)" class="btn-action view-btn">View Details</button>
                 @if(!trip.actualDeparture) {
-                  <button (click)="markAsDeparted(trip)" class="btn-action btn-depart">Depart</button>
+                  <button (click)="markAsDeparted(trip)" class="btn-action depart-btn">Depart</button>
                 }
                 @if(trip.actualDeparture && !trip.actualArrival) {
-                  <button (click)="markAsArrived(trip)" class="btn-action btn-arrive">Arrive</button>
+                  <button (click)="markAsArrived(trip)" class="btn-action arrive-btn">Arrive</button>
                 }
                 @if(!trip.actualDeparture) {
-                  <button (click)="onDelete(trip)" class="btn-action btn-delete">Delete</button>
+                  <button (click)="onDelete(trip)" class="btn-action delete-btn">Delete</button>
                 }
-                @if(trip.actualArrival) {
-                    <span>-</span>
-                }
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="7">
-                <p>No trips scheduled yet.</p>
-                <button class="add-btn-small" (click)="goToSchedulePage()">Schedule First Trip</button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <h3>No Trips Scheduled</h3>
+          <p>Get started by scheduling your first trip.</p>
+          <button class="add-btn" (click)="goToSchedulePage()">+ Schedule First Trip</button>
+        </div>
+      }
     </div>
   }
 </div>
+
+<!-- Modal remains unchanged and will open as before -->
+@if (isViewModalOpen()) {
+  <app-trip-view [selectedTrip]="selectedTripForView()" (close)="onCloseViewModal()"></app-trip-view>
+}

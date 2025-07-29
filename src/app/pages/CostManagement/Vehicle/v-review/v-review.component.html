@@ -1,56 +1,75 @@
 <div class="page-container">
   <app-tnlnavbar></app-tnlnavbar>
+
+  <!-- Redesigned Top Bar -->
   <div class="top-bar">
-    <input type="text" placeholder="Search by Plate, Model, Collector..." 
-           [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
-    <button class="add-btn" (click)="addNewVehicle()">+ Add New Vehicle</button>
+    <div class="search-wrapper">
+      <input type="text" placeholder="Search by Plate, Model, Collector..."
+             [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
+    </div>
+    <button class="add-btn" (click)="addNewVehicle()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg>
+      Add New Vehicle
+    </button>
   </div>
 
+  <!-- Loading / Error / Content States -->
   @if (isLoading()) {
-    <div class="loading-indicator">Loading Vehicles...</div>
+    <div class="status-indicator">
+      <div class="loader"></div>
+      Loading Vehicles...
+    </div>
   } @else if (error()) {
-    <div class="error-message">{{ error() }}</div>
+    <div class="status-indicator error">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z"/></svg>
+      {{ error() }}
+    </div>
   } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Vehicle ID</th>
-          <th>License Plate</th>
-          <th>Model</th>
-          <th>Volume (m³)</th>
-          <th>Assigned Collector</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (vehicle of filteredVehicles(); track vehicle.vehicleId) {
-          <tr>
-            <td>{{ vehicle.vehicleId }}</td>
-            <td>{{ vehicle.licensePlate }}</td>
-            <td>{{ vehicle.model || 'N/A' }}</td>
-            <td>{{ vehicle.volume }}</td>
-            <!-- This line is now valid -->
-            <td>{{ vehicle.collectorName || 'Unassigned' }}</td>
-            <td class="actions-cell">
-              <button (click)="onView(vehicle)" class="btn-action btn-view">View</button>
-              <button (click)="onEdit(vehicle)" class="btn-action btn-edit">Edit</button>
-              <button (click)="onDelete(vehicle)" class="btn-action btn-delete">Delete</button>
-            </td>
-          </tr>
-        } @empty {
-          <tr><td colspan="6">No vehicles found.</td></tr>
-        }
-      </tbody>
-    </table>
+    <!-- New Card Grid Layout -->
+    <div class="card-grid">
+      @for (vehicle of filteredVehicles(); track vehicle.vehicleId) {
+        <div class="vehicle-card" (click)="onView(vehicle)">
+          <div class="card-header theme-blue">
+            <div class="card-title">
+              <h2>{{ vehicle.licensePlate }}</h2>
+              <p>Vehicle ID: #{{ vehicle.vehicleId }}</p>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="detail-item">
+              <span class="label">Model</span>
+              <span class="value">{{ vehicle.model || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Volume</span>
+              <span class="value">{{ vehicle.volume }} m³</span>
+            </div>
+          </div>
+
+          <div class="card-footer theme-green">
+            <div class="detail-item">
+              <span class="label">Assigned Collector</span>
+              <span class="value">{{ vehicle.collectorName || 'Unassigned' }}</span>
+            </div>
+            <div class="card-actions">
+              <button (click)="onView(vehicle); $event.stopPropagation()" class="btn-action view-btn">View</button>
+              <button (click)="onEdit(vehicle); $event.stopPropagation()" class="btn-action edit-btn">Edit</button>
+              <button (click)="onDelete(vehicle); $event.stopPropagation()" class="btn-action delete-btn">Delete</button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="status-indicator">No vehicles found.</div>
+      }
+    </div>
   }
-  <!-- View Modal -->
+</div>
+
+<!-- Modals remain unchanged and will open as before -->
 @if (isViewModalOpen()) {
   <app-v-view [vehicle]="dataToView()!" (close)="closeViewModal()"></app-v-view>
 }
-
-<!-- Edit Modal -->
 @if (isEditModalOpen()) {
   <app-v-edit [vehicle]="dataToEdit()!" (close)="closeEditModal()" (save)="handleSave($event)"></app-v-edit>
 }
-</div>
-

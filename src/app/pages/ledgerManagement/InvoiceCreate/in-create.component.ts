@@ -6,15 +6,15 @@ import { switchMap } from 'rxjs';
 
 // Models and Services
 import { CreateInvoicePayload } from '../../../models/Ledger Management/invoiceSales.model';
-import { InvoiceSalesService } from '../../../services/LedgerManagement/invoiceSales.service';
+import { InvoiceSalesService } from '../../../Services/LedgerManagement/invoiceSales.service';
 import { StockLedgerResponse } from '../../../models/Ledger Management/stockLedger.model';
-import { StockLedgerService } from '../../../services/LedgerManagement/stockLedger.service';
-// import { ManualIdEntryComponent } from './mannualId-entry/m-id-entry.component';
+import { StockLedgerService } from '../../../Services/LedgerManagement/stockLedger.service';
+import { ManualIdEntryComponent } from './mannualId-entry/m-id-entry.component';
 
 @Component({
   selector: 'app-invoice-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe ],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, ManualIdEntryComponent],
   templateUrl: './in-create.component.html',
   styleUrls: ['./in-create.component.scss']
 })
@@ -28,11 +28,9 @@ export class InvoiceCreateComponent implements OnInit {
 
   // --- Forms ---
   invoiceForm: FormGroup;
-  manualIdForm: FormGroup; // For manual ID entry
 
   // --- State Signals ---
-
-   public stockItem = computed(() => this.stockItemToInvoice());
+  public stockItem = computed(() => this.stockItemToInvoice());
    
   stockItemToInvoice = signal<StockLedgerResponse | null>(null);
   isLoading = signal(true);
@@ -44,10 +42,6 @@ export class InvoiceCreateComponent implements OnInit {
       stockLedgerEntryId: [{value: null, disabled: true}, Validators.required],
       brokerName: ['', [Validators.required, Validators.maxLength(150)]],
       invoiceDate: [this.formatDate(new Date()), Validators.required]
-    });
-    
-    this.manualIdForm = this.fb.group({
-      stockId: [null, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -89,23 +83,17 @@ export class InvoiceCreateComponent implements OnInit {
       }
     });
   }
-  
-  findStockItem(): void {
-    if (this.manualIdForm.invalid) return;
-    const stockId = this.manualIdForm.value.stockId;
-    this.loadStockItem(stockId);
-  }
+
   toggleManualEntry(): void {
     this.isManualEntryMode.set(!this.isManualEntryMode());
     if (this.isManualEntryMode()) {
       this.stockItemToInvoice.set(null);
       this.invoiceForm.reset();
-    } else {
-      this.manualIdForm.reset();
+      this.invoiceForm.patchValue({
+        invoiceDate: this.formatDate(new Date())
+      });
     }
   }
-
-
 
   onSubmit(): void {
     if (this.invoiceForm.invalid) {
@@ -116,14 +104,14 @@ export class InvoiceCreateComponent implements OnInit {
     this.invoiceService.createInvoice(payload).subscribe({
       next: () => {
         alert('Invoice created successfully!');
-        this.router.navigate(['ledgerManagementdashboard/invoice-review']); // Navigate to invoice review page
+        this.router.navigate(['ledgerManagementdashboard/invoice-review']);
       },
       error: (err) => alert(`Error creating invoice: ${err.message}`)
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['ledgerManagementdashboard/stock-ledger']); // Go back to the main stock ledger
+    this.router.navigate(['ledgerManagementdashboard/stock-ledger']);
   }
   
   private formatDate(date: Date): string {

@@ -4,9 +4,14 @@ export interface VehicleResponse {
   licensePlate: string;
   volume: number;
   model?: string;
-  conditionNotes?: string;
   collectorId: number;
-  collectorName?: string; // <-- THIS IS THE CRUCIAL ADDITION
+  collectorName?: string;
+  isClean: boolean;
+  hasGoodTires: boolean;
+  hasVentilation: boolean;
+  isPestFree: boolean;
+  hasValidDocs: boolean;
+  hasFireExtinguisher: boolean;
 }
 
 // For CREATING or UPDATING a vehicle
@@ -15,5 +20,10 @@ export interface CreateUpdateVehiclePayload {
   licensePlate: string;
   volume: number;
   model?: string;
-  conditionNotes?: string;
+  isClean: boolean;
+  hasGoodTires: boolean;
+  hasVentilation: boolean;
+  isPestFree: boolean;
+  hasValidDocs: boolean;
+  hasFireExtinguisher: boolean;
 }

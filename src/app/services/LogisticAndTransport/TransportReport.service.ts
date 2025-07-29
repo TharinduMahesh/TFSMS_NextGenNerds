@@ -29,7 +29,6 @@ export class TransportReportService {
   scheduleTrip(payload: ScheduleTripPayload): Observable<TripResponse> {
     return this.http.post<TripResponse>(`${this.tripsApiUrl}/schedule`, payload).pipe(catchError(this.handleError));
   }
-
   updateTripStatus(tripId: number, payload: UpdateTripStatusPayload): Observable<TripResponse> {
     return this.http.put<TripResponse>(`${this.tripsApiUrl}/${tripId}/status`, payload).pipe(catchError(this.handleError));
   }
@@ -38,13 +37,10 @@ export class TransportReportService {
     return this.http.get<TripResponse[]>(this.tripsApiUrl).pipe(catchError(this.handleError));
   }
 
-  // =========================================================
-  //      ↓↓↓  THIS IS THE MISSING METHOD - NOW ADDED  ↓↓↓
-  // =========================================================
+ 
   deleteTrip(tripId: number): Observable<void> {
     return this.http.delete<void>(`${this.tripsApiUrl}/${tripId}`).pipe(catchError(this.handleError));
   }
-  // =========================================================
 
   // --- Reporting Methods ---
 

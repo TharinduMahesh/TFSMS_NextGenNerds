@@ -1,0 +1,65 @@
+<!-- 1. The dedicated overlay div with the click handler -->
+<div class="modal-overlay" (click)="close.emit()">
+  <!-- 2. The stopPropagation() on the content is crucial -->
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="close.emit()" title="Close">×</button>
+    
+    <header class="modal-header">
+
+      <h2 class="route-name">{{ selectedTrip?.route?.rName }}</h2>
+      <p class="trip-id">Trip ID: {{ selectedTrip?.tripId }}</p>
+    </header>
+
+    <div class="main-grid">
+      <div class="map-container">
+        <app-google-map
+          [startLocation]="selectedTrip?.route?.startLocationAddress ?? null"
+          [endLocation]="selectedTrip?.route?.endLocationAddress ?? null"
+          [growerLocations]="growerLocationsForMap()">
+        </app-google-map>
+      </div>
+
+      <div class="details-container">
+        <div class="details-section theme-blue">
+          <h3>Trip Timeline</h3>
+          <div class="timeline">
+            <div class="timeline-event">
+              <span class="event-label">Scheduled Departure</span>
+              <span class="event-time">{{ selectedTrip?.scheduledDeparture | date:'MMM d, h:mm a' }}</span>
+            </div>
+            @if (selectedTrip?.actualDeparture) {
+              <div class="timeline-event actual">
+                <span class="event-label">Actual Departure</span>
+                <span class="event-time">{{ selectedTrip?.actualDeparture | date:'MMM d, h:mm a' }}</span>
+              </div>
+            }
+            <div class="timeline-event">
+              <span class="event-label">Scheduled Arrival</span>
+              <span class="event-time">{{ selectedTrip?.scheduledArrival | date:'MMM d, h:mm a' }}</span>
+            </div>
+            @if (selectedTrip?.actualArrival) {
+              <div class="timeline-event actual">
+                <span class="event-label">Actual Arrival</span>
+                <span class="event-time">{{ selectedTrip?.actualArrival | date:'MMM d, h:mm a' }}</span>
+              </div>
+            }
+          </div>
+        </div>
+        
+        <div class="details-section theme-green">
+          <h3>Trip Stops ({{ selectedTrip?.stops?.length || 0 }})</h3>
+          <div class="stops-list">
+            @for(stop of selectedTrip?.stops; track stop.growerEmail) {
+              <div class="stop-item">
+                <span class="stop-order">{{ stop.stopOrder }}</span>
+                <span class="stop-email">{{ stop.growerEmail }}</span>
+              </div>
+            } @empty {
+              <p class="empty-stops">No growers were added to this trip.</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

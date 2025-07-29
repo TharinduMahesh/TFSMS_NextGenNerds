@@ -1,0 +1,14 @@
+<div class="manual-entry-container">
+  <h3>Find Stock Item to Invoice</h3>
+  <p>Please enter the Stock ID for the unsold tea batch you wish to invoice.</p>
+
+  <form [formGroup]="manualIdForm" (ngSubmit)="submitId($event)" class="manual-id-form">
+    <input
+      formControlName="stockId"
+      type="number"
+      placeholder="Enter Stock ID..."
+      min="1"
+    />
+    <button type="submit" [disabled]="manualIdForm.invalid">Find Item</button>
+  </form>
+</div>

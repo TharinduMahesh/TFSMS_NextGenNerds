@@ -1,0 +1,12 @@
+<div class="manual-entry-container">
+  <h3>Find Invoice to Dispatch</h3>
+  <p>Please enter the Invoice ID for the batch you wish to dispatch.</p>
+
+  <form [formGroup]="manualIdForm" (ngSubmit)="submitId()" class="manual-id-form">
+    <input formControlName="invoiceId"
+      type="number"             
+      placeholder="Enter Invoice ID..."
+    />
+    <button type="submit" [disabled]="manualIdForm.invalid">Find Invoice</button>
+  </form>
+</div>

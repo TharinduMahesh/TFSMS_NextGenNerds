@@ -5,7 +5,7 @@
 // import { HeaderComponent } from "../../header/header.component"
 // import { FooterComponent } from "../../footer/footer.component"
 // import {  ValidatorFn, Validators } from "@angular/forms"
-// import  { AuthService } from "../../../shared/services/auth.service"
+// import  { AuthService } from "../../../shared/Services/auth.service"
 // import  { Router } from "@angular/router"
 // import { FirstKeyPipe } from "../../../shared/pipes/first-key-pipe.pipe"
 // import { HttpClientModule } from "@angular/common/http"

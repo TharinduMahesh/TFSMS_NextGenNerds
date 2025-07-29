@@ -1,30 +1,58 @@
 @if (route) {
   <div class="modal-overlay" (click)="close.emit()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="close.emit()" aria-label="Close">×</button>
-      <h2 class="modal-title">Route Details: {{ route.rName }}</h2>
+      <button class="close-btn" (click)="close.emit()" title="Close">×</button>
+      
+      <!-- New Themed Header -->
+      <header class="modal-header">
+        <h2 class="route-name">{{ route.rName }}</h2>
+        <p class="route-id">Route ID :{{ route.rId }}</p>
+      </header>
 
-      <!-- Generic Details Section -->
-      <div class="details-summary">
-        <div class="detail-row"><span class="label">ID:</span><span class="value">{{ route.rId }}</span></div>
-        <div class="detail-row"><span class="label">Start Location:</span><span class="value">{{ route.startLocation }}</span></div>
-        <div class="detail-row"><span class="label">End Location:</span><span class="value">{{ route.endLocation }}</span></div>
-        <div class="detail-row"><span class="label">Distance:</span><span class="value">{{ route.distance }} km</span></div>
-        <div class="detail-row"><span class="label">Collector ID:</span><span class="value">{{ route.collectorId || 'Not Assigned' }}</span></div>
+      <div class="main-grid">
+        <!-- Left Side: The Map -->
+        <div class="map-container">
+          <app-google-map
+            [startLocation]="route.startLocationAddress"
+            [endLocation]="route.endLocationAddress">
+          </app-google-map>
+        </div>
+
+        <!-- Right Side: The Details -->
+        <div class="details-container">
+          <!-- Blue theme for locations -->
+          <div class="details-section theme-blue">
+            <h3>Locations</h3>
+            <div class="route-path">
+              <div class="location start">
+                <span class="location-label">Start Point</span>
+                <p class="location-address">{{ route.startLocationAddress }}</p>
+              </div>
+              <div class="location end">
+                <span class="location-label">End Point</span>
+                <p class="location-address">{{ route.endLocationAddress }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Green theme for operational info -->
+          <div class="details-section theme-green">
+            <h3>Operational Details</h3>
+            <div class="info-row">
+              <span class="label">Total Distance</span>
+              <span class="value distance">{{ route.distance | number:'1.1-2' }} km</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Assigned Collector</span>
+              @if(route.collectorId) {
+                <span class="value">ID : {{ route.collectorId }}</span>
+              } @else {
+                <span class="value unassigned">Unassigned</span>
+              }
+            </div>
+          </div>
+        </div>
       </div>
-
-      <!-- Generic List Section -->
-      <h3 class="list-title">Grower Locations</h3>
-      <ul class="details-list">
-        @for (location of route.growerLocations; track location.gId) {
-          <li class="list-item">
-            <span class="label">Description:</span>
-            <span class="value">{{ location.description || 'N/A' }}</span>
-          </li>
-        } @empty {
-          <li class="list-item-empty">No grower locations assigned to this route.</li>
-        }
-      </ul>
     </div>
   </div>
 }

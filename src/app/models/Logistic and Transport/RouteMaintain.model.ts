@@ -1,36 +1,36 @@
-// For VIEWING a list of routes or a single route's details
+// ==================================================
+// Filename: models/Logistic and Transport/RouteMaintain.model.ts (Corrected)
+// ==================================================
+
+// This interface matches the camelCase JSON sent by the backend
 export interface RtList {
   rId: number;
   rName: string;
-  startLocation: string;
-  endLocation: string;
-  distance: number;
-  collectorId?: number;
-  growerLocations: GrowerLocation[];
-}
-
-// Sub-model for viewing a grower location within a route
-export interface GrowerLocation {
-  gId: number;
-  latitude: number;
-  longitude: number;
-  description?: string;
-  rtListId: number;
-}
-
-// For CREATING or UPDATING a route's data
-export interface CreateUpdateRoutePayload {
-  rName: string;
-  startLocation: string;
-  endLocation: string;
+  startLocationAddress: string;
+  startLocationLatitude: number;
+  startLocationLongitude: number;
+  endLocationAddress: string;
+  endLocationLatitude: number;
+  endLocationLongitude: number;
   distance: number;
   collectorId?: number | null;
-  growerLocations: GrowerLocationPayload[];
+  collectorName?: string;
+  // Note: The 'Collector' navigation property is usually not sent in list views,
+  // but can be included if your API does so.
 }
 
-// Sub-model for the grower locations payload
-export interface GrowerLocationPayload {
+// The payload for creating/updating a route.
+// This matches the FormGroup structure.
+export interface RouteLocationPayload {
+  address: string;
   latitude: number;
   longitude: number;
-  description?: string;
+}
+
+export interface CreateUpdateRoutePayload {
+  rName: string;
+  startLocation: RouteLocationPayload;
+  endLocation: RouteLocationPayload;
+  distance: number;
+  collectorId?: number | null;
 }

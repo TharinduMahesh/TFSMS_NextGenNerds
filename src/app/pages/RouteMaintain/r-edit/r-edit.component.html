@@ -1,84 +1,93 @@
-<!-- This is the Modal Wrapper -->
-<div class="modal-overlay visible">
-  <div class="modal-content visible">
-    <!-- THE FIX IS HERE: Changed onClose() to the existing onCancel() -->
+<div [class.modal-overlay]="true" (click)="onCancel()">
+  <div [class]="'modal-content'" (click)="$event.stopPropagation()">
     <button (click)="onCancel()" class="close-btn" title="Close">×</button>
 
-    <!-- Your Component's Content Starts Here -->
-    <div class="page-container">
-    
-      @if (isLoading) {
-        <div class="loading">Loading route data...</div>
-      } @else if (error) {
-        <div class="error">{{ error }}</div>
+    <!-- New Modal Header -->
+    <div class="modal-header">
+      <h2>Edit Route</h2>
+      <p>Modify route details and collector assignment using the form and map.</p>
+    </div>
+
+    <div class="modal-body">
+      @if (isLoading()) {
+        <div class="status-indicator">
+          <div class="loader"></div>
+          Loading route data...
+        </div>
+      } @else if (error()) {
+        <div class="status-indicator error">{{ error() }}</div>
       } @else {
-        <div class="edit-modal-container">
-          <div class="map-preview">
-            <p>Map Preview Placeholder</p>
+        <div class="main-grid">
+          <!-- Left Side: The Map -->
+          <div class="map-container">
+            <app-google-map
+              [startLocation]="routeForm.get('startLocation.address')?.value"
+              [endLocation]="routeForm.get('endLocation.address')?.value"
+              [startLocationInput]="startLocationInput"
+              [endLocationInput]="endLocationInput"
+              (startLocationSelected)="onStartLocationSelected($event)"
+              (endLocationSelected)="onEndLocationSelected($event)"
+              (routeInfoUpdated)="onRouteInfoUpdated($event)"
+              (selectionStateChanged)="onMapStateChanged($event)">
+            </app-google-map>
           </div>
 
-          <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="route-form">
-            <div class="form-container">
-              
+          <!-- Right Side: The Form -->
+          <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="form-container">
+            <fieldset class="details-section theme-blue">
               <div class="form-group">
                 <label for="edit-rName">Route Name</label>
-                <input id="edit-rName" type="text" formControlName="rName" />
+                <input id="edit-rName" type="text" formControlName="rName">
+              </div>
+
+              <div class="form-group" formGroupName="startLocation">
+                <label for="edit-startLocation">Start Location</label>
+                <input #startLocationInput id="edit-startLocation" type="text" formControlName="address">
+              </div>
+
+              <div class="form-group" formGroupName="endLocation">
+                <label for="edit-endLocation">End Location</label>
+                <input #endLocationInput id="edit-endLocation" type="text" formControlName="address">
               </div>
               
-              <div class="form-row">
-                  <div class="form-group">
-                      <label for="edit-startLocation">Start Location</label>
-                      <input id="edit-startLocation" type="text" formControlName="startLocation" />
-                  </div>
-                  <div class="form-group">
-                      <label for="edit-endLocation">End Location</label>
-                      <input id="edit-endLocation" type="text" formControlName="endLocation" />
-                  </div>
+              <div class="direction-controls">
+                @if (mapSelectionState() === MapSelectionState.IDLE || mapSelectionState() === MapSelectionState.ROUTE_SHOWN) {
+                  <button type="button" class="btn-map-action" (click)="handleDirectionButtonClick()">Change Route from Map</button>
+                } @else {
+                  <button type="button" class="btn-map-action clear" (click)="handleDirectionButtonClick()">Clear Route & Start Over</button>
+                }
               </div>
-              
+            </fieldset>
+
+            <fieldset class="details-section theme-green">
               <div class="form-group">
-                <label for="edit-distance">Distance (km)</label>
-                <input id="edit-distance" type="number" formControlName="distance" />
+                <label for="edit-distance">Route Distance (km)</label>
+                <input class="info-display" id="edit-distance" type="text" [value]="routeForm.get('distance')?.value | number:'1.1-2'" readonly>
+                @if (estimatedDuration()) {
+                  <small class="info-text">Estimated travel time: {{ estimatedDuration() }}</small>
+                }
               </div>
-              
+
               <div class="form-group">
-                  <label for="edit-collectorId">Assigned Collector</label>
-                  <select id="edit-collectorId" formControlName="collectorId">
-                      <option [ngValue]="null">-- Not Assigned --</option>
-                      @for(collector of availableCollectors(); track collector.collectorId) {
-                          <option [value]="collector.collectorId">
-                              {{ collector.name }} (Vehicle: {{ collector.vehicleLicensePlate || 'N/A' }})
-                          </option>
-                      }
-                  </select>
-              </div>
-      
-              <hr />
-              
-              <h3>Grower Locations</h3>
-              <div formArrayName="growerLocations" class="grower-list-editable">
-                  @for (locationGroup of growerLocations.controls; track $index) {
-                    <div [formGroupName]="$index" class="grower-item-editable">
-                      <input formControlName="latitude" placeholder="Latitude" type="number" step="any" />
-                      <input formControlName="longitude" placeholder="Longitude" type="number" step="any" />
-                      <input formControlName="description" placeholder="Location description" />
-                      <button type="button" (click)="removeGrowerLocation($index)" class="btn-remove" title="Remove Location">X</button>
-                    </div>
+                <label for="edit-collectorId">Assign Collector</label>
+                <select id="edit-collectorId" formControlName="collectorId">
+                  <option [ngValue]="null">-- Not Assigned --</option>
+                  @for(collector of availableCollectors(); track collector.collectorId) {
+                    <option [value]="collector.collectorId">
+                      {{ collector.name }} ({{ collector.vehicleLicensePlate || 'No Vehicle' }})
+                    </option>
                   }
+                </select>
               </div>
-              <button type="button" (click)="addGrowerLocation()" class="btn-add-location">+ Add Grower Location</button>
-      
-              <hr />
-      
-              <div class="form-actions">
-                <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-                <button type="submit" class="btn-primary" [disabled]="routeForm.invalid">Save Changes</button>
-              </div>
-      
-            </div>
+            </fieldset>
           </form>
         </div>
       }
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
+      <button type="button" class="btn-save" [disabled]="routeForm.invalid || !routeForm.dirty" (click)="onSubmit()">Save Changes</button>
     </div>
   </div>
 </div>

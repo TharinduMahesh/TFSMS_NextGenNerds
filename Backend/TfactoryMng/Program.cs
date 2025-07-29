@@ -52,8 +52,8 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
+    var Services = scope.ServiceProvider;
+    var context = Services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
 }
 

@@ -2,7 +2,7 @@ import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Removed unused CurrencyPipe/DatePipe for this component
 import { Router } from '@angular/router';
 import { InvoiceResponse } from '../../../models/Ledger Management/invoiceSales.model';
-import { InvoiceSalesService } from '../../../services/LedgerManagement/invoiceSales.service';
+import { InvoiceSalesService } from '../../../Services/LedgerManagement/invoiceSales.service';
 import { InvoiceViewComponent } from "./invoice-view/in-view.component";
 
 @Component({

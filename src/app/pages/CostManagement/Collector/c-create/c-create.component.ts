@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CollectorService } from '../../../../services/LogisticAndTransport/Collector.service';
+import { CollectorService } from '../../../../Services/LogisticAndTransport/Collector.service';
 import { CreateUpdateCollectorPayload } from '../../../../models/Logistic and Transport/CollectorManagement.model';
 
 @Component({

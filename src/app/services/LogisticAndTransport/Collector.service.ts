@@ -13,8 +13,6 @@ export class CollectorService {
 
   constructor(private http: HttpClient) { }
 
-  // --- Collector Methods ---
-
   getAllCollectors(): Observable<CollectorResponse[]> {
     return this.http.get<CollectorResponse[]>(this.collectorsApiUrl).pipe(catchError(this.handleError));
   }

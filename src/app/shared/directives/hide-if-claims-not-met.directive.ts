@@ -1,5 +1,5 @@
 // import { Directive,ElementRef,Input, OnInit } from '@angular/core';
-// import { AuthService } from '../services/auth.service';
+// import { AuthService } from '../Services/auth.service';
 
 
 // @Directive({

@@ -3,16 +3,16 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { RtList, CreateUpdateRoutePayload } from '../../../models/Logistic and Transport/RouteMaintain.model';
-import { RouteService } from '../../../services/LogisticAndTransport/RouteMaintain.service';
-
+import { RouteService } from '../../../Services/LogisticAndTransport/RouteMaintain.service';
 
 import { RtViewComponent } from '../r-view/r-view.component';
+import { RtEditComponent } from '../r-edit/r-edit.component';
 import { TnLNavbarComponent } from "../../../components/TnLNavbar/tnlnav.component";
 
 @Component({
   selector: 'app-r-review', 
   standalone: true,
-  imports: [CommonModule, RtViewComponent, TnLNavbarComponent],
+  imports: [CommonModule, RtViewComponent, RtEditComponent, TnLNavbarComponent],
   templateUrl: './r-review.component.html',
   styleUrls: ['./r-review.component.scss']
 })
@@ -84,7 +84,15 @@ export class RtReviewComponent implements OnInit {
   }
 
   addNewRoute(): void {
-    this.router.navigate(['transportdashboard/r-create']); // Assuming '/r-create' is your page route
+    this.router.navigate(['transportdashboard/r-create']);
+  }
+
+  routeAnalysis(): void {
+    this.router.navigate(['performancedashboard/routes-analysis']);
+  }
+
+   routePerformance(): void {
+    this.router.navigate(['performancedashboard/route-report']);
   }
 
   onView(route: RtList): void {
@@ -93,8 +101,13 @@ export class RtReviewComponent implements OnInit {
   }
 
   onEdit(route: RtList): void {
-  this.router.navigate(['transportdashboard/r-edit', route.rId]);
-}
+    // For modal editing - set the route and open modal
+    this.routeBeingEdited.set(route);
+    this.isEditModalOpen.set(true);
+    
+    // If you prefer navigation instead, uncomment the line below and remove the above lines:
+    // this.router.navigate(['transportdashboard/r-edit', route.rId]);
+  }
 
   onDelete(id?: number): void {
     if (!id) return;
@@ -110,7 +123,6 @@ export class RtReviewComponent implements OnInit {
   }
   
   // --- Event handlers for the Modals ---
-
   closeViewModal(): void {
     this.isViewModalOpen.set(false);
   }
@@ -133,5 +145,11 @@ export class RtReviewComponent implements OnInit {
       },
       error: (err) => alert(`Error: ${err.message}`)
     });
+  }
+
+  // This handles the (save) event from the modal (which doesn't pass payload)
+  handleSaveFromModal(): void {
+    this.loadRoutes(); // Refresh the data
+    this.closeEditModal();
   }
 }

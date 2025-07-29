@@ -1,41 +1,90 @@
 <div class="page-container">
+  <app-tnlnavbar></app-tnlnavbar>
+
   <header class="page-header">
     <h1>Add a New Vehicle</h1>
     <p>Create a new vehicle record and assign it to an available collector.</p>
   </header>
 
   <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-    <div class="form-group">
-      <label for="collectorId">Assign to Collector</label>
-      <select id="collectorId" formControlName="collectorId">
-        <option [ngValue]="null" disabled>-- Select an available collector --</option>
-        @for(collector of availableCollectors(); track collector.collectorId) {
-          <option [value]="collector.collectorId">{{ collector.name }}</option>
-        }
-      </select>
-       @if(availableCollectors().length === 0) {
-        <small class="form-text">No available collectors without a vehicle.</small>
-       }
+    <div class="form-grid">
+      <!-- Left Column -->
+      <div class="details-column">
+        <!-- Blue theme for core details -->
+        <fieldset class="details-section theme-blue">
+          <legend>Vehicle Details</legend>
+          <div class="form-group">
+            <label for="licensePlate">License Plate</label>
+            <input id="licensePlate" formControlName="licensePlate" type="text" placeholder="e.g., WP-ABC-1234"/>
+          </div>
+          <div class="form-group">
+            <label for="model">Model (Optional)</label>
+            <input id="model" formControlName="model" type="text" placeholder="e.g., Toyota Hiace"/>
+          </div>
+          <div class="form-group">
+            <label for="volume">Volume / Capacity (m³)</label>
+            <input id="volume" formControlName="volume" type="number" step="0.1" placeholder="e.g., 5.5"/>
+          </div>
+        </fieldset>
+        
+        <fieldset class="details-section theme-blue">
+           <legend>Assignment</legend>
+            <div class="form-group">
+              <label for="collectorId">Assign to Collector</label>
+              <select id="collectorId" formControlName="collectorId">
+                <option [ngValue]="null" disabled>-- Select an available collector --</option>
+                @for(collector of availableCollectors(); track collector.collectorId) {
+                  <option [value]="collector.collectorId">{{ collector.name }}</option>
+                }
+              </select>
+               @if(availableCollectors().length === 0) {
+                <small class="form-text">No available collectors without a vehicle.</small>
+               }
+            </div>
+          </fieldset>
+      </div>
+
+      <!-- Right Column -->
+      <div class="details-column">
+        <!-- Green theme for condition checklist -->
+        <fieldset class="details-section theme-green">
+          <legend>Condition Checklist</legend>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="isClean">
+              <span class="custom-checkbox"></span> Clean and suitable for tea
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="hasGoodTires">
+              <span class="custom-checkbox"></span> Good tires, brakes, lights
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="hasVentilation">
+              <span class="custom-checkbox"></span> Ventilated cargo area
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="isPestFree">
+              <span class="custom-checkbox"></span> No moisture or pests
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="hasValidDocs">
+              <span class="custom-checkbox"></span> Valid documents
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" formControlName="hasFireExtinguisher">
+              <span class="custom-checkbox"></span> Has fire extinguisher
+            </label>
+          </div>
+        </fieldset>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="licensePlate">License Plate</label>
-      <input id="licensePlate" formControlName="licensePlate" type="text" placeholder="e.g., WP-ABC-1234"/>
-    </div>
-    <div class="form-group">
-      <label for="volume">Vehicle Volume / Capacity (m³)</label>
-      <input id="volume" formControlName="volume" type="number" step="0.1" placeholder="e.g., 5.5"/>
-    </div>
-    <div class="form-group">
-      <label for="model">Model (Optional)</label>
-      <input id="model" formControlName="model" type="text" placeholder="e.g., Toyota Hiace"/>
-    </div>
-    <div class="form-group">
-      <label for="conditionNotes">Condition Notes (Optional)</label>
-      <textarea id="conditionNotes" formControlName="conditionNotes" rows="3"></textarea>
-    </div>
+
+    <!-- Form Actions Footer -->
     <div class="form-actions">
-      <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-      <button type="submit" class="btn-primary" [disabled]="vehicleForm.invalid">Create Vehicle</button>
+      <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="btn-create" [disabled]="vehicleForm.invalid">
+        Create Vehicle
+      </button>
     </div>
   </form>
 </div>

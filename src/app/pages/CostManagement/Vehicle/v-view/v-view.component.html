@@ -1,36 +1,44 @@
 @if (vehicle) {
   <div class="modal-overlay" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="closeModal()" aria-label="Close">×</button>
-      <h2 class="modal-title">Vehicle Details</h2>
+      <button class="close-btn" (click)="closeModal()" aria-label="Close" title="Close">×</button>
 
-      <!-- Main Vehicle Details -->
-      <div class="details-summary">
-        <div class="detail-row"><span class="label">Vehicle ID:</span><span class="value">{{ vehicle.vehicleId }}</span></div>
-        <div class="detail-row"><span class="label">License Plate:</span><span class="value">{{ vehicle.licensePlate }}</span></div>
-        <div class="detail-row"><span class="label">Model:</span><span class="value">{{ vehicle.model || 'N/A' }}</span></div>
-        <div class="detail-row"><span class="label">Volume / Capacity:</span><span class="value">{{ vehicle.volume }} m³</span></div>
+      <!-- Modal Header (Unchanged) -->
+      <div class="modal-header">
+        <h2 class="license-plate">{{ vehicle.licensePlate }}</h2>
+        <p class="vehicle-model">{{ vehicle.model || 'N/A' }}</p>
       </div>
 
-      <!-- Assigned Collector Section -->
-      <h3 class="list-title">Assigned Collector</h3>
-      <div class="details-summary">
-        <div class="detail-row">
-          <span class="label">Name:</span>
-          <span class="value">{{ assignedCollectorName() }}</span>
+      <!-- Modal Body (Unchanged) -->
+      <div class="modal-body">
+        <div class="details-column">
+          <div class="details-section theme-blue">
+            <h3>Core Details</h3>
+            <div class="info-row"><span class="label">Vehicle ID</span><span class="value">#{{ vehicle.vehicleId }}</span></div>
+            <div class="info-row"><span class="label">Volume / Capacity</span><span class="value">{{ vehicle.volume }} m³</span></div>
+          </div>
+          <div class="details-section theme-blue">
+            <h3>Assigned Collector</h3>
+            <div class="info-row"><span class="label">Name</span><span class="value">{{ assignedCollectorName() }}</span></div>
+            <div class="info-row"><span class="label">Collector ID</span><span class="value">#{{ vehicle.collectorId || 'N/A' }}</span></div>
+          </div>
         </div>
-        <div class="detail-row">
-          <span class="label">Collector ID:</span>
-          <span class="value">{{ vehicle.collectorId || 'N/A' }}</span>
+
+        <div class="details-column">
+          <div class="details-section theme-green">
+            <h3>Condition Checklist</h3>
+            <div class="condition-list">
+              <!-- ADDED: title attribute for interactivity -->
+              <div class="condition-item"><span class="item-label">Clean & Suitable</span><span class="status" [ngClass]="vehicle.isClean ? 'yes' : 'no'" [title]="vehicle.isClean ? 'Condition Met' : 'Condition Not Met'"></span></div>
+              <div class="condition-item"><span class="item-label">Good Tires/Brakes</span><span class="status" [ngClass]="vehicle.hasGoodTires ? 'yes' : 'no'" [title]="vehicle.hasGoodTires ? 'Condition Met' : 'Condition Not Met'"></span></div>
+              <div class="condition-item"><span class="item-label">Ventilated Cargo</span><span class="status" [ngClass]="vehicle.hasVentilation ? 'yes' : 'no'" [title]="vehicle.hasVentilation ? 'Condition Met' : 'Condition Not Met'"></span></div>
+              <div class="condition-item"><span class="item-label">No Moisture/Pests</span><span class="status" [ngClass]="vehicle.isPestFree ? 'yes' : 'no'" [title]="vehicle.isPestFree ? 'Condition Met' : 'Condition Not Met'"></span></div>
+              <div class="condition-item"><span class="item-label">Valid Documents</span><span class="status" [ngClass]="vehicle.hasValidDocs ? 'yes' : 'no'" [title]="vehicle.hasValidDocs ? 'Condition Met' : 'Condition Not Met'"></span></div>
+              <div class="condition-item"><span class="item-label">Fire Extinguisher</span><span class="status" [ngClass]="vehicle.hasFireExtinguisher ? 'yes' : 'no'" [title]="vehicle.hasFireExtinguisher ? 'Condition Met' : 'Condition Not Met'"></span></div>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <!-- Condition Notes Section -->
-      <h3 class="list-title">Condition Notes</h3>
-      <div class="notes-container">
-        <p>{{ vehicle.conditionNotes || 'No notes available.' }}</p>
-      </div>
-
     </div>
   </div>
 }

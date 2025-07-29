@@ -1,59 +1,83 @@
 <div class="page-container">
   <app-tnlnavbar></app-tnlnavbar>
+
+  <!-- Redesigned Top Bar -->
   <div class="top-bar">
-    <input type="text" placeholder="Search by ID, Name, NIC, or City..." 
-           [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
-    <button class="add-btn" (click)="addNewCollector()">+ Add New Collector</button>
+    <div class="search-wrapper">
+      
+      <input
+        type="text"
+        placeholder="Search by ID, Name, NIC, or City..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
+    </div>
+
+    <div class="btn-group">
+      <button class="analysis-btn orange" (click)="collectorCost()">Cost Analysis</button>
+      <button class="analysis-btn blue" (click)="collectorAnalysis()">Performance Analysis</button>
+    </div>
   </div>
 
+  <!-- Loading / Error / Content States -->
   @if (isLoading()) {
-    <div class="loading-indicator">Loading Collectors...</div>
+    <div class="status-indicator">
+      <div class="loader"></div>
+      Loading Collectors...
+    </div>
   } @else if (error()) {
-    <div class="error-message">{{ error() }}</div>
+    <div class="status-indicator error">
+      {{ error() }}
+    </div>
   } @else {
-    <div class="table-wrapper"> 
-      <table>
-        <thead>
-          <tr>
-            <th>Collector ID</th>
-            <th>Name</th>
-            <th>NIC</th>
-            <th>City</th>
-            <th>Rate per Km</th>
-            <th>Vehicle</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (collector of filteredCollectors(); track collector.collectorId) {
-            <tr>
-              <td>{{ collector.collectorId }}</td>
-              <td>{{ collector.name }}</td>
-              <td>{{ collector.collectorNIC || 'N/A' }}</td>
-              <td>{{ collector.collectorCity || 'N/A' }}</td>
-              <td>{{ collector.ratePerKm | number:'1.2-2' }}</td>
-              <td>{{ collector.vehicleLicensePlate || 'None' }}</td>
-              <td class="actions-cell">
-                <button (click)="onView(collector)" class="btn-action btn-view">View</button>
-                <button (click)="onEdit(collector)" class="btn-action btn-edit">Edit</button>
-                <button (click)="onDelete(collector)" class="btn-action btn-delete">Delete</button>
-              </td>
-            </tr>
-          } @empty {
-            <tr><td colspan="9">No collectors found.</td></tr>
-          }
-        </tbody>
-      </table>
+    <!-- New Card Grid Layout -->
+    <div class="card-grid">
+      @for (collector of filteredCollectors(); track collector.collectorId) {
+        <div class="collector-card" (click)="onView(collector)">
+          <div class="card-header theme-blue">
+            <div class="card-title">
+              <h2>{{ collector.name }}</h2>
+              <p>Collector ID: #{{ collector.collectorId }}</p>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="detail-item">
+              <span class="label">NIC</span>
+              <span class="value">{{ collector.collectorNIC || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">City</span>
+              <span class="value">{{ collector.collectorCity || 'N/A' }}</span>
+            </div>
+          </div>
+
+          <div class="card-footer theme-green">
+             <div class="detail-item">
+              <span class="label">Rate / Km</span>
+              <span class="value rate">{{ collector.ratePerKm | number:'1.2-2' }}</span>
+            </div>
+             <div class="detail-item">
+              <span class="label">Vehicle</span>
+              <span class="value vehicle">{{ collector.vehicleLicensePlate || 'Unassigned' }}</span>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="status-indicator">No collectors found.</div>
+      }
     </div>
   }
 </div>
+
+<!-- Modals remain unchanged and will open as before -->
 @if (isViewModalOpen()) {
   <app-c-view [collector]="dataToView()!" (close)="closeViewModal()"></app-c-view>
 }
 @if (isEditModalOpen()) {
-  <app-c-edit 
-    [collector]="dataToEdit()!" 
-    (close)="closeEditModal()" 
+  <app-c-edit
+    [collector]="dataToEdit()!"
+    (close)="closeEditModal()"
     (save)="handleSave($event)">
   </app-c-edit>
 }

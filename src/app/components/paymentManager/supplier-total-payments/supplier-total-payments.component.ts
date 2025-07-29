@@ -3,9 +3,9 @@ import { CommonModule, DatePipe } from "@angular/common"
 import { FormsModule } from "@angular/forms" // Import FormsModule for ngModel
 import { HeaderComponent } from "../../header/header.component";
 import  { SupplierTotalPaymentRecord } from "../../../models/supplier-total-payment.model" // New record model
-import  { SupplierTotalPaymentRecordService } from "../../../shared/services/supplier-total-payment-record.service"
+import  { SupplierTotalPaymentRecordService } from "../../../shared/Services/supplier-total-payment-record.service"
 import  { Supplier } from "../../../models/supplier.model" // Assuming you have a Supplier model
-import  { SupplierService } from "../../../shared/services/supplier.service" // Assuming you have a SupplierService
+import  { SupplierService } from "../../../shared/Services/supplier.service" // Assuming you have a SupplierService
 
 @Component({
   selector: "app-supplier-total-payments",

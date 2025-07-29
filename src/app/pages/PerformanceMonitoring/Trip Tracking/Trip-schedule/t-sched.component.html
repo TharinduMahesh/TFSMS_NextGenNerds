@@ -1,64 +1,119 @@
 <div class="page-container">
+  <app-tnlnavbar></app-tnlnavbar>
+
   <header class="page-header">
     <h1>Schedule a New Trip</h1>
-    <p>Select a route and collector, then set a departure time to create a new trip record.</p>
   </header>
 
   @if (isLoading()) {
-    <div class="loading-indicator">Loading routes and collectors...</div>
+    <div class="status-indicator"><div class="loader"></div>Loading routes and collectors...</div>
   } @else if (error()) {
-    <div class="error-message-full-page">{{ error() }}</div>
+    <div class="status-indicator error">{{ error() }}</div>
   } @else {
-    <form [formGroup]="tripForm" (ngSubmit)="onSubmit()" class="form-wrapper">
-      
-      <div class="form-group">
-        <label for="routeId">Select Route</label>
-        <select id="routeId" formControlName="routeId">
-          <option [ngValue]="null" disabled>-- Choose an Existing Route --</option>
-          @for(route of routes(); track route.rId) {
-            <option [value]="route.rId">
-              {{ route.rName }} ({{ route.distance }}km, from {{route.startLocation}})
-            </option>
-          }
-        </select>
-        @if (tripForm.get('routeId')?.invalid && tripForm.get('routeId')?.touched) {
-            <div class="error-message">A route is required.</div>
-        }
+    <div class="scheduler-panel">
+      <!-- Left Side: The Map -->
+      <div class="map-container">
+        <app-google-map
+          [startLocation]="startLocationForMap()"
+          [endLocation]="endLocationForMap()"
+          [growerLocations]="showGrowerLocations() ? growerLocations() : []"
+          (growerAdded)="onGrowerAdded($event)">
+        </app-google-map>
       </div>
 
-      <div class="form-group">
-        <label for="collectorId">Assign to Collector</label>
-        <select id="collectorId" formControlName="collectorId">
-          <option [ngValue]="null" disabled>-- Choose a Collector --</option>
-          @for(collector of collectors(); track collector.collectorId) {
-            <option [value]="collector.collectorId">
-              {{ collector.name }} (Vehicle: {{ collector.vehicleLicensePlate || 'N/A' }})
-            </option>
-          }
-        </select>
-         @if (tripForm.get('collectorId')?.invalid && tripForm.get('collectorId')?.touched) {
-            <div class="error-message">A collector is required.</div>
-        }
-      </div>
-        <div class="form-group">
-          <label for="scheduledDeparture">Scheduled Departure Time</label>
-          <input id="scheduledDeparture" formControlName="scheduledDeparture" type="datetime-local" />
-          @if (tripForm.get('scheduledDeparture')?.invalid && tripForm.get('scheduledDeparture')?.touched) {
-              <div class="error-message">Departure time is required.</div>
-          }
-        </div>
+      <!-- Right Side: The Form -->
+      <form [formGroup]="tripForm" (ngSubmit)="onSubmit()" class="form-container">
+        <div class="form-body">
+          <!-- Step 1: Route & Collector -->
+          <div class="form-step">
+            <div class="step-header">
+              <span class="step-number">1</span>
+              <h2 class="step-title">Route & Time</h2>
+            </div>
+            <div class="form-group">
+              <label for="routeId">Select Route</label>
+              <select id="routeId" formControlName="routeId">
+                <option [ngValue]="null" disabled>Choose an Existing Route</option>
+                @for(route of routes(); track route.rId) {
+                  <option [value]="route.rId">{{ route.rName }} ({{ route.distance }}km)</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="collectorId">Assign Collector</label>
+              <select id="collectorId" formControlName="collectorId">
+                <option [ngValue]="null" disabled>-- Choose a Collector --</option>
+                @for(collector of collectors(); track collector.collectorId) {
+                  <option [value]="collector.collectorId">{{ collector.name }} ({{ collector.vehicleLicensePlate || 'No Vehicle' }})</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="scheduledDeparture">Scheduled Departure Time</label>
+              <input id="scheduledDeparture" formControlName="scheduledDeparture" type="datetime-local" />
+            </div>
+            <div class="form-group">
+              <label for="scheduledArrival">Scheduled Arrival Time</label>
+              <input id="scheduledArrival" formControlName="scheduledArrival" type="datetime-local" />
+            </div>
+          </div>
+          
+          <!-- Step 2: Growers -->
+          <div class="form-step">
+            <div class="step-header">
+              <span class="step-number">2</span>
+              <h2 class="step-title">Add Growers</h2>
+            </div>
+            <div class="grower-actions">
+              @if (!showGrowerLocations()) {
+                <button type="button" class="btn-action" (click)="findGrowers()" [disabled]="growerLoadingState()">
+                  @if (growerLoadingState()) { Finding Growers... } @else { Find Growers on Map }
+                </button>
+              } @else {
+                <div class="grower-info-panel">
+                  <span><strong>{{ growerLocations().length }}</strong> grower(s) found on map.</span>
+                  <button type="button" class="btn-hide" (click)="hideGrowerLocations()">Hide</button>
+                </div>
+              }
+            </div>
+            @if (showGrowerLocations()) {
+              <div class="grower-add-toggle">
+                @if (!isAddingGrowers()) {
+                  <button type="button" class="btn-action add" (click)="onStartAddingGrowers()">Add Growers to List</button>
+                } @else {
+                  <div class="adding-growers-active">
+                    <span>Click on grower markers to add them.</span>
+                    <button type="button" class="btn-done" (click)="onFinishAddingGrowers()">Done Adding</button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
 
-        <div class="form-group">
-          <label for="scheduledArrival">Scheduled Arrival Time</label>
-          <input id="scheduledArrival" formControlName="scheduledArrival" type="datetime-local" />
-          @if (tripForm.get('scheduledArrival')?.invalid && tripForm.get('scheduledArrival')?.touched) {
-              <div class="error-message">Arrival time is required.</div>
+          <!-- Step 3: Review Added Growers -->
+          @if (addedGrowers().length > 0) {
+            <div class="form-step">
+              <div class="step-header">
+                <span class="step-number">3</span>
+                <h2 class="step-title">Trip Stops ({{ addedGrowers().length }})</h2>
+              </div>
+              <div class="added-growers-list">
+                @for(grower of addedGrowers(); track grower.growerEmail) {
+                  <div class="grower-card">
+                    <span class="grower-email">{{ grower.growerEmail }}</span>
+                    <button type="button" class="btn-remove" (click)="removeAddedGrower(grower.growerEmail)">×</button>
+                  </div>
+                }
+              </div>
+            </div>
           }
         </div>
-      <div class="form-actions">
-        <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
-        <button type="submit" class="btn-primary" [disabled]="tripForm.invalid">Schedule Trip</button>
-      </div>
-    </form>
+        
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
+          <button type="submit" class="btn-create" [disabled]="tripForm.invalid">Schedule Trip</button>
+        </div>
+      </form>
+    </div>
   }
 </div>

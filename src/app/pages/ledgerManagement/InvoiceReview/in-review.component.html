@@ -25,7 +25,8 @@
       <table>
         <thead>
           <tr>
-            <th>Invoice #</th>
+            <th>InvoiceId</th>
+            <th>Invoice Number</th>
             <th>Date</th>
             <th>Broker Name</th>
             <th>Tea Details</th>
@@ -37,6 +38,7 @@
         <tbody>
           @for (item of filteredInvoices(); track item.invoiceId) {
             <tr>
+              <td>{{ item.invoiceId }}</td>
               <td>{{ item.invoiceNumber }}</td>
               <td>{{ item.invoiceDate | date:'yyyy-MM-dd' }}</td>
               <td>{{ item.brokerName || 'N/A' }}</td>

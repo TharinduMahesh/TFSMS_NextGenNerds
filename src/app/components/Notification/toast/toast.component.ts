@@ -2,7 +2,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+<<<<<<< HEAD:src/app/components/toast/toast.component.ts
+import { Toast, ToastService } from '../../shared/Services/toast.service'; // Adjust path if needed
+=======
 import { Toast, ToastService } from '../../../shared/services/toast.service'; // Adjust path if needed
+>>>>>>> main:src/app/components/Notification/toast/toast.component.ts
 
 @Component({
   selector: 'app-toast',

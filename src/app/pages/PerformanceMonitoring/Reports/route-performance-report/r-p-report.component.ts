@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 // Models and Services
 import { RoutePerformanceReport } from '../../../../models/Logistic and Transport/TransportReports.model';
-import { TransportReportService } from '../../../../services/LogisticAndTransport/TransportReport.service';
+import { TransportReportService } from '../../../../Services/LogisticAndTransport/TransportReport.service';
 import { PNavbarComponent } from "../../../../components/pnav bar/pnav.component";
 
 @Component({
@@ -32,7 +32,6 @@ export class RoutePerformanceReportComponent implements OnInit {
   error = signal<string | null>(null);
 
   constructor() {
-    // Initialize the form with default date values (e.g., the last month)
     const today = new Date();
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(today.getMonth() - 1);
@@ -43,17 +42,14 @@ export class RoutePerformanceReportComponent implements OnInit {
     });
   }
   
-  // ngOnInit is a great place to generate an initial report
   ngOnInit(): void {
       this.generateReport();
   }
 
-  // Helper function to format a Date object into 'YYYY-MM-DD' for the input control
   private formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
   }
 
-  // Method called by the form submission
   generateReport(): void {
     if (this.reportForm.invalid) {
       alert('Please select both a start and end date.');
@@ -62,19 +58,72 @@ export class RoutePerformanceReportComponent implements OnInit {
     
     this.isLoading.set(true);
     this.error.set(null);
-    this.reportData.set(null); // Clear previous results before fetching new ones
+    // NOTE: We no longer set reportData to null here to prevent the UI from flickering.
 
     const { startDate, endDate } = this.reportForm.value;
 
     this.reportService.getPerformanceByRoute(startDate, endDate).subscribe({
       next: (data) => {
-        this.reportData.set(data);
+        // Sort data to show highest cost-per-km routes first for better analysis
+        const sortedData = data.sort((a, b) => b.costPerKm - a.costPerKm);
+        this.reportData.set(sortedData);
         this.isLoading.set(false);
       },
       error: (err) => {
         this.error.set(err.message || 'Failed to generate the route performance report.');
         this.isLoading.set(false);
+        this.reportData.set([]); // Set to empty on error to clear old data
       }
     });
+  }
+
+  // --- NEW: CSV EXPORT FUNCTIONALITY ---
+  exportToCsv(): void {
+    const data = this.reportData();
+    if (!data || data.length === 0) {
+      alert('No data is available to export.');
+      return;
+    }
+
+    // 1. Define CSV Headers to match the table
+    const headers = [
+      "Route ID",
+      "Route Name",
+      "Total Trips",
+      "Average Trip Duration (Hours)",
+      "On-Time Departure Percentage",
+      "Total Cost (LKR)",
+      "Cost per Km (LKR)"
+    ];
+
+    // 2. Convert each row of data into a CSV-formatted string
+    const csvRows = data.map(row =>
+      [
+        row.routeId,
+        `"${row.routeName.replace(/"/g, '""')}"`, // Enclose in quotes and handle existing quotes
+        row.totalTrips,
+        row.averageTripDurationHours,
+        row.onTimeDeparturePercentage,
+        row.totalCost,
+        row.costPerKm
+      ].join(',')
+    );
+
+    // 3. Combine the headers and the rows, separated by newline characters
+    const csvContent = [headers.join(','), ...csvRows].join('\n');
+
+    // 4. Create a Blob (Binary Large Object) and trigger a browser download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      const reportDate = this.formatDate(new Date());
+      link.setAttribute("href", url);
+      link.setAttribute("download", `route-performance-report_${reportDate}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 }

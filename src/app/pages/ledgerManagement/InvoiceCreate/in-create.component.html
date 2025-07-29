@@ -7,18 +7,14 @@
   @if (isLoading()) {
     <div class="loading-indicator">Loading...</div>
   } @else if (isManualEntryMode()) {
-    <!-- 
-      This block handles the manual entry mode. It shows the separate component for finding an item.
-      When the 'find' event is emitted from that child component, it calls the 'loadStockItem' method.
-    -->
-    <!-- <app-manual-id-entry (find)="loadStockItem($event)"></app-manual-id-entry> -->
-
-    <!-- Display any potential errors that occurred during the item lookup -->
+     <!-- Remove the event binding since ManualIdEntryComponent now handles navigation internally -->
+     <app-manual-id-entry></app-manual-id-entry>
+     
     @if(error()) {
       <div class="error-message full-width">{{error()}}</div>
     }
 
-    <div class="actions-center"> <!-- A wrapper for the back button -->
+    <div class="actions-center">
       <button type="button" class="btn-secondary back-button" (click)="onCancel()">Back to Ledger</button>
     </div>
 

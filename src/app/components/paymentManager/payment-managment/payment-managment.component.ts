@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaymentComponent } from '../payment/payment.component';
 import { IncentiveComponent } from '../incentive/incentive.component';
 import { HeaderComponent } from "../../header/header.component";
+import { PaymentHistoryComponent } from '../payment-history/payment-history.component';
 // import { DebtComponent } from '../debt/debt.component';
 // import { AdvanceComponent } from '../advance/advance.component';
 
@@ -16,7 +17,8 @@ import { HeaderComponent } from "../../header/header.component";
     ReactiveFormsModule,
     PaymentComponent,
     IncentiveComponent,
-    HeaderComponent
+    HeaderComponent,
+    PaymentHistoryComponent
   ],
   templateUrl: './payment-managment.component.html',
   styleUrls: ['./payment-managment.component.css']

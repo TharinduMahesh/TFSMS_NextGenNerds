@@ -1,10 +1,11 @@
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
-import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
+import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators, FormControl } from "@angular/forms"
 import  { AuthService } from "../../../shared/services/auth.service"
 import { RouterModule } from "@angular/router"
 import  { ToastService } from "../../../shared/services/toast.service" 
 import { ConfirmationService } from "../../../shared/services/confirmation.service"
+import { map, startWith } from "rxjs"
 
 
 @Component({
@@ -16,7 +17,9 @@ import { ConfirmationService } from "../../../shared/services/confirmation.servi
 })
 export class AdminUserManagementComponent implements OnInit {
   userForm: FormGroup
-  users: any[] = []
+  users: any[] = [];
+  filteredUsers: any[] = [];
+  searchControl = new FormControl('');
   roles: string[] = ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] 
   selectedUserId: string | null = null
   alertMessage =  " "
@@ -39,17 +42,37 @@ export class AdminUserManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadUsers()
+    this.loadUsers();
+    this.searchControl.valueChanges.pipe(
+      startWith(''), // Start with an empty string to show all users initially
+      map(value => this._filter(value || ''))
+    ).subscribe(filtered => {
+      this.filteredUsers = filtered;
+    });
   }
+
+   private _filter(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    return this.users.filter(user => 
+      user.firstName.toLowerCase().includes(filterValue) ||
+      user.lastName.toLowerCase().includes(filterValue) ||
+      user.email.toLowerCase().includes(filterValue)
+    );
+  }
+
+
 
   loadUsers(): void {
     this.authService.getAllUsers().subscribe({
       next: (data) => {
         this.users = data
+        this.filteredUsers = this.users;
+        this.searchControl.setValue(this.searchControl.value); 
       },
       error: (err) => {
         console.error("Error loading users:", err)
         this.showAlertMessage("Failed to load users.", "error")
+
       },
     })
   }
@@ -93,17 +116,21 @@ export class AdminUserManagementComponent implements OnInit {
 }
 
   editUser(user: any): void {
-    this.selectedUserId = user.Id
-    this.userForm.patchValue({
-      Email: user.Email,
+    this.selectedUserId = user.id;
+
+    this.userForm.reset({
+      Email: user.email,         
       FirstName: user.firstName, 
-      LastName: user.lastName, 
-      MobileNo: user.mobileNo, 
-      Role: user.role, 
-    })
-    this.userForm.get("Email")?.disable()
+      LastName: user.lastName,   
+      MobileNo: user.mobileNo,   
+      Role: user.role            
+    });
+
+    this.userForm.get("Email")?.disable();
   }
 
+  // Also, update your resetForm method to re-enable the email field
+  
 
 //   resetPassword(userId: string): void {
 //   const user = this.users.find(u => u.id === userId);

@@ -10,6 +10,8 @@ import  { IncentiveService } from "../../../shared/services/incentive.service"
 import  { SupplierService } from "../../../shared/services/supplier.service"
 import  { ExportService } from "../../../shared/services/export.service"
 import  { DataRefreshService } from "../../../shared/services/data-refresh.service"
+import { ToastService } from "../../../shared/services/toast.service";
+import { ConfirmationService } from "../../../shared/services/confirmation.service";
 
 @Component({
   selector: "app-incentive",
@@ -40,6 +42,8 @@ export class IncentiveComponent implements OnInit, OnDestroy {
     private exportService: ExportService,
     private dataRefreshService: DataRefreshService,
     private fb: FormBuilder,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService
   ) {
     this.incentiveForm = this.fb.group({
       SupplierId: ["", Validators.required],
@@ -268,41 +272,62 @@ export class IncentiveComponent implements OnInit, OnDestroy {
     })
   }
 
-   deleteIncentive(incentiveId: number): void {
-    // Client-side check for immediate feedback (good UX)
-    const incentive = this.incentives.find((i) => i.IncentiveId === incentiveId);
-    if (incentive?.IsUsed) {
-      this.error = "This incentive cannot be deleted because it has already been applied to a payment.";
-      // You could also use a more prominent alert:
-      // alert("This incentive cannot be deleted because it has already been applied to a payment.");
-      return;
-    }
-
-    if (confirm("Are you sure you want to delete this incentive? This action cannot be undone.")) {
-      this.loading = true;
-      this.error = null;
-
-      this.incentiveService.deleteIncentive(incentiveId).subscribe({
-        next: (response) => {
-          this.loading = false;
-          if (response.success) {
-            // Success: Reload the data to remove the item from the UI list.
-            console.log("Incentive deleted successfully.");
-            this.loadIncentives();
-            this.loadSummaryMetrics();
-          } else {
-            // Failure: Show the specific error message from the backend.
-            this.error = response.message ?? "An unknown error occurred.";
-          }
-        },
-        error: (err) => { // This is for unexpected network/server errors
-          this.loading = false;
-          this.error = "An unexpected network or server error occurred. Please try again.";
-          console.error("Critical error during incentive deletion:", err);
-        },
-      });
-    }
+   async deleteIncentive(incentiveId: number): Promise<void> {
+  // Client-side check for immediate feedback (good UX)
+  const incentive = this.incentives.find((i) => i.IncentiveId === incentiveId);
+  if (incentive?.IsUsed) {
+    // --- REPLACEMENT for this.error ---
+    this.toastService.showWarning(
+      'Action Not Allowed',
+      'This incentive cannot be deleted because it has already been applied to a payment.'
+    );
+    return;
   }
+
+  // --- REPLACEMENT for confirm() ---
+  const confirmation = await this.confirmationService.confirm(
+    'Are you sure you want to delete this incentive? This action cannot be undone.'
+  );
+
+  if (confirmation) {
+    this.loading = true; // Still useful to show loading state on the component itself if needed
+
+    // --- Optional: Add a loading toast for better feedback ---
+    const loadingToastId = this.toastService.showLoading('Deleting...', 'Removing incentive record.');
+
+    this.incentiveService.deleteIncentive(incentiveId).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.toastService.remove(loadingToastId); // Remove loading toast
+
+        if (response.success) {
+          // --- REPLACEMENT for this.error ---
+          this.toastService.showSuccess('Success!', 'Incentive deleted successfully.');
+          
+          // Reload the data to remove the item from the UI list.
+          this.loadIncentives();
+          this.loadSummaryMetrics();
+        } else {
+          // --- REPLACEMENT for this.error ---
+          // Show the specific error message from the backend.
+          const errorMessage = response.message ?? 'An unknown error occurred.';
+          this.toastService.showError('Delete Failed', errorMessage);
+        }
+      },
+      error: (err) => { // This is for unexpected network/server errors
+        this.loading = false;
+        this.toastService.remove(loadingToastId); // Remove loading toast
+
+        // --- REPLACEMENT for this.error ---
+        this.toastService.showError(
+          'System Error',
+          'An unexpected network or server error occurred. Please try again.'
+        );
+        console.error("Critical error during incentive deletion:", err);
+      },
+    });
+  }
+}
 
   // Method to manually refresh data
   refreshData(): void {

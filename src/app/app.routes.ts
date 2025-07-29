@@ -152,6 +152,7 @@ import { UserProfileComponent } from "./components/user/user-profile/user-profil
 import { PaymentHistoryComponent } from "./components/paymentManager/payment-history/payment-history.component"
 import { SupplierTotalPaymentsComponent } from "./components/paymentManager/supplier-total-payments/supplier-total-payments.component"
 import { ChangePasswordComponent } from "./components/user/change-password/change-password.component" // New
+import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -213,6 +214,10 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { requiredRoles: ["full-admin"] },
   },
+  
+  // ... (your other routes)
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+
 
   {
     path: "profile",
@@ -230,6 +235,8 @@ export const routes: Routes = [
     path: "supplier-total-payments",
     component: SupplierTotalPaymentsComponent,
   },
+
+
 
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   // { path: 'dashboard', component: DashboardComponent }, // FIX: Ensure DashboardComponent is active

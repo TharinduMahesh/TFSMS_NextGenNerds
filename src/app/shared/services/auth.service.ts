@@ -311,4 +311,9 @@ export class AuthService {
       return false
     }
 }
+
+
+forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/forgot-password`, { Email: email });
+  }
 }

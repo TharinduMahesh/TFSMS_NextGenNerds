@@ -61,21 +61,45 @@
       </div>
     </form>
   </div>
+</div>
 
-  <div class="user-list-section">
-    <h3>Existing Users</h3>
-    <div *ngIf="users.length === 0" class="no-users">No users found.</div>
-    <ul class="user-list">
-      <li *ngFor="let user of users" class="user-item">
-        <div class="user-details">
-          <span><strong>{{ user.firstName }} {{ user.lastName }}</strong> ({{ user.email }}) - {{ user.role | titlecase }}</span>
-        </div>
-        <div class="user-actions">
-          <button (click)="editUser(user)">Edit</button>
-           <button class="reset-password-btn" (click)="resetPassword(user.id)">Reset Password</button>
-          <button (click)="deleteUser(user.id)">Delete</button>
-        </div>
-      </li>
-    </ul>
+ <div class="user-list-section">
+  <h3>Existing Users</h3>
+
+  <div class="search-container">
+    <input type="text" [formControl]="searchControl" placeholder="Search by name or email...">
   </div>
+
+  <div *ngIf="filteredUsers.length === 0" class="no-users">No users found.</div>
+
+  <table class="user-table" *ngIf="filteredUsers.length > 0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Permissions</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers" class="user-item">
+        <td>{{ user.firstName }} {{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.mobileNo }}</td>
+        <td>{{ user.role | titlecase }}</td>
+        <td>
+  <div class="status-indicator" [ngClass]="{'online': user.isOnline, 'offline': !user.isOnline}"></div>
+</td>
+        <td class="user-actions">
+          <button (click)="editUser(user)" class="edit-btn">Edit</button>
+          <button class="reset-password-btn" (click)="resetPassword(user.id)">Reset Password</button>
+          <button (click)="deleteUser(user.id)" class="delete-btn">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="users-total">{{ filteredUsers.length }} of {{ users.length }} users shown</div>
 </div>

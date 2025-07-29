@@ -23,11 +23,11 @@
   </div>
   
   <div class="incentive-container">
-    <h3>Supplier Incentives</h3>
+    <h3>Grower Incentives</h3>
     
     <div class="filters">
       <div class="filter-group">
-        <label>Supplier:</label>
+        <label>Grower:</label>
         <select [(ngModel)]="selectedSupplier" (change)="filterIncentives()">
           <option value="">All Suppliers</option>
           <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
@@ -98,7 +98,7 @@
     <thead>
       <tr>
         <th>Incentive ID</th>
-        <th>Supplier ID</th>
+        <th>Grower ID</th>
         <th>Month</th>
         <th>Quality Bonus</th>
         <th>Loyalty Bonus</th>

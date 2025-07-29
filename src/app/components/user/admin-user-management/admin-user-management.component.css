@@ -1,281 +1,316 @@
-/* === General Container and Form Styles (Your Existing Code) === */
+/* ==========================================================
+   FINAL, MODERN & ATTRACTIVE USER MANAGEMENT STYLES
+   ========================================================== */
+
+/* --- Main Container --- */
 .admin-user-management-container {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 40px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  background-color: #f4f7f6; /* A softer, off-white background */
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
   color: #333;
 }
 
+/* --- Main Headers --- */
 h2 {
   text-align: center;
   color: #2c3e50;
-  margin-bottom: 30px;
-  font-size: 2.2em;
-  font-weight: 600;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -1px;
 }
 
 h3 {
   color: #34495e;
-  margin-top: 25px;
-  margin-bottom: 15px;
-  font-size: 1.6em;
-  border-bottom: 2px solid #eceff1;
-  padding-bottom: 8px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dce4ec;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+/* Add a user icon before the "Existing Users" header */
+.user-list-section h3::before {
+  content: '\f0c0'; /* Font Awesome Users Icon */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 0.9em;
+  color: #3498db;
+}
+
+/* Add a form icon before the "Add/Edit User" header */
+.form-section h3::before {
+  content: '\f044'; /* Font Awesome Edit/Pencil Icon */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 0.9em;
+  color: #2ecc71;
+}
+
+/* --- Alert Messages (from previous fix) --- */
 .alert {
   padding: 15px 20px;
   margin-bottom: 20px;
   border-radius: 5px;
   font-weight: 500;
   text-align: center;
-  opacity: 1; /* Made visible by default */
-  transition: opacity 0.3s ease-in-out;
 }
+.alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-.alert-success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
 
-.alert-error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
+/* --- Form Section --- */
 .form-section {
-  background-color: #f9f9f9;
-  padding: 25px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  margin-bottom: 30px;
-}
-
-.form-group {
-  margin-bottom: 20px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  margin-bottom: 40px;
+  border: 1px solid #eef2f5;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #555;
+  color: #5a6877;
+  font-size: 0.9rem;
 }
 
-.form-group input[type="email"],
-.form-group input[type="text"],
+.form-group input,
 .form-group select {
-  width: 100%; /* Simplified width calculation */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1em;
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #dce4ec;
+  border-radius: 8px;
+  font-size: 1rem;
   box-sizing: border-box;
+  background-color: #fdfdfe;
+  transition: all 0.3s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
   outline: none;
+  background-color: #ffffff;
 }
 
 .error-message {
-  color: #dc3545;
-  font-size: 0.85em;
-  margin-top: 5px;
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-top: 6px;
+  font-weight: 500;
 }
 
 .form-actions {
   display: flex;
   gap: 15px;
   justify-content: flex-end;
-  margin-top: 25px;
+  margin-top: 30px;
 }
 
 .form-actions button {
-  padding: 10px 25px;
+  padding: 12px 28px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1em;
-  font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 }
 
 .form-actions button[type="submit"] {
-  background-color: #28a745;
+  background: linear-gradient(45deg, #2ecc71, #28b463);
   color: white;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
 }
 
-.form-actions button[type="submit"]:hover {
-  background-color: #218838;
-  transform: translateY(-2px);
+.form-actions button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(46, 204, 113, 0.3);
 }
 
 .form-actions button[type="submit"]:disabled {
-  background-color: #cccccc;
+  background: #bdc3c7;
+  box-shadow: none;
   cursor: not-allowed;
-  transform: none; /* No hover effect when disabled */
 }
 
 .form-actions button[type="button"] {
-  background-color: #6c757d;
+  background-color: #7f8c8d;
   color: white;
 }
 
 .form-actions button[type="button"]:hover {
-  background-color: #5a6268;
-  transform: translateY(-2px);
+  background-color: #95a5a6;
 }
 
-
-/* === NEW AND UPDATED STYLES FOR USER LIST TABLE === */
-
+/* --- User List Section --- */
 .user-list-section {
-  background-color: #f9f9f9;
-  padding: 25px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2f5;
+}
+
+/* --- Search Bar --- */
+.search-container {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 12px 15px 12px 40px; /* Add space for icon */
+  border: 1px solid #dce4ec;
   border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background-color: #fdfdfe;
+  transition: all 0.3s ease;
 }
 
-.no-users {
-  text-align: center;
-  color: #777;
-  padding: 20px;
-  font-style: italic;
-  border: 1px dashed #ddd;
-  border-radius: 5px;
+.search-container::before {
+  content: '\f002'; /* Font Awesome Search Icon */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #95a5a6;
+  transition: color 0.3s ease;
 }
 
+.search-container input:focus + .search-container::before {
+  color: #3498db;
+}
+
+.search-container input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+  background-color: #ffffff;
+}
+
+/* --- User Table --- */
 .user-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 .user-table thead th {
-  background-color: #e9ecef;
+  background-color: #f8f9fa;
   color: #495057;
-  padding: 12px 15px;
+  padding: 15px;
   text-align: left;
   font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  border-top: 1px solid #e9ecef;
   border-bottom: 2px solid #dee2e6;
 }
 
 .user-table tbody td {
-  padding: 12px 15px;
+  padding: 15px;
   border-bottom: 1px solid #e9ecef;
   vertical-align: middle;
 }
 
-.user-table tbody tr:last-child td {
-  border-bottom: none;
+.user-table tbody tr {
+  transition: background-color 0.2s ease;
 }
 
 .user-table tbody tr:hover {
   background-color: #f1f3f5;
 }
 
-.status-indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.user-details strong {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.user-details span {
+  display: block;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+.user-role {
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 15px; /* Pill shape */
+  font-size: 0.8rem;
+  text-align: center;
+  min-width: 100px;
   display: inline-block;
-  background-color: #28a745; /* Green for "online"/active */
+  border: 1px solid;
 }
 
-.status-indicator.online {
-  background-color: #28a745;
-  animation: pulse 2s infinite;
-}
+/* Role-specific colors */
+.role-full-admin { background-color: #fdebd0; color: #a04000; border-color: #f5cba7; }
+.role-transport-administrator { background-color: #d6eaf8; color: #1b4f72; border-color: #aed6f1; }
+.role-floor-manager { background-color: #d1f2eb; color: #0e6251; border-color: #a3e4d7; }
+.role-pending { background-color: #eaeded; color: #566573; border-color: #d5dbdb; }
+.role-public-user { background-color: #f2d7d5; color: #78281f; border-color: #e6b0aa; }
 
-/* You could add a class for offline/inactive users if needed */
-.status-indicator.offline {
-  background-color: #fd7e14;
-    animation: pulse 2s infinite;
-}
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
-  }
-}
-
+/* --- Table Action Buttons (Light Theme) --- */
 .user-actions {
   text-align: right;
-  white-space: nowrap; /* Prevents buttons from wrapping on small screens */
+  white-space: nowrap;
 }
-
 
 .user-actions button {
-  padding: 8px 15px;
+  padding: 8px 12px;
   margin-left: 8px;
-  border: none;
-  border-radius: 9%;
+  border: 1px solid transparent;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: white;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
-
 
 .user-actions button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.user-actions .edit-btn {
-  background: linear-gradient(45deg, #0d6efd, #0a58ca);
-}
+/* Edit Button (Light Blue) */
+.user-actions .edit-btn { background-color: #eaf4ff; color: #0d6efd; border-color: #bde0fe; }
+.user-actions .edit-btn:hover { background-color: #d8eaff; border-color: #a3d2fe; }
 
-.user-actions .reset-password-btn {
-  background: linear-gradient(45deg, #6c757d, #5a6268);
-}
+/* Reset Password Button (Light Orange/Yellow) */
+.user-actions .reset-password-btn { background-color: #fff8e1; color: #ff8f00; border-color: #ffecb3; }
+.user-actions .reset-password-btn:hover { background-color: #ffecb3; border-color: #ffe082; }
 
-.user-actions .delete-btn {
-  background: linear-gradient(45deg, #dc3545, #bb2d3b);
-}
+/* Delete Button (Light Red) */
+.user-actions .delete-btn { background-color: #fdeeee; color: #dc3545; border-color: #f5c6cb; }
+.user-actions .delete-btn:hover { background-color: #f8d7da; border-color: #f1b0b7; }
 
 
-.users-total {
-  margin-top: 15px;
-  color: #6c757d;
-  font-size: 0.9rem;
-  text-align: right;
-  padding-right: 5px;
+/* --- Font Awesome Icons for Buttons --- */
+.user-actions button::before {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 0.9em;
 }
-
-.search-container {
-  margin-bottom: 20px;
-}
-
-.search-container input {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1em;
-  box-sizing: border-box;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.search-container input:focus {
-  outline: none;
-  border-color: #4a9e0f;
-  box-shadow: 0 0 0 3px rgba(74, 158, 15, 0.1);
-}
+.edit-btn::before { content: '\f044'; }
+.reset-password-btn::before { content: '\f021'; }
+.delete-btn::before { content: '\f2ed'; }

@@ -20,7 +20,7 @@ export class AdminUserManagementComponent implements OnInit {
   users: any[] = [];
   filteredUsers: any[] = [];
   searchControl = new FormControl('');
-  roles: string[] = ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] 
+  roles: string[] = ["full-admin", "transport-administrator", "floor-manager", "logistic", "public-user"] 
   selectedUserId: string | null = null
   alertMessage =  " "
   showAlert = false

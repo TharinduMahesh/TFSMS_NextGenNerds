@@ -127,7 +127,7 @@
       <form [formGroup]="paymentForm" (ngSubmit)="createPayment()">
         <div class="form-grid">
           <div class="form-group">
-            <label>Supplier:</label>
+            <label>Grower:</label>
             <select formControlName="SupplierId">
               <option value="">Select Supplier</option>
               <option *ngFor="let supplier of suppliers" [value]="supplier.SupplierId">
@@ -135,7 +135,7 @@
               </option>
             </select>
             <div *ngIf="paymentForm.get('SupplierId')?.touched && paymentForm.get('SupplierId')?.invalid" class="error-message">
-              Supplier is required
+              Grower is required
             </div>
           </div>
 
@@ -223,7 +223,7 @@
         <thead>
           <tr>
             <th>Payment ID</th>
-            <th>Supplier</th>
+            <th>Grower</th>
             <th>Normal Weight</th>
             <th>Golden Tip Weight</th>
             <th>Rate</th>

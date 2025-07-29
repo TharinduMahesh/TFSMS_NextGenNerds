@@ -60,7 +60,7 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class UserService {
-  private baseUrl = "https://localhost:7203/api/UserProfile";
+  private baseUrl = "https://localhost:7197/api/UserProfile";
 
   constructor(private http: HttpClient) {}
 

@@ -166,7 +166,7 @@ export class AuthService {
     this.isBrowser = isPlatformBrowser(this.platformId)
   }
 
-  baseUrl = "https://localhost:7203/api"
+  baseUrl = "https://localhost:7197/api"
 
   private hasToken(): boolean {
     if (this.isBrowser) {

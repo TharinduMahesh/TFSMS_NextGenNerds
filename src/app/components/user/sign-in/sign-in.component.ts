@@ -128,7 +128,6 @@ onSubmit() {
           }, 1500); // Keep delay so user can see the success toast
 
         } else {
-          // Unexpected response from the backend
           this.toastService.showError(
             'Login Error',
             'An unexpected login error occurred. Please try again.'
@@ -137,7 +136,6 @@ onSubmit() {
         // --- END OF UPDATED LOGIC ---
       },
       error: (err) => {
-        // Error handling for failed API calls
         if (err.status === 400) {
           this.toastService.showError('Login Failed', 'Invalid username or password.');
         } else {

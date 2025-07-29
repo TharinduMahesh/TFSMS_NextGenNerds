@@ -1,10 +1,19 @@
 import { Component,  OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
+<<<<<<< HEAD
 import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 import  { AuthService } from "../../../shared/Services/auth.service"
 import { RouterModule } from "@angular/router"
 import  { ToastService } from "../../../shared/Services/toast.service" // Import ToastService
 import { ConfirmationService } from "../../../shared/Services/confirmation.service"
+=======
+import { FormsModule, ReactiveFormsModule,  FormBuilder,  FormGroup, Validators, FormControl } from "@angular/forms"
+import  { AuthService } from "../../../shared/services/auth.service"
+import { RouterModule } from "@angular/router"
+import  { ToastService } from "../../../shared/services/toast.service" 
+import { ConfirmationService } from "../../../shared/services/confirmation.service"
+import { map, startWith } from "rxjs"
+>>>>>>> main
 
 
 @Component({
@@ -16,18 +25,20 @@ import { ConfirmationService } from "../../../shared/Services/confirmation.servi
 })
 export class AdminUserManagementComponent implements OnInit {
   userForm: FormGroup
-  users: any[] = []
-  roles: string[] = ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] // Define available roles
+  users: any[] = [];
+  filteredUsers: any[] = [];
+  searchControl = new FormControl('');
+  roles: string[] = ["full-admin", "transport-administrator", "floor-manager", "pending", "public-user"] 
   selectedUserId: string | null = null
   alertMessage =  " "
   showAlert = false
-  alertType = "" // 'success', 'error'
+  alertType = ""
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private toastService: ToastService ,
-    private confirmationService: ConfirmationService // Inject ConfirmationService
+    private confirmationService: ConfirmationService 
   ) {
     this.userForm = this.fb.group({
       Email: ["", [Validators.required, Validators.email]],
@@ -39,81 +50,95 @@ export class AdminUserManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadUsers()
+    this.loadUsers();
+    this.searchControl.valueChanges.pipe(
+      startWith(''), // Start with an empty string to show all users initially
+      map(value => this._filter(value || ''))
+    ).subscribe(filtered => {
+      this.filteredUsers = filtered;
+    });
   }
+
+   private _filter(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    return this.users.filter(user => 
+      user.firstName.toLowerCase().includes(filterValue) ||
+      user.lastName.toLowerCase().includes(filterValue) ||
+      user.email.toLowerCase().includes(filterValue)
+    );
+  }
+
+
 
   loadUsers(): void {
     this.authService.getAllUsers().subscribe({
       next: (data) => {
         this.users = data
+        this.filteredUsers = this.users;
+        this.searchControl.setValue(this.searchControl.value); 
       },
       error: (err) => {
         console.error("Error loading users:", err)
         this.showAlertMessage("Failed to load users.", "error")
+
       },
     })
   }
 
   onSubmit(): void {
-    if (this.userForm.valid) {
-      if (this.selectedUserId) {
-        // Update existing user
-        // Use getRawValue() to include disabled fields like Email if needed by backend,
-        // though for update, Email is usually not changed.
-        const userData = this.userForm.getRawValue()
-        this.authService.updateUserByAdmin(this.selectedUserId, userData).subscribe({
-          next: (res) => {
-            this.showAlertMessage("User updated successfully!", "success")
-            this.resetForm()
-            this.loadUsers()
-          },
-          error: (err) => {
-            console.error("Error updating user:", err)
-            this.showAlertMessage("Failed to update user.", "error")
-          },
-        })
-      } else {
-        // Create new user
-        // The backend's CreateUserByAdmin endpoint does NOT expect a password here.
-        // It will create the user and send a set-password link.
-        const newUser = {
-          Email: this.userForm.value.Email,
-          FirstName: this.userForm.value.FirstName,
-          LastName: this.userForm.value.LastName,
-          MobileNo: this.userForm.value.MobileNo,
-          Role: this.userForm.value.Role,
-        }
-        this.authService.createUserByAdmin(newUser).subscribe({
-          next: (res) => {
-            this.showAlertMessage("User created and set-password link sent!", "success")
-            console.log("Set password link:", res.setPasswordLink) // Log the link for testing
-            this.resetForm()
-            this.loadUsers()
-          },
-          error: (err) => {
-            console.error("Error creating user:", err)
-            this.showAlertMessage("Failed to create user. " + (err.error?.message || ""), "error")
-          },
-        })
-      }
+  this.userForm.markAllAsTouched();
+
+  if (this.userForm.valid) {
+    if (this.selectedUserId) {
+      const userData = this.userForm.getRawValue();
+      this.authService.updateUserByAdmin(this.selectedUserId, userData).subscribe({
+        next: (res) => {
+          this.toastService.showSuccess('Success!', 'User updated successfully!');
+          this.resetForm();
+          this.loadUsers();
+        },
+        error: (err) => {
+          const errorMessage = err.error?.message || 'An unknown error occurred.';
+          this.toastService.showError('Update Failed', errorMessage);
+        },
+      });
     } else {
-      this.showAlertMessage("Please fill in all required fields.", "error")
+      const newUser = this.userForm.value;
+      this.authService.createUserByAdmin(newUser).subscribe({
+        next: (res) => {
+          this.toastService.showSuccess('User Created!', 'User has been created with a temporary password.');
+          this.resetForm();
+          this.loadUsers();
+        },
+        error: (err) => {
+          const errorMessage = err.status === 409 
+            ? 'A user with this email already exists.'
+            : err.error?.message || 'An unknown error occurred.';
+          this.toastService.showError('Creation Failed', errorMessage);
+        },
+      });
     }
+  } else {
+    this.toastService.showError('Invalid Form', 'Please fill in all required fields correctly.');
   }
+}
 
   editUser(user: any): void {
-    this.selectedUserId = user.Id
-    this.userForm.patchValue({
-      Email: user.Email,
-      FirstName: user.firstName, // Note: Backend sends 'firstName', not 'FirstName' in DTO
-      LastName: user.lastName, // Note: Backend sends 'lastName', not 'LastName' in DTO
-      MobileNo: user.mobileNo, // Note: Backend sends 'mobileNo', not 'MobileNo' in DTO
-      Role: user.role, // Note: Backend sends 'role', not 'Role' in DTO
-    })
-    // Disable email field for editing
-    this.userForm.get("Email")?.disable()
+    this.selectedUserId = user.id;
+
+    this.userForm.reset({
+      Email: user.email,         
+      FirstName: user.firstName, 
+      LastName: user.lastName,   
+      MobileNo: user.mobileNo,   
+      Role: user.role            
+    });
+
+    this.userForm.get("Email")?.disable();
   }
 
+  // Also, update your resetForm method to re-enable the email field
+  
 
 //   resetPassword(userId: string): void {
 //   const user = this.users.find(u => u.id === userId);
@@ -143,51 +168,62 @@ export class AdminUserManagementComponent implements OnInit {
 // }
 
 
- async resetPassword(userId: string): Promise<void> {
-    const user = this.users.find(u => u.id === userId);
-    const userName = user ? `${user.firstName} ${user.lastName}` : 'this user';
-    
-    // --- THIS IS THE REPLACEMENT ---
-    // We 'await' the result of the promise from our service.
-    const confirmation = await this.confirmationService.confirm(
-      `Are you sure you want to reset the password for ${userName}? They will be forced to change it on their next login.`
-    );
-    // --- END OF REPLACEMENT ---
-    
-    if (confirmation) {
-      // The rest of the logic remains the same.
-      this.authService.resetUserPasswordByAdmin(userId).subscribe({
-        next: (res) => {
-          this.toastService.showSuccess('Success!', `Password for ${userName} has been reset.`);
-        },
-        error: (err) => {
-          const errorMessage = err.error?.message || "Failed to reset password.";
-          this.toastService.showError('Error', errorMessage);
-        }
-      });
-    }
-  }
+async resetPassword(userId: string): Promise<void> {
+  const user = this.users.find(u => u.id === userId);
+  const userName = user ? `${user.firstName} ${user.lastName}` : 'this user';
+  
+  const confirmation = await this.confirmationService.confirm(
+    `Are you sure you want to reset the password for ${userName}?`
+  );
+  
+  if (confirmation) {
+    const loadingToastId = this.toastService.showLoading('Processing...', `Resetting password for ${userName}.`);
 
-  deleteUser(userId: string): void {
-    if (confirm("Are you sure you want to delete this user?")) {
-      this.authService.deleteUserByAdmin(userId).subscribe({
-        next: (res) => {
-          this.showAlertMessage("User deleted successfully!", "success")
-          this.loadUsers()
-        },
-        error: (err) => {
-          console.error("Error deleting user:", err)
-          this.showAlertMessage("Failed to delete user.", "error")
-        },
-      })
-    }
+    this.authService.resetUserPasswordByAdmin(userId).subscribe({
+      next: (res) => {
+        this.toastService.remove(loadingToastId);
+        this.toastService.showSuccess('Success!', `Password for ${userName} has been reset.`);
+      },
+      error: (err) => {
+        this.toastService.remove(loadingToastId);
+        const errorMessage = err.error?.message || "Failed to reset password.";
+        this.toastService.showError('Error', errorMessage);
+      }
+    });
   }
+}
+
+  async deleteUser(userId: string): Promise<void> {
+  const user = this.users.find(u => u.id === userId);
+  const userName = user ? `${user.firstName} ${user.lastName}` : 'this user';
+
+  const confirmation = await this.confirmationService.confirm(
+    `Are you sure you want to permanently delete ${userName}? This action cannot be undone.`
+  );
+
+  if (confirmation) {
+    const loadingToastId = this.toastService.showLoading('Deleting...', `Removing user ${userName}.`);
+
+    this.authService.deleteUserByAdmin(userId).subscribe({
+      next: (res) => {
+        this.toastService.remove(loadingToastId);
+        this.toastService.showSuccess('Success!', 'User has been deleted successfully.');
+        this.loadUsers();
+      },
+      error: (err) => {
+        this.toastService.remove(loadingToastId);
+        const errorMessage = err.error?.message || "Failed to delete user.";
+        this.toastService.showError('Delete Failed', errorMessage);
+      },
+    });
+  }
+}
 
   resetForm(): void {
     this.userForm.reset()
     this.selectedUserId = null
-    this.userForm.get("Email")?.enable() // Re-enable email field
-    this.userForm.get("Role")?.setValue("") // Reset role dropdown
+    this.userForm.get("Email")?.enable() 
+    this.userForm.get("Role")?.setValue("") 
   }
 
  showAlertMessage(message: string, type: string): void {

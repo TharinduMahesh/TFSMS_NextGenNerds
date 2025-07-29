@@ -1,60 +1,94 @@
 /* src/app/pages/profile/user-profile/user-profile.component.css */
 
 .user-profile-container {
-  max-width: 700px;
+  max-width: 800px;
   margin: 40px auto;
-  padding: 30px;
+  padding: 0;
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #1a1a1a;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
 }
 
 h2 {
   text-align: center;
-  color: #2c3e50;
-  margin-bottom: 30px;
-  font-size: 2.2em;
-  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  padding: 32px 40px 24px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
 }
 
 .alert {
-  padding: 12px 20px;
-  margin-bottom: 20px;
-  border-radius: 5px;
+  padding: 16px 24px;
+  margin: 24px 40px;
+  border-radius: 8px;
   font-weight: 500;
-  text-align: center;
+  text-align: left;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-left: 4px solid;
+  font-size: 0.95rem;
 }
 
 .alert.show {
   opacity: 1;
+  transform: translateY(0);
 }
 
 .alert-success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background-color: #f0fdf4;
+  color: #166534;
+  border-left-color: #22c55e;
+  border: 1px solid #bbf7d0;
 }
 
 .alert-error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-left-color: #ef4444;
+  border: 1px solid #fecaca;
 }
 
 .alert-close {
   background: none;
   border: none;
-  font-size: 1.5em;
+  font-size: 1.25rem;
   cursor: pointer;
   color: inherit;
-  padding: 0 5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  opacity: 0.7;
+}
+
+.alert-close:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .loading-spinner {
@@ -62,15 +96,16 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 50px;
+  padding: 80px 40px;
+  gap: 16px;
 }
 
 .spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #007bff;
+  border: 3px solid #f3f4f6;
+  border-left-color: #667eea;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   animation: spin 1s linear infinite;
 }
 
@@ -84,101 +119,205 @@ h2 {
 }
 
 .profile-form-section {
-  background-color: #f9f9f9;
-  padding: 25px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  padding: 40px;
+  border-top: 1px solid #f3f4f6;
+  position: relative;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #555;
+  color: #374151;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
 }
 
 .form-group input[type="email"],
 .form-group input[type="text"] {
-  width: 100%; /* Changed from calc() to 100% since box-sizing is used */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1em;
-  box-sizing: border-box; 
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #ffffff;
+  color: #1f2937;
 }
 
 .form-group input[readonly] {
-  background-color: #e9ecef;
+  background-color: #f9fafb;
+  color: #6b7280;
   cursor: not-allowed;
+  border-color: #d1d5db;
 }
 
 .form-group input[type="email"]:focus,
 .form-group input[type="text"]:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
   outline: none;
+  background-color: #ffffff;
+}
+
+.form-group input[type="email"]:hover:not([readonly]),
+.form-group input[type="text"]:hover:not([readonly]) {
+  border-color: #9ca3af;
 }
 
 .error-message {
-  color: #dc3545;
-  font-size: 0.85em;
-  margin-top: 5px;
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.error-message::before {
+  content: '⚠';
+  font-size: 0.75rem;
 }
 
 .form-actions {
   display: flex;
-  gap: 15px;
-  justify-content: flex-end; /* This aligns buttons to the right, which is common */
-  margin-top: 25px;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f3f4f6;
 }
 
-/* This is your base style for all buttons in this section */
 .form-actions button {
-  padding: 10px 25px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1em;
+  font-size: 0.95rem;
   font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-width: 140px;
+  letter-spacing: 0.01em;
 }
 
-/* --- UPDATED/CONFIRMED STYLES --- */
-
-/* Primary button (Update Profile) - Renamed to a class for clarity */
+/* Primary button (Update Profile) */
 .btn-primary {
-  background-color: #28a745; /* Your existing green color */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #218838; /* Your existing darker green */
   transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
 }
 
-/* --- NEW STYLES FOR THE SECONDARY BUTTON --- */
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
 
 /* Secondary button (Change Password) */
 .btn-secondary {
-  background-color: #6c757d; /* A standard, complementary gray */
-  color: white;
+  background-color: #ffffff;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #5a6268; /* A darker gray for hover */
-  transform: translateY(-2px);
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* --- END OF NEW STYLES --- */
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+  background-color: #f3f4f6;
+}
 
-
-/* This is your existing disabled style, it will apply to both buttons now */
+/* Disabled state for both buttons */
 .form-actions button:disabled {
-  background-color: #cccccc;
+  background: #f3f4f6;
+  color: #9ca3af;
   cursor: not-allowed;
-  transform: none; /* No movement when disabled */
+  transform: none;
+  box-shadow: none;
+  border-color: #e5e7eb;
+}
+
+/* Loading state for buttons */
+.form-actions button.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.form-actions button.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.form-actions button.loading span {
+  opacity: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .user-profile-container {
+    margin: 20px;
+    border-radius: 8px;
+  }
+  
+  h2 {
+    padding: 24px 20px 16px;
+    font-size: 1.75rem;
+  }
+  
+  .profile-form-section {
+    padding: 24px 20px;
+  }
+  
+  .alert {
+    margin: 16px 20px;
+  }
+  
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  
+  .form-actions button {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+/* Focus visible for accessibility */
+.form-actions button:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for better UX */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }

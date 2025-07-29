@@ -50,54 +50,35 @@
 //   }
 // }
 
-import { Injectable } from "@angular/core"
-import {  HttpClient, HttpHeaders } from "@angular/common/http"
-import  { Observable } from "rxjs"
-import  { AuthService } from "./auth.service"
+// In src/app/shared/services/user.service.ts
+
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
 })
 export class UserService {
-  // ✅ FIX 1: Make sure baseUrl is correct and consistent
-  private baseUrl = "https://localhost:7203/api"
+  private baseUrl = "https://localhost:7203/api/UserProfile";
 
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService,
-  ) {}
-
-  // ✅ FIX 2: Centralized method to get auth headers
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.gettoken()
-    if (!token) {
-      throw new Error("No authentication token found")
-    }
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    })
-  }
+  constructor(private http: HttpClient) {}
 
   getUserProfile(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/UserProfile`, {
-      headers: this.getAuthHeaders(),
-    })
+    return this.http.get(`${this.baseUrl}/`);
   }
 
   updateUserProfile(userData: { FirstName: string; LastName: string; MobileNo: string }): Observable<any> {
-    return this.http.put(`${this.baseUrl}/UserProfile`, userData, {
-      headers: this.getAuthHeaders(),
-    })
+    return this.http.put(`${this.baseUrl}/`, userData);
   }
 
   changePassword(passwordData: { currentPassword: string; newPassword: string }): Observable<any> {
-  // 1. Log the action for debugging purposes.
-  console.log("UserService: Calling the changePassword API endpoint.");
+    
+    const requestBody = {
+      CurrentPassword: passwordData.currentPassword,
+      NewPassword: passwordData.newPassword
+    };
 
-  const changePasswordUrl = `${this.baseUrl}/UserProfile/change-password`;
-
-  return this.http.post(changePasswordUrl, passwordData);
+    return this.http.post(`${this.baseUrl}/change-password`, requestBody);
+  }
 }
-
-}
-

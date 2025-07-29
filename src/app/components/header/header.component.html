@@ -34,7 +34,9 @@
         <!-- The dropdown menu itself, shown/hidden with *ngIf -->
         <div class="profile-dropdown" *ngIf="profileMenuOpen">
           <div class="dropdown-header">
-  <h4>Welcome, <strong class="user-name-dropdown">{{ firstName }}</strong></h4>
+  <h4>Welcome, <strong class="user-name-dropdown">{{ firstName }}</strong>
+           <span class="status-dot online"></span>
+  </h4>
 </div>
           <hr />
           <a routerLink="/dashboard" (click)="closeProfileMenu()">Go to Dashboard</a>

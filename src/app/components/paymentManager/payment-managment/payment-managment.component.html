@@ -15,18 +15,13 @@
       (click)="setActiveTab('incentives')">
       Incentives
     </button>
-    <!-- <button 
+     <button 
       class="nav-tab" 
-      [class.active]="activeTab === 'debts'" 
-      (click)="setActiveTab('debts')">
-      Debts
+      [class.active]="activeTab === 'payment-history'" 
+      (click)="setActiveTab('payment-history')">
+      Payment History
     </button>
-    <button 
-      class="nav-tab" 
-      [class.active]="activeTab === 'advances'" 
-      (click)="setActiveTab('advances')">
-      Advances
-    </button> -->
+    
   </div>
 
   <div class="tab-content">
@@ -36,11 +31,8 @@
     <div *ngIf="activeTab === 'incentives'">
       <app-incentive></app-incentive>
     </div>
-    <!-- <div *ngIf="activeTab === 'debts'">
-      <app-debt></app-debt>
+     <div *ngIf="activeTab === 'payment-history'">
+      <app-payment-history></app-payment-history>
     </div>
-    <div *ngIf="activeTab === 'advances'">
-      <app-advance></app-advance>
-    </div> -->
   </div>
 </div>

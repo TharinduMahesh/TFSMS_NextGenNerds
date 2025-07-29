@@ -12,13 +12,20 @@ import  { SupplierService } from "../../../shared/Services/supplier.service"
 import  { GreenLeafService } from "../../../shared/Services/green-leaf.service"
 import  { ExportService } from "../../../shared/Services/export.service"
 import  { PaymentCalculationResult } from "../../../models/payment-calculation.model"
+<<<<<<< HEAD
 import  { IncentiveService } from "../../../shared/Services/incentive.service"
+=======
+import  { IncentiveService } from "../../../shared/services/incentive.service"
+import { PaymentHistoryComponent } from "../payment-history/payment-history.component";
+import { ConfirmationService } from "../../../shared/services/confirmation.service";
+import { ToastService } from "../../../shared/services/toast.service";
+>>>>>>> main
 
 @Component({
   selector: "app-payment",
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent],
-  providers: [PaymentService, SupplierService, GreenLeafService, ExportService, IncentiveService],
+  providers: [PaymentService, SupplierService, GreenLeafService, ExportService, IncentiveService , PaymentHistoryComponent],
   templateUrl: "./payment.component.html",
   styleUrls: ["./payment.component.css"],
 })
@@ -64,6 +71,8 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     private ExportService: ExportService,
     private incentiveService: IncentiveService,
     private fb: FormBuilder,
+    private confirmationService: ConfirmationService, 
+    private toastService: ToastService
   ) {
     this.paymentForm = this.fb.group({
       SupplierId: ["", Validators.required],
@@ -339,29 +348,42 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   }
 
   // Delete functionality
-  deletePayment(paymentId: number): void {
-    if (confirm("Are you sure you want to delete this payment? This action cannot be undone.")) {
-      this.loading = true
-      this.error = null
-      this.paymentService.deletePayment(paymentId).subscribe({
-        next: (success) => {
-          if (success) {
-            this.loadPayments()
-            this.loadSummaryMetrics()
-            console.log("Payment deleted successfully")
-          } else {
-            this.error = "Failed to delete payment. Please try again."
-          }
-          this.loading = false
-        },
-        error: (err) => {
-          console.error("Error deleting payment:", err)
-          this.error = "Failed to delete payment. Please try again."
-          this.loading = false
-        },
-      })
-    }
+ async deletePayment(paymentId: number): Promise<void> {
+  const confirmation = await this.confirmationService.confirm(
+    'Are you sure you want to permanently delete this payment? This action cannot be undone.'
+  );
+
+  if (confirmation) {
+    this.loading = true;
+    const loadingToastId = this.toastService.showLoading('Deleting...', 'Removing payment record.');
+
+    this.paymentService.deletePayment(paymentId).subscribe({
+      // The 'wasSuccessful' variable here is just a boolean: true or false
+      next: (wasSuccessful: boolean) => {
+        this.loading = false;
+        this.toastService.remove(loadingToastId);
+        
+        // --- THIS IS THE FIX ---
+        if (wasSuccessful) {
+          // If the service returned true, show success.
+          this.toastService.showSuccess('Success!', 'Payment has been deleted successfully.');
+          this.loadPayments();
+          this.loadSummaryMetrics();
+        } else {
+          // If the service returned false, show a generic error.
+          this.toastService.showError('Delete Failed', 'The payment could not be deleted.');
+        }
+        // --- END OF FIX ---
+      },
+      error: (err) => {
+        this.loading = false;
+        this.toastService.remove(loadingToastId);
+        this.toastService.showError('System Error', 'An unexpected error occurred. Please try again.');
+        console.error('Error deleting payment:', err);
+      },
+    });
   }
+}
 
   
 
@@ -402,42 +424,55 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     });
   }
 
- exportPaymentsData(format: string): void {
-    if (this.filteredPayments.length === 0) {
-      alert("There are no pending payments in the current view to finalize.");
-      return;
-    }
 
-    // ✨ FIX: Corrected the template literal for the confirmation message.
-    if (!confirm(`This will finalize ${this.filteredPayments.length} pending payment(s) in the current view and generate a payment sheet. This action cannot be undone. Are you sure?`)) {
-      return;
-    }
+async exportPaymentsData(format: string): Promise<void> {
+  const pendingPaymentsToExport = this.filteredPayments.filter(
+    (p) => p.Status === 'Pending'
+  );
 
-    this.loading = true; // Start loading for the entire operation.
-    this.error = null;
+  if (pendingPaymentsToExport.length === 0) {
+    this.toastService.showInfo('No Data', 'There are no pending payments in the current view to finalize.');
+    return;
+  }
 
-    this.ExportService.exportPayments(format, this.customStartDate, this.customEndDate).subscribe({
-      next: (blob) => {
-        console.log("Payment sheet generated successfully by the backend.");
+  const confirmation = await this.confirmationService.confirm(
+    `This will finalize ${pendingPaymentsToExport.length} pending payment(s) and generate a payment sheet. This action cannot be undone. Are you sure?`
+  );
 
-        // Download the file immediately.
-        const filename = `payments-export-${new Date().toISOString().split('T')[0]}.${format.toLowerCase()}`;
-        this.ExportService.downloadFile(blob, filename);
+  if (!confirmation) {
+    return;
+  }
 
-        // ✨ FIX: Trigger the data reload. The loading spinner will remain active
-        // until loadPayments() completes, preventing the user from clicking again on stale data.
-        this.loadPayments();
-        this.loadSummaryMetrics();
-      },
-      error: (err) => {
-        // On error, we must manually turn off the loading spinner.
-        this.loading = false;
-        this.error = "Failed to generate the payment sheet. No payments were finalized.";
-        console.error("Error exporting payments:", err);
-      }
-    });
+  this.loading = true;
+  // --- Optional but recommended: Add a loading toast for immediate feedback ---
+  const loadingToastId = this.toastService.showLoading('Generating...', 'Creating payment sheet. This may take a moment.');
+
+  this.ExportService.exportPayments(
+    format,
+    this.customStartDate,
+    this.customEndDate
+  ).subscribe({
+    next: (blob) => {
+      this.loading = false;
+      this.toastService.remove(loadingToastId);
+      
+      this.toastService.showSuccess('Success!', 'Payment sheet generated and download has started.');
+
+      const filename = `payments-export-${new Date().toISOString().split('T')[0]}.${format.toLowerCase()}`;
+      this.ExportService.downloadFile(blob, filename);
+
+      this.loadPayments();
+      this.loadSummaryMetrics();
+    },
+    error: (err) => {
+      this.loading = false;
+      this.toastService.remove(loadingToastId);
+
+      this.toastService.showError('Export Failed', 'Failed to generate the payment sheet. No payments were finalized.');
+      console.error('Error exporting payments:', err);
+    },
+  });
 }
-
   private normalizePaymentData(payments: any[]): Payment[] {
     return payments.map((payment) => {
       return {

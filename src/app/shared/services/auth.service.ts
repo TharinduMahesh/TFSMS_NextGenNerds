@@ -144,6 +144,7 @@ import { TOKEN_KEY } from "../constans"
 import  { JwtPayload } from "jwt-decode" // You might need to install jwt-decode: npm install jwt-decode
 import { Router } from "@angular/router" // Import Router
 import { Observable } from "rxjs"
+import { BehaviorSubject } from "rxjs"
 
 interface CustomJwtPayload extends JwtPayload {
   role?: string // Add role property to the JWT payload interface
@@ -153,7 +154,8 @@ interface CustomJwtPayload extends JwtPayload {
   providedIn: "root",
 })
 export class AuthService {
-  
+  private loggedInState = new BehaviorSubject<boolean>(this.hasToken());
+  isLoggedIn$ = this.loggedInState.asObservable();
   private isBrowser: boolean;
 
   constructor(
@@ -165,6 +167,13 @@ export class AuthService {
   }
 
   baseUrl = "https://localhost:7203/api"
+
+  private hasToken(): boolean {
+    if (this.isBrowser) {
+      return localStorage.getItem(TOKEN_KEY) !== null;
+    }
+    return false;
+  }
 
   createUser(formData: any) {
     // This endpoint is for self-registration, which we are moving away from for role assignment
@@ -182,7 +191,8 @@ export class AuthService {
 
   savetoken(token: string) {
     if (this.isBrowser) {
-      localStorage.setItem(TOKEN_KEY, token)
+      localStorage.setItem(TOKEN_KEY, token);
+      
     }
   }
 
@@ -195,7 +205,9 @@ export class AuthService {
 
   deletetoken() {
     if (this.isBrowser) {
-      localStorage.removeItem(TOKEN_KEY)
+      localStorage.removeItem(TOKEN_KEY);
+            this.loggedInState.next(false);
+
     }
   }
 
@@ -299,4 +311,9 @@ export class AuthService {
       return false
     }
 }
+
+
+forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/forgot-password`, { Email: email });
+  }
 }

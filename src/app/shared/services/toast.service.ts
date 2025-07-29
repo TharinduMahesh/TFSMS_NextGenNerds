@@ -61,6 +61,22 @@ export class ToastService {
     })
   }
 
+  showLoading(title: string, message: string): number {
+    const toast: Toast = {
+      id: this.getNextId(),
+      type: 'info', // Use the 'info' style for the loading indicator
+      title,
+      message,
+      // We explicitly DO NOT set a timeout, so it stays forever
+    };
+    
+    this.show(toast); // Call the existing private method to display it
+    
+    return toast.id; // Return the ID for later removal
+  }
+
+
+
   private show(toast: Toast): void {
     this.toasts.push(toast)
     this.toastsChanged.next([...this.toasts])

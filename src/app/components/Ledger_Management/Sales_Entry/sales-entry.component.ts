@@ -4,7 +4,7 @@ import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common'; // For NgFor, NgIf, DatePipe
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
-import { HeaderComponent } from "../../header/header.component";
+import { HeaderComponent } from "../../header/header.component"; // Import HeaderComponent
 
 import { SalesEntryService } from '../../../Services/sales-entry.service'; // Import the new service
 import { SalesEntry } from '../../../models/sales-entry.interface'; // Import the SalesEntry interface
@@ -12,23 +12,22 @@ import { SalesEntry } from '../../../models/sales-entry.interface'; // Import th
 @Component({
   selector: 'app-sales-entry',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent], // Added HeaderComponent to imports
   templateUrl: './sales-entry.component.html',
   styleUrls: ['./sales-entry.component.css']
 })
 export class SalesEntryComponent implements OnInit {
 
   // --- Form Properties ---
-  invoiceNumber: string = '';
+  invoiceNumber: string = ''; // DEFINITIVE FIX: Re-added invoiceNumber property
   saleDate: string = new Date().toISOString().split('T')[0]; // Default to today's date
   customerName: string = '';
   teaGrade: string = ''; // Will be bound to dropdown
   quantityKg: number | null = null;
   unitPriceKg: number | null = null;
   totalAmount: number | null = null;
-  remarks: string = '';
 
-  // NEW: Predefined options for Tea Grade dropdown
+  // Predefined options for Tea Grade dropdown
   teaGrades: string[] = [
     'BOPF', 'FBOP', 'OP', 'Pekoe', 'Green Tea Sencha',
     'Earl Grey Blend', 'Chamomile Infusion', 'Ceylon Black Tea', 'Dust'
@@ -62,7 +61,8 @@ export class SalesEntryComponent implements OnInit {
         this.salesRecords = data.map(entry => ({
           ...entry,
           saleDate: entry.saleDate ? new Date(entry.saleDate).toISOString().split('T')[0] : '', // Ensure YYYY-MM-DD
-          remarks: entry.remarks || '' // Handle optional remarks
+          createdAt: entry.createdAt || null,
+          updatedAt: entry.updatedAt || null
         })).sort((a, b) => new Date(b.saleDate).getTime() - new Date(a.saleDate).getTime()); // Sort by date descending
 
         console.log('Sales records loaded:', this.salesRecords);
@@ -81,14 +81,13 @@ export class SalesEntryComponent implements OnInit {
    * @description Clears the form fields and resets the editing state.
    */
   clearForm(): void {
-    this.invoiceNumber = '';
+    this.invoiceNumber = ''; // DEFINITIVE FIX: Clear invoiceNumber
     this.saleDate = new Date().toISOString().split('T')[0];
     this.customerName = '';
-    this.teaGrade = ''; // Clear teaGrade
+    this.teaGrade = '';
     this.quantityKg = null;
     this.unitPriceKg = null;
     this.totalAmount = null;
-    this.remarks = '';
     this.editingEntryId = null; // Clear editing state
   }
 
@@ -111,14 +110,13 @@ export class SalesEntryComponent implements OnInit {
    */
   editEntry(entry: SalesEntry): void {
     this.editingEntryId = entry.id || null;
-    this.invoiceNumber = entry.invoiceNumber;
+    this.invoiceNumber = entry.invoiceNumber; // DEFINITIVE FIX: Populate invoiceNumber
     this.saleDate = entry.saleDate;
     this.customerName = entry.customerName;
-    this.teaGrade = entry.teaGrade; // Populate teaGrade
+    this.teaGrade = entry.teaGrade;
     this.quantityKg = entry.quantityKg;
     this.unitPriceKg = entry.unitPriceKg;
     this.totalAmount = entry.totalAmount;
-    this.remarks = entry.remarks || '';
   }
 
   /**
@@ -126,6 +124,7 @@ export class SalesEntryComponent implements OnInit {
    * @description Adds a new sales entry or updates an existing one.
    */
   addOrUpdateEntry(): void {
+    // Basic validation
     if (!this.invoiceNumber || !this.saleDate || !this.customerName || !this.teaGrade ||
         this.quantityKg === null || this.quantityKg <= 0 ||
         this.unitPriceKg === null || this.unitPriceKg <= 0 ||
@@ -138,14 +137,13 @@ export class SalesEntryComponent implements OnInit {
 
     const entryToSave: SalesEntry = {
       id: this.editingEntryId || undefined,
-      invoiceNumber: this.invoiceNumber,
+      invoiceNumber: this.invoiceNumber, // DEFINITIVE FIX: Include invoiceNumber
       saleDate: this.saleDate,
       customerName: this.customerName,
       teaGrade: this.teaGrade,
       quantityKg: this.quantityKg,
       unitPriceKg: this.unitPriceKg,
       totalAmount: this.totalAmount,
-      remarks: this.remarks || undefined
     };
 
     if (this.editingEntryId) {
@@ -220,7 +218,7 @@ export class SalesEntryComponent implements OnInit {
    * @method formatDate
    * @description Utility function to format date strings for display.
    */
-  formatDate(dateString: string | undefined): string {
+  formatDate(dateString: string | undefined | null): string {
     if (!dateString) return 'N/A';
     try {
       const date = new Date(dateString);

@@ -1,8 +1,9 @@
 /* General container for the entire Sales Report page */
 .sales-report-container {
   padding: 40px;
-  max-width: 1300px; /* Wider for reports */
-  margin: 40px 40px auto 240px;
+  max-width: 1500px; /* Wider for reports */
+  margin: 40px auto; /* Center horizontally, with top/bottom margin */
+  margin-left: 320px; /* Add left margin to account for sidebar width */
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1); /* Prominent shadow for a report feel */
@@ -127,7 +128,6 @@
   transform: translateY(-1px);
 }
 
-
 /* KPI Cards - Consistent with other report pages */
 .kpi-cards-grid {
   display: grid;
@@ -181,6 +181,51 @@
   border-left-color: #673ab7; /* Purple */
 }
 
+/* Charts Section - for future use */
+.charts-section {
+  background-color: #fdfdfd;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+}
+
+.charts-section h2 {
+  color: #34495e;
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.chart-card {
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+}
+
+.chart-card h3 {
+  color: #34495e;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.chart-wrapper {
+  height: 300px;
+  position: relative;
+}
 
 /* Tables Section - Consistent with other report tables */
 .table-responsive {
@@ -259,10 +304,21 @@
 }
 
 /* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .sales-report-container {
+    margin-left: 110px; /* Collapsed sidebar */
+  }
+  
+  .charts-grid {
+    grid-template-columns: 1fr; /* Stack charts on medium screens */
+  }
+}
+
 @media (max-width: 992px) {
   .sales-report-container { /* Adjusted from .report-container */
     padding: 20px;
     margin: 20px auto;
+    margin-left: 20px; /* Reset margin on smaller screens */
   }
   .report-title {
     font-size: 2.2rem;
@@ -281,6 +337,7 @@
   .sales-report-container {
     padding: 15px;
     margin: 15px auto;
+    margin-left: 15px; /* Mobile margin */
   }
   .report-title {
     font-size: 1.8rem;
@@ -317,5 +374,9 @@
   }
   .exit-button-container {
     justify-content: center;
+  }
+  .exit-button {
+    width: 100%; /* Full width on mobile */
+    padding: 12px 15px;
   }
 }

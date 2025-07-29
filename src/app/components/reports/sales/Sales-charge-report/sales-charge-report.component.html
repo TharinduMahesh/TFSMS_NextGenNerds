@@ -1,5 +1,6 @@
 <!-- src/app/components/reports/sales-charge-report/sales-charge-report.component.html -->
 <app-header></app-header>
+<app-sidebar></app-sidebar>
 <div class="sales-report-container">
   <h1 class="report-title">Sales Charges Report</h1>
 
@@ -105,8 +106,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let record of filteredSalesChargeRecords">
-            <td>{{ record.id }}</td>
-            <td>{{ record.saleReference }}</td>
+            <td>{{ record.salesChargeId }}</td>
+            <!-- <td>{{ record.saleReference }}</td> -->
             <td>{{ record.chargeType }}</td>
             <td>{{ record.amount | number:'1.2-2' }}</td>
             <td>{{ formatDate(record.chargeDate) }}</td>

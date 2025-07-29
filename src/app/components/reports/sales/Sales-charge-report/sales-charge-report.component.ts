@@ -4,9 +4,9 @@ import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common'; // For NgFor, NgIf, DatePipe
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
-import { HeaderComponent } from "../../../../components/header/header.component"; // Import HeaderComponent
+import { HeaderComponent } from '../../../header/header.component'; // Import HeaderComponent for navigation
+import { SidebarComponent } from '../../../sidebar/sidebar/sidebar.component';
 
-// NEW: Import for Charts
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 
@@ -23,8 +23,7 @@ interface SalesChargeSummaryKpi {
 @Component({
   selector: 'app-sales-charge-report',
   standalone: true,
-  // NEW: Add BaseChartDirective to imports
-  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent],
+  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent, SidebarComponent],
   templateUrl: './sales-charge-report.component.html',
   styleUrls: ['./sales-charge-report.component.css']
 })
@@ -134,7 +133,7 @@ export class SalesChargeReportComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private salesChargeReportService: SalesChargeReportService, // Inject the Sales Charge Report Service
+    private salesChargeReportService: SalesChargeReportService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -154,8 +153,10 @@ export class SalesChargeReportComponent implements OnInit {
       next: (data) => {
         this.allSalesChargeRecords = data.map(entry => ({
           ...entry,
-          chargeDate: new Date(entry.chargeDate).toISOString().split('T')[0] // Ensure YYYY-MM-DD for consistency
-        })).sort((a, b) => new Date(a.chargeDate).getTime() - new Date(b.chargeDate).getTime()); // Sort by date ascending
+          chargeDate: entry.chargeDate ? new Date(entry.chargeDate).toISOString().split('T')[0] : null,
+          // saleReference: entry.saleReference || null,
+          description: entry.description || null
+        })).sort((a, b) => (b.salesChargeId || 0) - (a.salesChargeId || 0));
 
         console.log('Sales Charge records loaded:', this.allSalesChargeRecords);
         this.applyFilters(); // Apply filters to display data and update KPIs
@@ -184,17 +185,17 @@ export class SalesChargeReportComponent implements OnInit {
       );
     }
 
-    // Filter by Sale Reference
-    if (this.saleReferenceFilter) {
-      tempRecords = tempRecords.filter(record =>
-        record.saleReference.toLowerCase().includes(this.saleReferenceFilter.toLowerCase())
-      );
-    }
+    // FIX: Robust filter for optional saleReference (using &&)
+    // if (this.saleReferenceFilter) {
+    //   tempRecords = tempRecords.filter(record =>
+    //     record.saleReference && record.saleReference.toLowerCase().includes(this.saleReferenceFilter.toLowerCase())
+    //   );
+    // }
 
     this.filteredSalesChargeRecords = tempRecords;
     this.calculateSummaryKpis();
     if (this.isBrowser) {
-      this.updateChartData(); // NEW: Call updateChartData after filtering
+      this.updateChartData(); // Call updateChartData after filtering
     }
   }
 
@@ -243,7 +244,8 @@ export class SalesChargeReportComponent implements OnInit {
     // 1. Sales Charge Amount Trend (Line Chart)
     const monthlyChargeAmounts: { [key: string]: number } = {};
     this.filteredSalesChargeRecords.forEach(entry => {
-      const month = new Date(entry.chargeDate).toISOString().substring(0, 7); // YYYY-MM
+      // FIX: Use optional chaining and nullish coalescing for chargeDate
+      const month = entry.chargeDate ? new Date(entry.chargeDate).toISOString().substring(0, 7) : 'N/A';
       monthlyChargeAmounts[month] = (monthlyChargeAmounts[month] || 0) + entry.amount;
     });
     const sortedMonths = Object.keys(monthlyChargeAmounts).sort();
@@ -280,14 +282,14 @@ export class SalesChargeReportComponent implements OnInit {
    * @method formatDate
    * @description Utility function to format date strings for display.
    */
-  formatDate(dateString: string | undefined): string {
+  formatDate(dateString: string | undefined | null): string {
     if (!dateString) return 'N/A';
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) {
         return 'Invalid Date';
       }
-      return date.toLocaleDateString(); // For display
+      return date.toLocaleDateString();
     } catch (e) {
       return 'Invalid Date Format';
     }
@@ -323,11 +325,11 @@ export class SalesChargeReportComponent implements OnInit {
       };
 
       return [
-        escapeCsv(record.id),
-        escapeCsv(record.saleReference),
+        escapeCsv(record.salesChargeId),
+        // escapeCsv(record.saleReference || 'N/A'), // DEFINITIVE FIX: Handle optional saleReference for CSV
         escapeCsv(record.chargeType),
         escapeCsv(record.amount),
-        escapeCsv(this.formatDate(record.chargeDate)),
+        escapeCsv(this.formatDate(record.chargeDate)), // DEFINITIVE FIX: Handle optional chargeDate for CSV
         escapeCsv(record.description || 'N/A')
       ].join(',');
     });

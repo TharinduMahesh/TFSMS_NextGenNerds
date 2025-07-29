@@ -6,6 +6,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { forkJoin } from 'rxjs';
 import { HeaderComponent } from "../../header/header.component";
+import { SidebarComponent } from '../../sidebar/sidebar/sidebar.component';
 
 // Import services and interfaces for Claims
 import { ClaimEntryService } from '../../../Services/claim-entry.service';
@@ -49,7 +50,7 @@ interface GroupedClaimData {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseChartDirective,HeaderComponent],
+  imports: [CommonModule, FormsModule, BaseChartDirective,HeaderComponent, SidebarComponent],
   templateUrl: './claim-analysis.component.html',
   styleUrls: ['./claim-analysis.component.css']
 })

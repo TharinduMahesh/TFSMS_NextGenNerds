@@ -5,6 +5,7 @@ import { isPlatformBrowser, CommonModule } from '@angular/common'; // For NgFor,
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
 import { HeaderComponent } from "../../../header/header.component";
+import { SidebarComponent } from '../../../sidebar/sidebar/sidebar.component';
 
 // NEW: Import for Charts
 import { BaseChartDirective } from 'ng2-charts';
@@ -25,7 +26,7 @@ interface GratisIssueSummaryKpi {
   selector: 'app-gratis-issue-report',
   standalone: true,
   // NEW: Add BaseChartDirective to imports
-  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent],
+  imports: [CommonModule, FormsModule, BaseChartDirective, HeaderComponent, SidebarComponent],
   templateUrl: './gratis-issue-report.component.html',
   styleUrls: ['./gratis-issue-report.component.css']
 })

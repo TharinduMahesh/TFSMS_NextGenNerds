@@ -1,8 +1,8 @@
 /* General container for the entire report page */
 .nsa-report-container {
   padding: 40px;
-  max-width: 1300px; /* Wider for reports */
-  margin: 40px 40px auto 240px;
+  max-width: 1500px; /* Wider for reports */
+  margin: 40px auto;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1); /* Prominent shadow for a report feel */

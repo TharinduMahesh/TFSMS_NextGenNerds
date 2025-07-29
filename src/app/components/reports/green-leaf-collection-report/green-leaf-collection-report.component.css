@@ -1,7 +1,7 @@
 /* General container for the entire report page */
 .glc-report-container {
   padding: 40px;
-  max-width: 1200px; /* Wider for reports */
+  max-width: 1500px; /* Wider for reports */
   margin: 40px 40px auto 300px;
   background-color: #ffffff;
   border-radius: 12px;
@@ -173,7 +173,7 @@
 /* Charts Section */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); /* Flexible chart columns */
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Flexible chart columns */
   gap: 25px;
   margin-top: 20px;
 }

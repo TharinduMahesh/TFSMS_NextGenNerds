@@ -1,8 +1,9 @@
 /* General container styling, consistent with claims-analysis */
 .returns-analysis-container {
   padding: 30px;
-  max-width: 1300px; /* Wider for dashboard layout */
-  margin: 40px 40px auto 240px;
+  max-width: 1500px; /* Wider for dashboard layout */
+  margin: 40px auto;
+  margin-left: 300px; /* Add left margin to account for sidebar width */
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);
@@ -61,6 +62,7 @@
   border-radius: 6px;
   font-size: 1rem;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
   /* FIX: Ensure consistent minimum height for all input types */
   min-height: 40px; /* Adjust as needed for visual consistency */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
@@ -117,7 +119,6 @@
   background-color: #45a049;
   transform: translateY(-1px);
 }
-
 
 .kpi-cards-grid {
   display: grid;
@@ -210,6 +211,12 @@
   margin-top: 10px;
 }
 
+/* Chart wrapper for actual charts */
+.chart-wrapper {
+  height: 250px;
+  position: relative;
+}
+
 /* Detailed Records Section */
 .records-section {
   background-color: #fdfdfd;
@@ -268,6 +275,7 @@
   padding: 20px;
 }
 
+/* Exit button styling */
 .exit-button-container {
   display: flex;
   justify-content: flex-end;
@@ -295,6 +303,10 @@
 
 /* Responsive Adjustments */
 @media (max-width: 1200px) {
+  .returns-analysis-container {
+    margin-left: 90px; /* Collapsed sidebar */
+  }
+  
   .charts-grid {
     grid-template-columns: 1fr; /* Stack charts on smaller screens */
   }
@@ -304,6 +316,7 @@
   .returns-analysis-container {
     padding: 15px;
     margin: 15px auto;
+    margin-left: 15px; /* Reset margin on mobile */
   }
 
   .page-title {

@@ -1,5 +1,6 @@
 <!-- src/app/components/reports/sales-report/sales-report.component.html -->
 <app-header></app-header>
+<app-sidebar></app-sidebar>
 <div class="sales-report-container">
   <h1 class="report-title">Sales Report</h1>
 
@@ -60,36 +61,63 @@
       <table class="sales-report-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Invoice No.</th>
-            <th>Sale Date</th>
-            <th>Customer Name</th>
-            <th>Tea Grade</th>
-            <th>Quantity (Kg)</th>
-            <th>Unit Price (Rs./Kg)</th>
+            <th>Invoice ID</th>
+            <th>Invoice Number</th>
+            <th>Invoice Date</th>
+            <th>Broker Name</th>
+            <th>Buyer Name</th>
             <th>Total Amount (Rs.)</th>
-            <th>Remarks</th>
+            <th>Sold Price Per Kg</th>
+            <th>Status</th>
+            <th>Tea Grade (Line Item)</th>
+            <th>Quantity (Line Item)</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let record of filteredSalesRecords">
-            <td>{{ record.id }}</td>
+          <tr *ngFor="let record of filteredInvoiceRecords"> <!-- FIX: Use filteredInvoiceRecords -->
+            <td>{{ record.invoiceId }}</td>
             <td>{{ record.invoiceNumber }}</td>
-            <td>{{ formatDate(record.saleDate) }}</td>
-            <td>{{ record.customerName }}</td>
-            <td>{{ record.teaGrade }}</td>
-            <td>{{ record.quantityKg | number:'1.2-2' }}</td>
-            <td>{{ record.unitPriceKg | number:'1.2-2' }}</td>
+            <td>{{ formatDate(record.invoiceDate) }}</td>
+            <td>{{ record.brokerName }}</td>
+            <td>{{ record.buyerName || 'N/A' }}</td>
             <td>{{ record.totalAmount | number:'1.2-2' }}</td>
-            <td>{{ record.remarks || 'N/A' }}</td>
+            <td>{{ record.soldPricePerKg | number:'1.2-2' }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'status-pending': record.status === 'Pending',
+                'status-invoiced': record.status === 'Invoiced',
+                'status-dispatched': record.status === 'Dispatched',
+                'status-paid': record.status === 'Paid'
+              }">
+                {{ record.status }}
+              </span>
+            </td>
+            <td>
+              <!-- Display first line item tea grade, or loop through all if needed -->
+              <ng-container *ngIf="record.salesEntries && record.salesEntries.length > 0">
+                {{ record.salesEntries[0].teaGrade }}
+              </ng-container>
+              <ng-container *ngIf="!record.salesEntries || record.salesEntries.length === 0">
+                N/A
+              </ng-container>
+            </td>
+            <td>
+              <!-- Display first line item quantity, or sum all if needed -->
+              <ng-container *ngIf="record.salesEntries && record.salesEntries.length > 0">
+                {{ record.salesEntries[0].quantityKg | number:'1.2-2' }}
+              </ng-container>
+              <ng-container *ngIf="!record.salesEntries || record.salesEntries.length === 0">
+                N/A
+              </ng-container>
+            </td>
             <td class="actions-cell">
               <!-- Add Edit/Delete buttons here if this report allows direct manipulation -->
               <!-- For now, this is a report, so direct manipulation might be on an entry page -->
             </td>
           </tr>
-          <tr *ngIf="filteredSalesRecords.length === 0">
-            <td colspan="10" class="no-data">No sales records found for the selected filters.</td>
+          <tr *ngIf="filteredInvoiceRecords.length === 0"> <!-- FIX: Use filteredInvoiceRecords -->
+            <td colspan="11" class="no-data">No sales records found for the selected filters.</td> <!-- FIX: Adjusted colspan -->
           </tr>
         </tbody>
       </table>

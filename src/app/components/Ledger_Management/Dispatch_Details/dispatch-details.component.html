@@ -1,0 +1,89 @@
+<!-- src/app/components/Ledger_Management/Dispatch_Details/dispatch-details.component.html -->
+
+<div class="claims-entry-container"> <!-- Reusing general container class for consistent styling -->
+  <h1 class="page-title">Record New Dispatch</h1>
+
+  <div class="form-section">
+    <h2>Dispatching For Invoice</h2>
+    <div class="form-fields-grid">
+      <!-- Display details of the selected Invoice -->
+      <div class="form-group display-group">
+        <label>Invoice #:</label>
+        <p>{{ selectedInvoice?.invoiceNumber || 'N/A' }}</p>
+      </div>
+      <div class="form-group display-group">
+        <label>Broker:</label>
+        <p>{{ selectedInvoice?.brokerName || 'N/A' }}</p>
+      </div>
+      <div class="form-group display-group">
+        <label>Tea Details:</label>
+        <!-- FIX: Use *ngIf with local variable 'packedTea' -->
+        <p>
+          <ng-container *ngIf="selectedInvoice?.stockLedgerEntry?.packedTea as packedTea; else noTeaDetails">
+            {{ packedTea.gardenMark }} - {{ packedTea.grade }}
+          </ng-container>
+          <ng-template #noTeaDetails>N/A</ng-template>
+        </p>
+      </div>
+      <div class="form-group display-group">
+        <label>Weight (Kg):</label>
+        <!-- FIX: Use *ngIf with local variable 'stockEntry' -->
+        <p>
+          <ng-container *ngIf="selectedInvoice?.stockLedgerEntry as stockEntry; else noWeight">
+            {{ stockEntry.currentWeightKg | number:'1.2-2' }}
+          </ng-container>
+          <ng-template #noWeight>N/A</ng-template>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>Enter Logistics Details</h2>
+    <form (ngSubmit)="recordDispatch()">
+      <div class="form-fields-grid">
+        <div class="form-group">
+          <label for="vehicleNumber">Vehicle Number:</label>
+          <input type="text" id="vehicleNumber" [(ngModel)]="vehicleNumber" name="vehicleNumber" placeholder="e.g., CBA-001" required>
+        </div>
+        <div class="form-group">
+          <label for="dispatchDate">Dispatch Date:</label>
+          <input type="date" id="dispatchDate" [(ngModel)]="dispatchDate" name="dispatchDate" required>
+        </div>
+        <div class="form-group">
+          <label for="driverName">Driver Name:</label>
+          <input type="text" id="driverName" [(ngModel)]="driverName" name="driverName" placeholder="e.g., Nimal Silva" required>
+        </div>
+        <div class="form-group">
+          <label for="driverNic">Driver NIC (Optional):</label>
+          <input type="text" id="driverNic" [(ngModel)]="driverNic" name="driverNic" placeholder="e.g., 787878788V">
+        </div>
+        <div class="form-group">
+          <label for="sealNumber">Seal Number (Optional):</label>
+          <input type="text" id="sealNumber" [(ngModel)]="sealNumber" name="sealNumber" placeholder="e.g., SEAL-003">
+        </div>
+        <div class="form-group">
+          <label for="bagCount">Bag Count:</label>
+          <input type="number" id="bagCount" [(ngModel)]="bagCount" name="bagCount" placeholder="e.g., 60" required min="1">
+        </div>
+        <!-- Dispatched Weight Kg is pre-filled from selectedInvoice.stockLedgerEntry.currentWeightKg -->
+        <div class="form-group display-group">
+          <label>Dispatched Weight (Kg):</label>
+          <!-- FIX: Use *ngIf with local variable 'stockEntry' for dispatchedWeightKg -->
+          <p>
+            <ng-container *ngIf="selectedInvoice?.stockLedgerEntry as stockEntry; else noDispatchedWeight">
+              {{ stockEntry.currentWeightKg | number:'1.2-2' }}
+            </ng-container>
+            <ng-template #noDispatchedWeight>N/A</ng-template>
+          </p>
+          <!-- Hidden input to send the value if needed, though TS picks it from component property -->
+          <input type="hidden" [(ngModel)]="dispatchedWeightKg" name="dispatchedWeightKg">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="action-button secondary-button" type="button" (click)="exitPage()">Back to Invoices</button>
+        <button class="action-button primary-button" type="submit">Record Dispatch</button>
+      </div>
+    </form>
+  </div>
+</div>

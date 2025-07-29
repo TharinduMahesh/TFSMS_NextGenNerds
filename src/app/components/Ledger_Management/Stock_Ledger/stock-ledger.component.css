@@ -1,0 +1,286 @@
+/* General container styling for the Stock Ledger Page */
+.claims-entry-container { /* Reusing claims-entry-container for general styling */
+  padding: 30px;
+  max-width: 1500px;
+  margin: 30px auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.page-title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 40px;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.form-section, .records-section {
+  background-color: #fdfdfd;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-section h2, .records-section h2 {
+  color: #34495e;
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.filter-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+  padding: 0 10px; /* Add horizontal padding to the grid */
+}
+
+.form-group {
+  margin-bottom: 0; /* Managed by grid gap */
+  display: flex; /* Use flexbox for consistent vertical alignment of label/input */
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  margin-left: 0; /* Align labels with inputs */
+  color: #555;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; /* Crucial: includes padding and border in width/height */
+  min-height: 40px; /* Consistent min-height for inputs/selects */
+}
+
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* Action buttons for filters */
+.form-group.action-buttons {
+  grid-column: 1 / -1; /* Span across all columns */
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Space between buttons */
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.clear-filters-button {
+  background-color: #f0ad4e; /* Orange for Clear */
+  color: white;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border: none;
+}
+
+.clear-filters-button:hover {
+  background-color: #ec971f;
+  transform: translateY(-1px);
+}
+
+/* Table Styles - Reusing claims-table for general styling */
+.claims-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.claims-table th, .claims-table td {
+  padding: 15px;
+  border: 1px solid #eee;
+  text-align: left;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.claims-table th {
+  background-color: #f5f5f5;
+  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.claims-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.claims-table tbody tr:hover {
+  background-color: #f0f8ff;
+}
+
+.no-data {
+  text-align: center;
+  font-style: italic;
+  color: #999;
+  padding: 20px;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.status-unsold {
+  background-color: #6c757d; /* Gray */
+}
+
+.status-invoiced {
+  background-color: #007bff; /* Blue */
+}
+
+.status-sold {
+  background-color: #28a745; /* Green */
+}
+
+/* Actions Cell & Buttons */
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.primary-button {
+  background-color: #28a745; /* Green for Create Invoice */
+  color: white;
+}
+.primary-button:hover {
+  background-color: #218838;
+}
+
+.secondary-button {
+  background-color: #e5e7eb; /* Light gray for Invoiced (disabled) */
+  color: #374151;
+}
+
+.delete-btn { /* Reusing delete-btn for Sold (disabled) */
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Exit Button Container */
+.exit-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.exit-button {
+  background-color: #f44336; /* Red for Exit */
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.exit-button:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .claims-entry-container {
+    padding: 15px;
+    margin: 15px auto;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+
+  .form-section h2, .records-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .filter-controls {
+    grid-template-columns: 1fr; /* Stack filters on small screens */
+    gap: 15px;
+  }
+
+  .form-group input, .form-group select {
+    min-height: 38px; /* Slightly smaller height */
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+  }
+
+  .action-buttons {
+    flex-direction: column; /* Stack buttons */
+    gap: 10px;
+  }
+
+  .action-btn, .clear-filters-button, .primary-button, .secondary-button, .exit-button {
+    width: 100%; /* Full width buttons */
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  .claims-table th, .claims-table td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+  .status-badge {
+    padding: 3px 6px;
+    font-size: 0.75rem;
+  }
+
+  .actions-cell {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

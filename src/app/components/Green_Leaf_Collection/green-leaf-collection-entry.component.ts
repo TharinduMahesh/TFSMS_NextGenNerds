@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // For NgFor, NgIf, DatePipe
 import { FormsModule } from '@angular/forms';   // For NgModel
 import { Router } from '@angular/router';       // For navigation
+import { HeaderComponent } from '../header/header.component';
+import { SidebarComponent } from '../sidebar/sidebar/sidebar.component';
+
 import { SupplierService } from '../../Services/supplier.service'; // Import SupplierService
 import { GreenLeafCollectionService } from '../../Services/green_leaf_collection.service'; // Import GreenLeafCollectionService
 import { Supplier } from '../../models/supplier.interface'; // Import Supplier interface
@@ -10,7 +13,7 @@ import { GreenLeafCollection } from '../../models/green-leaf-collection.interfac
 @Component({
   selector: 'app-green-leaf-collection-entry',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent, SidebarComponent],
   templateUrl: './green-leaf-collection-entry.component.html',
   styleUrls: ['./green-leaf-collection-entry.component.css']
 })

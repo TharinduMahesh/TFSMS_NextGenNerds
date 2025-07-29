@@ -2,10 +2,10 @@
 
 /* Main container for the navigation page */
 .financial-reports-nav {
-  /* FIX: Adjust margin for better overall page spacing, considering sidebar */
-  /* Assuming a main content wrapper that pushes content over from sidebar */
-  max-width: 1200px; /* Adjusted max-width for better fit within typical content areas */
-  margin: 40px 40px auto 240px; /* Center horizontally, with top/bottom margin */
+  /* FIXED: Proper margin for sidebar spacing */
+  max-width: 1500px; /* Adjusted max-width for better fit within typical content areas */
+  margin: 40px auto; /* Center horizontally, with top/bottom margin */
+  margin-left: 320px; /* Add left margin to account for sidebar width */
   padding: 40px; /* Consistent padding inside the container */
   background: #f9fafb; /* Light background for the main card */
   border-radius: 18px; /* Prominent rounded corners */
@@ -66,10 +66,10 @@
   color: #4361ee; /* Default blue icon color */
   flex-shrink: 0; /* Prevent icon from shrinking */
 }
-.nav-icon i { /* Styling for Font Awesome icon inside nav-icon */
-    font-size: 1.8rem;
-}
 
+.nav-icon i { /* Styling for Font Awesome icon inside nav-icon */
+  font-size: 1.8rem;
+}
 
 /* Specific icon colors (using your existing classes) */
 .nav-icon-blue { background: #e3e8f7; color: #4361ee; }
@@ -91,11 +91,38 @@
   line-height: 1.4; /* Better readability */
 }
 
+/* Exit button styling */
+.exit-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.exit-button {
+  background-color: #f44336; /* Red for Exit */
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.exit-button:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
 /* Responsive Adjustments */
 @media (max-width: 1200px) {
   .financial-reports-nav {
     max-width: 90%; /* Adjust max-width for smaller screens */
     margin: 30px auto;
+    margin-left: 110px; /* Collapsed sidebar */
     padding: 30px;
   }
   .nav-title {
@@ -126,6 +153,7 @@
   .financial-reports-nav {
     max-width: 95%;
     margin: 20px auto;
+    margin-left: 20px; /* Reset margin on mobile */
     padding: 20px;
   }
   .nav-title {
@@ -151,5 +179,9 @@
   }
   .nav-card-desc {
     font-size: 0.8rem;
+  }
+  .exit-button {
+    width: 100%;
+    padding: 12px 15px;
   }
 }

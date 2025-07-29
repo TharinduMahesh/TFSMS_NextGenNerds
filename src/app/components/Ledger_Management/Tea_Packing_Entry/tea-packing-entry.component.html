@@ -1,0 +1,107 @@
+<!-- src/app/components/Ledger_Management/Tea_Packing_Entry/tea-packing-entry.component.html -->
+
+<div class="claims-entry-container"> <!-- Reusing general container class -->
+  <h1 class="page-title">Tea Packing Entry</h1>
+
+  <div class="form-section">
+    <h2>Record New Packed Tea Batch</h2>
+    <form (ngSubmit)="addOrUpdatePackedTea()">
+      <div class="form-fields-grid">
+        <div class="form-group">
+          <label for="grade">Tea Grade:</label>
+          <select id="grade" [(ngModel)]="grade" name="grade"> <!-- Removed 'required' -->
+            <option value="" disabled>Select Tea Grade</option>
+            <option *ngFor="let g of teaGrades" [value]="g">{{ g }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="gardenMark">Garden Mark / Estate:</label>
+          <input type="text" id="gardenMark" [(ngModel)]="gardenMark" name="gardenMark" placeholder="e.g., Misty Mountain" required>
+        </div>
+        <div class="form-group">
+          <label for="financialYear">Financial Year:</label>
+          <input type="number" id="financialYear" [(ngModel)]="financialYear" name="financialYear" required min="1900" max="2100">
+        </div>
+        <div class="form-group">
+          <label for="packingType">Packing Type:</label>
+          <select id="packingType" [(ngModel)]="packingType" name="packingType"> <!-- Removed 'required' -->
+            <option value="" disabled>Select Packing Type</option>
+            <option *ngFor="let pt of packingTypes" [value]="pt">{{ pt }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="initialWeightKg">Initial Weight (Kg):</label>
+          <input type="number" id="initialWeightKg" [(ngModel)]="initialWeightKg" name="initialWeightKg" placeholder="e.g., 500.50" step="0.01" required min="0">
+        </div>
+        <div class="form-group">
+          <label for="packingDate">Packing Date:</label>
+          <input type="date" id="packingDate" [(ngModel)]="packingDate" name="packingDate" required>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="action-button secondary-button" type="button" (click)="clearForm()">Clear Form</button>
+        <button class="action-button primary-button" type="submit">
+          {{ editingPackedTeaId ? 'Update Packed Tea' : 'Add Packed Tea' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="records-section">
+    <h2>Packed Tea Records</h2>
+    <div class="table-responsive">
+      <table class="claims-table"> <!-- Reusing general table styling -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Grade</th>
+            <th>Garden Mark</th>
+            <th>Financial Year</th>
+            <th>Packing Type</th>
+            <th>Initial Weight (Kg)</th>
+            <th>Packing Date</th>
+            <th>Stock Status</th> <!-- Display Stock Ledger Status -->
+            <th>Current Weight (Kg)</th> <!-- Display Stock Ledger Current Weight -->
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of packedTeaRecords">
+            <td>{{ record.packedTeaId }}</td>
+            <td>{{ record.grade }}</td>
+            <td>{{ record.gardenMark }}</td>
+            <td>{{ record.financialYear }}</td>
+            <td>{{ record.packingType }}</td>
+            <!-- FIX: Removed || 'N/A' as initialWeightKg is a number -->
+            <td>{{ record.initialWeightKg | number:'1.2-2' }}</td>
+            <td>{{ formatDate(record.packingDate) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'status-unsold': record.stockLedgerEntry?.status?.toLowerCase() === 'unsold',
+                'status-invoiced': record.stockLedgerEntry?.status?.toLowerCase() === 'invoiced',
+                'status-sold': record.stockLedgerEntry?.status?.toLowerCase() === 'sold'
+              }">
+                {{ record.stockLedgerEntry?.status || 'N/A' }}
+              </span>
+            </td>
+            <!-- FIX: Removed || 'N/A' as currentWeightKg is a number -->
+            <td>{{ record.stockLedgerEntry?.currentWeightKg | number:'1.2-2' }}</td>
+            <td class="actions-cell">
+              <button *ngIf="record.stockLedgerEntry?.status?.toLowerCase() === 'unsold'" class="action-btn primary-button" (click)="navigateToInvoiceCreation(record.stockLedgerEntry?.stockLedgerEntryId)">Create Invoice</button>
+              <button *ngIf="record.stockLedgerEntry?.status?.toLowerCase() === 'invoiced'" class="action-btn secondary-button" disabled>Invoiced</button>
+              <button *ngIf="record.stockLedgerEntry?.status?.toLowerCase() === 'sold'" class="action-btn delete-btn" disabled>Sold</button>
+              <!-- Add other actions like View Details if needed -->
+            </td>
+          </tr>
+          <tr *ngIf="packedTeaRecords.length === 0">
+            <td colspan="10" class="no-data">No packed tea records found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

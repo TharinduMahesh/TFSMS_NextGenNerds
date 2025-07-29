@@ -1,4 +1,5 @@
 <app-header></app-header>
+<app-sidebar></app-sidebar>
 <div class="claims-entry-container"> <!-- Reusing claims-entry-container class for general styling -->
   <h1 class="page-title">Sales Charge Entry</h1>
 
@@ -32,7 +33,7 @@
       <div class="form-actions">
         <button class="action-button secondary-button" type="button" (click)="clearForm()">Clear Form</button>
         <button class="action-button primary-button" type="submit">
-          {{ editingChargeId ? 'Update Charge' : 'Add Charge' }}
+          {{ editingSalesChargeId ? 'Update Charge' : 'Add Charge' }} <!-- FIX: Use editingSalesChargeId -->
         </button>
       </div>
     </form>
@@ -44,7 +45,7 @@
       <table class="claims-table"> <!-- Reusing claims-table for general styling -->
         <thead>
           <tr>
-            <th>ID</th>
+            <th>ID</th> <!-- Still display as ID for user -->
             <th>Sale Reference</th>
             <th>Charge Type</th>
             <th>Amount (Rs.)</th>
@@ -55,15 +56,15 @@
         </thead>
         <tbody>
           <tr *ngFor="let charge of chargeRecords">
-            <td>{{ charge.id }}</td>
-            <td>{{ charge.saleReference }}</td>
+            <td>{{ charge.salesChargeId }}</td> <!-- Uses salesChargeId -->
+            <!-- <td>{{ charge.saleReference || 'N/A' }}</td> Handles null/undefined -->
             <td>{{ charge.chargeType }}</td>
             <td>{{ charge.amount | number:'1.2-2' }}</td>
             <td>{{ formatDate(charge.chargeDate) }}</td>
             <td>{{ charge.description || 'N/A' }}</td>
             <td class="actions-cell">
               <button class="action-btn edit-btn" (click)="editCharge(charge)">Edit</button>
-              <button class="action-btn delete-btn" (click)="confirmDelete(charge.id)">Delete</button>
+              <button class="action-btn delete-btn" (click)="confirmDelete(charge.salesChargeId)">Delete</button> <!-- Uses salesChargeId -->
             </td>
           </tr>
           <tr *ngIf="chargeRecords.length === 0">
@@ -72,5 +73,9 @@
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
   </div>
 </div>

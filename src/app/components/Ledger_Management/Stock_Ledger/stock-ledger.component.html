@@ -1,0 +1,83 @@
+<!-- src/app/components/Ledger_Management/Stock_Ledger/stock-ledger.component.html -->
+
+<div class="claims-entry-container"> <!-- Reusing general container class -->
+  <h1 class="page-title">Stock Ledger</h1>
+
+  <div class="form-section">
+    <h2>Stock Overview</h2>
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="statusFilter">Status:</label>
+        <select id="statusFilter" [(ngModel)]="statusFilter" (change)="loadStockLedgerRecords()" name="statusFilter">
+          <option value="">All Statuses</option>
+          <option *ngFor="let status of stockStatuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="gradeFilter">Tea Grade:</label>
+        <input type="text" id="gradeFilter" [(ngModel)]="gradeFilter" (keyup.enter)="loadStockLedgerRecords()" name="gradeFilter" placeholder="Search by Grade">
+      </div>
+      <div class="form-group">
+        <label for="gardenMarkFilter">Garden Mark:</label>
+        <input type="text" id="gardenMarkFilter" [(ngModel)]="gardenMarkFilter" (keyup.enter)="loadStockLedgerRecords()" name="gardenMarkFilter" placeholder="Search by Garden Mark">
+      </div>
+      <div class="form-group action-buttons">
+        <button class="clear-filters-button" (click)="clearFilters()">Clear Filters</button>
+        <!-- <button class="action-button primary-button">New Packing Entry</button> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="records-section">
+    <h2>Stock Ledger Entries</h2>
+    <div class="table-responsive">
+      <table class="claims-table"> <!-- Reusing general table styling -->
+        <thead>
+          <tr>
+            <th>Stock ID</th>
+            <th>Grade</th>
+            <th>Garden Mark</th>
+            <th>Packing Date</th>
+            <th>Status</th>
+            <th>Initial Weight (Kg)</th>
+            <th>Current Weight (Kg)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredStockLedgerRecords">
+            <td>{{ record.stockLedgerEntryId }}</td>
+            <td>{{ record.packedTea?.grade || 'N/A' }}</td>
+            <td>{{ record.packedTea?.gardenMark || 'N/A' }}</td>
+            <td>{{ formatDate(record.packedTea?.packingDate) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'status-unsold': record.status === 'Unsold',
+                'status-invoiced': record.status === 'Invoiced',
+                'status-sold': record.status === 'Sold'
+              }">
+                {{ record.status }}
+              </span>
+            </td>
+            <!-- FIX: Removed || 'N/A' as initialWeightKg is a number -->
+            <td>{{ record.packedTea?.initialWeightKg | number:'1.2-2' }}</td>
+            <td>{{ record.currentWeightKg | number:'1.2-2' }}</td>
+            <td class="actions-cell">
+              <button *ngIf="record.status === 'Unsold'" class="action-btn primary-button" (click)="navigateToInvoiceCreation(record.stockLedgerEntryId)">Create Invoice</button>
+              <button *ngIf="record.status === 'Invoiced'" class="action-btn secondary-button" disabled>Invoiced</button>
+              <button *ngIf="record.status === 'Sold'" class="action-btn delete-btn" disabled>Sold</button>
+              <!-- Add other actions like View Details if needed -->
+            </td>
+          </tr>
+          <tr *ngIf="filteredStockLedgerRecords.length === 0">
+            <td colspan="8" class="no-data">No stock ledger records found for the selected filters.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="exit-button-container">
+    <button class="exit-button" (click)="exitPage()">Exit</button>
+  </div>
+</div>

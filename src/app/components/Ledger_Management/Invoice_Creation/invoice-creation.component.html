@@ -1,0 +1,103 @@
+<!-- src/app/components/Ledger_Management/Invoice_Creation/invoice-creation.component.html -->
+
+<div class="claims-entry-container"> <!-- Reusing general container class for consistent styling -->
+  <h1 class="page-title">Create New Invoice</h1>
+
+  <div class="form-section">
+    <h2>Invoicing For</h2>
+    <div class="form-fields-grid">
+      <!-- Display details of the selected Stock Ledger Entry -->
+      <div class="form-group display-group">
+        <label>Stock ID:</label>
+        <p>#{{ selectedStockEntry?.stockLedgerEntryId || 'N/A' }}</p>
+      </div>
+      <div class="form-group display-group">
+        <label>Garden Mark:</label>
+        <p>{{ selectedStockEntry?.packedTea?.gardenMark || 'N/A' }}</p>
+      </div>
+      <div class="form-group display-group">
+        <label>Grade:</label>
+        <p>{{ selectedStockEntry?.packedTea?.grade || 'N/A' }}</p>
+      </div>
+      <div class="form-group display-group">
+        <label>Packing Date:</label>
+        <p>{{ formatDate(selectedStockEntry?.packedTea?.packingDate) }}</p>
+      </div>
+      <div class="form-group display-group">
+        <label>Weight (Kg):</label>
+        <!-- FIX: Removed || 'N/A' as currentWeightKg is a number -->
+        <p>{{ selectedStockEntry?.currentWeightKg | number:'1.2-2' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>Invoice Details</h2>
+    <form (ngSubmit)="createInvoice()">
+      <div class="form-fields-grid">
+        <div class="form-group">
+          <label for="invoiceNumber">Invoice Number:</label>
+          <input type="text" id="invoiceNumber" [(ngModel)]="invoiceNumber" name="invoiceNumber" placeholder="e.g., INV-2025-00001" required>
+        </div>
+        <div class="form-group">
+          <label for="brokerName">Broker Name:</label>
+          <input type="text" id="brokerName" [(ngModel)]="brokerName" name="brokerName" placeholder="e.g., Colombo Tea Brokers" required>
+        </div>
+        <div class="form-group">
+          <label for="invoiceDate">Invoice Date:</label>
+          <input type="date" id="invoiceDate" [(ngModel)]="invoiceDate" name="invoiceDate" required>
+        </div>
+        <div class="form-group">
+          <label for="buyerName">Buyer Name (Optional):</label>
+          <input type="text" id="buyerName" [(ngModel)]="buyerName" name="buyerName" placeholder="e.g., XYZ Importers">
+        </div>
+        <div class="form-group">
+          <label for="soldPricePerKg">Sold Price per Kg (LKR):</label>
+          <input type="number" id="soldPricePerKg" [(ngModel)]="soldPricePerKg" (input)="calculateTotalAmount()" name="soldPricePerKg" placeholder="e.g., 900.00" step="0.01" required min="0">
+        </div>
+        <div class="form-group">
+          <label for="totalAmount">Total Amount (LKR):</label>
+          <input type="number" id="totalAmount" [(ngModel)]="totalAmount" name="totalAmount" placeholder="Calculated automatically" readonly>
+        </div>
+      </div>
+
+      <!-- Sales Charges Section -->
+      <div class="sales-charges-section">
+        <h3>Sales Charges for this Invoice</h3>
+        <div class="sales-charge-form-grid">
+          <div class="form-group">
+            <label for="newChargeType">Charge Type:</label>
+            <input type="text" id="newChargeType" [(ngModel)]="newChargeType" name="newChargeType" placeholder="e.g., Commission">
+          </div>
+          <div class="form-group">
+            <label for="newChargeAmount">Amount:</label>
+            <input type="number" id="newChargeAmount" [(ngModel)]="newChargeAmount" name="newChargeAmount" placeholder="e.g., 1500.00" step="0.01" min="0">
+          </div>
+          <div class="form-group full-width">
+            <label for="newChargeDescription">Description (Optional):</label>
+            <textarea id="newChargeDescription" [(ngModel)]="newChargeDescription" name="newChargeDescription" rows="2" placeholder="Details of the charge"></textarea>
+          </div>
+          <div class="form-actions add-charge-action">
+            <button type="button" class="action-button secondary-button" (click)="addSalesCharge()">+ Add Charge</button>
+          </div>
+        </div>
+
+        <!-- Display Added Sales Charges -->
+        <div *ngIf="salesCharges.length > 0" class="sales-charges-list">
+          <h4>Added Charges:</h4>
+          <ul>
+            <li *ngFor="let charge of salesCharges; let i = index">
+              {{ charge.chargeType }}: {{ charge.amount | number:'1.2-2' }} LKR
+              <button type="button" class="remove-charge-btn" (click)="removeSalesCharge(i)">X</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="action-button secondary-button" type="button" (click)="exitPage()">Back to Stock Ledger</button>
+        <button class="action-button primary-button" type="submit">Create Invoice</button>
+      </div>
+    </form>
+  </div>
+</div>

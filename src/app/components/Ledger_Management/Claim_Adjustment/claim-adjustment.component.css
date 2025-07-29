@@ -1,8 +1,9 @@
 /* General container styling for the Claims Adjustment Page */
 .claims-adjustment-container {
   padding: 30px;
-  max-width: 1300px; /* Adjust as needed */
-  margin: 40px 40px auto 300px;
+  max-width: 1500px; /* Adjust as needed */
+  margin: 40px auto;
+  margin-left: 280px; /* Add left margin to account for sidebar width */
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);
@@ -205,11 +206,38 @@
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 
+/* Exit button styling */
+.exit-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.exit-button {
+  background-color: #f44336; /* Red for Exit */
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.exit-button:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .claims-adjustment-container {
     padding: 15px;
     margin: 15px auto;
+    margin-left: 15px; /* Reset left margin on mobile - adjust based on your mobile sidebar behavior */
   }
 
   .page-title {
@@ -234,6 +262,11 @@
 
   .action-button {
     width: 100%; /* Full width buttons */
+    padding: 10px 15px;
+  }
+
+  .exit-button {
+    width: 100%; /* Full width exit button on mobile */
     padding: 10px 15px;
   }
 

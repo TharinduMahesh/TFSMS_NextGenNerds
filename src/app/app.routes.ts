@@ -214,6 +214,14 @@ export const routes: Routes = [
       { path: 'claim-analysis', component: ClaimAnalysisComponent },
       { path: 'nsa-analysis', component: NsaAnalysisComponent },
       { path: 'returns-analysis', component: ReturnsAnalysisComponent },
+      { path: 'return-entry', component: ReturnEntryComponent},
+
+      { path: 'tea-packing-entry', component: TeaPackingEntryComponent },
+      { path: 'stock-ledger', component: StockLedgerComponent },
+      { path: 'invoice-creation', component: InvoiceCreationComponent },
+      { path: 'invoice-register', component: InvoiceRegisterComponent },
+      { path: 'dispatch-details', component: DispatchDetailsComponent },
+      { path: 'finalize-sale', component: FinalizeSaleComponent },
     ]
   }, // Ensure no trailing comma here if it's the last top-level route
 
@@ -248,6 +256,15 @@ import { SalesReportComponent } from './components/reports/sales/sales-report/sa
 import { SalesChargeReportComponent } from './components/reports/sales/Sales-charge-report/sales-charge-report.component';
 import { GratisIssueReportComponent } from './components/reports/sales/Gratis-issue-report/Gratis-issue-report.component';
 import { SalesEntryComponent } from './components/Ledger_Management/Sales_Entry/sales-entry.component';
+import { ReturnEntryComponent } from "./components/Ledger_Management/Return_Entry/return-entry.component"
+
+import { TeaPackingEntryComponent } from './components/Ledger_Management/Tea_Packing_Entry/tea-packing-entry.component';
+import { StockLedgerComponent } from './components/Ledger_Management/Stock_Ledger/stock-ledger.component';
+import { InvoiceCreationComponent } from './components/Ledger_Management/Invoice_Creation/invoice-creation.component';
+import { InvoiceRegisterComponent } from './components/Ledger_Management/Invoice_Register/invoice-register.component';
+import { DispatchDetailsComponent } from './components/Ledger_Management/Dispatch_Details/dispatch-details.component';
+import { FinalizeSaleComponent } from './components/Ledger_Management/Finalize_Sale/finalize-sale.component';
+
 
 
 

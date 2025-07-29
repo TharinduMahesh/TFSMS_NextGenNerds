@@ -5,8 +5,8 @@ import { RouterModule } from "@angular/router"
 import { HeaderComponent } from "../header/header.component"
 import { FooterComponent } from "../footer/footer.component"
 import  { Router } from "@angular/router"
-import  { AuthService } from "../../shared/Services/auth.service"
-import  { UserService } from "../../shared/Services/user.service"
+import  { AuthService } from "../../shared/services/auth.service"
+import  { UserService } from "../../shared/services/user.service"
 
 @Component({
   selector: "app-success",

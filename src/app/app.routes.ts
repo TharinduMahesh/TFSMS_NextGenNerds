@@ -37,7 +37,7 @@
 //       { path: "", component: SuccessComponent }, // Default dashboard view
 //     ],
 //   },
-//   {
+//   
 //     path: "viewtrs",
 //     component: TransactionComponent,
 //     canActivate: [authGuard],
@@ -104,7 +104,7 @@ import { SalesChargeReportComponent } from './components/reports/sales/Sales-cha
 import { RyReviewComponent } from './pages/RouteYieldMaintain/ry-review/ry-review.component';
 import { RyCreateComponent } from './pages/RouteYieldMaintain/ry-create/ry-create.component';
 import { RyViewComponent } from './pages/RouteYieldMaintain/ry-view/ry-view.component';
-import { RtReviewComponent } from './pages/RouteMaintain/r-review/r-review.component';
+// import { RtReviewComponent } from './pages/RouteMaintain/r-review/r-review.component';
 import { RyEditComponent } from './pages/RouteYieldMaintain/ry-edit/ry-edit.component';
 
 import { LedgerDashboardComponent } from './components/ledger-dashboard/ledger-dashboard.component';
@@ -112,7 +112,7 @@ import { LedgerDashboardComponent } from './components/ledger-dashboard/ledger-d
 import { CollectorReviewComponent } from './pages/CostManagement/Collector/c-review/c-review.component'; 
 
 import { VehicleReviewComponent } from './pages/CostManagement/Vehicle/v-review/v-review.component'; 
-import { TripReviewComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-review/t-review.component';
+// import { TripReviewComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-review/t-review.component';
 
 import { CostReportComponent } from './pages/CostManagement/Cost-report/ct-report.component';
 import { CollectorPerformanceReportComponent } from './pages/PerformanceMonitoring/Reports/Collector-performance-report/c-p-report.component';
@@ -139,7 +139,7 @@ import { SuccessComponent } from "./components/success/success.component"
 import { HeaderComponent } from "./components/header/header.component"
 import { FooterComponent } from "./components/footer/footer.component"
 import { AboutusComponent } from "./components/aboutus/aboutus.component"
-import { ContactComponent } from "./components/contact/contact.component"
+// import { ContactComponent } from "./components/contact/contact.component"
 import { authGuard } from "./shared/auth.guard"
 import { HomeComponent } from "./components/home/home.component"
 import { TransactionComponent } from "./components/viewtransaction/viewtransaction.component"
@@ -151,7 +151,7 @@ import { AdminUserManagementComponent } from "./components/user/admin-user-manag
 import { SetNewPasswordComponent } from "./components/user/set-new-password/set-new-password.component" // New
 import { UserProfileComponent } from "./components/user/user-profile/user-profile.component"
 import { PaymentHistoryComponent } from "./components/paymentManager/payment-history/payment-history.component"
-import { SupplierTotalPaymentsComponent } from "./components/paymentManager/supplier-total-payments/supplier-total-payments.component"
+// import { SupplierTotalPaymentsComponent } from "./components/paymentManager/supplier-total-payments/supplier-total-payments.component"
 import { ChangePasswordComponent } from "./components/user/change-password/change-password.component" 
 import { ManualIdEntryComponent } from './pages/ledgerManagement/InvoiceCreate/mannualId-entry/m-id-entry.component';
 import { ManualDispatchEntryComponent } from './pages/ledgerManagement/Dispatch Entry/manual-dispatch-entry/menualdis.component';
@@ -162,11 +162,12 @@ import { VehicleCreateComponent } from './pages/CostManagement/Vehicle/v-create/
 import { VehicleViewComponent } from './pages/CostManagement/Vehicle/v-view/v-view.component';
 import { CollectorViewComponent } from './pages/CostManagement/Collector/c-view/c-view.component';
 import { VehicleEditComponent } from './pages/CostManagement/Vehicle/v-edit/v-edit.component';
-import { RtCreateComponent } from './pages/RouteMaintain/r-create/r-create.component';
-import { RtEditComponent } from './pages/RouteMaintain/r-edit/r-edit.component';
-import { RtViewComponent } from './pages/RouteMaintain/r-view/r-view.component';
-import { TripScheduleComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-schedule/t-sched.component';
+// import { RtCreateComponent } from './pages/RouteMaintain/r-create/r-create.component';
+// import { RtEditComponent } from './pages/RouteMaintain/r-edit/r-edit.component';
+// import { RtViewComponent } from './pages/RouteMaintain/r-view/r-view.component';
+// import { TripScheduleComponent } from './pages/PerformanceMonitoring/Trip Tracking/Trip-schedule/t-sched.component';
 import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
+import { SidebarComponent } from './components/sidebar/sidebar/sidebar.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -179,7 +180,7 @@ export const routes: Routes = [
   { path: "header", component: HeaderComponent },
   { path: "footer", component: FooterComponent },
   { path: "about-us", component: AboutusComponent },
-  { path: "contact-us", component: ContactComponent },
+  // { path: "contact-us", component: ContactComponent },
   { path: "forbidden", component: ForbiddenComponent },
   { path: "set-password", component: SetNewPasswordComponent }, // New: Accessible without login
 
@@ -245,10 +246,10 @@ export const routes: Routes = [
     component: PaymentHistoryComponent,
   },
 
-  {
-    path: "supplier-total-payments",
-    component: SupplierTotalPaymentsComponent,
-  },
+  // {
+  //   path: "supplier-total-payments",
+  //   component: SupplierTotalPaymentsComponent,
+  // },
 
 
 
@@ -340,10 +341,10 @@ export const routes: Routes = [
     path: 'transportdashboard/c-review',
     component: CollectorReviewComponent
   },
-  {
-    path: 'transportdashboard/r-review',
-    component: RtReviewComponent
-  },
+  // {
+  //   path: 'transportdashboard/r-review',
+  //   component: RtReviewComponent
+  // },
   {
     path: 'transportdashboard/v-review',
     component: VehicleReviewComponent
@@ -420,26 +421,31 @@ export const routes: Routes = [
     path: 'transportdashboard/v-view',
     component: VehicleCreateComponent
   },
+
   {
-    path: 'transportdashboard/r-create',
-    component: RtCreateComponent
-  },
-  {
-    path: 'transportdashboard/r-Edit/:id',
-    component: RtEditComponent
-  },
-  {
-    path: 'transportdashboard/r-view',
-    component: RtViewComponent
-  },
-  {
-    path: 'transportedashboard/trip-schedule',
-    component: TripScheduleComponent
-  },
-  {
-    path: 'transportdashboard/trip-review',
-    component: TripReviewComponent
+    path: 'test',
+    component: SidebarComponent
   }
+  // {
+  //   path: 'transportdashboard/r-create',
+  //   component: RtCreateComponent
+  // },
+  // {
+  //   path: 'transportdashboard/r-Edit/:id',
+  //   component: RtEditComponent
+  // },
+  // {
+  //   path: 'transportdashboard/r-view',
+  //   component: RtViewComponent
+  // },
+  // {
+  //   path: 'transportedashboard/trip-schedule',
+  //   component: TripScheduleComponent
+  // },
+  // {
+  //   path: 'transportdashboard/trip-review',
+  //   component: TripReviewComponent
+  // }
 ]
 
     
